@@ -1,0 +1,148 @@
+{
+  "merchants": [
+    {
+      "id": "mer_1",
+      "name": "Bella Pizza",
+      "email": "owner@bella.com",
+      "plan": "pro",
+      "status": "active",
+      "createdAt": "2025-09-20T10:00:00Z"
+    },
+    {
+      "id": "mer_2",
+      "name": "Hotel Lumière",
+      "email": "gm@lumiere.com",
+      "plan": "pro",
+      "status": "active",
+      "createdAt": "2025-09-21T09:00:00Z"
+    }
+  ],
+  "places": [
+    {
+      "id": "pl_bella_1",
+      "merchantId": "mer_1",
+      "localName": "Bella Pizza",
+      "address": "12 Rue Exemple, Paris",
+      "googleUrl": "https://search.google.com/local/writereview?placeid=XYZ",
+      "tripadvisorUrl": "https://www.tripadvisor.com/Restaurant_Review-g12345-Bella_Pizza.html",
+      "createdAt": "2025-09-20T10:05:00Z"
+    },
+    {
+      "id": "pl_lum_1",
+      "merchantId": "mer_2",
+      "localName": "Hotel Lumière",
+      "address": "3 Av. Montaigne, Paris",
+      "googleUrl": "https://search.google.com/local/writereview?placeid=ABC",
+      "createdAt": "2025-09-21T09:05:00Z"
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "cmp_1",
+      "merchantId": "mer_1",
+      "placeId": "pl_bella_1",
+      "name": "Lunch Sep 2025",
+      "slug": "bella-pizza-sept-2025",
+      "primaryCtaUrl": "https://search.google.com/local/writereview?placeid=XYZ",
+      "status": "active",
+      "createdAt": "2025-09-21T09:10:00Z"
+    },
+    {
+      "id": "cmp_2",
+      "merchantId": "mer_2",
+      "placeId": "pl_lum_1",
+      "name": "Autumn 2025",
+      "slug": "hotel-lumiere-autumn-2025",
+      "primaryCtaUrl": "https://search.google.com/local/writereview?placeid=ABC",
+      "status": "draft",
+      "createdAt": "2025-09-22T08:00:00Z"
+    }
+  ],
+  "shortlinks": [
+    {
+      "id": "qrx7abc",
+      "merchantId": "mer_1",
+      "campaignId": "cmp_1",
+      "targetSlug": "bella-pizza-sept-2025",
+      "channel": "QR",
+      "status": "active",
+      "createdAt": "2025-09-21T10:00:00Z",
+      "updatedAt": "2025-09-21T10:00:00Z"
+    },
+    {
+      "id": "nfc9xyz",
+      "merchantId": "mer_1",
+      "campaignId": "cmp_1",
+      "targetSlug": "bella-pizza-sept-2025",
+      "channel": "NFC",
+      "status": "active",
+      "createdAt": "2025-09-21T10:01:00Z",
+      "updatedAt": "2025-09-21T10:01:00Z"
+    },
+    {
+      "id": "sms8def",
+      "merchantId": "mer_2",
+      "campaignId": "cmp_2",
+      "targetSlug": "hotel-lumiere-autumn-2025",
+      "channel": "SMS",
+      "status": "paused",
+      "createdAt": "2025-09-22T08:10:00Z",
+      "updatedAt": "2025-09-22T08:10:00Z"
+    }
+  ],
+  "events": [
+    {
+      "id": "ev1",
+      "ts": "2025-09-27T12:00:00Z",
+      "type": "visit",
+      "merchantId": "mer_1",
+      "campaignId": "cmp_1",
+      "shortLinkId": "qrx7abc",
+      "channel": "QR"
+    },
+    {
+      "id": "ev2",
+      "ts": "2025-09-27T12:05:00Z",
+      "type": "cta_click",
+      "merchantId": "mer_1",
+      "campaignId": "cmp_1",
+      "shortLinkId": "nfc9xyz",
+      "channel": "NFC"
+    },
+    {
+      "id": "ev3",
+      "ts": "2025-09-28T14:00:00Z",
+      "type": "scan",
+      "merchantId": "mer_2",
+      "campaignId": "cmp_2",
+      "shortLinkId": "sms8def",
+      "channel": "SMS"
+    }
+  ],
+  "statsCampaignDaily": [
+    {
+      "id": "stat1",
+      "day": "2025-09-23",
+      "campaignId": "cmp_1",
+      "visits": 120,
+      "ctaClicks": 70,
+      "reviewDelta": 3
+    },
+    {
+      "id": "stat2",
+      "day": "2025-09-24",
+      "campaignId": "cmp_1",
+      "visits": 140,
+      "ctaClicks": 85,
+      "reviewDelta": 4
+    },
+    {
+      "id": "stat3",
+      "day": "2025-09-24",
+      "campaignId": "cmp_2",
+      "visits": 60,
+      "ctaClicks": 20,
+      "reviewDelta": 1
+    }
+  ]
+}

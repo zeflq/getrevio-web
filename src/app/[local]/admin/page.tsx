@@ -1,16 +1,14 @@
-"use client"
-
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { MerchantSidebar } from "@/components/merchant-sidebar"
+import { AdminSidebar } from "@/components/admin-sidebar"
 import { LanguageSwitcher } from "@/components/language-switcher"
 
-export default function MerchantHome({ params }: { params: { local: string } }) {
-  const base = `/${params.local}`
+export default async function AdminHome({ params }: { params: Promise<{ local: string }> }) {
+  const base = `/${(await params).local}/admin`
   return (
     <SidebarProvider>
-      <MerchantSidebar base={base} />
+      <AdminSidebar base={base} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 justify-between">
           <div className="flex items-center gap-2 px-4">
@@ -19,7 +17,7 @@ export default function MerchantHome({ params }: { params: { local: string } }) 
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">Merchant</BreadcrumbLink>
+                  <BreadcrumbLink href="#">Admin</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
