@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import {NextIntlClientProvider} from "next-intl";
 import {getMessages, getLocale} from "next-intl/server";
+import { QueryProvider } from "@/shared/lib/react-query";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,13 +26,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
-  const messages = await getMessages();
 
   return (
     <html lang={locale}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <NextIntlClientProvider locale={locale}>
-          {children}
+          <QueryProvider>{children}</QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>
