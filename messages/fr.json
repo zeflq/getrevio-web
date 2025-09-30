@@ -1,0 +1,17 @@
+{
+  "login": {
+    "title": "Bon retour",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "show": "Afficher",
+    "hide": "Masquer",
+    "submit": "Se connecter",
+    "success": "Connexion réussie",
+    "error": "Identifiants invalides"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "cancel": "Annuler",
+    "save": "Enregistrer"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "login": {
+    "title": "Welcome back",
+    "email": "Email",
+    "password": "Password",
+    "show": "Show",
+    "hide": "Hide",
+    "submit": "Sign in",
+    "success": "Logged in successfully",
+    "error": "Invalid credentials"
+  },
+  "common": {
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "save": "Save"
+  }
+}
