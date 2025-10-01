@@ -23,8 +23,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { UserProfileInline } from "./user-profile-inline"
+import { Link } from "@/i18n/navigation"
 
-export function AdminSidebar({ base, ...props }: React.ComponentProps<typeof Sidebar> & { base: string }) {
+export function AdminSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const user = {
     name: "Admin",
     email: "admin@getrevio.app",
@@ -32,13 +33,13 @@ export function AdminSidebar({ base, ...props }: React.ComponentProps<typeof Sid
   }
 
   const navMain = [
-    { title: "Dashboard", url: `${base}` , icon: LayoutDashboard, isActive: true },
-    { title: "Merchants", url: `${base}/merchants`, icon: Users },
-    { title: "Places", url: `${base}/places`, icon: MapPin },
-    { title: "Campaigns", url: `${base}/campaigns`, icon: Megaphone },
-    { title: "Shortlinks", url: `${base}/shortlinks`, icon: Link2 },
-    { title: "Events", url: `${base}/events`, icon: CalendarDays },
-    { title: "Settings", url: `${base}/settings`, icon: Settings2 },
+    { title: "Dashboard", url: "/admin" , icon: LayoutDashboard, isActive: true },
+    { title: "Merchants", url: "/admin/merchants", icon: Users },
+    { title: "Places", url: "/admin/places", icon: MapPin },
+    { title: "Campaigns", url: "/admin/campaigns", icon: Megaphone },
+    { title: "Shortlinks", url: "/admin/shortlinks", icon: Link2 },
+    { title: "Events", url: "/admin/events", icon: CalendarDays },
+    { title: "Settings", url: "/admin/settings", icon: Settings2 },
   ]
 
   return (
@@ -47,7 +48,7 @@ export function AdminSidebar({ base, ...props }: React.ComponentProps<typeof Sid
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href={base}>
+              <Link href="/admin">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Command className="size-4" />
                 </div>
@@ -55,7 +56,7 @@ export function AdminSidebar({ base, ...props }: React.ComponentProps<typeof Sid
                   <span className="truncate font-medium">Admin</span>
                   <span className="truncate text-xs">Dashboard</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

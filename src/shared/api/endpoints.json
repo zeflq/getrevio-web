@@ -1,0 +1,26 @@
+{
+  "merchants": {
+    "base": "/merchants",
+    "byId": "/merchants/:id",
+    "stats": "/merchants/:id/stats"
+  },
+  "places": {
+    "base": "/places",
+    "byId": "/places/:id"
+  },
+  "campaigns": {
+    "base": "/campaigns",
+    "byId": "/campaigns/:id"
+  },
+  "shortlinks": {
+    "base": "/shortlinks",
+    "byId": "/shortlinks/:id"
+  },
+  "events": {
+    "base": "/events",
+    "byId": "/events/:id"
+  },
+  "stats": {
+    "campaignDaily": "/statsCampaignDaily"
+  }
+}

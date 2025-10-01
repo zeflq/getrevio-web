@@ -4,9 +4,10 @@
       "id": "mer_1",
       "name": "Bella Pizza",
       "email": "owner@bella.com",
-      "plan": "pro",
+      "plan": "free",
       "status": "active",
-      "createdAt": "2025-09-20T10:00:00Z"
+      "createdAt": "2025-09-20T10:00:00Z",
+      "locale": ""
     },
     {
       "id": "mer_2",
@@ -15,6 +16,24 @@
       "plan": "pro",
       "status": "active",
       "createdAt": "2025-09-21T09:00:00Z"
+    },
+    {
+      "id": "9bf3",
+      "name": "eee",
+      "email": "flaviodelmondo@gmail.com",
+      "locale": "d",
+      "plan": "free",
+      "status": "active",
+      "createdAt": "2025-09-30T14:29:45.179Z"
+    },
+    {
+      "id": "456e",
+      "name": "Mohamed Amine Nour",
+      "email": "flaviodelmondo@gmail.com",
+      "locale": "",
+      "plan": "free",
+      "status": "suspended",
+      "createdAt": "2025-09-30T15:03:01.621Z"
     }
   ],
   "places": [
@@ -143,6 +162,29 @@
       "visits": 60,
       "ctaClicks": 20,
       "reviewDelta": 1
+    }
+  ],
+  "merchantStats": [
+    {
+      "id": "ms_mer_1",
+      "merchantId": "mer_1",
+      "places": 2,
+      "campaigns": 2,
+      "shortlinks": 3
+    },
+    {
+      "id": "ms_mer_2",
+      "merchantId": "mer_2",
+      "places": 1,
+      "campaigns": 1,
+      "shortlinks": 1
+    },
+    {
+      "id": "ms_mer_3",
+      "merchantId": "456e",
+      "places": 1,
+      "campaigns": 1,
+      "shortlinks": 1
     }
   ]
 }
