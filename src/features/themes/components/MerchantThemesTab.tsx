@@ -111,7 +111,7 @@ export function MerchantThemesTab({ merchantId, defaultThemeId }: { merchantId: 
 
       {/* Mobile: cards */}
         <DataTableCards
-            controller={controller as any}
+            controller={controller}
             toolbar={toolbar}
             isLoading={isLoading}
             emptyText="No themes found."

@@ -9,7 +9,7 @@ export function createCrudHooks<
   L = T
 >(opts: {
   keyBase: QueryKey;
-  list?: (params: Record<string, any>) => Promise<ListEnvelope<T>>;
+  list?: (params: Record<string, string | number>) => Promise<ListEnvelope<T>>;
   get?: (id: Id) => Promise<T>;
   create?: (input: Partial<T>) => Promise<T>;
   update?: (id: Id, input: Partial<T>) => Promise<T>;
@@ -25,7 +25,7 @@ export function createCrudHooks<
 
   // OLD useList (unchanged)
   const useList = list
-    ? (params: Record<string, any>) =>
+    ? (params: Record<string, string | number>) =>
         useQuery({
           queryKey: [...keyBase, "list", params],
           queryFn: () => list(params),
@@ -34,7 +34,7 @@ export function createCrudHooks<
     : undefined;
 
   const useLite = list && lite
-    ? (params: Record<string, any> = {}, options?: { enabled?: boolean }) => {
+    ? (params: Record<string, string | number> = {}, options?: { enabled?: boolean }) => {
         const map = lite.map ?? ((x: T) => x as unknown as L);
         const paramKey = lite.paramKey ?? "_lite";
         const defaultLimit = lite.defaultLimit ?? 20;

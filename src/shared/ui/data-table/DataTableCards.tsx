@@ -1,15 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { flexRender, Row, Table } from "@tanstack/react-table";
+import { flexRender, type Row, type Table } from "@tanstack/react-table";
 import { Card } from "@/components/ui/card";
 import { DataTablePagination } from "./DataTablePagination";
 import { DataTableToolbarBase } from "./DataTableToolbarBase";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Keep synced with your controller or import the type.
-type DataTableMeta = {
+type DataTableColumnMeta = {
   forTable?: boolean;
+  forCard?: boolean;
   headerText?: string;
 };
 
@@ -72,7 +73,8 @@ export function DataTableCards<TData>({
   const isForCard = React.useCallback(
     (colId: string) => {
       const col = table.getAllLeafColumns().find((c) => c.id === colId);
-      return !(col?.columnDef as any)?.meta?.forTable;
+      const meta = col?.columnDef.meta as DataTableColumnMeta | undefined;
+      return !meta?.forTable;
     },
     [table]
   );
@@ -99,8 +101,8 @@ export function DataTableCards<TData>({
         // ignore and fall back below
       }
 
-      const anyDef = col.columnDef as DataTableMeta;
-      return (anyDef?.headerText as string) || colId;
+      const meta = col.columnDef.meta as DataTableColumnMeta | undefined;
+      return meta?.headerText || colId;
     },
     [table]
   );
@@ -177,7 +179,11 @@ export function DataTableCards<TData>({
                 key={row.id}
                 className={["p-2", extraClass].filter(Boolean).join(" ")}
                 role={onRowClick ? "button" : undefined}
-                onClick={() => (onRowClick ? onRowClick((row.original as any).id, row.original) : undefined)}
+                onClick={() => {
+                  if (!onRowClick) return;
+                  const id = (row.original as { id?: string }).id;
+                  if (id) onRowClick(id, row.original);
+                }}
               >
                 {/* Header: title + actions */}
                 <div className="flex items-start justify-between">

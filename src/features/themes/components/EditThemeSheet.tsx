@@ -69,7 +69,7 @@ export function EditThemeSheet({
       textColor: data.textColor || undefined,
       meta: data.meta && Object.keys(data.meta).length > 0 ? data.meta : undefined,
     };
-    await updateTheme.mutateAsync({ id: themeId, input: cleaned } as any);
+    await updateTheme.mutateAsync({ id: themeId, input: cleaned });
     onSuccess?.();
     onOpenChange(false);
   };

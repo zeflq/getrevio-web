@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import { DataTablePagination } from "./DataTablePagination";
 import { DataTableToolbarBase } from "./DataTableToolbarBase";
+import type { DataTableColumnMeta } from "./types";
 
 // Keep this in sync with your controller type or import it directly.
 type ControllerShape<TData> = {
@@ -79,7 +80,8 @@ export function DataTableTable<TData>({
   const isForTable = React.useCallback(
     (colId: string) => {
       const col = table.getAllLeafColumns().find((c) => c.id === colId);
-      return !(col?.columnDef as any)?.meta?.forCard;
+      const meta = col?.columnDef.meta as DataTableColumnMeta | undefined;
+      return !meta?.forCard;
     },
     [table]
   );

@@ -79,7 +79,7 @@ export function EditCampaignSheet({
       name: campaign.name ?? "",
       slug: campaign.slug ?? "",
       primaryCtaUrl: campaign.primaryCtaUrl ?? "",
-      status: (campaign.status as any) ?? "draft",
+      status: campaign.status ?? "draft",
       theme: {
         brandColor: campaign.theme?.brandColor ?? "",
         logoUrl: campaign.theme?.logoUrl ?? "",
@@ -141,7 +141,7 @@ export function EditCampaignSheet({
       name: campaign?.name ?? "",
       slug: campaign?.slug ?? "",
       primaryCtaUrl: campaign?.primaryCtaUrl ?? "",
-      status: (campaign?.status as any) ?? "draft",
+      status: campaign?.status ?? "draft",
       theme: {
         brandColor: campaign?.theme?.brandColor ?? "",
         logoUrl: campaign?.theme?.logoUrl ?? "",

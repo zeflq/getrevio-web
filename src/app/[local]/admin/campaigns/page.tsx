@@ -189,7 +189,7 @@ export default function AdminCampaignsPage() {
         {/* Mobile: cards */}
         <div className="md:hidden">
           <DataTableCards
-            controller={controller as any}
+            controller={controller}
             toolbar={toolbar}
             isLoading={isLoading}
             emptyText="No campaigns found."
