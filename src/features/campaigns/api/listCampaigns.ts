@@ -1,26 +1,12 @@
 import { http } from '@/shared/lib/http';
 import endpoints from '@/shared/api/endpoints.json';
 import { Campaign } from '@/types/domain';
+import type { Paginated } from '@/types/api';
+import { CampaignQueryParams } from '../model/campaignSchema';
 
-export interface ListCampaignsParams {
-  q?: string;
-  status?: 'draft' | 'active' | 'archived';
-  merchantId?: string;
-  placeId?: string;
-  _page?: number;
-  _limit?: number;
-  _sort?: 'name' | 'createdAt' | 'status';
-  _order?: 'asc' | 'desc';
-}
+export type CampaignResponse = Paginated<Campaign>;
 
-export interface CampaignResponse {
-  data: Campaign[];
-  total: number;
-  page: number;
-  totalPages: number;
-}
-
-export async function listCampaigns(params: ListCampaignsParams = {}): Promise<CampaignResponse> {
+export async function listCampaigns(params: CampaignQueryParams = {}): Promise<CampaignResponse> {
   const searchParams = new URLSearchParams();
 
   if (params.q) searchParams.set('q', params.q);

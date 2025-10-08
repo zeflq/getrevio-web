@@ -1,3 +1,5 @@
-export * from "./DataTable";
-export * from "./DataTableToolbar";
+export * from "./DataTableTable";
+export * from "./DataTableToolbarBase";
 export * from "./DataTablePagination";
+
+export * from "./RowActions";

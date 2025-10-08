@@ -1,13 +1,10 @@
-export * from './components/MerchantsTable';
+export * from './components/columns';
 export * from './components/CreateMerchantDialog';
 export * from './components/EditMerchantSheet';
 export * from './components/DeleteMerchantDialog';
 export * from './components/MerchantDetailsCard';
 export * from './components/MerchantHeader';
 export * from './components/QuickStatsCard';
-export * from './hooks/useMerchants';
-export * from './hooks/useMerchant';
 export * from './hooks/useMerchantQuickStats';
-export * from './hooks/useCreateMerchant';
-export * from './hooks/useUpdateMerchant';
-export * from './hooks/useDeleteMerchant';
+export * from './hooks/useMerchantCrud';
+export type { MerchantLite } from './model/merchantSchema';

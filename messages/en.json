@@ -1,13 +1,13 @@
 {
-  "login": {
-    "title": "Welcome back",
-    "email": "Email",
-    "password": "Password",
-    "show": "Show",
-    "hide": "Hide",
-    "submit": "Sign in",
-    "success": "Logged in successfully",
-    "error": "Invalid credentials"
+  "place": {
+    "form": {
+    },
+    "message": {
+      "slugValid": "Slug is valid."
+    },
+    "error": {
+      "slugTaken": "This slug is already taken. Please choose another."
+    }
   },
   "common": {
     "loading": "Loading...",

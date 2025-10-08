@@ -9,19 +9,48 @@ export interface Merchant {
   name: string;
   email?: string;
   locale?: string;
+  defaultThemeId?: string
   plan: 'free' | 'pro' | 'enterprise';
   status: 'active' | 'suspended';
   createdAt: ISODate;
 }
+export type Theme = {
+  id: string;
+  merchantId: string;
+  name: string;
+  logoUrl?: string;
+  brandColor?: string;
+  accentColor?: string;
+  textColor?: string;
+  meta?: Record<string, string | number>;
+  createdAt: string;
+  updatedAt: string;
+};
+export type LandingDefaults = {
+  title?: string;
+  subtitle?: string;
+  primaryCtaLabel?: string;
+  primaryCtaUrl?: string;
+  secondaryCtaLabel?: string;
+  secondaryCtaUrl?: string;
+};
 
 export interface Place {
-  id: UUID;               // e.g. "pl_bella_1"
-  merchantId: UUID;       // FK -> merchants.id
+  id: string;
+  merchantId: string;
   localName: string;
-  address: string;
-  googleUrl: string;      // writereview?placeid=...
-  tripadvisorUrl?: string;
-  createdAt: ISODate;
+  slug: string;                      // globally unique
+  address?: string;
+  // visuals
+  themeId?: string;                  // overrides merchant default
+  // landing defaults (when no campaign override)
+  landingDefaults?: LandingDefaults;
+  // optional platform reference (kept for future integrations)
+  googlePlaceId?: string;
+  // shortlink integration
+  defaultShortlinkCode?: string;     // FK → Shortlink.code, code of sl:{code} in Redis, created by API
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Campaign {
@@ -38,13 +67,42 @@ export interface Campaign {
   createdAt: ISODate;
 }
 
+// Add a union type for shortlink target
+export type ShortlinkTarget =
+  | { t: "campaign"; cid: string; pid: string }
+  | { t: "place"; pid: string }
+  | { t: "url" };
+
 export interface Shortlink {
   id: string;             // short id written to NFC/QR (base62-ish, 7–10 chars)
+  code: string;           // canonical code used in public URLs / Redis
   merchantId: UUID;       // FK -> merchants.id
-  campaignId: UUID;       // FK -> campaigns.id
-  targetSlug: string;     // denormalized Campaign.slug for ultra-fast redirect
-  channel: Channel;       // QR | NFC | SMS | OTHER
-  status: 'active' | 'paused' | 'retired';
+
+  // New targeting model
+  target: ShortlinkTarget;
+
+  // New channel format (free-form)
+  channel?: string;                  // qr | nfc | email | web | print | custom
+
+  // Optional overrides
+  themeId?: string | null;           // enforce theme for this shortlink
+
+  // New runtime/redis status fields
+  active: boolean;                   // mirror of Redis a=1/0
+  redisStatus?: "ok" | "missing" | "error"; // computed field (not stored permanently)
+
+  // Optional UTM params
+  utm?: {
+    source?: string;
+    medium?: string;
+    campaign?: string;
+    term?: string;
+    content?: string;
+  };
+
+  // Optional expiry
+  expiresAt?: string | null;         // ISO
+
   createdAt: ISODate;
   updatedAt: ISODate;
 }

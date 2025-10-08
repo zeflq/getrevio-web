@@ -3,12 +3,8 @@ import endpoints from '@/shared/api/endpoints.json';
 import { Merchant } from '@/types/domain';
 import { MerchantUpdateInput } from '../model/merchantSchema';
 
-export interface UpdateMerchantParams {
-  id: string;
-  data: MerchantUpdateInput;
-}
 
-export async function updateMerchant(params: UpdateMerchantParams): Promise<Merchant> {
-  const endpoint = endpoints.merchants.byId.replace(':id', params.id);
-  return http.patch<Merchant>(endpoint, params.data);
+export async function updateMerchant(id:string , data: MerchantUpdateInput): Promise<Merchant> {
+  const endpoint = endpoints.merchants.byId.replace(':id', id);
+  return http.patch<Merchant>(endpoint, data);
 }

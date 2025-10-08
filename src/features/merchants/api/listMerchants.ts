@@ -1,24 +1,12 @@
 import { http } from '@/shared/lib/http';
 import endpoints from '@/shared/api/endpoints.json';
 import { Merchant } from '@/types/domain';
-export interface ListMerchantsParams {
-  q?: string;
-  plan?: 'free' | 'pro' | 'enterprise';
-  status?: 'active' | 'suspended';
-  _page?: number;
-  _limit?: number;
-  _sort?: 'name' | 'createdAt' | 'plan' | 'status';
-  _order?: 'asc' | 'desc';
-}
+import type { Paginated } from '@/types/api';
+import { MerchantQueryParams } from '../model/merchantSchema';
 
-export interface MerchantResponse {
-  data: Merchant[];
-  total: number;
-  page: number;
-  totalPages: number;
-}
+export type MerchantResponse = Paginated<Merchant>;
 
-export async function listMerchants(params: ListMerchantsParams = {}): Promise<MerchantResponse> {
+export async function listMerchants(params: MerchantQueryParams = {}): Promise<MerchantResponse> {
   const searchParams = new URLSearchParams();
 
   if (params.q) searchParams.set('q', params.q);
@@ -28,6 +16,7 @@ export async function listMerchants(params: ListMerchantsParams = {}): Promise<M
   if (params._limit) searchParams.set('_limit', params._limit.toString());
   if (params._sort) searchParams.set('_sort', params._sort);
   if (params._order) searchParams.set('_order', params._order);
+  if (params._lite) searchParams.set('_lite', params._lite.toString());
 
   const queryString = searchParams.toString();
   const endpoint = `${endpoints.merchants.base}${queryString ? `?${queryString}` : ''}`;

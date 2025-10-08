@@ -21,7 +21,7 @@ export default async function AdminLayout({
           </div>
           <LanguageSwitcher className="px-4" />
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
+        {children}
       </SidebarInset>
     </SidebarProvider>
   );

@@ -12,9 +12,9 @@ export interface MerchantHeaderProps {
   isLoading?: boolean;
 }
 
-export function MerchantHeader({ merchant }: MerchantHeaderProps) {
+export function MerchantHeader({ merchant, isLoading = false }: MerchantHeaderProps) {
   const [editSheetOpen, setEditSheetOpen] = useState(false);
-  if ((MerchantHeader as any).prototype && (arguments[0] as any)?.isLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-between">
         <div className="space-y-2">

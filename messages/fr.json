@@ -1,13 +1,13 @@
 {
-  "login": {
-    "title": "Bon retour",
-    "email": "E-mail",
-    "password": "Mot de passe",
-    "show": "Afficher",
-    "hide": "Masquer",
-    "submit": "Se connecter",
-    "success": "Connexion réussie",
-    "error": "Identifiants invalides"
+  "place": {
+    "form": {
+    },
+    "message": {
+      "slugValid": "Slug valide."
+    },
+    "error": {
+      "slugTaken": "Ce slug est déjà pris. Veuillez en choisir un autre."
+    }
   },
   "common": {
     "loading": "Chargement...",

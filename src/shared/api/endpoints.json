@@ -6,11 +6,17 @@
   },
   "places": {
     "base": "/places",
-    "byId": "/places/:id"
+    "byId": "/places/:id",
+    "checkSlug": "/places/slug-check"
   },
   "campaigns": {
     "base": "/campaigns",
     "byId": "/campaigns/:id"
+  },
+  "themes": {
+    "base": "/themes",
+    "byId": "/themes/:id",
+    "setDefaultForMerchant": "/merchants/:merchantId/themes/:themeId/default"
   },
   "shortlinks": {
     "base": "/shortlinks",
