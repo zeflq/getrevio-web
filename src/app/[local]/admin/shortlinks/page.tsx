@@ -13,14 +13,16 @@ import { DataTableToolbarBase } from "@/shared/ui/data-table/DataTableToolbarBas
 import { useDataTableController } from "@/shared/ui/data-table/useDataTableController";
 import { RHFSelect } from "@/components/form/controls";
 
+import { useAction } from "next-safe-action/hooks";
 import {
   shortlinkColumns,
   useShortlinksList,
   CreateShortlinkDialog,
   EditShortlinkSheet,
   DeleteShortlinkDialog,
+  checkRedisShortlinksAction,
 } from "@/features/shortlinks";
-import { useMerchantsLite } from "@/features/merchants";
+import { useMerchantsLite } from "@/features/merchants/hooks/useMerchantCrud";
 
 const SORTABLE_COLUMNS = ["code", "merchantId", "channel", "createdAt", "updatedAt"] as const;
 
@@ -78,22 +80,56 @@ export default function AdminShortlinksPage() {
   const totalPages = shortlinksResponse?.totalPages ?? 1;
   const total = shortlinksResponse?.total ?? 0;
 
+  // Redis status: check existence for visible codes and decorate rows
+  const codes = React.useMemo(() => Array.from(new Set(rows.map((r) => r.code))), [rows]);
+  const [redisMap, setRedisMap] = React.useState<Record<string, "ok" | "missing" | "error">>({});
+  const { execute: checkRedis } = useAction(checkRedisShortlinksAction, {
+    onSuccess: ({ data }) => {
+      const next: Record<string, "ok" | "missing" | "error"> = {};
+      data.items.forEach(({ code, exists }: { code: string; exists: boolean }) => {
+        next[code] = exists ? "ok" : "missing";
+      });
+      setRedisMap(next);
+    },
+    onError: () => {
+      setRedisMap((prev) => {
+        const next = { ...prev };
+        codes.forEach((code) => (next[code] = "error"));
+        return next;
+      });
+    },
+  });
+
+  React.useEffect(() => {
+    if (codes.length) {
+      checkRedis({ codes });
+    }
+  }, [codes, checkRedis]);
+
+  const decoratedRows = React.useMemo(
+    () => rows.map((sl) => ({ ...sl, redisStatus: redisMap[sl.code] ?? sl.redisStatus ?? "unknown" })),
+    [rows, redisMap]
+  );
   const [createOpen, setCreateOpen] = React.useState(false);
-  const [editCode, setEditCode] = React.useState<string | undefined>(undefined);
+  const [editId, setEditId] = React.useState<string | undefined>(undefined);
+  const [deleteId, setDeleteId] = React.useState<string | undefined>(undefined);
   const [deleteCode, setDeleteCode] = React.useState<string | undefined>(undefined);
 
   const columns = React.useMemo(
     () =>
       shortlinkColumns({
-        onEdit: (code) => setEditCode(code),
-        onDelete: (code) => setDeleteCode(code),
+        onEdit: (id) => setEditId(id),
+        onDelete: (id, code) => {
+          setDeleteId(id);
+          setDeleteCode(code);
+        },
       }),
-    [setEditCode, setDeleteCode]
+    [setEditId, setDeleteId, setDeleteCode]
   );
 
   const controller = useDataTableController({
     columns,
-    data: rows,
+    data: decoratedRows,
     mode: "server",
     pageCount: totalPages,
     state: { pageIndex, pageSize, sorting, columnFilters },
@@ -116,8 +152,8 @@ export default function AdminShortlinksPage() {
             options={merchantsLiteQuery.data ?? []}
             value={merchantId ?? null}
             onChange={(value) => setColumnFilters((prev) => upsertFilter(prev, "merchantId", value ?? undefined))}
-            getOptionValue={(merchant) => merchant.id}
-            getOptionLabel={(merchant) => merchant.name}
+            getOptionValue={(merchant) => merchant.value}
+            getOptionLabel={(merchant) => merchant.label}
             placeholder="Merchant"
             searchPlaceholder="Search merchants…"
             loading={merchantsLiteQuery.isLoading}
@@ -200,7 +236,7 @@ export default function AdminShortlinksPage() {
           serverTotalRowsLabel={`${total} shortlink(s)`}
           cardActionsColumnId="actions"
           cardExcludeColumnIds={["actions"]}
-          onRowClick={(_id, row) => setEditCode(row.code)}
+          onRowClick={(_id, row) => setEditId(row.id)}
         />
       </div>
 
@@ -208,25 +244,30 @@ export default function AdminShortlinksPage() {
         open={createOpen}
         onOpenChange={setCreateOpen}
         merchantsLite={merchantsLiteQuery.data ?? []}
+        onSuccess={() => controller.table.resetRowSelection()}
       />
 
-      {editCode && (
+      {editId && (
         <EditShortlinkSheet
-          code={editCode}
-          open={!!editCode}
+          id={editId}
+          open={!!editId}
           onOpenChange={(open) => {
-            if (!open) setEditCode(undefined);
+            if (!open) setEditId(undefined);
           }}
           merchantsLite={merchantsLiteQuery.data ?? []}
         />
       )}
 
-      {deleteCode && (
+      {deleteId && deleteCode && (
         <DeleteShortlinkDialog
+          id={deleteId}
           code={deleteCode}
-          open={!!deleteCode}
+          open={!!deleteId}
           onOpenChange={(open) => {
-            if (!open) setDeleteCode(undefined);
+            if (!open) {
+              setDeleteId(undefined);
+              setDeleteCode(undefined);
+            }
           }}
         />
       )}

@@ -3,25 +3,32 @@
 
 import * as React from "react";
 import { ConfirmByNameDialog } from "@/components/ui/confirmByNameDialog";
-import { useCampaignItem, useDeleteCampaign } from "../hooks/useCampaignCrud";
+import { useDeleteCampaign } from "../hooks/useCampaignCrud";
 
 export interface DeleteCampaignDialogProps {
   campaignId: string;
+  campaignName: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
 export function DeleteCampaignDialog({
   campaignId,
+  campaignName,
   open,
   onOpenChange,
 }: DeleteCampaignDialogProps) {
-  const { data: campaign } = useCampaignItem(campaignId);
-  const deleteCampaign = useDeleteCampaign();
+  const { execute, isExecuting } = useDeleteCampaign<
+    { id: string },
+    { ok?: boolean }
+  >({
+    onSuccess: () => {
+      onOpenChange(false);
+    },
+  });
 
-  const handleConfirm = async () => {
-    await deleteCampaign.mutateAsync(campaignId);
-    onOpenChange(false);
+  const handleConfirm = () => {
+    execute({ id: campaignId });
   };
 
   return (
@@ -30,12 +37,12 @@ export function DeleteCampaignDialog({
       onOpenChange={onOpenChange}
       title="Delete Campaign"
       description="This action cannot be undone. This will permanently delete the campaign and related data."
-      expectedName={campaign?.name}
+      expectedName={campaignName}
       confirmPromptLabel="Type"
       inputPlaceholder="Enter campaign name"
       confirmLabel="Delete Campaign"
       confirmVariant="destructive"
-      loading={deleteCampaign.isPending}
+      loading={isExecuting}
       onConfirm={handleConfirm}
       preventCloseWhileLoading
     />

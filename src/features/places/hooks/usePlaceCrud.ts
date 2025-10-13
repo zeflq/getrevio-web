@@ -1,35 +1,51 @@
-import { createCrudHooks } from "@/hooks/createCrudHooks"
-import { Place } from "@/types/domain"
-import { listPlaces, ListPlacesParams } from "../api/listPlaces"
-import { getPlaceById } from "../api/getPlaceById"
-import { createPlace } from "../api/createPlace"
-import { updatePlace } from "../api/updatePlace"
-import { deletePlace } from "../api/deletePlace"
-import type { PlaceCreateInput, PlaceUpdateInput, PlaceLite } from "../model/placeSchema"
+import {
+  createPlaceAction,
+  updatePlaceAction,
+  deletePlaceAction,
+} from "@/features/places/server/actions";
+import { createCrudBridge, type ListEnvelope } from "@/hooks/createCrudBridge";
+import { http } from "@/shared/lib/http";
+import type { LiteListe } from "@/types/lists";
+import type { PlaceListItem } from "../server/queries";
 
-// Build CRUD hooks using the shared utility and places API
-const crud = createCrudHooks<Place, string, PlaceLite>({
+const buildQuery = (params: Record<string, unknown>) => {
+  const search = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null) return;
+    search.append(key, String(value));
+  });
+  return search.toString();
+};
+
+const list = (params: Record<string, unknown>) =>
+  http.get<ListEnvelope<PlaceListItem>>(
+    `/api/places?${buildQuery(params)}`,
+    { cache: "no-store" }
+  );
+
+const get = (id: string) => http.get<PlaceListItem>(`/api/places/${id}`, { cache: "no-store" });
+
+const liteList = (params: Record<string, unknown>) =>
+  http.get<LiteListe[]>(`/api/places/lite?${buildQuery(params)}`, {
+    cache: "no-store",
+  });
+
+const bridge = createCrudBridge<PlaceListItem, string, LiteListe>({
   keyBase: ["places"],
-  list: (params) => listPlaces(params as ListPlacesParams),
-  get: (id) => getPlaceById(id),
-  create: (input) => createPlace(input as PlaceCreateInput),
-  update: (id, input) => updatePlace(id, input as PlaceUpdateInput),
-  remove: (id) => deletePlace(id),
-  staleTimeMs: 60_000,
-  lite: {
-    map: (p) => ({ id: p.id, localName: p.localName }),
-    paramKey: "_lite",
-    defaultLimit: 20,
+  list,
+  get,
+  liteList,
+  actions: {
+    create: createPlaceAction,
+    update: updatePlaceAction,
+    remove: deletePlaceAction,
   },
-})
+  getIdFromActionInput: (input) => (input as { id?: string } | undefined)?.id,
+});
 
-// Export typed hook wrappers for convenient usage
-export const usePlacesList = (params: ListPlacesParams = {}) => crud.useList!(params)
-export const usePlacesLite = (
-  params: Omit<ListPlacesParams, "_lite"> = {},
-  opts?: { enabled?: boolean }
-) => crud.useLite!(params, opts);
-export const usePlaceItem = (id?: string) => crud.useItem!(id)
-export const useCreatePlace = () => crud.useCreate!()
-export const useUpdatePlace = () => crud.useUpdate!()
-export const useDeletePlace = () => crud.useRemove!()
+export const usePlacesList = bridge.useList!;
+export const usePlaceItem = bridge.useItem!;
+export const usePlacesLite = bridge.useLite!;
+export const useCreatePlace = bridge.useCreateAction!;
+export const useUpdatePlace = bridge.useUpdateAction!;
+export const useDeletePlace = bridge.useRemoveAction!;

@@ -8,18 +8,30 @@ import {
   iconAction,
 } from "@/shared/ui/IconActionGroup";
 import type { Shortlink } from "@/types/domain";
+import { Link } from "@/i18n/navigation";
+import * as React from "react";
 
 const DEFAULT_SHORT_URL_BASE = process.env.NEXT_PUBLIC_SHORT_URL_BASE ?? "https://getrevio.app";
 
 
 
-const formatTarget = (target: Shortlink["target"] | undefined | null) => {
+const formatTarget = (
+  target: Shortlink["target"] | undefined | null
+): React.ReactNode => {
   if (!target) return "—";
   switch (target.t) {
     case "campaign":
-      return `Campaign ${target.cid} → Place ${target.pid}`;
+      return (
+        <Link href={`/admin/campaigns/${target.cid}`} className="text-primary underline-offset-4 hover:underline">
+          Campaign
+        </Link>
+      );
     case "place":
-      return `Place ${target.pid}`;
+      return (
+        <Link href={`/admin/places/${target.pid}`} className="text-primary underline-offset-4 hover:underline">
+          Place
+        </Link>
+      );
     default:
       return "Custom URL";
   }
@@ -46,8 +58,8 @@ export type ShortlinkRow = Pick<
 >;
 
 export function shortlinkColumns(opts: {
-  onEdit: (code: string) => void;
-  onDelete: (code: string) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string, code: string) => void;
   onShowQr?: (code: string, shortUrl: string) => void; // optional QR handler
   onCopied?: (what: "code" | "url") => void;           // optional toast hook
   getShortUrl?: (code: string) => string;              // override short URL builder
@@ -150,13 +162,13 @@ export function shortlinkColumns(opts: {
                   },
                   // Edit
                   {
-                    onClick: () => opts.onEdit(sl.code),
+                    onClick: () => opts.onEdit(sl.id),
                     icon: <Pencil className="h-4 w-4" />,
                     ariaLabel: "Edit",
                   },
                   // Delete
                   {
-                    onClick: () => opts.onDelete(sl.code),
+                    onClick: () => opts.onDelete(sl.id, sl.code),
                     icon: <Trash2 className="h-4 w-4" />,
                     ariaLabel: "Delete",
                     variant: "linkDestructive",

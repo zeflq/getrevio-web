@@ -5,7 +5,7 @@ import * as React from "react";
 import { useFormContext } from "react-hook-form";
 import { RHFInput, RHFCombobox } from "@/components/form/controls";
 import { useFlattenErrors } from "@/components/form/useFlattenErrors";
-import type { MerchantLite } from "@/features/merchants";
+import type { LiteListe } from "@/types/lists";
 import { LandingDefaultsFields } from "@/features/landing";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
@@ -14,7 +14,7 @@ type Props = {
   mode: "create" | "edit";
   disabled?: boolean;
   merchantId?: string;
-  merchantsLite?: MerchantLite[];
+  merchantsLite?: LiteListe[];
   slugSuffix?: React.ReactNode;
   slugDescription?: string;
   existingSlug?: string;
@@ -56,12 +56,12 @@ export function PlaceFormFields({
       <TabsContent value="info">
         <div className="space-y-4">
           {!merchantId ? (
-            <RHFCombobox<MerchantLite>
+            <RHFCombobox<LiteListe>
               name="merchantId"
               label="Merchant"
               options={merchantsLite}
-              getOptionValue={(m) => String(m.id)}
-              getOptionLabel={(m) => m.name}
+              getOptionValue={(m) => m.value}
+              getOptionLabel={(m) => m.label}
               placeholder="Select merchant"
               searchPlaceholder="Search merchants…"
               requiredStar

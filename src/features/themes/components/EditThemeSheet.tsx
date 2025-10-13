@@ -26,7 +26,15 @@ export function EditThemeSheet({
   onSuccess,
 }: EditThemeSheetProps) {
   const { data: theme, isLoading } = useThemeItem(themeId);
-  const updateTheme = useUpdateTheme();
+  const { execute, isExecuting } = useUpdateTheme<
+    { id: string } & ThemeUpdateInput,
+    { ok?: boolean }
+  >({
+    onSuccess: () => {
+      onSuccess?.();
+      onOpenChange(false);
+    },
+  });
 
   const form = useForm<ThemeUpdateInput>({
     resolver: zodResolver(themeUpdateSchema),
@@ -60,7 +68,7 @@ export function EditThemeSheet({
     });
   }, [theme, reset]);
 
-  const onSubmit = async (data: ThemeUpdateInput) => {
+  const onSubmit = (data: ThemeUpdateInput) => {
     const cleaned: ThemeUpdateInput = {
       ...data,
       logoUrl: data.logoUrl || undefined,
@@ -69,12 +77,10 @@ export function EditThemeSheet({
       textColor: data.textColor || undefined,
       meta: data.meta && Object.keys(data.meta).length > 0 ? data.meta : undefined,
     };
-    await updateTheme.mutateAsync({ id: themeId, input: cleaned });
-    onSuccess?.();
-    onOpenChange(false);
+    execute({ id: themeId, ...cleaned });
   };
 
-  const isBusy = updateTheme.isPending || isLoading;
+  const isBusy = isExecuting || isLoading;
 
   // Reset back to loaded values when closing the sheet
   const handleOpenChange = (next: boolean) => {

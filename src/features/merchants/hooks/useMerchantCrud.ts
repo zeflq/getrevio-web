@@ -1,34 +1,77 @@
-import { createCrudHooks } from "@/hooks/createCrudHooks";
-import { Merchant } from "@/types/domain";
-import { listMerchants } from "../api/listMerchants";
-import { getMerchantById } from "../api/getMerchantById";
-import { createMerchant } from "../api/createMerchant";
-import { updateMerchant } from "../api/updateMerchant";
-import { deleteMerchant } from "../api/deleteMerchant";
-import type { MerchantCreateInput, MerchantLite, MerchantQueryParams, MerchantUpdateInput } from "../model/merchantSchema";
+// features/merchants/hooks/useMerchantCrud.ts
+"use client";
 
-// Define the lite type (only the minimal fields you need in dropdowns, etc.)
+import {
+  createMerchantAction,
+  updateMerchantAction,
+  deleteMerchantAction,
+} from "@/features/merchants/server/actions";
+import { createCrudBridge, type ListEnvelope } from "@/hooks/createCrudBridge";
+import { http } from "@/shared/lib/http";
+import type { LiteListe } from "@/types/lists";
 
-// Build CRUD hooks using the shared utility and merchants API
-const crud = createCrudHooks<Merchant, string, MerchantLite>({
+type MerchantListItem = {
+  id: string;
+  name: string;
+  email: string;
+  defaultThemeId?: string;
+  plan: "free" | "pro" | "enterprise";
+  status: "active" | "suspended";
+  createdAt: string;
+};
+
+const buildQuery = (params: Record<string, unknown>) => {
+  const search = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null) return;
+    search.append(key, String(value));
+  });
+  return search.toString();
+};
+
+// REST readers
+const list = (params: Record<string, unknown>) =>
+  http.get<ListEnvelope<MerchantListItem>>(
+    `/api/merchants?${buildQuery(params)}`,
+    { cache: "no-store" }
+  );
+
+const get = (id: string) =>{
+  return  http.get<MerchantListItem>(`/api/merchants/${id}`, { cache: "no-store" });
+}
+
+const liteList = (params: Record<string, unknown>) =>
+  http.get<LiteListe[]>(`/api/merchants/lite?${buildQuery(params)}`, {
+    cache: "no-store",
+  });
+
+// Build bridge
+const bridge = createCrudBridge<MerchantListItem, string, LiteListe>({
   keyBase: ["merchants"],
-  list: (params) => listMerchants(params as MerchantQueryParams),
-  get: (id) => getMerchantById(id),
-  create: (input) => createMerchant(input as MerchantCreateInput),
-  update: (id, input) => updateMerchant(id, input as MerchantUpdateInput),
-  remove: (id) => deleteMerchant(id),
-  staleTimeMs: 60_000,
-  lite: {
-    map: (m) => ({ id: m.id, name: m.name }), // mapping full Merchant -> MerchantLite
-    paramKey: "_lite",
-    defaultLimit: 20,
+  list,
+  get,
+  liteList,
+  actions: {
+    create: createMerchantAction,
+    update: updateMerchantAction,
+    remove: deleteMerchantAction,
   },
+  getIdFromActionInput: (i) => i?.id,
 });
 
-// Export typed hook wrappers for convenient usage
-export const useMerchantsList = (params: MerchantQueryParams = {}) => crud.useList!(params);
-export const useMerchantsLite = (params: Omit<MerchantQueryParams, "_lite"> = {}) => crud.useLite!(params);
-export const useMerchantItem = (id?: string) => crud.useItem!(id);
-export const useCreateMerchant = () => crud.useCreate!();
-export const useUpdateMerchant = () => crud.useUpdate!();
-export const useDeleteMerchant = () => crud.useRemove!();
+// 🔽 Expose ALL hooks with nice names
+export const useMerchantsList = bridge.useList!;          // (params) -> { data, total, totalPages }
+export const useMerchantItem = bridge.useItem!;           // (id) -> merchant
+export const useMerchantsLite = bridge.useLite!;          // (params) -> { value, label }[]
+
+export const useCreateMerchant = bridge.useCreateAction!; // () -> { execute, isExecuting, result, ... }
+export const useUpdateMerchant = bridge.useUpdateAction!;
+export const useDeleteMerchant = bridge.useRemoveAction!;
+
+// Optional: export keys if you want to reuse them elsewhere
+export const MERCHANT_KEYS = {
+  all: ["merchants"] as const,
+  list: (f: unknown) => ["merchants", "list", f] as const,
+  item: (id: string | undefined) => ["merchants", "item", id] as const,
+  lite: (f: unknown) => ["merchants", "lite", f] as const,
+};

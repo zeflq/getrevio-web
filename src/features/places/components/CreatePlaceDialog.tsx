@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogForm } from "@/components/form/DialogForm";
 import { placeCreateSchema, type PlaceCreateInput } from "../model/placeSchema";
 import { useCreatePlace } from "../hooks/usePlaceCrud";
-import type { MerchantLite } from "@/features/merchants";
+import type { LiteListe } from "@/types/lists";
 import { usePlaceSlugCheck } from "../hooks/usePlaceSlugCheck";
 import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { PlaceFormFields } from "./PlaceFormFields";
@@ -16,7 +16,7 @@ export interface CreatePlaceDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   merchantId?: string;
-  merchantsLite?: MerchantLite[];
+  merchantsLite?: LiteListe[];
   onSuccess?: () => void;
 }
 
@@ -27,7 +27,13 @@ export function CreatePlaceDialog({
   merchantsLite = [],
   onSuccess,
 }: CreatePlaceDialogProps) {
-  const createPlace = useCreatePlace();
+  const { execute, isExecuting } = useCreatePlace<PlaceCreateInput, { id?: string }>({
+    onSuccess: () => {
+      resetForm();
+      onOpenChange(false);
+      onSuccess?.();
+    },
+  });
 
   const methods = useForm<PlaceCreateInput>({
     resolver: zodResolver(placeCreateSchema),
@@ -74,11 +80,8 @@ export function CreatePlaceDialog({
       },
     });
 
-  const onSubmit = async (data: PlaceCreateInput) => {
-    await createPlace.mutateAsync(data);
-    resetForm();
-    onOpenChange(false);
-    onSuccess?.();
+  const onSubmit = (data: PlaceCreateInput) => {
+    execute(data);
   };
 
   // Slug availability (debounced)
@@ -112,7 +115,7 @@ export function CreatePlaceDialog({
   (methods as MethodsWithSlot)._slot = (
     <PlaceFormFields
       mode="create"
-      disabled={createPlace.isPending}
+      disabled={isExecuting}
       merchantId={merchantId}
       merchantsLite={merchantsLite}
       slugSuffix={slugSuffix}
@@ -131,9 +134,9 @@ export function CreatePlaceDialog({
       description="Add a new place. Fill in the required information below."
       methods={methods}
       onSubmit={onSubmit}
-      isBusy={createPlace.isPending}
+      isBusy={isExecuting}
       isReady={true}
-      submitLabel={createPlace.isPending ? "Creating..." : "Create Place"}
+      submitLabel={isExecuting ? "Creating..." : "Create Place"}
     />
   );
 }

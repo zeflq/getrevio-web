@@ -2,22 +2,18 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription,
+} from "@/components/ui/form";
+import { cn } from "@/lib/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type Option = { value: string; label: string; disabled?: boolean };
 
 type RHFSelectProps = {
-  name: string;             // required
-  label: string;            // required
-  options: Option[];        // required
+  name: string;
+  label: string;
+  options: Option[];
   placeholder?: string;
   description?: string;
   disabled?: boolean;
@@ -26,13 +22,17 @@ type RHFSelectProps = {
   labelClassName?: string;
   hideLabel?: boolean;
   onValueChange?: (value: string | undefined) => void;
+  allowClear?: boolean; // optional "None" choice
+  clearLabel?: string;
 };
+
+const CLEAR_SENTINEL = "__CLEAR__";
 
 export function RHFSelect({
   name,
   label,
   options,
-  placeholder,
+  placeholder = "Select…",
   description,
   disabled,
   requiredStar,
@@ -40,6 +40,8 @@ export function RHFSelect({
   labelClassName,
   hideLabel,
   onValueChange,
+  allowClear = false,
+  clearLabel = "None",
 }: RHFSelectProps) {
   const { control } = useFormContext();
 
@@ -52,11 +54,12 @@ export function RHFSelect({
           <FormLabel className={cn(hideLabel && "sr-only", labelClassName)}>
             {label} {requiredStar ? <span className="text-destructive">*</span> : null}
           </FormLabel>
+
           <FormControl className="w-full">
             <Select
-              value={(field.value as string | undefined) ?? ""}
+              value={(field.value as string | undefined) ?? undefined} // ← never ""
               onValueChange={(val) => {
-                const next = val === "" ? undefined : val;
+                const next = val === CLEAR_SENTINEL ? undefined : val;
                 field.onChange(next);
                 onValueChange?.(next);
               }}
@@ -65,12 +68,11 @@ export function RHFSelect({
               <SelectTrigger className="w-full">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
+
               <SelectContent>
-                {placeholder ? (
-                  <SelectItem value="">
-                    {placeholder}
-                  </SelectItem>
-                ) : null}
+                {allowClear && (
+                  <SelectItem value={CLEAR_SENTINEL}>{clearLabel}</SelectItem>
+                )}
                 {options.map((o) => (
                   <SelectItem key={o.value} value={o.value} disabled={o.disabled}>
                     {o.label}
@@ -79,6 +81,7 @@ export function RHFSelect({
               </SelectContent>
             </Select>
           </FormControl>
+
           {description ? <FormDescription>{description}</FormDescription> : null}
           <FormMessage className="text-xs" />
         </FormItem>

@@ -34,13 +34,6 @@ export const merchantUpdateSchema = merchantCreateSchema.partial().extend({
 export type MerchantCreateInput = z.infer<typeof merchantCreateSchema>;
 export type MerchantUpdateInput = z.infer<typeof merchantUpdateSchema>;
 
-export const merchantLiteSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-});
-export type MerchantLite = z.infer<typeof merchantLiteSchema>;
-
-
 export interface MerchantQueryParams {
   q?: string;
   plan?: 'free' | 'pro' | 'enterprise';
@@ -51,3 +44,31 @@ export interface MerchantQueryParams {
   _order?: 'asc' | 'desc';
   _lite?: boolean;
 }
+
+/** Accepts your current front params, outputs normalized filters */
+export const merchantFiltersSchema = z
+  .object({
+    q: z.string().optional(),
+    plan: z.enum(["free", "pro", "enterprise"]).optional(),
+    status: z.enum(["active", "suspended"]).optional(),
+
+    // current names you use on the front:
+    _page: z.coerce.number().int().min(1).optional(),
+    _limit: z.coerce.number().int().min(1).max(100).optional(),
+    _sort: z.enum(["name", "createdAt", "plan", "status"]).optional(),
+    _order: z.enum(["asc", "desc"]).optional(),
+    _lite: z.coerce.boolean().optional(),
+  })
+  .transform((p) => ({
+    q: p.q,
+    plan: p.plan,
+    status: p.status,
+    page: p._page ?? 1,
+    pageSize: p._limit ?? 10,
+    sort: p._sort ?? "createdAt" as const,
+    order: p._order ?? "desc" as const,
+    lite: p._lite ?? false,
+  }));
+
+/** The normalized server type your queries will use */
+export type MerchantFilters = z.output<typeof merchantFiltersSchema>;

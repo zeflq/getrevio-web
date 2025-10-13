@@ -48,7 +48,6 @@ export interface Place {
   // optional platform reference (kept for future integrations)
   googlePlaceId?: string;
   // shortlink integration
-  defaultShortlinkCode?: string;     // FK → Shortlink.code, code of sl:{code} in Redis, created by API
   createdAt: string;
   updatedAt: string;
 }
@@ -58,7 +57,7 @@ export interface Campaign {
   merchantId: UUID;       // FK -> merchants.id
   placeId: UUID;          // FK -> places.id
   name: string;
-  slug: string;           // landing slug, e.g. "bella-pizza-sept-2025"
+  slug?: string;          // optional human-friendly slug
   primaryCtaUrl: string;  // Google/Tripadvisor review URL
   theme?: { brandColor?: string; logoUrl?: string };
   status: 'draft' | 'active' | 'archived';
@@ -69,9 +68,8 @@ export interface Campaign {
 
 // Add a union type for shortlink target
 export type ShortlinkTarget =
-  | { t: "campaign"; cid: string; pid: string }
-  | { t: "place"; pid: string }
-  | { t: "url" };
+  | { t: "campaign"; cid: string;}
+  | { t: "place"; pid: string };
 
 export interface Shortlink {
   id: string;             // short id written to NFC/QR (base62-ish, 7–10 chars)
@@ -101,7 +99,7 @@ export interface Shortlink {
   };
 
   // Optional expiry
-  expiresAt?: string | null;         // ISO
+  expiresAt?: Date | null;         // ISO
 
   createdAt: ISODate;
   updatedAt: ISODate;

@@ -1,59 +1,89 @@
-// features/campaigns/components/columns.tsx
+// src/features/campaigns/components/columns.tsx
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 import { Eye, Pencil, Trash2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { iconActionGroup as IconActionGroup, iconAction } from "@/shared/ui/IconActionGroup";
 
-type Row = {
-  id: string;
-  name: string;
-  merchantId?: string;
-  placeId?: string;
-  status: "draft" | "active" | "archived";
-  createdAt: string;
+import { Badge } from "@/components/ui/badge";
+import {
+  iconActionGroup as IconActionGroup,
+  iconAction,
+} from "@/shared/ui/IconActionGroup";
+import type { CampaignListItem } from "../server/queries";
+
+const statusBadgeVariant = (
+  status: CampaignListItem["status"]
+): "default" | "secondary" | "outline" => {
+  switch (status) {
+    case "active":
+      return "default";
+    case "archived":
+      return "secondary";
+    default:
+      return "outline";
+  }
 };
 
-export function campaignColumns(opts: {
+export function CampaignColumns(opts: {
   onView?: (id: string) => void;
   onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
-}): ColumnDef<Row>[] {
-  const handleView = (id: string) =>
-    opts.onView ? opts.onView(id) : (window.location.href = `/admin/campaigns/${id}`);
+  onDelete: (id: string, name: string) => void;
+}): ColumnDef<CampaignListItem>[] {
+  const router = useRouter();
+
+  const goToDetails = (id: string) => {
+    if (opts.onView) return opts.onView(id);
+    router.push(`/admin/campaigns/${id}`);
+  };
 
   return [
     {
       accessorKey: "name",
       header: "Name",
+      enableSorting: true,
+      enableColumnFilter: true,
       cell: ({ row }) => (
-        <button className="text-left font-medium hover:underline" onClick={() => handleView(row.original.id)}>
+        <button
+          className="text-left font-medium hover:underline"
+          onClick={() => goToDetails(row.original.id)}
+        >
           {row.original.name}
         </button>
       ),
-      enableSorting: true,
     },
-    { accessorKey: "merchantId", header: "Merchant" },
-    { accessorKey: "placeId", header: "Place" },
+    {
+      accessorKey: "merchantId",
+      header: "Merchant",
+      enableColumnFilter: true,
+      cell: ({ row }) =>
+        row.original.merchantName ?? row.original.merchantId ?? "—",
+    },
+    {
+      accessorKey: "placeId",
+      header: "Place",
+      enableColumnFilter: true,
+      cell: ({ row }) =>
+        row.original.placeName ?? row.original.placeId ?? "—",
+    },
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => {
-        const s = row.original.status;
-        const variant = s === "active" ? "default" : s === "draft" ? "outline" : "secondary";
-        return <Badge variant={variant}>{s}</Badge>;
-      },
       enableSorting: true,
+      enableColumnFilter: true,
+      cell: ({ row }) => (
+        <Badge variant={statusBadgeVariant(row.original.status)}>
+          {row.original.status}
+        </Badge>
+      ),
     },
     {
       accessorKey: "createdAt",
       header: "Created",
-      cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
       enableSorting: true,
+      cell: ({ row }) =>
+        new Date(row.original.createdAt).toLocaleDateString(),
     },
-
-    // TABLE actions (inline)
     {
       id: "actions",
       header: () => <div className="text-right">Actions</div>,
@@ -61,34 +91,36 @@ export function campaignColumns(opts: {
       enableSorting: false,
       enableHiding: false,
       cell: ({ row }) => {
-        const c = row.original;
+        const campaign = row.original;
         return (
           <div className="flex justify-end">
             <IconActionGroup
-              actions={[
-                handleView && {
-                  onClick: () => handleView(c.id),
-                  icon: <Eye className="h-4 w-4" />, 
-                  ariaLabel: "View",
-                },
-                opts.onEdit && {
-                  onClick: () => opts.onEdit(c.id),
-                  icon: <Pencil className="h-4 w-4" />, 
-                  ariaLabel: "Edit",
-                },
-                opts.onDelete && {
-                  onClick: () => opts.onDelete(c.id),
-                  icon: <Trash2 className="h-4 w-4" />, 
-                  ariaLabel: "Delete",
-                  variant: "linkDestructive",
-                },
-              ].filter(Boolean) as iconAction[]}
+              actions={
+                [
+                  {
+                    onClick: () => goToDetails(campaign.id),
+                    icon: <Eye className="h-4 w-4" />,
+                    ariaLabel: "View",
+                  },
+                  {
+                    onClick: () => opts.onEdit(campaign.id),
+                    icon: <Pencil className="h-4 w-4" />,
+                    ariaLabel: "Edit",
+                  },
+                  {
+                    onClick: () =>
+                      opts.onDelete(campaign.id, campaign.name),
+                    icon: <Trash2 className="h-4 w-4" />,
+                    ariaLabel: "Delete",
+                    variant: "linkDestructive",
+                  },
+                ].filter(Boolean) as iconAction[]
+              }
               condensed
             />
           </div>
         );
       },
     },
-
   ];
 }

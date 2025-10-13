@@ -22,8 +22,22 @@ export const placeUpdateSchema = placeCreateSchema.extend({
 export type PlaceCreateInput = z.infer<typeof placeCreateSchema>;
 export type PlaceUpdateInput = z.infer<typeof placeUpdateSchema>;
 
-export const placeLiteSchema = z.object({
-  id: z.string(),
-  localName: z.string(),
-});
-export type PlaceLite = z.infer<typeof placeLiteSchema>;
+export const placeFiltersSchema = z
+  .object({
+    q: z.string().optional(),
+    merchantId: z.string().optional(),
+    _page: z.coerce.number().int().min(1).optional(),
+    _limit: z.coerce.number().int().min(1).max(100).optional(),
+    _sort: z.enum(["localName", "createdAt"]).optional(),
+    _order: z.enum(["asc", "desc"]).optional(),
+  })
+  .transform((params) => ({
+    q: params.q,
+    merchantId: params.merchantId,
+    page: params._page ?? 1,
+    pageSize: params._limit ?? 10,
+    sort: params._sort ?? ("createdAt" as const),
+    order: params._order ?? ("desc" as const),
+  }));
+
+export type PlaceFilters = z.output<typeof placeFiltersSchema>;

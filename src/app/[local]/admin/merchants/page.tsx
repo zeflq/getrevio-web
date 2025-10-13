@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
-import { usePathname, useRouter } from "@/i18n/navigation";
-import { useIsMobile } from "@/hooks/use-mobile";
+import * as React from 'react';
+import { ColumnFiltersState, SortingState } from '@tanstack/react-table';
+import { Plus } from 'lucide-react';
+import { usePathname, useRouter } from '@/i18n/navigation';
+import { useIsMobile } from '@/hooks/use-mobile';
 
-import { iconActionGroup as IconActionGroup } from "@/shared/ui/IconActionGroup";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { iconActionGroup as IconActionGroup } from '@/shared/ui/IconActionGroup';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-import { MerchantColumns } from "@/features/merchants/components/columns";
-import { useMerchantsList } from "@/features/merchants/hooks/useMerchantCrud";
-import { CreateMerchantDialog } from "@/features/merchants/components/CreateMerchantDialog";
-import { EditMerchantSheet } from "@/features/merchants/components/EditMerchantSheet";
-import { DeleteMerchantDialog } from "@/features/merchants/components/DeleteMerchantDialog";
+import { MerchantColumns } from '@/features/merchants/components/columns';
+import { useMerchantsList } from '@/features/merchants/hooks/useMerchantCrud';
+import { CreateMerchantDialog } from '@/features/merchants/components/CreateMerchantDialog';
+import { EditMerchantSheet } from '@/features/merchants/components/EditMerchantSheet';
+import { DeleteMerchantDialog } from '@/features/merchants/components/DeleteMerchantDialog';
 
 // NEW API
-import { useDataTableController } from "@/shared/ui/data-table/useDataTableController";
-import { DataTableResponsive } from "@/shared/ui/data-table/DataTableResponsive";
-import { DataTableToolbarBase } from "@/shared/ui/data-table/DataTableToolbarBase";
+import { useDataTableController } from '@/shared/ui/data-table/useDataTableController';
+import { DataTableResponsive } from '@/shared/ui/data-table/DataTableResponsive';
+import { DataTableToolbarBase } from '@/shared/ui/data-table/DataTableToolbarBase';
 
 export default function MerchantsPage() {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function MerchantsPage() {
   // --- table state
   const [pageIndex, setPageIndex] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(() => (isMobile ? 5 : 10));
-  const [sorting, setSorting] = React.useState<SortingState>([{ id: "createdAt", desc: true }]);
+  const [sorting, setSorting] = React.useState<SortingState>([{ id: 'createdAt', desc: true }]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   React.useEffect(() => {
@@ -44,6 +44,9 @@ export default function MerchantsPage() {
   const [editSheetOpen, setEditSheetOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [selectedMerchantId, setSelectedMerchantId] = React.useState<string | undefined>(undefined);
+
+  // Store both id & name when user clicks delete
+  const [deletingMerchant, setDeletingMerchant] = React.useState<{ id: string; name: string } | null>(null);
 
   // --- derived filters
   const q = getFilterValue(columnFilters, "name");
@@ -67,13 +70,14 @@ export default function MerchantsPage() {
   const totalPages = merchantsResponse?.totalPages ?? 1;
   const total = merchantsResponse?.total ?? 0;
 
+  // Preferred: columns call onDelete(id, name)
   const columns = MerchantColumns({
     onEdit: (id) => {
       setSelectedMerchantId(id);
       setEditSheetOpen(true);
     },
-    onDelete: (id) => {
-      setSelectedMerchantId(id);
+    onDelete: (id, name) => {
+      setDeletingMerchant({ id, name });
       setDeleteDialogOpen(true);
     },
   });
@@ -82,7 +86,7 @@ export default function MerchantsPage() {
   const controller = useDataTableController({
     columns,
     data: rows,
-    mode: "server",
+    mode: 'server',
     pageCount: totalPages,
     state: { pageIndex, pageSize, sorting, columnFilters },
     onPageChange: (p) => {
@@ -102,9 +106,9 @@ export default function MerchantsPage() {
       leftExtras={
         <div className="flex flex-col w-full gap-2 sm:flex-row sm:items-center">
           <Select
-            value={plan ?? "all"}
+            value={plan ?? 'all'}
             onValueChange={(val) => {
-              setColumnFilters((prev) => upsertFilter(prev, "plan", val === "all" ? undefined : val));
+              setColumnFilters((prev) => upsertFilter(prev, 'plan', val === 'all' ? undefined : val));
               setPageIndex(0);
             }}
           >
@@ -167,30 +171,35 @@ export default function MerchantsPage() {
           isLoading={isLoading}
           emptyText="No merchants found."
           serverTotalRowsLabel={`${total} merchant(s)`}
-          classes={{
-            // container: "rounded-xl",
-            // headerCell: "uppercase tracking-wide",
-            // bodyCell: "text-sm",
-          }}
+          classes={{}}
           // Mobile cards behavior
           cardActionsColumnId="actionsMenu"
-          cardExcludeColumnIds={["actions"]}
+          cardExcludeColumnIds={['actions']}
           metaColsPerRow={2}
           onRowClick={(id) => router.push(`${pathname}/${id}`)}
-          // breakpoint="md" // default
         />
       </div>
 
       {/* Dialogs */}
       <CreateMerchantDialog open={createDialogOpen} onOpenChange={setCreateDialogOpen} />
+
       {selectedMerchantId && (
-        <EditMerchantSheet merchantId={selectedMerchantId} open={editSheetOpen} onOpenChange={setEditSheetOpen} />
-      )}
-      {selectedMerchantId && (
-        <DeleteMerchantDialog
+        <EditMerchantSheet
           merchantId={selectedMerchantId}
+          open={editSheetOpen}
+          onOpenChange={setEditSheetOpen}
+        />
+      )}
+
+      {deletingMerchant && (
+        <DeleteMerchantDialog
+          merchantId={deletingMerchant.id}
+          merchantName={deletingMerchant.name}
           open={deleteDialogOpen}
-          onOpenChange={setDeleteDialogOpen}
+          onOpenChange={(open) => {
+            setDeleteDialogOpen(open);
+            if (!open) setDeletingMerchant(null); // cleanup when closed
+          }}
         />
       )}
     </div>
@@ -203,6 +212,6 @@ function getFilterValue(filters: ColumnFiltersState, id: string) {
 }
 function upsertFilter(filters: ColumnFiltersState, id: string, value?: string) {
   const next = filters.filter((f) => f.id !== id);
-  if (value === undefined || value === "") return next;
+  if (value === undefined || value === '') return next;
   return [...next, { id, value }];
 }

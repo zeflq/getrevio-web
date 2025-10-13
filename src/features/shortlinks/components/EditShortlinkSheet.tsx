@@ -5,38 +5,56 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { SheetForm } from "@/components/form/SheetForm";
-import type { MerchantLite } from "@/features/merchants";
+import type { LiteListe } from "@/types/lists";
 
 import { ShortlinkFormFields } from "./ShortlinkFormFields";
 import { useShortlinkItem, useUpdateShortlink } from "../hooks/useShortlinkCrud";
-import { shortlinkCreateSchema, type ShortlinkCreateInput } from "../model/shortlinkSchema";
+import {
+  shortlinkFormSchema,
+  type ShortlinkFormValues,
+  type ShortlinkUpdateInput,
+} from "../model/shortlinkSchema";
 import {
   buildUpdateShortlinkPayload,
   createInitialShortlinkValues,
   shortlinkToFormValues,
 } from "../lib/transformers";
+import { toast } from "sonner";
+import { useReadableError } from "@/lib/useReadableError";
 
 type EditShortlinkSheetProps = {
-  code: string;
+  id: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  merchantsLite?: MerchantLite[];
+  merchantsLite?: LiteListe[];
   onSuccess?: () => void;
 };
 
 export function EditShortlinkSheet({
-  code,
+  id,
   open,
   onOpenChange,
   merchantsLite = [],
   onSuccess,
 }: EditShortlinkSheetProps) {
-  const shortlinkQuery = useShortlinkItem(open ? code : undefined);
-  const updateShortlink = useUpdateShortlink();
+  const shortlinkQuery = useShortlinkItem(open ? id : undefined);
+  const readableError = useReadableError();
+  const { execute, isExecuting } = useUpdateShortlink<
+    { id: string } & ShortlinkUpdateInput,
+    { ok?: boolean }
+  >({
+    onSuccess: () => {
+      onSuccess?.();
+      onOpenChange(false);
+    },
+    onError: (e) => {
+      toast.error(readableError(e, "generic"));
+    },
+  });
 
-  const methods = useForm<ShortlinkCreateInput>({
-    resolver: zodResolver(shortlinkCreateSchema),
-    mode: "onChange",
+  const methods = useForm<ShortlinkFormValues>({
+    resolver: zodResolver(shortlinkFormSchema),
+    mode: "onSubmit",
     defaultValues: createInitialShortlinkValues(),
   });
 
@@ -48,11 +66,9 @@ export function EditShortlinkSheet({
     }
   }, [shortlinkQuery.data, reset]);
 
-  const handleSubmit = async (values: ShortlinkCreateInput) => {
+  const handleSubmit = (values: ShortlinkFormValues) => {
     const payload = buildUpdateShortlinkPayload(values);
-    await updateShortlink.mutateAsync({ id: code, input: payload });
-    onSuccess?.();
-    onOpenChange(false);
+    execute({ id, ...payload });
   };
 
   const handleOpenChange = (next: boolean) => {
@@ -66,11 +82,11 @@ export function EditShortlinkSheet({
     onOpenChange(next);
   };
 
-  const isBusy = updateShortlink.isPending;
-  const isReady = !!shortlinkQuery.data;
+  const isBusy = isExecuting || shortlinkQuery.isLoading;
+  const isReady = !!shortlinkQuery.data && !shortlinkQuery.isLoading;
 
   return (
-    <SheetForm<ShortlinkCreateInput>
+    <SheetForm<ShortlinkFormValues>
       open={open}
       title="Edit Shortlink"
       description="Update shortlink targeting, status, or metadata."

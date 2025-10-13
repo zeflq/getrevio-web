@@ -73,7 +73,6 @@ type Place = {
   // optional platform reference (kept for future integrations)
   googlePlaceId?: string;
   // shortlink integration
-  defaultShortlinkCode?: string;     // code of sl:{code} in Redis, created by API
   createdAt: string;
   updatedAt: string;
 };
@@ -147,7 +146,7 @@ type Shortlink = {
   "u": "https://app.com/{placeSlug}?c={campaignId}",
   "ea": 1767225600,
   "mid": "mer_123",
-  "tgt": { "t": "campaign", "cid": "camp_123", "pid": "pl_456" },
+  "tgt": { "t": "campaign", "cid": "camp_123" },
   "utm": { "campaign": "summer25", "medium": "offline" },
   "cm": {
     "qr":  { "utm": { "source": "qr" } },
@@ -204,7 +203,7 @@ Input: /s/{code}?ch=qr
         
     *   Creates Place
         
-    *   Auto-creates default shortlink in Redis (sl:{slug}), sets defaultShortlinkCode
+-    *   Auto-creates default shortlink in Redis (sl:{slug})
         
 *   PATCH /admin/places/:id (updates + re-hydrate shortlink if slug changed)
     
@@ -454,7 +453,7 @@ type DailyStats = {
 
 *   Place.slug is **globally unique**
     
-*   defaultShortlinkCode is set by API after Redis write
+
     
 *   Campaign.status:
     

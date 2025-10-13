@@ -4,6 +4,7 @@ import "./globals.css";
 import {NextIntlClientProvider} from "next-intl";
 import {getLocale} from "next-intl/server";
 import { QueryProvider } from "@/shared/lib/react-query";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,14 @@ export default async function RootLayout({
     <html lang={locale}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <NextIntlClientProvider locale={locale}>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            {children}
+            <Toaster
+              position="top-center"
+              richColors
+              toastOptions={{ className: 'z-[10000]' }} // ensure above Dialog/Sheet
+            />
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

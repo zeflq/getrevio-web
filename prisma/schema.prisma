@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Merchant {
+  id             String   @id @default(cuid()) // UUID type in TS
+  name           String
+  email          String?  @unique
+  locale         String?
+  defaultThemeId String?
+  plan           Plan
+  status         Status
+  createdAt      DateTime @default(now())
+  places         Place[]
+  themes         Theme[]
+  defaultTheme   Theme?   @relation("MerchantDefaultTheme", fields: [defaultThemeId], references: [id])
+  campaigns      Campaign[]
+  shortlinks     Shortlink[]
+}
+
+model Place {
+  id           String   @id @default(cuid())
+  merchantId   String
+  merchant     Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  localName    String
+  slug         String   // required
+  @@unique([merchantId, slug], map: "place_merchant_slug_unique") // ← as you asked
+  @@index([merchantId])
+
+  address        String?
+  themeId        String?
+  landingDefaults Json?
+  googlePlaceId  String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  campaigns     Campaign[]
+
+}
+
+
+model Theme {
+  id        String   @id @default(cuid())
+  merchantId String
+  merchant  Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  name      String
+  logoUrl   String?
+  brandColor String?
+  accentColor String?
+  textColor String?
+  meta      Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  merchantsUsingDefault Merchant[] @relation("MerchantDefaultTheme")
+}
+
+model Campaign {
+  id            String   @id @default(cuid())
+  merchantId    String
+  merchant      Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  placeId       String
+  place         Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+
+  name          String
+  slug          String?  // optional
+  @@unique([placeId, slug], map: "campaign_place_slug_unique") // multiple NULLs are allowed
+  @@index([merchantId])
+  @@index([placeId])
+
+  primaryCtaUrl String
+  theme         Json?
+  status        CampaignStatus @default(draft)
+  startAt       DateTime?
+  endAt         DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+
+model Shortlink {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  merchantId String
+  merchant  Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  target    Json
+  channel   String?
+  themeId   String?
+  active    Boolean  @default(true)
+  expiresAt DateTime?
+  utm       Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Enums matching your TS literal types
+enum Plan {
+  free
+  pro
+  enterprise
+}
+
+enum Status {
+  active
+  suspended
+}
+
+enum CampaignStatus {
+  draft
+  active
+  archived
+}

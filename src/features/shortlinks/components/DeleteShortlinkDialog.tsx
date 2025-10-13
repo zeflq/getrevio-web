@@ -2,21 +2,27 @@
 
 import * as React from "react";
 import { ConfirmByNameDialog } from "@/components/ui/confirmByNameDialog";
-import { useDeleteShortlink, useShortlinkItem } from "../hooks/useShortlinkCrud";
+import { useDeleteShortlink } from "../hooks/useShortlinkCrud";
 
 type Props = {
+  id: string;
   code: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
-export function DeleteShortlinkDialog({ code, open, onOpenChange }: Props) {
-  const { data: shortlink } = useShortlinkItem(open ? code : undefined);
-  const deleteShortlink = useDeleteShortlink();
+export function DeleteShortlinkDialog({ id, code, open, onOpenChange }: Props) {
+  const { execute, isExecuting } = useDeleteShortlink<
+    { id: string },
+    { ok?: boolean }
+  >({
+    onSuccess: () => {
+      onOpenChange(false);
+    },
+  });
 
-  const handleConfirm = async () => {
-    await deleteShortlink.mutateAsync(code);
-    onOpenChange(false);
+  const handleConfirm = () => {
+    execute({ id });
   };
 
   return (
@@ -25,12 +31,12 @@ export function DeleteShortlinkDialog({ code, open, onOpenChange }: Props) {
       onOpenChange={onOpenChange}
       title="Delete Shortlink"
       description="This will disable redirects for this code and remove it from Redis."
-      expectedName={shortlink?.code ?? code}
+      expectedName={code}
       confirmPromptLabel="Type the code"
       inputPlaceholder="Enter shortlink code"
-      confirmLabel={deleteShortlink.isPending ? "Deleting…" : "Delete Shortlink"}
+      confirmLabel={isExecuting ? "Deleting…" : "Delete Shortlink"}
       confirmVariant="destructive"
-      loading={deleteShortlink.isPending}
+      loading={isExecuting}
       onConfirm={handleConfirm}
       preventCloseWhileLoading
     />

@@ -7,7 +7,7 @@ import { useRouter } from "@/i18n/navigation";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { campaignColumns } from "@/features/campaigns/components/columns";
+import { CampaignColumns } from "@/features/campaigns/components/columns";
 
 // NEW API
 import { useDataTableController } from "@/shared/ui/data-table/useDataTableController";
@@ -17,9 +17,9 @@ import { DataTableToolbarBase } from "@/shared/ui/data-table/DataTableToolbarBas
 import { iconActionGroup as IconActionGroup } from "@/shared/ui/IconActionGroup";
 
 // Optional future hooks for dropdowns
-import { useMerchantsLite } from "@/features/merchants";
 import { useCampaignsList, CreateCampaignDialog, EditCampaignSheet, DeleteCampaignDialog } from "@/features/campaigns";
 import { GenericCombobox } from "@/components/ui/genericCombobox";
+import { useMerchantsLite } from "@/features/merchants/hooks/useMerchantCrud";
 // import { usePlacesLite } from "@/features/places/hooks/usePlacesLite";
 
 export default function AdminCampaignsPage() {
@@ -59,11 +59,11 @@ export default function AdminCampaignsPage() {
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | null>(null);
-  const [deleteId, setDeleteId] = React.useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = React.useState<{ id: string; name: string } | null>(null);
 
-  const columns = campaignColumns({
+  const columns = CampaignColumns({
     onEdit: (id) => setEditId(id),
-    onDelete: (id) => setDeleteId(id),
+    onDelete: (id, name) => setDeleteTarget({ id, name }),
   });
 
   // --- controller (shared by both renderers)
@@ -114,8 +114,8 @@ export default function AdminCampaignsPage() {
             onChange={(v) =>
               setColumnFilters((prev) => upsertFilter(prev, "merchantId", v ?? undefined))
             }
-            getOptionValue={(m) => m.id}
-            getOptionLabel={(m) => m.name}
+            getOptionValue={(m) => m.value}
+            getOptionLabel={(m) => m.label}
             placeholder="Merchant"
             searchPlaceholder="Search merchants…"
             loading={merchantsLiteQuery.isLoading}
@@ -157,11 +157,12 @@ export default function AdminCampaignsPage() {
           onSuccess={() => setEditId(null)}
         />
       )}
-      {deleteId && (
+      {deleteTarget && (
         <DeleteCampaignDialog
-          campaignId={deleteId}
-          open={!!deleteId}
-          onOpenChange={(open) => !open && setDeleteId(null)}
+          campaignId={deleteTarget.id}
+          campaignName={deleteTarget.name}
+          open={!!deleteTarget}
+          onOpenChange={(open) => !open && setDeleteTarget(null)}
         />
       )}
       <div className="space-y-4">

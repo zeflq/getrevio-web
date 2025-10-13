@@ -143,7 +143,7 @@ Screens & UX
 *   **Mini Analytics** (optional): place-level daily scans vs CTA clicks
     
 
-> The Place’s **default shortlink** is created by the API on Place creation and stored in place.defaultShortlinkCode.
+> The Place’s default shortlink is created by the API on Place creation.
 
 ### 3) Campaigns
 

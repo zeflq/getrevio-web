@@ -1,15 +1,15 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { setDefaultTheme } from '../api/setDefaultTheme';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAction } from 'next-safe-action/hooks';
+
+import { setDefaultThemeAction } from '@/features/themes/server/actions';
 
 export function useSetDefaultTheme(merchantId: string) {
   const qc = useQueryClient();
-  return useMutation<{ success: true }, Error, { themeId: string }>({
-    mutationFn: async ({ themeId }) => setDefaultTheme({merchantId, themeId}),
-    onSuccess: (_data, variables) => {
-      // Invalidate list and specific item
+  return useAction(setDefaultThemeAction, {
+    onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['merchants', 'item', merchantId] });
       qc.invalidateQueries({ queryKey: ['themes', 'list'] });
-      qc.invalidateQueries({ queryKey: ['themes', 'item', variables.themeId] });
+      qc.invalidateQueries({ queryKey: ['themes', 'lite'] });
     },
   });
 }

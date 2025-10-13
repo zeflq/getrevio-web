@@ -2,21 +2,29 @@
 
 import * as React from 'react';
 import { ConfirmByNameDialog } from '@/components/ui/confirmByNameDialog';
-import { useMerchantItem, useDeleteMerchant } from '../hooks/useMerchantCrud';
+import { useDeleteMerchant } from '../hooks/useMerchantCrud';
 
 export interface DeleteMerchantDialogProps {
-  merchantId: string;
+  merchantName: string;
+  merchantId: string; // still needed for the deletion call itself
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function DeleteMerchantDialog({ merchantId, open, onOpenChange }: DeleteMerchantDialogProps) {
-  const { data: merchant } = useMerchantItem(merchantId);
-  const deleteMerchant = useDeleteMerchant();
+export function DeleteMerchantDialog({
+  merchantId,
+  merchantName,
+  open,
+  onOpenChange,
+}: DeleteMerchantDialogProps) {
+  const { execute, isExecuting } = useDeleteMerchant<{ id: string }, { ok?: boolean }>({
+    onSuccess: () => {
+      onOpenChange(false);
+    },
+  });
 
-  const handleConfirm = async () => {
-    await deleteMerchant.mutateAsync(merchantId);
-    onOpenChange(false);
+  const handleConfirm = () => {
+    execute({ id: merchantId });
   };
 
   return (
@@ -25,12 +33,12 @@ export function DeleteMerchantDialog({ merchantId, open, onOpenChange }: DeleteM
       onOpenChange={onOpenChange}
       title="Delete Merchant"
       description="This action cannot be undone. This will permanently delete the merchant and all associated data."
-      expectedName={merchant?.name}
+      expectedName={merchantName}
       confirmPromptLabel="Type"
       inputPlaceholder="Enter merchant name"
       confirmLabel="Delete Merchant"
       confirmVariant="destructive"
-      loading={deleteMerchant.isPending}
+      loading={isExecuting}
       onConfirm={handleConfirm}
       preventCloseWhileLoading
     />

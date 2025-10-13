@@ -11,8 +11,8 @@ import {
   merchantUpdateSchema,
   type MerchantUpdateInput,
 } from "../model/merchantSchema";
-import { useMerchantItem, useUpdateMerchant } from "../hooks/useMerchantCrud";
 import { MerchantFormFields } from "./MerchantFormFields";
+import { useMerchantItem, useUpdateMerchant } from "../hooks/useMerchantCrud";
 
 export interface EditMerchantSheetProps {
   merchantId: string;
@@ -26,7 +26,15 @@ export function EditMerchantSheet({
   onOpenChange,
 }: EditMerchantSheetProps) {
   const { data: merchant, isLoading } = useMerchantItem(merchantId);
-  const updateMerchant = useUpdateMerchant();
+
+  const { execute, isExecuting } = useUpdateMerchant<
+    { id: string } & MerchantUpdateInput,
+    { ok?: boolean }
+  >({
+    onSuccess: () => {
+      onOpenChange(false);
+    },
+  });
 
   const form = useForm<MerchantUpdateInput>({
     resolver: zodResolver(merchantUpdateSchema),
@@ -40,26 +48,22 @@ export function EditMerchantSheet({
     },
   });
 
-  const { reset } = form;
+  const { reset, handleSubmit } = form;
 
   useEffect(() => {
     if (!merchant) return;
     reset({
       name: merchant.name ?? "",
       email: merchant.email ?? "",
-      locale: merchant.locale ?? "",
-      plan: merchant.plan ?? "free",
-      status: merchant.status ?? "active",
+      locale: (merchant as any).locale ?? "",
+      plan: (merchant as any).plan ?? "free",
+      status: (merchant as any).status ?? "active",
     });
   }, [merchant, reset]);
 
-  const onSubmit = async (data: MerchantUpdateInput) => {
-    try {
-      await updateMerchant.mutateAsync({ id: merchantId, input: data });
-      onOpenChange(false);
-    } catch (error) {
-      console.error("Failed to update merchant:", error);
-    }
+  const onSubmit = (data: MerchantUpdateInput) => {
+    // Server action expects flat input with id at root
+    execute({ id: merchantId, ...data });
   };
 
   const resetToLoaded = () => {
@@ -67,9 +71,9 @@ export function EditMerchantSheet({
     reset({
       name: merchant.name ?? "",
       email: merchant.email ?? "",
-      locale: merchant.locale ?? "",
-      plan: merchant.plan ?? "free",
-      status: merchant.status ?? "active",
+      locale: (merchant as any).locale ?? "",
+      plan: (merchant as any).plan ?? "free",
+      status: (merchant as any).status ?? "active",
     });
   };
 
@@ -78,7 +82,7 @@ export function EditMerchantSheet({
     onOpenChange(nextOpen);
   };
 
-  const isBusy = updateMerchant.isPending;
+  const isBusy = isExecuting;
   const isReady = !!merchant && !isLoading;
 
   return (

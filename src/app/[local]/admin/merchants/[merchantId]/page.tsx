@@ -4,7 +4,7 @@
 import { use, useState } from 'react';
 import { Pencil } from 'lucide-react';
 import { SinglePageHeader } from '@/shared/ui/SinglePageHeader';
-import { MerchantDetailsCard, QuickStatsCard, useMerchantQuickStats, EditMerchantSheet } from '@/features/merchants';
+import { MerchantDetailsCard, QuickStatsCard, EditMerchantSheet } from '@/features/merchants';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { MerchantThemesTab } from '@/features/themes/components/MerchantThemesTab';
 import { useMerchantItem } from '@/features/merchants/hooks/useMerchantCrud';
@@ -16,9 +16,9 @@ export default function MerchantDetailPage({
 }) {
   const resolvedParams = use(params);
   const { data: merchant, isLoading, error } = useMerchantItem(resolvedParams.merchantId);
-  const { data: stats, isLoading: isStatsLoading } = useMerchantQuickStats({ id: resolvedParams.merchantId });
+  //const { data: stats, isLoading: isStatsLoading } = useMerchantQuickStats({ id: resolvedParams.merchantId });
   const [editSheetOpen, setEditSheetOpen] = useState(false);
-
+console.log('merchant', merchant);
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <SinglePageHeader
@@ -59,7 +59,7 @@ export default function MerchantDetailPage({
         <TabsContent value="quick">
           <div className="grid gap-6 md:grid-cols-2">
             <MerchantDetailsCard merchant={merchant} isLoading={isLoading} />
-            <QuickStatsCard stats={stats} isLoading={isStatsLoading} />
+            {/* <QuickStatsCard stats={stats} isLoading={isStatsLoading} /> */}
           </div>
         </TabsContent>
         <TabsContent value="themes">

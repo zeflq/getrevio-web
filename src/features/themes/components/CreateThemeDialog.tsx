@@ -10,13 +10,13 @@ import ThemeFormFields from "./ThemeFormFields";
 
 import { themeCreateSchema, type ThemeCreateInput } from "../model/themeSchema";
 import { useCreateTheme } from "../hooks/useThemeCrud";
-import type { MerchantLite } from "@/features/merchants";
+import type { LiteListe } from "@/types/lists";
 
 export interface CreateThemeDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   merchantId?: string;                // if provided, hide merchant picker
-  merchantsLite?: MerchantLite[];
+  merchantsLite?: LiteListe[];
   onSuccess?: () => void;
 }
 
@@ -27,7 +27,13 @@ export function CreateThemeDialog({
   merchantsLite = [],
   onSuccess,
 }: CreateThemeDialogProps) {
-  const createTheme = useCreateTheme();
+  const { execute, isExecuting } = useCreateTheme<ThemeCreateInput, { id?: string }>({
+    onSuccess: () => {
+      resetForm();
+      onOpenChange(false);
+      onSuccess?.();
+    },
+  });
 
   const methods = useForm<ThemeCreateInput>({
     resolver: zodResolver(themeCreateSchema),
@@ -65,7 +71,7 @@ export function CreateThemeDialog({
       meta: {},
     });
 
-  const onSubmit = async (d: ThemeCreateInput) => {
+  const onSubmit = (d: ThemeCreateInput) => {
     const cleaned: ThemeCreateInput = {
       ...d,
       logoUrl: d.logoUrl || undefined,
@@ -75,10 +81,7 @@ export function CreateThemeDialog({
       meta: d.meta && Object.keys(d.meta).length > 0 ? d.meta : undefined,
     };
 
-    await createTheme.mutateAsync(cleaned);
-    resetForm();
-    onOpenChange(false);
-    onSuccess?.();
+    execute(cleaned);
   };
 
   // Provide the inner fields to DialogForm inside RHF context
@@ -86,19 +89,19 @@ export function CreateThemeDialog({
   (methods as MethodsWithSlot)._slot = (
     <>
       {!merchantId && (
-        <RHFCombobox<MerchantLite>
+        <RHFCombobox<LiteListe>
           name="merchantId"
           label="Merchant"
           options={merchantsLite}
-          getOptionValue={(m) => m.id}
-          getOptionLabel={(m) => m.name}
+          getOptionValue={(m) => m.value}
+          getOptionLabel={(m) => m.label}
           placeholder="Select merchant"
           searchPlaceholder="Search merchants…"
           requiredStar
-          disabled={createTheme.isPending}
+          disabled={isExecuting}
         />
       )}
-      <ThemeFormFields disabled={createTheme.isPending} />
+      <ThemeFormFields disabled={isExecuting} />
     </>
   );
 
@@ -113,9 +116,9 @@ export function CreateThemeDialog({
       description="Create a new theme for a merchant."
       methods={methods}
       onSubmit={onSubmit}
-      isBusy={createTheme.isPending}
+      isBusy={isExecuting}
       isReady
-      submitLabel={createTheme.isPending ? "Creating..." : "Create Theme"}
+      submitLabel={isExecuting ? "Creating..." : "Create Theme"}
       className="sm:max-w-[560px]"
     />
   );

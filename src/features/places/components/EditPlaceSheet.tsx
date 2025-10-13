@@ -9,7 +9,7 @@ import { SheetForm } from "@/components/form/SheetForm";
 
 import { placeUpdateSchema, type PlaceUpdateInput } from "../model/placeSchema";
 import { usePlaceItem, useUpdatePlace } from "../hooks/usePlaceCrud";
-import type { MerchantLite } from "@/features/merchants";
+import type { LiteListe } from "@/types/lists";
 import { PlaceFormFields } from "./PlaceFormFields";
 
 export interface EditPlaceSheetProps {
@@ -17,7 +17,7 @@ export interface EditPlaceSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   merchantId?: string;
-  merchantsLite?: MerchantLite[];
+  merchantsLite?: LiteListe[];
   onSuccess?: () => void;
 }
 
@@ -30,7 +30,15 @@ export function EditPlaceSheet({
   onSuccess,
 }: EditPlaceSheetProps) {
   const { data: place, isLoading } = usePlaceItem(id);
-  const updatePlace = useUpdatePlace();
+  const { execute, isExecuting } = useUpdatePlace<
+    { id: string } & PlaceUpdateInput,
+    { ok?: boolean }
+  >({
+    onSuccess: () => {
+      onOpenChange(false);
+      onSuccess?.();
+    },
+  });
 
   const form = useForm<PlaceUpdateInput>({
     resolver: zodResolver(placeUpdateSchema),
@@ -61,7 +69,7 @@ export function EditPlaceSheet({
       address: place.address ?? "",
       merchantId: merchantId ?? place.merchantId ?? "",
       googlePlaceId: place.googlePlaceId ?? "",
-      landingDefaults: place.landingDefaults ?? {},
+      landingDefaults: (place.landingDefaults ?? {}) as PlaceUpdateInput["landingDefaults"],
       slug: place.slug, // read-only field still needs value in form state
     });
   }, [place, merchantId, reset]);
@@ -78,18 +86,12 @@ export function EditPlaceSheet({
       address: place?.address ?? "",
       merchantId: merchantId ?? place?.merchantId ?? "",
       googlePlaceId: "",
-      landingDefaults: place?.landingDefaults ?? {},
+      landingDefaults: (place?.landingDefaults ?? {}) as PlaceUpdateInput["landingDefaults"],
       slug: place?.slug,
     });
 
-  const onSubmit = async (data: PlaceUpdateInput) => {
-    try {
-      await updatePlace.mutateAsync({ id, input: data });
-      onOpenChange(false);
-      onSuccess?.();
-    } catch (error) {
-      console.error("Failed to update place:", error);
-    }
+  const onSubmit = (data: PlaceUpdateInput) => {
+    execute({ id, ...data });
   };
 
   const handleSheetChange = (nextOpen: boolean) => {
@@ -97,7 +99,7 @@ export function EditPlaceSheet({
     onOpenChange(nextOpen);
   };
 
-  const isBusy = isLoading || updatePlace.isPending;
+  const isBusy = isLoading || isExecuting;
   const isReady = !!place && !isLoading;
 
   return (

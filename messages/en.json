@@ -13,5 +13,14 @@
     "loading": "Loading...",
     "cancel": "Cancel",
     "save": "Save"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "unauthorized": "You are not authorized to perform this action.",
+    "forbidden": "Access denied.",
+    "notFound": "The requested resource was not found.",
+    "timeout": "The request took too long. Please try again later.",
+    "conflict": "This resource already exists.",
+    "validation": "Please check the entered information and try again."
   }
 }

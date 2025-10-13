@@ -6,18 +6,15 @@ import { useThemeItem, useDeleteTheme } from "../hooks/useThemeCrud";
 
 export interface DeleteThemeDialogProps {
   themeId: string;
+  themeName: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function DeleteThemeDialog({ themeId, open, onOpenChange }: DeleteThemeDialogProps) {
-  const { data: theme } = useThemeItem(themeId);
-  const deleteTheme = useDeleteTheme();
-
-  const handleConfirm = async () => {
-    await deleteTheme.mutateAsync(themeId);
-    onOpenChange(false);
-  };
+export function DeleteThemeDialog({ themeId, themeName, open, onOpenChange }: DeleteThemeDialogProps) {
+  const { execute, isExecuting } = useDeleteTheme<{ id: string }, { ok?: boolean }>({
+    onSuccess: () => onOpenChange(false),
+  });
 
   return (
     <ConfirmByNameDialog
@@ -25,13 +22,13 @@ export function DeleteThemeDialog({ themeId, open, onOpenChange }: DeleteThemeDi
       onOpenChange={onOpenChange}
       title="Delete Theme"
       description="This action cannot be undone. This will permanently delete the theme."
-      expectedName={theme?.name}
+      expectedName={themeName}
       confirmPromptLabel="Type"
       inputPlaceholder="Enter theme name"
       confirmLabel="Delete Theme"
       confirmVariant="destructive"
-      loading={deleteTheme.isPending}
-      onConfirm={handleConfirm}
+      loading={isExecuting}
+      onConfirm={() => execute({ id: themeId })}
       preventCloseWhileLoading
     />
   );

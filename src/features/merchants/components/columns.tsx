@@ -24,7 +24,7 @@ function statusBadgeVariant(status: Merchant["status"]) {
 
 export function MerchantColumns(opts: {
   onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: string, name: string) => void;
   onView?: (id: string) => void;
 }): ColumnDef<Merchant>[] {
   const router = useRouter();
@@ -93,7 +93,7 @@ export function MerchantColumns(opts: {
                   ariaLabel: "Edit",
                 },
                 opts.onDelete && {
-                  onClick: () => opts.onDelete(m.id),
+                  onClick: () => opts.onDelete(m.id, m.name),
                   icon: <Trash2 className="h-4 w-4" />, 
                   ariaLabel: "Delete",
                   variant: "linkDestructive",

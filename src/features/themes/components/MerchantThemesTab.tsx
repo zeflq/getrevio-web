@@ -2,14 +2,26 @@
 
 import * as React from "react";
 import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
-import { themeColumns, useThemesList, CreateThemeDialog, EditThemeSheet, DeleteThemeDialog, useSetDefaultTheme } from "@/features/themes";
+import {
+  themeColumns,
+  useThemesList,
+  CreateThemeDialog,
+  EditThemeSheet,
+  DeleteThemeDialog,
+  useSetDefaultTheme,
+} from "@/features/themes";
 import { useDataTableController } from "@/shared/ui/data-table/useDataTableController";
 import { DataTableCards } from "@/shared/ui/data-table/DataTableCards";
 import { DataTableToolbarBase } from "@/shared/ui/data-table/DataTableToolbarBase";
 import { iconActionGroup as IconActionGroup } from "@/shared/ui/IconActionGroup";
-import { Theme } from "@/types/domain";
+import type { Theme } from "@/types/domain";
 
-export function MerchantThemesTab({ merchantId, defaultThemeId }: { merchantId: string; defaultThemeId?: string }) {
+type Props = {
+  merchantId: string;
+  defaultThemeId?: string;
+};
+
+export function MerchantThemesTab({ merchantId, defaultThemeId }: Props) {
   // --- table state
   const [pageIndex, setPageIndex] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
@@ -21,7 +33,7 @@ export function MerchantThemesTab({ merchantId, defaultThemeId }: { merchantId: 
   // --- dialogs state
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | null>(null);
-  const [deleteId, setDeleteId] = React.useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = React.useState<{ id: string; name: string } | null>(null);
 
   // --- derived filters
   const q = getFilterValue(columnFilters, "name");
@@ -37,17 +49,21 @@ export function MerchantThemesTab({ merchantId, defaultThemeId }: { merchantId: 
     _order: sortOrder,
   });
 
-  const rows = themesResponse?.data ?? [];
+  const rows: Array<Theme & { id: string; name: string }> = (themesResponse?.data ?? []) as any[];
   const totalPages = themesResponse?.totalPages ?? 1;
   const total = themesResponse?.total ?? 0;
 
-  const setDefault = useSetDefaultTheme(merchantId);
+  const { execute: setDefaultTheme, isExecuting: isSettingDefault } = useSetDefaultTheme(merchantId);
 
   const columns = themeColumns({
     onEdit: (id) => setEditId(id),
-    onDelete: (id) => setDeleteId(id),
-    onSetDefault: (id) => setDefault.mutate({ themeId: id }),
-    defaultThemeId
+    onDelete: (id) => {
+      const t = rows.find((r) => r.id === id);
+      setDeleteTarget({ id, name: t?.name ?? "" });
+    },
+    onSetDefault: (id) => setDefaultTheme({ merchantId, themeId: id }),
+    defaultThemeId,
+    isSettingDefault,
   });
 
   const controller = useDataTableController({
@@ -85,14 +101,16 @@ export function MerchantThemesTab({ merchantId, defaultThemeId }: { merchantId: 
 
   return (
     <div className="space-y-4">
-      {/* Render dialogs/sheets */}
+      {/* Create */}
       <CreateThemeDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
-        merchantsLite={[]}
+        merchantsLite={[]} // not used when merchantId is locked
         onSuccess={() => controller.table.resetRowSelection()}
         merchantId={merchantId}
       />
+
+      {/* Edit */}
       {editId && (
         <EditThemeSheet
           themeId={editId}
@@ -101,33 +119,31 @@ export function MerchantThemesTab({ merchantId, defaultThemeId }: { merchantId: 
           onSuccess={() => setEditId(null)}
         />
       )}
-      {deleteId && (
+
+      {/* Delete (with name passed) */}
+      {deleteTarget && (
         <DeleteThemeDialog
-          themeId={deleteId}
-          open={!!deleteId}
-          onOpenChange={(open) => !open && setDeleteId(null)}
+          themeId={deleteTarget.id}
+          themeName={deleteTarget.name}
+          open={!!deleteTarget}
+          onOpenChange={(open) => !open && setDeleteTarget(null)}
         />
       )}
 
       {/* Mobile: cards */}
-        <DataTableCards
-            controller={controller}
-            toolbar={toolbar}
-            isLoading={isLoading}
-            emptyText="No themes found."
-            serverTotalRowsLabel={`${total} theme(s)`}
-            rowClassName={(row) => {
-                const theme = row.original as Theme;
-                return defaultThemeId && theme.id === defaultThemeId
-                ? "bg-muted/60 ring-1 ring-primary/50"
-                : undefined;
-            }}
-            classes={{
-                // container: "rounded-xl",
-                // headerCell: "text-lg font-bold",
-                // bodyCell: "text-sm",
-            }}
-        />
+      <DataTableCards
+        controller={controller}
+        toolbar={toolbar}
+        isLoading={isLoading}
+        emptyText="No themes found."
+        serverTotalRowsLabel={`${total} theme(s)`}
+        rowClassName={(row) => {
+          const theme = row.original as Theme;
+          return defaultThemeId && theme.id === defaultThemeId
+            ? "bg-muted/60 ring-1 ring-primary/50"
+            : undefined;
+        }}
+      />
     </div>
   );
 }

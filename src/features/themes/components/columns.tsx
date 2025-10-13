@@ -33,8 +33,9 @@ function ColorSwatch({ color }: { color?: string }) {
 export function themeColumns(opts: {
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-  onSetDefault: (id: string, ) => void;
+  onSetDefault: (id: string) => void;
   defaultThemeId?: string;
+  isSettingDefault?: boolean;
 }): ColumnDef<ThemeRow>[] {
 
   return [
@@ -97,6 +98,7 @@ export function themeColumns(opts: {
                   icon: <Star className="h-4 w-4" />,
                   ariaLabel: "Set as default",
                   variant: "ghost",
+                  disabled: opts.isSettingDefault,
                 },
               ].filter(Boolean) as iconAction[]}
               condensed

@@ -12,14 +12,14 @@ import {
 } from "@/components/ui/form";
 import { RHFInput, RHFCombobox } from "@/components/form/controls";
 import { useFlattenErrors } from "@/components/form/useFlattenErrors";
-import type { MerchantLite } from "@/features/merchants";
-import type { ShortlinkCreateInput } from "../model/shortlinkSchema";
-import { PlaceLite, usePlacesLite } from "@/features/places";
-import { useCampaignsLite, CampaignLite } from "@/features/campaigns";
+import type { LiteListe } from "@/types/lists";
+import type { ShortlinkFormValues } from "../model/shortlinkSchema";
+import { usePlacesLite } from "@/features/places";
+import { useCampaignsLite } from "@/features/campaigns";
 import { useThemesLite } from "@/features/themes";
-import type { ThemeLite } from "@/features/themes/model/themeSchema";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { RHFDateInput } from "@/components/form/controls/RHFDateInput";
 
 const CHANNEL_OPTIONS = [
   { value: "qr", label: "QR" },
@@ -34,7 +34,7 @@ type Props = {
   mode: "create" | "edit";
   disabled?: boolean;
   merchantId?: string;
-  merchantsLite?: MerchantLite[];
+  merchantsLite?: LiteListe[];
 };
 
 export function ShortlinkFormFields({
@@ -48,10 +48,13 @@ export function ShortlinkFormFields({
     register,
     watch,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext<ShortlinkFormValues>();
 
   const target = watch("target");
-  const targetType = target?.t ?? "campaign";
+  const targetType: "campaign" | "place" | "none" = (target?.t ?? "none") as
+    | "campaign"
+    | "place"
+    | "none";
   const selectedMerchantId = merchantId ?? watch("merchantId");
 
   // fetch places (lite) for combobox (scoped to merchant if available)
@@ -59,7 +62,7 @@ export function ShortlinkFormFields({
     selectedMerchantId ? { merchantId: selectedMerchantId } : {}
   );
 
-  const { data: CampaignLite = [], isLoading: campaignsLoading } = useCampaignsLite(
+  const { data: campaignsLite = [], isLoading: campaignsLoading } = useCampaignsLite(
     selectedMerchantId ? { merchantId: selectedMerchantId } : {}
   );
 
@@ -92,12 +95,12 @@ export function ShortlinkFormFields({
       <TabsContent value="info">
         <div className="space-y-4">
           {!merchantId ? (
-            <RHFCombobox<MerchantLite>
+            <RHFCombobox<LiteListe>
               name="merchantId"
               label="Merchant"
               options={merchantsLite}
-              getOptionValue={(m) => m.id}
-              getOptionLabel={(m) => m.name}
+              getOptionValue={(m) => m.value}
+              getOptionLabel={(m) => m.label}
               placeholder="Select merchant"
               searchPlaceholder="Search merchants…"
               requiredStar
@@ -135,29 +138,28 @@ export function ShortlinkFormFields({
                   <select
                     className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                     disabled={disabled}
-                    value={(field.value as ShortlinkCreateInput["target"])?.t ?? "campaign"}
+                    value={target?.t ?? "none"}
                     onChange={(event) => {
-                      const next = event.target.value as ShortlinkCreateInput["target"]["t"];
-                      const current = field.value as ShortlinkCreateInput["target"] | undefined;
+                      const next = event.target.value as "none" | "campaign" | "place";
+                      const current = field.value;
+                      if (next === "none") {
+                        field.onChange(null);
+                        return;
+                      }
                       if (next === "campaign") {
                         field.onChange({
                           t: "campaign",
-                          cid: current?.t === "campaign" ? current.cid : "",
-                          pid: current?.t === "campaign" ? current.pid : "",
+                          cid: current && current.t === "campaign" ? current.cid : "",
                         });
-                      } else {
-                        field.onChange({
-                          t: "place",
-                          pid:
-                            current?.t === "campaign"
-                              ? current.pid
-                              : current?.t === "place"
-                                ? current.pid
-                                : "",
-                        });
+                        return;
                       }
+                      field.onChange({
+                        t: "place",
+                        pid: current && current.t === "place" ? current.pid : "",
+                      });
                     }}
                   >
+                    <option value="none">Select target…</option>
                     <option value="campaign">Campaign</option>
                     <option value="place">Place</option>
                   </select>
@@ -168,29 +170,31 @@ export function ShortlinkFormFields({
           />
 
           {targetType === "campaign" && (
-            <RHFCombobox<CampaignLite>
+            <RHFCombobox<LiteListe>
               name="target.cid"
               label="Campaign ID"
-              options={CampaignLite}
-              getOptionValue={(p) => p.id}
-              getOptionLabel={(p) => p.name ?? p.id}
+              options={campaignsLite}
+              getOptionValue={(option) => option.value}
+              getOptionLabel={(option) => option.label}
               placeholder="Select campaign"
               requiredStar
               disabled={disabled || !selectedMerchantId || campaignsLoading}
+              key="campaign-target"
             />
           )}
 
           {targetType === "place" && (
-            <RHFCombobox<PlaceLite>
+            <RHFCombobox<LiteListe>
               name="target.pid"
               label="Place"
               options={placesLite}
-              getOptionValue={(p) => p.id}
-              getOptionLabel={(p) => p.localName ?? p.id}
+              getOptionValue={(option) => option.value}
+              getOptionLabel={(option) => option.label}
               placeholder="Select place"
               searchPlaceholder="Search places…"
               requiredStar
               disabled={disabled || !selectedMerchantId || placesLoading}
+              key="place-target"
             />
           )}
 
@@ -245,12 +249,12 @@ export function ShortlinkFormFields({
               )}
             />
 
-            <RHFCombobox<ThemeLite>
+            <RHFCombobox<LiteListe>
               name="themeId"
               label="Theme Override"
               options={themesLite}
-              getOptionValue={(t) => t.id}
-              getOptionLabel={(t) => t.name ?? t.id}
+              getOptionValue={(t) => t.value}
+              getOptionLabel={(t) => t.label}
               placeholder="Not specified"
               searchPlaceholder="Search themes…"
               disabled={disabled || themesLoading || !selectedMerchantId}
@@ -258,10 +262,9 @@ export function ShortlinkFormFields({
               valueIsNullable
             />
 
-            <RHFInput
+            <RHFDateInput
               name="expiresAt"
               label="Expires At"
-              type="date"
               disabled={disabled}
             />
           </div>

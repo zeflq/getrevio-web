@@ -1,7 +1,6 @@
 // pagination.middleware.js
 module.exports = (req, res, next) => {
   const originalJson = res.json.bind(res);
-console.log('req.query', req.query)
   // Wrap res.json so we can reshape the body after json-server has handled the route
   res.json = (data) => {
     const totalHeader = res.getHeader('X-Total-Count');
@@ -12,7 +11,6 @@ console.log('req.query', req.query)
       req.query._limit &&
       typeof totalHeader !== 'undefined' &&
       Array.isArray(data);
-console.log('shouldPaginate', shouldPaginate)
     if (shouldPaginate) {
       const total = parseInt(totalHeader, 10);
       const page = parseInt(req.query._page, 10);

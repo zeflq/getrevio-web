@@ -12,12 +12,9 @@ export interface DeletePlaceDialogProps {
 
 export function DeletePlaceDialog({ id, open, onOpenChange }: DeletePlaceDialogProps) {
   const { data: place } = usePlaceItem(id);
-  const deletePlace = useDeletePlace();
-
-  const handleConfirm = async () => {
-    await deletePlace.mutateAsync(id);
-    onOpenChange(false);
-  };
+  const { execute, isExecuting } = useDeletePlace<{ id: string }, { ok?: boolean }>({
+    onSuccess: () => onOpenChange(false),
+  });
 
   return (
     <ConfirmByNameDialog
@@ -30,8 +27,8 @@ export function DeletePlaceDialog({ id, open, onOpenChange }: DeletePlaceDialogP
       inputPlaceholder="Enter place name"
       confirmLabel="Delete Place"
       confirmVariant="destructive"
-      loading={deletePlace.isPending}
-      onConfirm={handleConfirm}
+      loading={isExecuting}
+      onConfirm={() => execute({ id })}
       preventCloseWhileLoading
     />
   );

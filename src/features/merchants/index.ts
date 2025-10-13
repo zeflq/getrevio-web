@@ -7,4 +7,3 @@ export * from './components/MerchantHeader';
 export * from './components/QuickStatsCard';
 export * from './hooks/useMerchantQuickStats';
 export * from './hooks/useMerchantCrud';
-export type { MerchantLite } from './model/merchantSchema';
