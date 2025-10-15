@@ -25,6 +25,7 @@ export type PlaceUpdateInput = z.infer<typeof placeUpdateSchema>;
 export const placeFiltersSchema = z
   .object({
     q: z.string().optional(),
+    localName: z.string().optional(),
     merchantId: z.string().optional(),
     _page: z.coerce.number().int().min(1).optional(),
     _limit: z.coerce.number().int().min(1).max(100).optional(),
@@ -33,6 +34,7 @@ export const placeFiltersSchema = z
   })
   .transform((params) => ({
     q: params.q,
+    localName: params.localName,
     merchantId: params.merchantId,
     page: params._page ?? 1,
     pageSize: params._limit ?? 10,

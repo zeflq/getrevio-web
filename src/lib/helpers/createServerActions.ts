@@ -84,6 +84,9 @@ export async function createServerActions<
 
   /** Optional: centralized error hook */
   onError?: (err: unknown, meta: { op: "create" | "update" | "delete"; input: any; ctx: any }) => void | Promise<void>;
+
+  /** Field name used when auto-attaching tenant id during create (default: "tenantId") */
+  tenantKey?: string;
 }) {
   const {
     actionClient,
@@ -105,6 +108,7 @@ export async function createServerActions<
     returnOkOnUpdate = true,
     returnOkOnDelete = true,
     onError,
+    tenantKey = "tenantId",
   } = opts;
 
   // CREATE
@@ -116,7 +120,7 @@ export async function createServerActions<
         const data = (await beforeCreate?.(parsedInput, ctx)) ?? parsedInput;
 
         const record = await delegate.create({
-          data: tenantId ? { ...data, tenantId } : data,
+          data: tenantId && tenantKey ? { ...data, [tenantKey]: tenantId } : data,
           ...(selectAfterCreate ? { select: selectAfterCreate } : {}),
         });
 
@@ -146,8 +150,6 @@ export async function createServerActions<
           const guardedWhere = whereByIdTenant(id, tenantId);
 
           const previous = getById ? await getById(id, tenantId) : undefined;
-console.log("previousddddddd");
-console.log(parsedInput);
           const nextPatch =
             (await beforeUpdate?.(id, patch as TUpdateInput, ctx)) ??
             (patch as TUpdateInput);

@@ -1,6 +1,6 @@
 // features/places/server/queries.ts
 import prisma from "@/lib/prisma";
-// import { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 import { createServerQueries } from "@/lib/helpers/createServerQueries";
 import { placeFiltersSchema, type PlaceFilters } from "../model/placeSchema";
@@ -49,9 +49,7 @@ export const {
     ...(filters.q
       ? {
           OR: [
-            { localName: { contains: filters.q, mode: "insensitive" } },
-            { slug: { contains: filters.q, mode: "insensitive" } },
-            { address: { contains: filters.q, mode: "insensitive" } },
+            { localName: { contains: filters.q, mode: Prisma.QueryMode.insensitive } },
           ],
         }
       : {}),

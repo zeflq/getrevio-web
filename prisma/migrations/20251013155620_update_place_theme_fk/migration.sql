@@ -1,0 +1,2 @@
+-- AddForeignKey
+ALTER TABLE "Place" ADD CONSTRAINT "Place_themeId_fkey" FOREIGN KEY ("themeId") REFERENCES "Theme"("id") ON DELETE SET NULL ON UPDATE CASCADE;

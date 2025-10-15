@@ -14,93 +14,94 @@ datasource db {
 }
 
 model Merchant {
-  id             String   @id @default(cuid()) // UUID type in TS
+  id             String      @id @default(cuid()) // UUID type in TS
   name           String
-  email          String?  @unique
+  email          String?     @unique
   locale         String?
   defaultThemeId String?
   plan           Plan
   status         Status
-  createdAt      DateTime @default(now())
+  createdAt      DateTime    @default(now())
   places         Place[]
   themes         Theme[]
-  defaultTheme   Theme?   @relation("MerchantDefaultTheme", fields: [defaultThemeId], references: [id])
+  defaultTheme   Theme?      @relation("MerchantDefaultTheme", fields: [defaultThemeId], references: [id])
   campaigns      Campaign[]
   shortlinks     Shortlink[]
 }
 
 model Place {
-  id           String   @id @default(cuid())
-  merchantId   String
-  merchant     Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  localName    String
-  slug         String   // required
+  id         String   @id @default(cuid())
+  merchantId String
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  localName  String
+  slug       String // required
+
+  address         String?
+  themeId         String?
+  theme           Theme?   @relation(fields: [themeId], references: [id], onDelete: SetNull)
+  landingDefaults Json?
+  googlePlaceId   String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  campaigns Campaign[]
+
   @@unique([merchantId, slug], map: "place_merchant_slug_unique") // ← as you asked
   @@index([merchantId])
-
-  address        String?
-  themeId        String?
-  landingDefaults Json?
-  googlePlaceId  String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  campaigns     Campaign[]
-
 }
 
-
 model Theme {
-  id        String   @id @default(cuid())
-  merchantId String
-  merchant  Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  name      String
-  logoUrl   String?
-  brandColor String?
-  accentColor String?
-  textColor String?
-  meta      Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                    String     @id @default(cuid())
+  merchantId            String
+  merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  name                  String
+  logoUrl               String?
+  brandColor            String?
+  accentColor           String?
+  textColor             String?
+  meta                  Json?
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
   merchantsUsingDefault Merchant[] @relation("MerchantDefaultTheme")
+  Place                 Place[]
 }
 
 model Campaign {
-  id            String   @id @default(cuid())
-  merchantId    String
-  merchant      Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  placeId       String
-  place         Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())
+  merchantId String
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  placeId    String
+  place      Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
-  name          String
-  slug          String?  // optional
-  @@unique([placeId, slug], map: "campaign_place_slug_unique") // multiple NULLs are allowed
-  @@index([merchantId])
-  @@index([placeId])
+  name String
+  slug String? // optional
 
   primaryCtaUrl String
   theme         Json?
   status        CampaignStatus @default(draft)
   startAt       DateTime?
   endAt         DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@unique([placeId, slug], map: "campaign_place_slug_unique") // multiple NULLs are allowed
+  @@index([merchantId])
+  @@index([placeId])
 }
 
-
 model Shortlink {
-  id        String   @id @default(cuid())
-  code      String   @unique
+  id         String    @id @default(cuid())
+  code       String    @unique
   merchantId String
-  merchant  Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  target    Json
-  channel   String?
-  themeId   String?
-  active    Boolean  @default(true)
-  expiresAt DateTime?
-  utm       Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  merchant   Merchant  @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  target     Json
+  channel    String?
+  themeId    String?
+  active     Boolean   @default(true)
+  expiresAt  DateTime?
+  utm        Json?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 /// Enums matching your TS literal types

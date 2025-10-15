@@ -50,6 +50,8 @@ export function createServerQueries<
   select?: TSelect;
   /** id field name; used by getById (default: "id") */
   idKey?: string;
+  /** field name used to scope queries by tenant (default: "tenantId") */
+  tenantKey?: string;
   /** projector: DB row -> public DTO for main list/get (default: identity) */
   mapRow?: (row: TRow) => TPublic;
 
@@ -74,6 +76,7 @@ export function createServerQueries<
     orderBy,
     select,
     idKey = "id",
+    tenantKey = "merchantId",
     mapRow = (x) => x as unknown as TPublic,
     lite,
   } = opts;
@@ -85,7 +88,11 @@ export function createServerQueries<
     const rawFilters = hasTenant ? maybeFilters : tenantIdOrFilters;
 
     const f = filterSchema.parse(rawFilters);
-    const where = buildWhere(f, tenantId);
+    const whereFilters = buildWhere(f, tenantId);
+    const where =
+      tenantId && tenantKey
+        ? ({ ...whereFilters, [tenantKey]: tenantId } as unknown as TWhere)
+        : whereFilters;
     const ob = typeof orderBy === "function" ? orderBy(f) : orderBy;
 
     const [total, rows] = await Promise.all([
@@ -112,7 +119,10 @@ export function createServerQueries<
     const id = hasTenant ? (maybeId as string) : (tenantIdOrId as string);
     const tenantId = hasTenant ? (tenantIdOrId as string) : undefined;
 
-    const where = { [idKey]: id, ...(tenantId ? { tenantId } : {}) } as unknown as TWhere;
+    const where = {
+      [idKey]: id,
+      ...(tenantId && tenantKey ? { [tenantKey]: tenantId } : {}),
+    } as unknown as TWhere;
 
     const row = await delegate.findFirst({
       where,
@@ -139,7 +149,11 @@ export function createServerQueries<
     const rawFilters = hasTenant ? maybeFilters : tenantIdOrFilters;
 
     const f = filterSchema.parse(rawFilters);
-    const where = buildWhere(f, tenantId);
+    const whereFilters = buildWhere(f, tenantId);
+    const where =
+      tenantId && tenantKey
+        ? ({ ...whereFilters, [tenantKey]: tenantId } as unknown as TWhere)
+        : whereFilters;
 
     // Derive limit safely from filters if they include pageSize; otherwise use default
     const requested = (f as any).pageSize ?? defaultLimit;

@@ -30,6 +30,7 @@ bun dev
     │
     ├─ hooks/
     │  ├─ use<Entity>Crud.ts           # wraps createCrudBridge: useList/useItem/useLite + use*Action
+    │  ├─ createCrudBridge.ts          # helper to create client hooks
     │  └─ index.ts
     │
     ├─ components/                     # client UI for this feature only
@@ -49,6 +50,9 @@ bun dev
     │           ├─ [id]/route.ts       # GET item (optional)
     │           └─ lite/route.ts       # GET lite (label/value) for comboboxes
     │
+    ├─ lib/helpers/
+    │  ├─ createServerQueries.ts      # helper to create server queries
+    │  └─ createServerActions.ts      # helper to create server actions
     └─ index.ts                        # public API of the feature (barrel)
 
 ```
