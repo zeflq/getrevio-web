@@ -1,67 +1,70 @@
-// features/themes/server/queries.ts
-import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
-import { createServerQueries } from "@/lib/helpers/createServerQueries";
-import { themeFiltersSchema, type ThemeFilters } from "../model/themeSchema";
+import { createServerQueries } from "@/server/core/queries/createServerQueries";
+import { makeSortPolicy } from "@/server/core/policies/sortPolicy";
 
-const orderByMain = (filters: { sort: "name" | "createdAt"; order: "asc" | "desc" }) => ({
-  [filters.sort]: filters.order,
+import {
+  themeFiltersSchema,
+  type ThemeFilters,
+} from "../model/themeSchema";
+import { buildThemeWhere } from "./buildWhere";
+import {
+  mapThemeLite,
+  mapThemeRow,
+  type ThemeListDTO,
+} from "./mappers";
+import { themeQueryPolicy } from "./policy";
+import {
+  themeLiteSelect,
+  themeRepo,
+  themeSelect,
+} from "./repo";
+
+const themeSortPolicy = makeSortPolicy<ThemeFilters>({
+  allowed: ["name", "createdAt"],
+  defaultKey: "createdAt",
+  defaultDir: "desc",
 });
 
-const orderByLite = () => ({ name: "asc" as const });
-
-const select = {
-  id: true,
-  merchantId: true,
-  name: true,
-  logoUrl: true,
-  brandColor: true,
-  accentColor: true,
-  textColor: true,
-  meta: true,
-  createdAt: true,
-  updatedAt: true,
-} ;
-
-type ThemeSelectRow = Prisma.ThemeGetPayload<{ select: typeof select }>;
-
-type ThemeListDTO = {
-  id: string;
-  merchantId: string;
-  name: string;
-  logoUrl?: string;
-  brandColor?: string;
-  accentColor?: string;
-  textColor?: string;
-  meta?: Record<string, unknown>;
-  createdAt: string;
-  updatedAt: string;
-};
+const themeLiteSortPolicy = makeSortPolicy<ThemeFilters>({
+  allowed: ["name"],
+  defaultKey: "name",
+  defaultDir: "asc",
+});
 
 export const {
   list: listThemesServer,
   getById: getThemeServer,
   listLite: listThemesLiteServer,
-} = createServerQueries({
-  delegate: prisma.theme,
+  create: createThemeServer,
+  update: updateThemeServer,
+  remove: removeThemeServer,
+} = createServerQueries<
+  Prisma.ThemeGetPayload<{ select: typeof themeSelect }>,
+  ThemeListDTO,
+  Prisma.ThemeWhereInput,
+  typeof themeSelect,
+  ThemeFilters,
+  Prisma.ThemeGetPayload<{ select: typeof themeLiteSelect }>,
+  { value: string; label: string },
+  typeof themeLiteSelect,
+  Prisma.ThemeCreateInput,
+  Prisma.ThemeUpdateInput
+>({
+  repo: themeRepo,
+  policy: themeQueryPolicy,
   filterSchema: themeFiltersSchema,
-  buildWhere: (filters) => ({
-    ...(filters.q
-      ? {
-          OR: [
-            { name: { contains: filters.q, mode: Prisma.QueryMode.insensitive } },
-            { logoUrl: { contains: filters.q, mode: Prisma.QueryMode.insensitive } },
-          ],
-        }
-      : {}),
-    ...(filters.merchantId ? { merchantId: filters.merchantId } : {}),
-  }),
-  orderBy: orderByMain,
-  select,
+  buildWhere: buildThemeWhere,
+  tenantKey: "merchantId",
+  select: themeSelect,
+  mapRow: mapThemeRow,
+  sort: themeSortPolicy,
   lite: {
-    select: { id: true, name: true },
-    orderBy: orderByLite,
+    select: themeLiteSelect,
+    mapLite: mapThemeLite,
+    defaultLimit: 20,
+    maxLimit: 50,
+    sort: themeLiteSortPolicy,
   },
 });
 

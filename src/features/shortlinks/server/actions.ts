@@ -4,8 +4,8 @@
 import { z } from "zod";
 import { randomBytes } from "crypto";
 import prisma from "@/lib/prisma";
-import { createServerActions } from "@/lib/helpers/createServerActions";
 import { actionUser } from "@/lib/actionUser";
+import { createServerActions } from "@/server/core/actions/createServerActions";
 import {
   shortlinkCreateSchema,
   shortlinkUpdateSchema,
@@ -16,9 +16,12 @@ import {
   onShortlinkDeleted,
   type ShortlinkRow,
 } from "./redis.actions";
+import { shortlinkRepo, shortlinkSelect } from "./repo";
+import type { ShortlinkSelectRow } from "./mappers";
 
 // ---------- schemas ----------
 const deleteSchema = z.object({ id: z.string() });
+const shortlinkUpdateWithIdSchema = shortlinkUpdateSchema.extend({ id: z.string() });
 
 // ---------- code generator ----------
 const CODE_ALPHABET =
@@ -57,9 +60,63 @@ const ensureUniqueCode = async (preferred?: string | null) => {
 };
 
 // ---------- actions ----------
+const toRedisRow = (row: ShortlinkSelectRow | null | undefined): ShortlinkRow | null => {
+  if (!row) return null;
+  return {
+    id: row.id,
+    code: row.code,
+    target: row.target,
+    merchantId: row.merchantId,
+    channel: row.channel ?? null,
+    themeId: row.themeId ?? null,
+    active: row.active,
+    expiresAt: row.expiresAt
+      ? row.expiresAt instanceof Date
+        ? row.expiresAt.toISOString()
+        : (row.expiresAt as unknown as string)
+      : null,
+    utm: row.utm ?? null,
+  };
+};
+
+const normalizePatchForRedis = (
+  patch: Omit<z.output<typeof shortlinkUpdateWithIdSchema>, "id">
+): Partial<ShortlinkRow> => {
+  const result: Partial<ShortlinkRow> = {};
+  if (Object.prototype.hasOwnProperty.call(patch, "code") && patch.code !== undefined) {
+    result.code = patch.code;
+  }
+  if (Object.prototype.hasOwnProperty.call(patch, "target") && patch.target !== undefined) {
+    result.target = patch.target;
+  }
+  if (Object.prototype.hasOwnProperty.call(patch, "channel") && patch.channel !== undefined) {
+    result.channel = patch.channel ?? null;
+  }
+  if (Object.prototype.hasOwnProperty.call(patch, "themeId") && patch.themeId !== undefined) {
+    result.themeId = patch.themeId ?? null;
+  }
+  if (Object.prototype.hasOwnProperty.call(patch, "active") && patch.active !== undefined) {
+    result.active = patch.active;
+  }
+  if (Object.prototype.hasOwnProperty.call(patch, "expiresAt") && patch.expiresAt !== undefined) {
+    result.expiresAt = patch.expiresAt
+      ? patch.expiresAt instanceof Date
+        ? patch.expiresAt.toISOString()
+        : (patch.expiresAt as unknown as string)
+      : null;
+  }
+  if (Object.prototype.hasOwnProperty.call(patch, "utm") && patch.utm !== undefined) {
+    result.utm = patch.utm ?? null;
+  }
+  if (Object.prototype.hasOwnProperty.call(patch, "merchantId") && patch.merchantId !== undefined) {
+    result.merchantId = patch.merchantId;
+  }
+  return result;
+};
+
 const actions = await createServerActions({
   actionClient: actionUser,
-  delegate: prisma.shortlink,
+  repo: shortlinkRepo,
 
   // IMPORTANT: scope by id + tenant
   whereByIdTenant: (id: string, tenantId?: string) => ({
@@ -71,24 +128,15 @@ const actions = await createServerActions({
   getById: (id: string, tenantId?: string) =>
     prisma.shortlink.findFirst({
       where: tenantId ? { id, merchantId: tenantId } : { id },
-      select: {
-        id: true,
-        code: true,
-        target: true,
-        merchantId: true,
-        channel: true,
-        themeId: true,
-        active: true,
-        expiresAt: true,
-        utm: true,
-      },
-    }),
+      select: shortlinkSelect,
+    }) as Promise<ShortlinkSelectRow | null>,
 
   createSchema: shortlinkCreateSchema,
-  updateSchema: shortlinkUpdateSchema.extend({ id: z.string() }),
+  updateSchema: shortlinkUpdateWithIdSchema,
   deleteSchema,
 
   getTenantId: (ctx) => ctx.user?.tenantId,
+  tenantKey: "merchantId",
   revalidateTag: "shortlinks",
 
   beforeCreate: async (input) => {
@@ -96,28 +144,25 @@ const actions = await createServerActions({
     return { ...input, code };
   },
 
-  // On retourne ce qui est utile et suffisant pour Redis.create
-  selectAfterCreate: {
-    id: true,
-    code: true,
-    target: true,
-    merchantId: true,
-    channel: true,
-    themeId: true,
-    active: true,
-    expiresAt: true,
-    utm: true,
-  },
+  selectAfterCreate: shortlinkSelect,
+  selectAfterUpdate: shortlinkSelect,
 
   // 🔴 Delegation Redis
   afterCreate: async ({ record }) => {
-    await onShortlinkCreated(record as ShortlinkRow);
+    const redisRow = toRedisRow(record as ShortlinkSelectRow);
+    if (redisRow) await onShortlinkCreated(redisRow);
   },
   afterUpdate: async ({ previous, inputPatch }) => {
-    await onShortlinkUpdated(previous as ShortlinkRow, inputPatch as Partial<ShortlinkRow>);
+    const prevRow = toRedisRow(previous as ShortlinkSelectRow | null | undefined);
+    if (!prevRow) return;
+    const patch = normalizePatchForRedis(
+      inputPatch as Omit<z.output<typeof shortlinkUpdateWithIdSchema>, "id">
+    );
+    await onShortlinkUpdated(prevRow, patch);
   },
   afterDelete: async ({ previous }) => {
-    await onShortlinkDeleted(previous as ShortlinkRow);
+    const prevRow = toRedisRow(previous as ShortlinkSelectRow | null | undefined);
+    if (prevRow) await onShortlinkDeleted(prevRow);
   },
 });
 

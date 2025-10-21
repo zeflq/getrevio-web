@@ -1,69 +1,70 @@
-// features/places/server/queries.ts
-import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
-import { createServerQueries } from "@/lib/helpers/createServerQueries";
-import { placeFiltersSchema, type PlaceFilters } from "../model/placeSchema";
+import { createServerQueries } from "@/server/core/queries/createServerQueries";
+import { makeSortPolicy } from "@/server/core/policies/sortPolicy";
 
-const orderByMain = (filters: { sort: "localName" | "createdAt"; order: "asc" | "desc" }) => ({
-  [filters.sort]: filters.order,
+import {
+  placeFiltersSchema,
+  type PlaceFilters,
+} from "../model/placeSchema";
+import { buildPlaceWhere } from "./buildWhere";
+import {
+  mapPlaceLite,
+  mapPlaceRow,
+  type PlaceListDTO,
+} from "./mappers";
+import { placeQueryPolicy } from "./policy";
+import {
+  placeLiteSelect,
+  placeRepo,
+  placeSelect,
+} from "./repo";
+
+const placeSortPolicy = makeSortPolicy<PlaceFilters>({
+  allowed: ["localName", "createdAt"],
+  defaultKey: "createdAt",
+  defaultDir: "desc",
 });
 
-const orderByLite = () => ({ localName: "asc" as const });
-
-const select = {
-  id: true,
-  merchantId: true,
-  localName: true,
-  slug: true,
-  address: true,
-  themeId: true,
-  landingDefaults: true,
-  googlePlaceId: true,
-  createdAt: true,
-  updatedAt: true,
-} ;
-
-
-type PlaceListDTO = {
-  id: string;
-  merchantId: string;
-  localName: string;
-  slug: string;
-  address?: string;
-  themeId?: string;
-  landingDefaults?: Record<string, unknown>;
-  googlePlaceId?: string;
-  createdAt: string;
-  updatedAt: string;
-};
+const placeLiteSortPolicy = makeSortPolicy<PlaceFilters>({
+  allowed: ["localName"],
+  defaultKey: "localName",
+  defaultDir: "asc",
+});
 
 export const {
   list: listPlacesServer,
   getById: getPlaceServer,
   listLite: listPlacesLiteServer,
-} = createServerQueries({
-  delegate: prisma.place,
+  create: createPlaceServer,
+  update: updatePlaceServer,
+  remove: removePlaceServer,
+} = createServerQueries<
+  Prisma.PlaceGetPayload<{ select: typeof placeSelect }>,
+  PlaceListDTO,
+  Prisma.PlaceWhereInput,
+  typeof placeSelect,
+  PlaceFilters,
+  Prisma.PlaceGetPayload<{ select: typeof placeLiteSelect }>,
+  { value: string; label: string },
+  typeof placeLiteSelect,
+  Prisma.PlaceCreateInput,
+  Prisma.PlaceUpdateInput
+>({
+  repo: placeRepo,
+  policy: placeQueryPolicy,
   filterSchema: placeFiltersSchema,
-  buildWhere: (filters) => ({
-    ...(filters.q
-      ? {
-          OR: [
-            { localName: { contains: filters.q, mode: Prisma.QueryMode.insensitive } },
-          ],
-        }
-      : {}),
-    ...(filters.merchantId ? { merchantId: filters.merchantId } : {}),
-  }),
-  orderBy: orderByMain,
-  select,
+  buildWhere: buildPlaceWhere,
+  tenantKey: "merchantId",
+  select: placeSelect,
+  mapRow: mapPlaceRow,
+  sort: placeSortPolicy,
   lite: {
-    select: { id: true, localName: true },
-    orderBy: orderByLite,
-    // mapLite: (row: { id: string; localName: string | null }) => ({
-    //   value: row.id,
-    //   label: row.localName ?? row.id,
-    // }),
+    select: placeLiteSelect,
+    mapLite: mapPlaceLite,
+    defaultLimit: 20,
+    maxLimit: 50,
+    sort: placeLiteSortPolicy,
   },
 });
 

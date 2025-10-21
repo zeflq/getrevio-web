@@ -5,37 +5,35 @@ import { z } from "zod";
 
 import prisma from "@/lib/prisma";
 import { actionUser } from "@/lib/actionUser";
-import { createServerActions } from "@/lib/helpers/createServerActions";
+import { createServerActions } from "@/server/core/actions/createServerActions";
 import {
   themeCreateSchema,
   themeUpdateSchema,
 } from "@/features/themes/model/themeSchema";
 
+import { themeRepo, themeSelect } from "./repo";
+
 const deleteSchema = z.object({ id: z.string() });
 
-const whereById = (id: string, tenantId?: string) => ({
+const whereByIdTenant = (id: string, tenantId?: string) => ({
   id,
-  ...(tenantId ? { tenantId } : {}),
+  ...(tenantId ? { merchantId: tenantId } : {}),
 });
 
 const actions = await createServerActions({
   actionClient: actionUser,
-  delegate: prisma.theme,
-  whereByIdTenant: whereById,
+  repo: themeRepo,
+  whereByIdTenant,
   createSchema: themeCreateSchema,
   updateSchema: themeUpdateSchema.extend({ id: z.string() }),
   deleteSchema,
   getTenantId: (ctx) => ctx.user?.tenantId,
+  tenantKey: "merchantId",
   revalidateTag: "themes",
   beforeCreate: async (input) => input,
   beforeUpdate: async (_id, patch) => patch,
-  selectAfterCreate: {
-    id: true,
-    merchantId: true,
-    name: true,
-    createdAt: true,
-    updatedAt: true,
-  },
+  selectAfterCreate: themeSelect,
+  selectAfterUpdate: themeSelect,
 });
 
 export const createThemeAction = actions.createAction;

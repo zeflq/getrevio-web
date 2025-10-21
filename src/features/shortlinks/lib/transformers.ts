@@ -55,7 +55,7 @@ export const shortlinkToFormValues = (s: Shortlink): ShortlinkFormValues => {
     channel: asChannel(s.channel),
     themeId: trimOrUndefined(s.themeId),
     active: s.active,
-    expiresAt: s.expiresAt ?? undefined,
+    expiresAt: s.expiresAt ? new Date(s.expiresAt):undefined,
     utm: ensureUtmForForm(s.utm),
   };
 };

@@ -3,40 +3,36 @@
 
 import { z } from "zod";
 
-import prisma from "@/lib/prisma";
 import { actionUser } from "@/lib/actionUser";
-import { createServerActions } from "@/lib/helpers/createServerActions";
+import { createServerActions } from "@/server/core/actions/createServerActions";
+
 import {
   placeCreateSchema,
   placeUpdateSchema,
 } from "@/features/places/model/placeSchema";
+import { placeRepo, placeSelect } from "./repo";
 
 const deleteSchema = z.object({ id: z.string() });
 
-const whereById = (id: string, tenantId?: string) => ({
+const whereByIdTenant = (id: string, tenantId?: string) => ({
   id,
-  ...(tenantId ? { tenantId } : {}),
+  ...(tenantId ? { merchantId: tenantId } : {}),
 });
 
 const actions = await createServerActions({
   actionClient: actionUser,
-  delegate: prisma.place,
-  whereByIdTenant: whereById,
+  repo: placeRepo,
+  whereByIdTenant,
   createSchema: placeCreateSchema,
   updateSchema: placeUpdateSchema.extend({ id: z.string() }),
   deleteSchema,
   getTenantId: (ctx) => ctx.user?.tenantId,
+  tenantKey: "merchantId",
   revalidateTag: "places",
   beforeCreate: async (input) => input,
   beforeUpdate: async (_id, patch) => patch,
-  selectAfterCreate: {
-    id: true,
-    merchantId: true,
-    localName: true,
-    slug: true,
-    createdAt: true,
-    updatedAt: true,
-  },
+  selectAfterCreate: placeSelect,
+  selectAfterUpdate: placeSelect,
 });
 
 export const createPlaceAction = actions.createAction;

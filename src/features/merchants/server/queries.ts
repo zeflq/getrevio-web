@@ -1,48 +1,71 @@
-// features/merchants/server/queries.ts
-import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
-import { merchantFiltersSchema } from "../model/merchantSchema";
-import { createServerQueries } from "@/lib/helpers/createServerQueries";
+import type { Prisma } from "@prisma/client";
 
-const orderByMain = (f: { sort: "name" | "createdAt" | "plan" | "status"; order: "asc" | "desc" }) => ({
-  [f.sort]: f.order,
+import { createServerQueries } from "@/server/core/queries/createServerQueries";
+import { makeSortPolicy } from "@/server/core/policies/sortPolicy";
+
+import {
+  merchantFiltersSchema,
+  type MerchantFilters,
+} from "../model/merchantSchema";
+import { buildMerchantWhere } from "./buildWhere";
+import {
+  mapMerchantLite,
+  mapMerchantRow,
+  type MerchantListDTO,
+} from "./mappers";
+import { merchantQueryPolicy } from "./policy";
+import {
+  merchantLiteSelect,
+  merchantRepo,
+  merchantSelect,
+} from "./repo";
+
+const merchantSortPolicy = makeSortPolicy<MerchantFilters>({
+  allowed: ["name", "createdAt", "plan", "status"],
+  defaultKey: "createdAt",
+  defaultDir: "desc",
 });
 
-const orderByLite = () => ({ name: "asc" as const });
+const merchantLiteSortPolicy = makeSortPolicy<MerchantFilters>({
+  allowed: ["name"],
+  defaultKey: "name",
+  defaultDir: "asc",
+});
 
-export const { list: listMerchantsServer, getById: getMerchantServer, listLite: listMerchantsLiteServer } =
-  createServerQueries({
-    delegate: prisma.merchant,
-    filterSchema: merchantFiltersSchema,
-    // WHERE builder (single-tenant for now)
-    buildWhere: (filters) => ({
-      ...(filters.q
-        ? {
-            OR: [
-              { name: { contains: filters.q, mode: Prisma.QueryMode.insensitive } },
-              { email: { contains: filters.q, mode: Prisma.QueryMode.insensitive } },
-            ],
-          }
-        : {}),
-      ...(filters.plan ? { plan: filters.plan } : {}),
-      ...(filters.status ? { status: filters.status } : {}),
-    }),
-    orderBy: orderByMain,
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      defaultThemeId: true,
-      plan: true,
-      status: true,
-      createdAt: true,
-    },
-    lite: {
-      select: { id: true, name: true },
-      orderBy: orderByLite,
-      defaultLimit: 20,
-      maxLimit: 50,
-      // mapLite optional: default is { value: id, label: name }
-      // mapLite: (r) => ({ value: r.id, label: r.name }),
-    },
-  });
+export const {
+  list: listMerchantsServer,
+  getById: getMerchantServer,
+  listLite: listMerchantsLiteServer,
+  create: createMerchantServer,
+  update: updateMerchantServer,
+  remove: removeMerchantServer,
+} = createServerQueries<
+  Prisma.MerchantGetPayload<{ select: typeof merchantSelect }>,
+  MerchantListDTO,
+  Prisma.MerchantWhereInput,
+  typeof merchantSelect,
+  MerchantFilters,
+  Prisma.MerchantGetPayload<{ select: typeof merchantLiteSelect }>,
+  { value: string; label: string },
+  typeof merchantLiteSelect,
+  Prisma.MerchantCreateInput,
+  Prisma.MerchantUpdateInput
+>({
+  repo: merchantRepo,
+  policy: merchantQueryPolicy,
+  filterSchema: merchantFiltersSchema,
+  buildWhere: buildMerchantWhere,
+  tenantKey: "tenantId",
+  select: merchantSelect,
+  mapRow: mapMerchantRow,
+  sort: merchantSortPolicy,
+  lite: {
+    select: merchantLiteSelect,
+    mapLite: mapMerchantLite,
+    defaultLimit: 20,
+    maxLimit: 50,
+    sort: merchantLiteSortPolicy,
+  },
+});
+
+export type { MerchantListDTO as MerchantListItem };
