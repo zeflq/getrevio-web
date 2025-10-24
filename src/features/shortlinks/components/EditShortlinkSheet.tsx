@@ -59,7 +59,6 @@ export function EditShortlinkSheet({
   });
 
   const { reset } = methods;
-console.log('eeee');
   React.useEffect(() => {
     if (shortlinkQuery.data) {
       reset(shortlinkToFormValues(shortlinkQuery.data));

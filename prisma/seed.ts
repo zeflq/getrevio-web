@@ -177,6 +177,24 @@ async function main() {
     data: { defaultThemeId: "th_modern" },
   });
 
+  const superAdminEmail = "flaviodelmondo@gmail.com";
+
+  await prisma.user.upsert({
+    where: { email: superAdminEmail },
+    update: {
+      name: "Flavio Delmondo",
+      globalRole: "SUPER_ADMIN",
+      emailVerified: true,
+    },
+    create: {
+      id: "usr_super_admin",
+      name: "Flavio Delmondo",
+      email: superAdminEmail,
+      globalRole: "SUPER_ADMIN",
+      emailVerified: true,
+    },
+  });
+
   console.log(
     `Seeded ${merchants.length} merchants, ${places.length} places, and ${themes.length} themes.`
   );

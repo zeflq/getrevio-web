@@ -36,9 +36,6 @@ export const {
   list: listMerchantsServer,
   getById: getMerchantServer,
   listLite: listMerchantsLiteServer,
-  create: createMerchantServer,
-  update: updateMerchantServer,
-  remove: removeMerchantServer,
 } = createServerQueries<
   Prisma.MerchantGetPayload<{ select: typeof merchantSelect }>,
   MerchantListDTO,
@@ -47,9 +44,7 @@ export const {
   MerchantFilters,
   Prisma.MerchantGetPayload<{ select: typeof merchantLiteSelect }>,
   { value: string; label: string },
-  typeof merchantLiteSelect,
-  Prisma.MerchantCreateInput,
-  Prisma.MerchantUpdateInput
+  typeof merchantLiteSelect
 >({
   repo: merchantRepo,
   policy: merchantQueryPolicy,

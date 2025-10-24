@@ -18,7 +18,7 @@ export default function MerchantDetailPage({
   const { data: merchant, isLoading, error } = useMerchantItem(resolvedParams.merchantId);
   //const { data: stats, isLoading: isStatsLoading } = useMerchantQuickStats({ id: resolvedParams.merchantId });
   const [editSheetOpen, setEditSheetOpen] = useState(false);
-console.log('merchant', merchant);
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <SinglePageHeader

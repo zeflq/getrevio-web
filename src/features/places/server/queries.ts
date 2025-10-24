@@ -19,6 +19,7 @@ import {
   placeRepo,
   placeSelect,
 } from "./repo";
+import { ensureSuperAdmin } from "@/server/core/security/adminGuards";
 
 const placeSortPolicy = makeSortPolicy<PlaceFilters>({
   allowed: ["localName", "createdAt"],
@@ -36,9 +37,6 @@ export const {
   list: listPlacesServer,
   getById: getPlaceServer,
   listLite: listPlacesLiteServer,
-  create: createPlaceServer,
-  update: updatePlaceServer,
-  remove: removePlaceServer,
 } = createServerQueries<
   Prisma.PlaceGetPayload<{ select: typeof placeSelect }>,
   PlaceListDTO,
@@ -47,9 +45,7 @@ export const {
   PlaceFilters,
   Prisma.PlaceGetPayload<{ select: typeof placeLiteSelect }>,
   { value: string; label: string },
-  typeof placeLiteSelect,
-  Prisma.PlaceCreateInput,
-  Prisma.PlaceUpdateInput
+  typeof placeLiteSelect
 >({
   repo: placeRepo,
   policy: placeQueryPolicy,
@@ -66,6 +62,7 @@ export const {
     maxLimit: 50,
     sort: placeLiteSortPolicy,
   },
+  authorize: ensureSuperAdmin,
 });
 
 export type { PlaceListDTO as PlaceListItem };

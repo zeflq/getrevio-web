@@ -1,44 +1,21 @@
-"use client"
+// app/page.tsx
+import { redirect } from "next/navigation";
+import { getServerSession } from "@/lib/auth-server"; // implement with Better Auth
+import { SUPER_ADMIN } from "@/lib/utils";
 
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { MerchantSidebar } from "@/components/merchant-sidebar"
-import { LanguageSwitcher } from "@/components/language-switcher"
+export const dynamic = "force-dynamic";
 
-export default function MerchantHome({ params }: { params: { local: string } }) {
-  const base = `/${params.local}`
-  return (
-    <SidebarProvider>
-      <MerchantSidebar base={base} />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 justify-between">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">Merchant</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Dashboard</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-          <LanguageSwitcher className="px-4" />
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-          </div>
-          <div className="bg-muted/50 min-h-[40vh] flex-1 rounded-xl md:min-h-min" />
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
-  )
+export default async function Home() {
+  const session = await getServerSession();
+  if (!session?.user) {
+    redirect("/login");
+  }
+
+  const role = session.user.globalRole;
+  if (role === SUPER_ADMIN) {
+    redirect("/admin");
+  }
+
+  // Default landing for normal users
+  redirect("/m");
 }

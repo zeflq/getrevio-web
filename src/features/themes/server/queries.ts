@@ -36,9 +36,6 @@ export const {
   list: listThemesServer,
   getById: getThemeServer,
   listLite: listThemesLiteServer,
-  create: createThemeServer,
-  update: updateThemeServer,
-  remove: removeThemeServer,
 } = createServerQueries<
   Prisma.ThemeGetPayload<{ select: typeof themeSelect }>,
   ThemeListDTO,
@@ -47,9 +44,7 @@ export const {
   ThemeFilters,
   Prisma.ThemeGetPayload<{ select: typeof themeLiteSelect }>,
   { value: string; label: string },
-  typeof themeLiteSelect,
-  Prisma.ThemeCreateInput,
-  Prisma.ThemeUpdateInput
+  typeof themeLiteSelect
 >({
   repo: themeRepo,
   policy: themeQueryPolicy,

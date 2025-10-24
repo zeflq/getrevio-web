@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { defaultLiteMapper } from "../mappers/defaultMappers";
 import type { PagedFilters, QueryPolicy } from "../policies/queryPolicy";
-import type { CrudRepo, ReadRepo } from "../repos/types";
+import type { ReadRepo } from "../repos/types";
 
 export type QueryOptions = {
   signal?: AbortSignal;
@@ -50,11 +50,9 @@ type CreateServerQueriesOptions<
   TFilters extends PagedFilters,
   TLiteRow,
   TLite,
-  TSelectLite,
-  TCreate,
-  TUpdate
+  TSelectLite
 > = {
-  repo: CrudRepo<TRow, TWhere, TSelect, TCreate, TUpdate>;
+  repo: ReadRepo<TRow, TWhere, TSelect>;
   liteRepo?: ReadRepo<TLiteRow, TWhere, TSelectLite>;
   policy: QueryPolicy<TFilters, TWhere>;
   filterSchema: z.ZodType<TFilters>;
@@ -66,6 +64,12 @@ type CreateServerQueriesOptions<
   sort?: SortPolicy<TFilters>;
   lite?: LiteConfig<TFilters, TLiteRow, TLite, TSelectLite>;
   withTimeout?: WithTimeout;
+  authorize?: (args: {
+    action: "list" | "getById" | "listLite";
+    tenantId?: string;
+    filters?: TFilters;
+    id?: string;
+  }) => Promise<void> | void;
 };
 
 export type ListEnvelope<T> = { data: T[]; total: number; totalPages: number };
@@ -78,10 +82,8 @@ export function createServerQueries<
   TFilters extends PagedFilters = PagedFilters,
   TLiteRow = TRow,
   TLite = any,
-  TSelectLite = any,
-  TCreate = any,
-  TUpdate = any
->(opts: CreateServerQueriesOptions<TRow, TPublic, TWhere, TSelect, TFilters, TLiteRow, TLite, TSelectLite, TCreate, TUpdate>) {
+  TSelectLite = any
+>(opts: CreateServerQueriesOptions<TRow, TPublic, TWhere, TSelect, TFilters, TLiteRow, TLite, TSelectLite>) {
   const {
     repo,
     liteRepo,
@@ -95,6 +97,7 @@ export function createServerQueries<
     sort,
     lite,
     withTimeout = defaultWithTimeout,
+    authorize,
   } = opts;
 
   const resolveOrderBy = (filters: TFilters, policy?: SortPolicy<TFilters>) => {
@@ -122,6 +125,12 @@ export function createServerQueries<
     if (policy.requireTenant && !tenantId) {
       throw new Error("Tenant id is required for this resource.");
     }
+
+    await authorize?.({
+      action: "list",
+      tenantId,
+      filters: rawFilters as TFilters,
+    });
 
     const parsed = filterSchema.parse(rawFilters);
     const filters = policy.validateAndClamp(parsed);
@@ -175,6 +184,12 @@ export function createServerQueries<
       throw new Error("Tenant id is required for this resource.");
     }
 
+    await authorize?.({
+      action: "getById",
+      tenantId,
+      id,
+    });
+
     const baseWhere = { [idKey]: id } as unknown as TWhere;
     const where = policy.enforceTenant(baseWhere, tenantId, tenantKey);
 
@@ -210,6 +225,12 @@ export function createServerQueries<
       throw new Error("Tenant id is required for this resource.");
     }
 
+    await authorize?.({
+      action: "listLite",
+      tenantId,
+      filters: rawFilters as TFilters,
+    });
+
     const parsed = filterSchema.parse(rawFilters);
     const filters = policy.validateAndClamp(parsed);
     const requested = (filters as unknown as { pageSize?: number }).pageSize ?? defaultLimit;
@@ -234,50 +255,9 @@ export function createServerQueries<
     return (raw as TLiteRow[]).map(projector);
   }
 
-  async function create(data: TCreate, options?: QueryOptions): Promise<TPublic> {
-    const crud = repo as CrudRepo<TRow, TWhere, TSelect, TCreate, TUpdate>;
-    if (!crud.create) throw new Error("Repo does not support create");
-
-    const row = await runWithTimeout(
-      crud.create({
-        data,
-        select,
-      }),
-      options
-    );
-
-    return mapRow(row as TRow);
-  }
-
-  async function update(where: TWhere, data: TUpdate, options?: QueryOptions): Promise<TPublic> {
-    const crud = repo as CrudRepo<TRow, TWhere, TSelect, TCreate, TUpdate>;
-    if (!crud.update) throw new Error("Repo does not support update");
-
-    const row = await runWithTimeout(
-      crud.update({
-        where,
-        data,
-        select,
-      }),
-      options
-    );
-
-    return mapRow(row as TRow);
-  }
-
-  async function remove(where: TWhere, options?: QueryOptions): Promise<void> {
-    const crud = repo as CrudRepo<TRow, TWhere, TSelect, TCreate, TUpdate>;
-    if (!crud.delete) throw new Error("Repo does not support delete");
-
-    await runWithTimeout(crud.delete({ where }), options);
-  }
-
   return {
     list,
     getById,
     listLite,
-    create,
-    update,
-    remove,
   };
 }

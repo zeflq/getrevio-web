@@ -14,19 +14,27 @@ datasource db {
 }
 
 model Merchant {
-  id             String      @id @default(cuid()) // UUID type in TS
+  id             String       @id @default(cuid()) // UUID type in TS
   name           String
-  email          String?     @unique
+  email          String?      @unique
   locale         String?
   defaultThemeId String?
   plan           Plan
   status         Status
-  createdAt      DateTime    @default(now())
+  createdAt      DateTime     @default(now())
   places         Place[]
   themes         Theme[]
-  defaultTheme   Theme?      @relation("MerchantDefaultTheme", fields: [defaultThemeId], references: [id])
+  defaultTheme   Theme?       @relation("MerchantDefaultTheme", fields: [defaultThemeId], references: [id])
   campaigns      Campaign[]
   shortlinks     Shortlink[]
+  slug           String       @default(cuid())
+  logo           String?
+  metadata       String?
+  members        Member[]
+  invitations    Invitation[]
+
+  @@unique([slug])
+  @@map("Merchant")
 }
 
 model Place {
@@ -130,11 +138,15 @@ model User {
   name          String
   email         String
   emailVerified Boolean   @default(false)
+  globalRole    String    @default("USER") // e.g. 'USER' | 'SUPER_ADMIN'
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
+
+  members     Member[]
+  invitations Invitation[]
 
   @@unique([email])
   @@map("user")
@@ -150,6 +162,8 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  activeOrganizationId String?
 
   @@unique([token])
   @@map("session")
@@ -183,4 +197,30 @@ model Verification {
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("verification")
+}
+
+model Member {
+  id             String   @id
+  organizationId String
+  merchant       Merchant @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String
+  createdAt      DateTime
+
+  @@map("member")
+}
+
+model Invitation {
+  id             String   @id
+  organizationId String
+  merchant       Merchant @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           String?
+  status         String
+  expiresAt      DateTime
+  inviterId      String
+  user           User     @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@map("invitation")
 }

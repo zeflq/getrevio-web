@@ -9,6 +9,7 @@ export const languages = [
   { code: 'fr', label: 'Français' },
   { code: 'es', label: 'Español' }
 ];
+export const SUPER_ADMIN="SUPER_ADMIN";
 
 export function switchLocale(newLocale: string) {
   if (typeof window === 'undefined') return;

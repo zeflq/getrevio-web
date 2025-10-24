@@ -32,9 +32,6 @@ export const {
   list: listCampaignsServer,
   getById: getCampaignServer,
   listLite: listCampaignsLiteServer,
-  create: createCampaignServer,
-  update: updateCampaignServer,
-  remove: removeCampaignServer,
 } = createServerQueries<
   Prisma.CampaignGetPayload<{ select: typeof campaignSelect }>,
   CampaignListDTO,
@@ -43,9 +40,7 @@ export const {
   CampaignFilters,
   Prisma.CampaignGetPayload<{ select: typeof campaignLiteSelect }>,
   { value: string; label: string },
-  typeof campaignLiteSelect,
-  Prisma.CampaignCreateInput,
-  Prisma.CampaignUpdateInput
+  typeof campaignLiteSelect
 >({
   repo: campaignRepo,
   policy: campaignQueryPolicy,

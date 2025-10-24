@@ -20,9 +20,6 @@ const shortlinkSortPolicy = makeSortPolicy<ShortlinkFilters>({
 export const {
   list: listShortlinksServer,
   getById: getShortlinkServer,
-  create: createShortlinkServer,
-  update: updateShortlinkServer,
-  remove: removeShortlinkServer,
 } = createServerQueries<
   Prisma.ShortlinkGetPayload<{ select: typeof shortlinkSelect }>,
   Shortlink,
@@ -31,9 +28,7 @@ export const {
   ShortlinkFilters,
   Prisma.ShortlinkGetPayload<{ select: typeof shortlinkSelect }>,
   Shortlink,
-  typeof shortlinkSelect,
-  Prisma.ShortlinkCreateInput,
-  Prisma.ShortlinkUpdateInput
+  typeof shortlinkSelect
 >({
   repo: shortlinkRepo,
   policy: shortlinkQueryPolicy,
