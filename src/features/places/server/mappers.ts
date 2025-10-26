@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client";
 
-import { placeLiteSelect, placeSelect } from "./repo";
+import { placeLiteSelect, placeSelect } from "./infrastructure/prisma/placeSelects";
 
 export type PlaceSelectRow = Prisma.PlaceGetPayload<{ select: typeof placeSelect }>;
 export type PlaceLiteRow = Prisma.PlaceGetPayload<{ select: typeof placeLiteSelect }>;

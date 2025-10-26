@@ -28,9 +28,6 @@ export const auth = betterAuth({
                 schema: {
                     organization: {
                         modelName: "Merchant", //map the organization table to organizations
-                        fields: {
-                            name: "name", //map the name field to title
-                        },
                     },
                 },
             }

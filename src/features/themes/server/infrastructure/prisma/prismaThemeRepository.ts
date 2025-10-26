@@ -1,0 +1,107 @@
+import { Prisma } from "@prisma/client";
+
+import prisma from "@/lib/prisma";
+
+import type {
+  ThemeCreateRecord,
+  ThemeRepository,
+  ThemeUpdateRecord,
+} from "../../application/interfaces/themeRepository";
+
+export class PrismaThemeRepository implements ThemeRepository {
+  constructor(private readonly client: Prisma.ThemeDelegate = prisma.theme) {}
+
+  async create(data: ThemeCreateRecord): Promise<void> {
+    await this.client.create({
+      data: {
+        merchantId: data.merchantId,
+        name: data.name,
+        logoUrl: data.logoUrl ?? null,
+        brandColor: data.brandColor ?? null,
+        accentColor: data.accentColor ?? null,
+        textColor: data.textColor ?? null,
+        meta: data.meta ?? null,
+      },
+    });
+  }
+
+  async update(data: ThemeUpdateRecord, tenantId?: string | null): Promise<void> {
+    await this.ensureTenant(data.id, tenantId ?? null);
+
+    const patch: Prisma.ThemeUpdateInput = {};
+
+    if (data.name !== undefined) {
+      patch.name = data.name;
+    }
+
+    if (data.logoUrl !== undefined) {
+      patch.logoUrl = data.logoUrl;
+    }
+
+    if (data.brandColor !== undefined) {
+      patch.brandColor = data.brandColor;
+    }
+
+    if (data.accentColor !== undefined) {
+      patch.accentColor = data.accentColor;
+    }
+
+    if (data.textColor !== undefined) {
+      patch.textColor = data.textColor;
+    }
+
+    if (data.meta !== undefined) {
+      patch.meta = data.meta ?? Prisma.JsonNull;
+    }
+
+    if (data.merchantId !== undefined) {
+      patch.merchant = { connect: { id: data.merchantId } };
+    }
+
+    if (Object.keys(patch).length === 0) {
+      const existing = await this.client.findUnique({
+        where: { id: data.id },
+        select: { id: true },
+      });
+      if (!existing) {
+        throw new Error("NOT_FOUND");
+      }
+      return;
+    }
+
+    await this.client.update({
+      where: { id: data.id },
+      data: patch,
+    });
+  }
+
+  async delete(id: string, tenantId?: string | null): Promise<void> {
+    await this.ensureTenant(id, tenantId ?? null);
+    await this.client.delete({ where: { id } });
+  }
+
+  async setDefaultTheme(merchantId: string, themeId: string, tenantId?: string | null): Promise<void> {
+    if (tenantId && tenantId !== merchantId) {
+      throw new Error("FORBIDDEN");
+    }
+
+    await prisma.merchant.update({
+      where: { id: merchantId },
+      data: { defaultThemeId: themeId },
+    });
+  }
+
+  private async ensureTenant(id: string, tenantId: string | null) {
+    if (!tenantId) return;
+    const existing = await this.client.findFirst({
+      where: {
+        id,
+        merchantId: tenantId,
+      },
+      select: { id: true },
+    });
+    if (!existing) {
+      throw new Error("FORBIDDEN");
+    }
+  }
+}

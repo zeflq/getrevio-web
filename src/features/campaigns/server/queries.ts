@@ -1,62 +1,60 @@
-import type { Prisma } from "@prisma/client";
+import { ListCampaignsUseCase } from "./application/usecases/listCampaignsUseCase";
+import { GetCampaignUseCase } from "./application/usecases/getCampaignUseCase";
+import { ListCampaignsLiteUseCase } from "./application/usecases/listCampaignsLiteUseCase";
+import type { CampaignQueryOptions } from "./application/interfaces/campaignQueryRepository";
+import { PrismaCampaignQueryRepository } from "./infrastructure/prisma/prismaCampaignQueryRepository";
+import type { CampaignFilters } from "../model/campaignSchema";
+import type { CampaignListDTO } from "./mappers";
 
-import { createServerQueries } from "@/server/core/queries/createServerQueries";
-import { makeSortPolicy } from "@/server/core/policies/sortPolicy";
+const repository = new PrismaCampaignQueryRepository();
+const listUseCase = new ListCampaignsUseCase(repository);
+const getUseCase = new GetCampaignUseCase(repository);
+const listLiteUseCase = new ListCampaignsLiteUseCase(repository);
 
-import {
-  campaignFiltersSchema,
-  type CampaignFilters,
-} from "../model/campaignSchema";
-import { buildCampaignWhere } from "./buildWhere";
-import { mapCampaignRow, type CampaignListDTO } from "./mappers";
-import { campaignQueryPolicy } from "./policy";
-import {
-  campaignLiteSelect,
-  campaignRepo,
-  campaignSelect,
-} from "./repo";
+type MaybeTenant = string | undefined;
 
-const campaignSortPolicy = makeSortPolicy<CampaignFilters>({
-  allowed: ["name", "createdAt", "status"],
-  defaultKey: "createdAt",
-  defaultDir: "desc",
-});
+type Options = CampaignQueryOptions | undefined;
 
-const campaignLiteSortPolicy = makeSortPolicy<CampaignFilters>({
-  allowed: ["name"],
-  defaultKey: "name",
-  defaultDir: "asc",
-});
+type FiltersInput = CampaignFilters | unknown;
 
-export const {
-  list: listCampaignsServer,
-  getById: getCampaignServer,
-  listLite: listCampaignsLiteServer,
-} = createServerQueries<
-  Prisma.CampaignGetPayload<{ select: typeof campaignSelect }>,
-  CampaignListDTO,
-  Prisma.CampaignWhereInput,
-  typeof campaignSelect,
-  CampaignFilters,
-  Prisma.CampaignGetPayload<{ select: typeof campaignLiteSelect }>,
-  { value: string; label: string },
-  typeof campaignLiteSelect
->({
-  repo: campaignRepo,
-  policy: campaignQueryPolicy,
-  filterSchema: campaignFiltersSchema,
-  buildWhere: buildCampaignWhere,
-  tenantKey: "merchantId",
-  idKey: "id",
-  select: campaignSelect,
-  mapRow: mapCampaignRow,
-  sort: campaignSortPolicy,
-  lite: {
-    select: campaignLiteSelect,
-    defaultLimit: 20,
-    maxLimit: 50,
-    sort: campaignLiteSortPolicy,
-  },
-});
+export function listCampaignsServer(
+  tenantIdOrFilters: string | FiltersInput,
+  maybeFilters?: FiltersInput,
+  options?: Options
+) {
+  const { tenantId, filters } = normalizeFiltersInput(tenantIdOrFilters, maybeFilters);
+  return listUseCase.execute({ filters, tenantId, options });
+}
+
+export function getCampaignServer(
+  tenantIdOrId: string,
+  maybeId?: string,
+  options?: Options
+) {
+  const hasTenant = typeof maybeId === "string";
+  const id = hasTenant ? (maybeId as string) : (tenantIdOrId as string);
+  const tenantId = hasTenant ? (tenantIdOrId as string) : undefined;
+
+  return getUseCase.execute({ id, tenantId, options });
+}
+
+export function listCampaignsLiteServer(
+  tenantIdOrFilters: string | FiltersInput,
+  maybeFilters?: FiltersInput,
+  options?: Options
+) {
+  const { tenantId, filters } = normalizeFiltersInput(tenantIdOrFilters, maybeFilters);
+  return listLiteUseCase.execute({ filters, tenantId, options });
+}
+
+function normalizeFiltersInput(
+  tenantIdOrFilters: string | FiltersInput,
+  maybeFilters?: FiltersInput
+): { tenantId: MaybeTenant; filters: FiltersInput } {
+  const hasTenant = typeof tenantIdOrFilters === "string";
+  const tenantId = hasTenant ? (tenantIdOrFilters as string) : undefined;
+  const filters = hasTenant ? maybeFilters : tenantIdOrFilters;
+  return { tenantId, filters };
+}
 
 export type { CampaignListDTO as CampaignListItem };

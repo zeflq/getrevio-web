@@ -2,7 +2,7 @@ import type { Prisma } from "@prisma/client";
 
 import type { Shortlink } from "@/types/domain";
 
-import { shortlinkLiteSelect, shortlinkSelect } from "./repo";
+import { shortlinkLiteSelect, shortlinkSelect } from "./infrastructure/prisma/shortlinkSelects";
 
 export type ShortlinkSelectRow = Prisma.ShortlinkGetPayload<{ select: typeof shortlinkSelect }>;
 export type ShortlinkLiteRow = Prisma.ShortlinkGetPayload<{ select: typeof shortlinkLiteSelect }>;

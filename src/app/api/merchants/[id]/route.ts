@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
 //  const s = await getSession();
   //if (!s?.user) return new Response("Unauthorized", { status: 401 });
-    const item = await getMerchantServer(params.id);
+    const item = await getMerchantServer({ id: params.id });
     if (!item) return new Response("Not Found", { status: 404 });
     return Response.json(item);
 }

@@ -74,13 +74,6 @@ export function CampaignFormFields({
         disabled={disabled}
         requiredStar
       />
-{/* 
-      <RHFInput
-        name="slug"
-        label="Slug"
-        placeholder="summer-promo"
-        disabled={disabled}
-      /> */}
 
       <RHFInput
         name="primaryCtaUrl"

@@ -69,7 +69,9 @@ type CreateServerQueriesOptions<
     tenantId?: string;
     filters?: TFilters;
     id?: string;
+    ctx?: unknown;
   }) => Promise<void> | void;
+  getContext?: () => Promise<unknown> | unknown;
 };
 
 export type ListEnvelope<T> = { data: T[]; total: number; totalPages: number };
@@ -98,6 +100,7 @@ export function createServerQueries<
     lite,
     withTimeout = defaultWithTimeout,
     authorize,
+    getContext,
   } = opts;
 
   const resolveOrderBy = (filters: TFilters, policy?: SortPolicy<TFilters>) => {
@@ -126,14 +129,18 @@ export function createServerQueries<
       throw new Error("Tenant id is required for this resource.");
     }
 
+    const parsed = filterSchema.parse(rawFilters);
+    const filters = policy.validateAndClamp(parsed);
+
+    const ctx = authorize ? (getContext ? await getContext() : undefined) : undefined;
+
     await authorize?.({
       action: "list",
       tenantId,
-      filters: rawFilters as TFilters,
+      filters,
+      ctx,
     });
 
-    const parsed = filterSchema.parse(rawFilters);
-    const filters = policy.validateAndClamp(parsed);
     const where0 = buildWhere(filters, tenantId);
     const where = policy.enforceTenant(where0, tenantId, tenantKey);
     const orderBy = sort ? resolveOrderBy(filters, sort) : undefined;
@@ -184,10 +191,13 @@ export function createServerQueries<
       throw new Error("Tenant id is required for this resource.");
     }
 
+    const ctx = authorize ? (getContext ? await getContext() : undefined) : undefined;
+
     await authorize?.({
       action: "getById",
       tenantId,
       id,
+      ctx,
     });
 
     const baseWhere = { [idKey]: id } as unknown as TWhere;
@@ -225,14 +235,17 @@ export function createServerQueries<
       throw new Error("Tenant id is required for this resource.");
     }
 
+    const parsed = filterSchema.parse(rawFilters);
+    const filters = policy.validateAndClamp(parsed);
+
+    const ctx = authorize ? (getContext ? await getContext() : undefined) : undefined;
+
     await authorize?.({
       action: "listLite",
       tenantId,
-      filters: rawFilters as TFilters,
+      filters,
+      ctx,
     });
-
-    const parsed = filterSchema.parse(rawFilters);
-    const filters = policy.validateAndClamp(parsed);
     const requested = (filters as unknown as { pageSize?: number }).pageSize ?? defaultLimit;
     const take = Math.max(1, Math.min(requested, Math.min(maxLimit, policy.maxPageSize)));
 

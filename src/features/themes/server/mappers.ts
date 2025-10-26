@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client";
 
-import { themeLiteSelect, themeSelect } from "./repo";
+import { themeLiteSelect, themeSelect } from "./infrastructure/prisma/themeSelects";
 
 export type ThemeSelectRow = Prisma.ThemeGetPayload<{ select: typeof themeSelect }>;
 export type ThemeLiteRow = Prisma.ThemeGetPayload<{ select: typeof themeLiteSelect }>;

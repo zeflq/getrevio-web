@@ -158,6 +158,14 @@ export async function  createServerActions<
 
   /** Optional helper for fetching a row prior to update/delete hooks */
   getById?: (id: string, tenantId?: string) => Promise<TRow | null>;
+  /** Optional authorization guard fired before each mutation */
+  authorize?: (args: {
+    action: "create" | "update" | "delete";
+    tenantId?: string;
+    id?: string;
+    input: unknown;
+    ctx: ActionContext;
+  }) => Promise<void> | void;
 }): Promise<CreateServerActionsReturn<
   TRow,
   TWhere,
@@ -184,6 +192,7 @@ export async function  createServerActions<
     afterUpdate,
     afterDelete,
     getById,
+    authorize,
   } = opts;
 
   const revalidate = () => {
@@ -195,6 +204,13 @@ export async function  createServerActions<
   // CREATE
   const createAction = buildAction(actionClient, createSchema, async ({ parsedInput, ctx }) => {
     const tenantId = getTenantId(ctx);
+
+    await authorize?.({
+      action: "create",
+      tenantId,
+      input: parsedInput,
+      ctx,
+    });
 
     // Stamp tenant sur l’input public
     const stamped =
@@ -219,6 +235,14 @@ export async function  createServerActions<
 
     const tenantId = getTenantId(ctx);
     const where = whereByIdTenant(id, tenantId);
+
+    await authorize?.({
+      action: "update",
+      tenantId,
+      id,
+      input: parsedInput,
+      ctx,
+    });
 
     // Défense en profondeur
     let previous: TRow | null | undefined;
@@ -250,6 +274,14 @@ export async function  createServerActions<
 
     const tenantId = getTenantId(ctx);
     const where = whereByIdTenant(id, tenantId);
+
+    await authorize?.({
+      action: "delete",
+      tenantId,
+      id,
+      input: parsedInput,
+      ctx,
+    });
 
     let previous: TRow | null | undefined;
     if (tenantId) {

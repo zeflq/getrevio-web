@@ -1,66 +1,66 @@
-import type { Prisma } from "@prisma/client";
+import { ensureSuperAdmin } from "@/server/core/security/adminGuards";
 
-import { createServerQueries } from "@/server/core/queries/createServerQueries";
-import { makeSortPolicy } from "@/server/core/policies/sortPolicy";
+import { ListThemesUseCase } from "./application/usecases/listThemesUseCase";
+import { GetThemeUseCase } from "./application/usecases/getThemeUseCase";
+import { ListThemesLiteUseCase } from "./application/usecases/listThemesLiteUseCase";
+import type { ThemeQueryOptions } from "./application/interfaces/themeQueryRepository";
+import { PrismaThemeQueryRepository } from "./infrastructure/prisma/prismaThemeQueryRepository";
+import type { ThemeFilters } from "../model/themeSchema";
+import type { ThemeListDTO } from "./mappers";
 
-import {
-  themeFiltersSchema,
-  type ThemeFilters,
-} from "../model/themeSchema";
-import { buildThemeWhere } from "./buildWhere";
-import {
-  mapThemeLite,
-  mapThemeRow,
-  type ThemeListDTO,
-} from "./mappers";
-import { themeQueryPolicy } from "./policy";
-import {
-  themeLiteSelect,
-  themeRepo,
-  themeSelect,
-} from "./repo";
+const repository = new PrismaThemeQueryRepository();
+const listUseCase = new ListThemesUseCase(repository);
+const getUseCase = new GetThemeUseCase(repository);
+const listLiteUseCase = new ListThemesLiteUseCase(repository);
 
-const themeSortPolicy = makeSortPolicy<ThemeFilters>({
-  allowed: ["name", "createdAt"],
-  defaultKey: "createdAt",
-  defaultDir: "desc",
-});
+type MaybeTenant = string | undefined;
+type Options = ThemeQueryOptions | undefined;
+type FiltersInput = ThemeFilters | unknown;
 
-const themeLiteSortPolicy = makeSortPolicy<ThemeFilters>({
-  allowed: ["name"],
-  defaultKey: "name",
-  defaultDir: "asc",
-});
+export async function listThemesServer(
+  tenantIdOrFilters: string | FiltersInput,
+  maybeFilters?: FiltersInput,
+  options?: Options
+) {
+  await ensureSuperAdmin();
 
-export const {
-  list: listThemesServer,
-  getById: getThemeServer,
-  listLite: listThemesLiteServer,
-} = createServerQueries<
-  Prisma.ThemeGetPayload<{ select: typeof themeSelect }>,
-  ThemeListDTO,
-  Prisma.ThemeWhereInput,
-  typeof themeSelect,
-  ThemeFilters,
-  Prisma.ThemeGetPayload<{ select: typeof themeLiteSelect }>,
-  { value: string; label: string },
-  typeof themeLiteSelect
->({
-  repo: themeRepo,
-  policy: themeQueryPolicy,
-  filterSchema: themeFiltersSchema,
-  buildWhere: buildThemeWhere,
-  tenantKey: "merchantId",
-  select: themeSelect,
-  mapRow: mapThemeRow,
-  sort: themeSortPolicy,
-  lite: {
-    select: themeLiteSelect,
-    mapLite: mapThemeLite,
-    defaultLimit: 20,
-    maxLimit: 50,
-    sort: themeLiteSortPolicy,
-  },
-});
+  const { tenantId, filters } = normalizeFiltersInput(tenantIdOrFilters, maybeFilters);
+  return listUseCase.execute({ filters, tenantId, options });
+}
+
+export async function getThemeServer(
+  tenantIdOrId: string,
+  maybeId?: string,
+  options?: Options
+) {
+  await ensureSuperAdmin();
+
+  const hasTenant = typeof maybeId === "string";
+  const id = hasTenant ? (maybeId as string) : (tenantIdOrId as string);
+  const tenantId = hasTenant ? (tenantIdOrId as string) : undefined;
+
+  return getUseCase.execute({ id, tenantId, options });
+}
+
+export async function listThemesLiteServer(
+  tenantIdOrFilters: string | FiltersInput,
+  maybeFilters?: FiltersInput,
+  options?: Options
+) {
+  await ensureSuperAdmin();
+
+  const { tenantId, filters } = normalizeFiltersInput(tenantIdOrFilters, maybeFilters);
+  return listLiteUseCase.execute({ filters, tenantId, options });
+}
+
+function normalizeFiltersInput(
+  tenantIdOrFilters: string | FiltersInput,
+  maybeFilters?: FiltersInput
+): { tenantId: MaybeTenant; filters: FiltersInput } {
+  const hasTenant = typeof tenantIdOrFilters === "string";
+  const tenantId = hasTenant ? (tenantIdOrFilters as string) : undefined;
+  const filters = hasTenant ? maybeFilters : tenantIdOrFilters;
+  return { tenantId, filters };
+}
 
 export type { ThemeListDTO as ThemeListItem };

@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client";
 
-import { campaignSelect } from "./repo";
+import { campaignSelect } from "./infrastructure/prisma/campaignSelects";
 
 export type CampaignSelectRow = Prisma.CampaignGetPayload<{ select: typeof campaignSelect }>;
 

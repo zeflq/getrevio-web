@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client";
 
-import { merchantLiteSelect, merchantSelect } from "./repo";
+import { merchantLiteSelect, merchantSelect } from "./infrastructure/prisma/merchantSelects";
 
 export type MerchantSelectRow = Prisma.MerchantGetPayload<{ select: typeof merchantSelect }>;
 export type MerchantLiteRow = Prisma.MerchantGetPayload<{ select: typeof merchantLiteSelect }>;

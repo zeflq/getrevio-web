@@ -1,8 +1,5 @@
 import type { Prisma } from "@prisma/client";
 
-import prisma from "@/lib/prisma";
-import { PrismaDefaultRepo } from "@/server/core/repos/prismaDefaultRepo";
-
 export const campaignSelect = {
   id: true,
   merchantId: true,
@@ -32,11 +29,3 @@ export const campaignLiteSelect = {
   id: true,
   name: true,
 } satisfies Prisma.CampaignSelect;
-
-export const campaignRepo = new PrismaDefaultRepo<
-  Prisma.CampaignGetPayload<{ select: typeof campaignSelect }>,
-  Prisma.CampaignWhereInput,
-  typeof campaignSelect,
-  Prisma.CampaignCreateInput,
-  Prisma.CampaignUpdateInput
->(prisma.campaign);
