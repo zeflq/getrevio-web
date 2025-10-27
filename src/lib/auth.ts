@@ -22,12 +22,40 @@ export const auth = betterAuth({
             }
         }
     },
+    databaseHooks: {
+        session: {
+            create: {
+                before: async (session) => {
+                const organizationId = await getActiveOrganization(session.userId);
+                return {
+                    data: {
+                        ...session,
+                        activeOrganizationId: organizationId,
+                    },
+                };
+                },
+            },
+        },
+    },
     plugins:[
         organization(
             {
+               // allowUserToCreateOrganizations: true,
                 schema: {
                     organization: {
                         modelName: "Merchant", //map the organization table to organizations
+                        additionalFields: {
+                            email: {
+                                type: "string",
+                                input: true,
+                                required: false,
+                            },
+                            onboardingStep: {
+                                type: "number",
+                                input: true,
+                                required: false,
+                            },
+                        },
                     },
                 },
             }
@@ -46,3 +74,14 @@ export const auth = betterAuth({
 
 type Session = typeof auth.$Infer.Session
 export type { Session };
+
+export async function getActiveOrganization(userId: string) {
+    if (!userId) return null;
+
+    const membership = await prisma.member.findFirst({
+        where: { userId },
+        orderBy: { createdAt: "asc" },
+    });
+
+    return membership?.organizationId ?? null;
+}

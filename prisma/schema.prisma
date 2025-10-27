@@ -19,9 +19,10 @@ model Merchant {
   email          String?      @unique
   locale         String?
   defaultThemeId String?
-  plan           Plan
-  status         Status
+  plan           Plan         @default(free)
+  status         Status       @default(active)
   createdAt      DateTime     @default(now())
+  onboardingStep Int          @default(0)
   places         Place[]
   themes         Theme[]
   defaultTheme   Theme?       @relation("MerchantDefaultTheme", fields: [defaultThemeId], references: [id])
