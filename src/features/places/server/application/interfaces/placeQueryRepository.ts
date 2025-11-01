@@ -19,6 +19,12 @@ export interface PlaceQueryRepository {
     options?: PlaceQueryOptions;
   }): Promise<PlaceListDTO | null>;
 
+  existsWithSlug(args: {
+    slug: string;
+    tenantId?: string;
+    options?: PlaceQueryOptions;
+  }): Promise<boolean>;
+
   listLite(args: {
     filters: PlaceFilters;
     tenantId?: string;

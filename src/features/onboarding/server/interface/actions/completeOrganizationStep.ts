@@ -1,16 +1,30 @@
 "use server";
 
 import { randomUUID } from "node:crypto";
-import { headers as nextHeaders } from "next/headers";
 
-import { actionUser } from "@/lib/actionUser";
+import { withAuth } from "@/lib/actionUser";
 import { auth } from "@/lib/auth";
+import { ActionError } from "@/lib/action-error";
+import { SUPER_ADMIN } from "@/lib/utils";
+import { PrismaThemeRepository } from "@/features/themes/server/infrastructure/prisma/prismaThemeRepository";
+import { CreateThemeUseCase } from "@/features/themes/server/application/usecases/createThemeUseCase";
+import { SetDefaultThemeUseCase } from "@/features/themes/server/application/usecases/setDefaultThemeUseCase";
 
 import {
   organizationStepSubmitSchema,
   type OrganizationStepData,
 } from "../../../model/organizationStepSchema";
-import { ActionError } from "@/lib/action-error";
+
+const DEFAULT_THEME_PRESET = {
+  name: "Default",
+  brandColor: "#0EA5E9",
+  accentColor: "#F97316",
+  textColor: "#111827",
+} as const;
+
+const themeRepository = new PrismaThemeRepository();
+const createThemeUseCase = new CreateThemeUseCase(themeRepository);
+const setDefaultThemeUseCase = new SetDefaultThemeUseCase(themeRepository);
 
 const MAX_SLUG_ATTEMPTS = 15;
 
@@ -53,10 +67,11 @@ async function resolveSlug(name: string, headers: HeadersInit): Promise<string> 
   throw new Error("Unable to find an available slug. Please try a different name.");
 }
 
-export const completeOrganizationStepAction = actionUser
+export const completeOrganizationStepAction = withAuth
   .inputSchema(organizationStepSubmitSchema)
-  .action(async ({ parsedInput }) => {
-    const headers = await nextHeaders();
+  .action(async ({ parsedInput, ctx }) => {
+    const headers = ctx.headers;
+    const userRole = ctx.isSuperAdmin ? SUPER_ADMIN : ctx.user.roles?.[0] ?? null;
     const email = parsedInput.email;
 
     if (parsedInput.organizationId) {
@@ -76,7 +91,16 @@ export const completeOrganizationStepAction = actionUser
     const organization = await createOrganizationRecord({
       headers,
       name: parsedInput.name,
-      email
+      email,
+    });
+
+    if (!organization?.id) {
+      throw new ActionError(500, "ORGANIZATION_CREATE_FAILED");
+    }
+
+    await ensureDefaultTheme({
+      organizationId: organization.id,
+      userRole,
     });
 
     return {
@@ -109,6 +133,7 @@ async function createOrganizationRecord(args: {
       id: created?.id,
       name: created?.name ?? name,
       email: email ?? undefined,
+      onboardingStep: 1,
     };
   } catch (error) {
     handleOrganizationError(error);
@@ -162,4 +187,32 @@ function handleOrganizationError(error: unknown): never {
   }
 
   throw new ActionError(500, "UNKNOWN_ERROR");
+}
+
+async function ensureDefaultTheme(args: { organizationId: string; userRole?: string | null }) {
+  const { organizationId, userRole } = args;
+
+  try {
+    const themeId = await createThemeUseCase.execute({
+      merchantId: organizationId,
+      tenantId: organizationId,
+      name: DEFAULT_THEME_PRESET.name,
+      brandColor: DEFAULT_THEME_PRESET.brandColor,
+      accentColor: DEFAULT_THEME_PRESET.accentColor,
+      textColor: DEFAULT_THEME_PRESET.textColor,
+      userRole,
+    });
+
+    await setDefaultThemeUseCase.execute({
+      merchantId: organizationId,
+      tenantId: organizationId,
+      themeId,
+      userRole,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new ActionError(500, error.message || "DEFAULT_THEME_FAILED");
+    }
+    throw new ActionError(500, "DEFAULT_THEME_FAILED");
+  }
 }

@@ -2,7 +2,7 @@ import { Check } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-type StepId = "organization" | "theme" | "place" | "shortlink" | "review";
+type StepId = "organization" | "place";
 
 type StepDescriptor = {
   id: StepId;

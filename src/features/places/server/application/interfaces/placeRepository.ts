@@ -20,7 +20,7 @@ export type PlaceUpdateRecord = {
 };
 
 export interface PlaceRepository {
-  create(data: PlaceCreateRecord): Promise<void>;
+  create(data: PlaceCreateRecord): Promise<string>;
   update(data: PlaceUpdateRecord, tenantId?: string | null): Promise<void>;
   delete(id: string, tenantId?: string | null): Promise<void>;
 }

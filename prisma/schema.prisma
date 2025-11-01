@@ -139,7 +139,7 @@ model User {
   name          String
   email         String
   emailVerified Boolean   @default(false)
-  globalRole    String    @default("USER") // e.g. 'USER' | 'SUPER_ADMIN'
+  globalRole    String    @default("TENANT_USER") // e.g. 'TENANT_USER' | 'SUPER_ADMIN'
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now()) @updatedAt
@@ -224,4 +224,13 @@ model Invitation {
   user           User     @relation(fields: [inviterId], references: [id], onDelete: Cascade)
 
   @@map("invitation")
+}
+
+model Jwks {
+  id         String   @id
+  publicKey  String
+  privateKey String
+  createdAt  DateTime
+
+  @@map("jwks")
 }

@@ -3,11 +3,19 @@
 import * as React from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { OrganizationStepData } from "../model/organizationStepSchema";
+import type { PlaceStepData } from "../model/placeStepSchema";
 import { StepSidebar } from "./StepSidebar";
 import { OrganizationStep } from "./steps/OrganizationStep";
-import type { OrganizationStepData } from "../model/organizationStepSchema";
+import { PlaceStep } from "./steps/PlaceStep";
 
-type StepId = "organization" | "theme" | "place" | "shortlink" | "review";
+type StepId = "organization" | "place";
+
+export type ShortlinkSummary = {
+  id: string;
+  code: string;
+  targetPlaceId: string;
+};
 
 type StepDefinition = {
   id: StepId;
@@ -17,25 +25,62 @@ type StepDefinition = {
 
 const steps: StepDefinition[] = [
   { id: "organization", title: "Organization", description: "Company basics" },
-  { id: "theme", title: "Brand", description: "Look & feel" },
   { id: "place", title: "Place", description: "Add your first location" },
-  { id: "shortlink", title: "Shortlink", description: "Prepare your default link" },
-  { id: "review", title: "Review", description: "Wrap-up" },
 ];
 
 type Props = {
   initialOrganization?: OrganizationStepData;
   initialEmail?: string;
+  initialPlace?: PlaceStepData | null;
+  initialShortlink?: ShortlinkSummary | null;
 };
 
-export function OnboardingWizard({ initialOrganization, initialEmail }: Props) {
-  const [activeStep, setActiveStep] = React.useState<StepId>("organization");
+function resolveInitialActiveStep(onboardingStep?: number): StepId {
+  if (!onboardingStep || onboardingStep <= 0) {
+    return "organization";
+  }
+  return "place";
+}
+
+function resolveInitialCompletedSteps(onboardingStep?: number, hasPlace?: boolean): StepId[] {
+  const done: StepId[] = [];
+  if (!onboardingStep || onboardingStep <= 0) {
+    return done;
+  }
+
+  if (onboardingStep >= 1) {
+    done.push("organization");
+  }
+  if (hasPlace || onboardingStep >= 3) {
+    done.push("place");
+  }
+
+  return done;
+}
+
+export function OnboardingWizard({ initialOrganization, initialEmail, initialPlace, initialShortlink }: Props) {
+  const shortUrlBase = (process.env.NEXT_PUBLIC_SHORT_URL_BASE ?? "").replace(/\/$/, "");
+  const initialCompletion =
+    Boolean(initialShortlink) ||
+    Boolean(initialPlace?.id) ||
+    ((initialOrganization?.onboardingStep ?? 0) >= 3);
+  const [shortlink, setShortlink] = React.useState<ShortlinkSummary | null>(initialShortlink ?? null);
+  const [activeStep, setActiveStep] = React.useState<StepId>(
+    resolveInitialActiveStep(initialOrganization?.onboardingStep)
+  );
   const [organization, setOrganization] = React.useState<OrganizationStepData | undefined>(
     initialOrganization
   );
+  const [place, setPlace] = React.useState<PlaceStepData | null | undefined>(initialPlace ?? null);
   const [completedSteps, setCompletedSteps] = React.useState<StepId[]>(
-    initialOrganization ? ["organization"] : []
+    initialCompletion
+      ? ["organization", "place"]
+      : resolveInitialCompletedSteps(
+          initialOrganization?.onboardingStep,
+          Boolean(initialPlace?.id || initialShortlink)
+        )
   );
+  const [isComplete, setIsComplete] = React.useState<boolean>(initialCompletion);
 
   const handleOrganizationComplete = React.useCallback(
     (payload: { organization: OrganizationStepData }) => {
@@ -43,65 +88,112 @@ export function OnboardingWizard({ initialOrganization, initialEmail }: Props) {
       setCompletedSteps((prev) =>
         prev.includes("organization") ? prev : [...prev, "organization"]
       );
-      setActiveStep("theme");
+      setActiveStep("place");
+    },
+    []
+  );
+
+  const handlePlaceComplete = React.useCallback(
+    (payload: { place: PlaceStepData; organization: OrganizationStepData; shortlink: ShortlinkSummary | null }) => {
+      setOrganization(payload.organization);
+      setPlace(payload.place);
+      setShortlink(payload.shortlink);
+      setCompletedSteps((prev) => {
+        const completed = new Set<StepId>(prev);
+        completed.add("organization");
+        completed.add("place");
+        return steps
+          .map((step) => step.id)
+          .filter((id) => completed.has(id)) as StepId[];
+      });
+      setIsComplete(true);
     },
     []
   );
 
   const currentStep = steps.find((step) => step.id === activeStep) ?? steps[0];
 
-  return (
-    <div className="min-h-screen bg-muted/30 py-12">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4">
+  const renderCompletionCard = () => (
+      <div className="rounded-lg border bg-background p-2 shadow-sm">
+        <h3 className="text-lg font-semibold">You&apos;re all set!</h3>
+        {shortlink ? (
+          <div className="mt-3 space-y-2 text-sm">
+            <div className="rounded-md border bg-muted/40 px-3 py-2 font-mono text-base">
+              {shortUrlBase ? `${shortUrlBase}/${shortlink.code}` : shortlink.code}
+            </div>
+            <p className="text-muted-foreground">
+              You can manage or customize this shortlink anytime from the Shortlinks section of the dashboard.
+            </p>
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Your organization and place are ready. You can now explore the dashboard.
+          </p>
+        )}
+      </div>
+  );
+
+  if (isComplete) {
+    return (
+      <div className="flex flex-col gap-6">
         <header className="space-y-2 text-center">
-          <h1 className="text-3xl font-semibold tracking-tight">Let&apos;s get you set up</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">You&apos;re ready to go</h1>
           <p className="text-muted-foreground">
-            Complete the steps below to finish your Reviw onboarding.
+            Your onboarding is complete. Share your shortlink or head to the dashboard.
           </p>
         </header>
-
-        <div className="grid gap-6 lg:grid-cols-[260px,1fr]">
-          <StepSidebar
-            steps={steps}
-            activeStep={activeStep}
-            completedSteps={completedSteps}
-            onStepSelect={(stepId) => {
-              if (completedSteps.includes(stepId)) {
-                setActiveStep(stepId);
-              }
-            }}
-          />
-
-          <Card className="border-0 shadow-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl font-semibold">
-                {currentStep.title}
-              </CardTitle>
-              <p className="text-muted-foreground text-sm">
-                {currentStep.description}
-              </p>
-            </CardHeader>
-            <CardContent>
-              {activeStep === "organization" ? (
-                <OrganizationStep
-                  onComplete={handleOrganizationComplete}
-                  defaultValues={organization ?? (initialEmail ? { name: "", email: initialEmail } : undefined)}
-                  organizationId={organization?.id}
-                />
-              ) : (
-                <div className="flex min-h-[320px] items-center justify-center text-center text-muted-foreground">
-                  <div>
-                    <p className="font-medium">This step isn&apos;t ready yet.</p>
-                    <p className="text-sm text-muted-foreground">
-                      We&apos;ll unlock it once the previous step is fully implemented.
-                    </p>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        {renderCompletionCard()}
       </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <header className="space-y-2 text-center">
+        <h1 className="text-3xl font-semibold tracking-tight">Let&apos;s get you set up</h1>
+        <p className="text-muted-foreground">
+          Complete the steps below to finish your Reviw onboarding.
+        </p>
+      </header>
+
+      <div className="-mx-2 sm:mx-0">
+        <StepSidebar
+          steps={steps}
+          activeStep={activeStep}
+          completedSteps={completedSteps}
+          onStepSelect={(stepId) => {
+            if (completedSteps.includes(stepId)) {
+              setActiveStep(stepId);
+            }
+          }}
+        />
+      </div>
+
+      <Card className="border shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xl font-semibold">
+            {currentStep.title}
+          </CardTitle>
+          <p className="text-muted-foreground text-sm">
+            {currentStep.description}
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {activeStep === "organization" ? (
+            <OrganizationStep
+              onComplete={handleOrganizationComplete}
+              defaultValues={organization ?? (initialEmail ? { name: "", email: initialEmail } : undefined)}
+              organizationId={organization?.id}
+            />
+          ) : activeStep === "place" ? (
+            <PlaceStep
+              organizationId={organization?.id}
+              defaultValues={place ?? undefined}
+              onComplete={handlePlaceComplete}
+            />
+          ) : null}
+        </CardContent>
+      </Card>
     </div>
   );
 }

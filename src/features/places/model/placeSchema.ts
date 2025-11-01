@@ -15,9 +15,8 @@ export const placeCreateSchema = z.object({
   landingDefaults: placeLandingSchema,
 });
 
-export const placeUpdateSchema = placeCreateSchema.extend({
-  id: z.string().optional(),
-});
+export const placeUpdateSchema = placeCreateSchema
+  .partial();
 
 export type PlaceCreateInput = z.infer<typeof placeCreateSchema>;
 export type PlaceUpdateInput = z.infer<typeof placeUpdateSchema>;

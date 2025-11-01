@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-import { getPlaceServer } from "@/features/places/server/queries";
+import { getPlaceServer } from "@/features/places/server/interface/queries";
 
 export const dynamic = "force-dynamic";
 

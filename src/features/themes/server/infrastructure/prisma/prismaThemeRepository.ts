@@ -11,8 +11,8 @@ import type {
 export class PrismaThemeRepository implements ThemeRepository {
   constructor(private readonly client: Prisma.ThemeDelegate = prisma.theme) {}
 
-  async create(data: ThemeCreateRecord): Promise<void> {
-    await this.client.create({
+  async create(data: ThemeCreateRecord): Promise<string> {
+    const created = await this.client.create({
       data: {
         merchantId: data.merchantId,
         name: data.name,
@@ -20,9 +20,16 @@ export class PrismaThemeRepository implements ThemeRepository {
         brandColor: data.brandColor ?? null,
         accentColor: data.accentColor ?? null,
         textColor: data.textColor ?? null,
-        meta: data.meta ?? null,
+        meta:
+          data.meta === undefined
+            ? undefined // ne pas toucher à la colonne
+            : data.meta === null
+              ? Prisma.JsonNull   // JSON null ({} -> null JSON)
+              : (data.meta as Prisma.InputJsonValue), // vrai JSON
       },
     });
+
+    return created.id;
   }
 
   async update(data: ThemeUpdateRecord, tenantId?: string | null): Promise<void> {
@@ -51,7 +58,9 @@ export class PrismaThemeRepository implements ThemeRepository {
     }
 
     if (data.meta !== undefined) {
-      patch.meta = data.meta ?? Prisma.JsonNull;
+      patch.meta = data.meta === null
+                ? Prisma.JsonNull   // JSON null ({} -> null JSON)
+                : (data.meta as Prisma.InputJsonValue); // vrai JSON
     }
 
     if (data.merchantId !== undefined) {

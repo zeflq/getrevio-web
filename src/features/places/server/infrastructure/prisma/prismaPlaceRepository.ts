@@ -11,8 +11,8 @@ import type {
 export class PrismaPlaceRepository implements PlaceRepository {
   constructor(private readonly client: Prisma.PlaceDelegate = prisma.place) {}
 
-  async create(data: PlaceCreateRecord): Promise<void> {
-    await this.client.create({
+  async create(data: PlaceCreateRecord): Promise<string> {
+    const created = await this.client.create({
       data: {
         merchantId: data.merchantId,
         localName: data.localName,
@@ -22,6 +22,8 @@ export class PrismaPlaceRepository implements PlaceRepository {
         googlePlaceId: data.googlePlaceId ?? null,
       },
     });
+
+    return created.id;
   }
 
   async update(data: PlaceUpdateRecord, tenantId?: string | null): Promise<void> {

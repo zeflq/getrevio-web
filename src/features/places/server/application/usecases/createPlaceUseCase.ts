@@ -7,7 +7,7 @@ import type { PlaceCreateRecord, PlaceRepository } from "../interfaces/placeRepo
 export class CreatePlaceUseCase {
   constructor(private readonly repository: PlaceRepository) {}
 
-  async execute(command: CreatePlaceCommand): Promise<void> {
+  async execute(command: CreatePlaceCommand): Promise<string> {
     this.ensureTenantAccess(command);
 
     const { tenantId: _tenantId, userRole: _role, ...payload } = command;
@@ -29,7 +29,7 @@ export class CreatePlaceUseCase {
       googlePlaceId: data.googlePlaceId ?? null,
     };
 
-    await this.repository.create(record);
+    return this.repository.create(record);
   }
 
   private ensureTenantAccess(command: CreatePlaceCommand) {

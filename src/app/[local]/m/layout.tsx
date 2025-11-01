@@ -1,16 +1,64 @@
 // app/(merchant)/m/layout.tsx
-import { Separator } from "@/components/ui/separator";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+
 import { MerchantSidebar } from "@/components/merchant-sidebar";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { redirect } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { OnboardingWizardModal } from "@/features/onboarding/components/OnboardingWizardModal";
+import type { OrganizationStepData } from "@/features/onboarding/model/organizationStepSchema";
+import type { PlaceStepData } from "@/features/onboarding/model/placeStepSchema";
+import { getTenantFirstPlaceServer } from "@/features/places/server/interface/queries";
+import { auth } from "@/lib/auth";
 import { getServerSession } from "@/lib/auth-server";
 
 export const dynamic = "force-dynamic";
 
 export default async function MerchantLayout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession();
-  if (!session?.user) redirect("/login"); // minimal guard; add merchant role checks if needed
+  const sessionResult = await getServerSession();
+  if (!sessionResult?.user) redirect("/login"); // minimal guard; add merchant role checks if needed
+
+  const { session, user } = sessionResult;
+  const headersList = await headers();
+  const activeOrganizationId = session?.activeOrganizationId ?? null;
+
+  let organization: OrganizationStepData | undefined;
+  if (activeOrganizationId) {
+    const fullOrg = await auth.api.getFullOrganization({
+      headers: headersList,
+      query: { organizationId: activeOrganizationId },
+    });
+
+    organization = fullOrg
+      ? {
+          id: fullOrg.id,
+          name: fullOrg.name ?? "",
+          email: fullOrg.email ?? undefined,
+          onboardingStep:
+            typeof (fullOrg as { onboardingStep?: number }).onboardingStep === "number"
+              ? (fullOrg as { onboardingStep?: number }).onboardingStep
+              : undefined,
+        }
+      : undefined;
+  }
+
+  let place: PlaceStepData | null = null;
+  if (organization?.id) {
+    const firstPlace = await getTenantFirstPlaceServer(organization.id);
+    place = firstPlace
+      ? {
+          id: firstPlace.id,
+          localName: firstPlace.localName ?? "",
+          address: firstPlace.address ?? undefined,
+          googlePlaceId: firstPlace.googlePlaceId ?? undefined,
+        }
+      : null;
+  }
+
+  const onboardingStepValue = organization?.onboardingStep ?? 0;
+  const initialCompletion = Boolean(place?.id) || onboardingStepValue >= 3;
+  const shouldShowOnboarding = !initialCompletion;
 
   return (
     <SidebarProvider>
@@ -26,6 +74,12 @@ export default async function MerchantLayout({ children }: { children: React.Rea
         </header>
         {children}
       </SidebarInset>
+      <OnboardingWizardModal
+        open={shouldShowOnboarding}
+        initialOrganization={organization}
+        initialEmail={user?.email ?? undefined}
+        initialPlace={place}
+      />
     </SidebarProvider>
   );
 }

@@ -17,7 +17,7 @@ export const auth = betterAuth({
             globalRole: { 
                 type: "string", 
                 required: false, 
-                defaultValue: "USER",
+                defaultValue: "TENANT_USER",
                 input: false
             }
         }

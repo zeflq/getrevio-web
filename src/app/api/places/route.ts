@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-import { listPlacesServer } from "@/features/places/server/queries";
+import { listPlacesServer } from "@/features/places/server/interface/queries";
 import { withErrorHandling } from "@/server/core/http/withErrorHandling";
 
 export const dynamic = "force-dynamic";

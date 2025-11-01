@@ -7,7 +7,7 @@ import type { ThemeCreateRecord, ThemeRepository } from "../interfaces/themeRepo
 export class CreateThemeUseCase {
   constructor(private readonly repository: ThemeRepository) {}
 
-  async execute(command: CreateThemeCommand): Promise<void> {
+  async execute(command: CreateThemeCommand): Promise<string> {
     this.ensureTenantAccess(command);
 
     const { tenantId: _tenantId, userRole: _role, ...payload } = command;
@@ -31,7 +31,7 @@ export class CreateThemeUseCase {
       meta: data.meta,
     };
 
-    await this.repository.create(record);
+    return this.repository.create(record);
   }
 
   private ensureTenantAccess(command: CreateThemeCommand) {
