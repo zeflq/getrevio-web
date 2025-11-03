@@ -1,6 +1,6 @@
 "use client"
 
-import { CalendarDays, Command, LayoutDashboard, Link2, MapPin, Megaphone } from "lucide-react"
+import { CalendarDays, Command, LayoutDashboard, Link2, MapPin, Megaphone, Settings } from "lucide-react"
 import { usePathname } from "next/navigation"
 
 import { NavMain } from "@/components/nav-main"
@@ -23,6 +23,7 @@ export function MerchantSidebar({ base, ...props }: React.ComponentProps<typeof 
     { title: "Campaigns", url: `${base}/campaigns`, icon: Megaphone },
     { title: "Shortlinks", url: `${base}/shortlinks`, icon: Link2 },
     { title: "Events", url: `${base}/events`, icon: CalendarDays },
+    { title: "Settings", url: `${base}/settings`, icon: Settings },
   ].map((item) => ({
     ...item,
     isActive: pathname === item.url || pathname.startsWith(item.url + "/"),
@@ -35,17 +36,17 @@ export function MerchantSidebar({ base, ...props }: React.ComponentProps<typeof 
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href={base} className="flex items-center gap-2">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <RevioGlyph className="size-4" />
+                <div className="bg-black text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <RevioGlyph className="size-4 bg-black" />
                 </div>
                 <div className="grid flex-1 text-left text-lg leading-tight">
                   <span className="truncate font-normal">
-                    <span className="font-bold">R</span>evio
+                    <span className="font-bold">evio</span>
                   </span>
                 </div>
               </Link>
             </SidebarMenuButton>
-          </SidebarMenuItem>
+          </SidebarMenuItem>  
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>

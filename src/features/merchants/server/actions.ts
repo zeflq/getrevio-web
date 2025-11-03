@@ -3,8 +3,8 @@
 import { z } from "zod";
 import { revalidateTag } from "next/cache";
 
-import { actionUser } from "@/lib/actionUser";
-import { getServerSession } from "@/lib/auth-server";
+import { withSuperAdmin, withTenantGuard } from "@/lib/actionUser";
+import { SUPER_ADMIN } from "@/lib/utils";
 import {
   merchantCreateSchema,
   merchantUpdateSchema,
@@ -23,21 +23,13 @@ const deleteUseCase = new DeleteMerchantUseCase(repository);
 const updateSchema = merchantUpdateSchema.extend({ id: z.string() });
 const deleteSchema = z.object({ id: z.string() });
 
-export const createMerchantAction = actionUser
-  .schema(merchantCreateSchema)
-  .action(async ({ parsedInput }) => {
-    const session = await getServerSession();
-    if (!session?.user) {
-      throw new Error("FORBIDDEN");
-    }
-
-    const tenantId = extractTenantId(session);
-    const userRole = session.user?.globalRole ?? null;
-
+export const createMerchantAction = withSuperAdmin
+  .inputSchema(merchantCreateSchema)
+  .action(async ({ parsedInput, ctx }) => {
     const result = await createUseCase.execute({
       ...parsedInput,
-      tenantId,
-      userRole,
+      tenantId: ctx.tenantId,
+      userRole: SUPER_ADMIN,
     });
 
     await revalidateTag("merchants");
@@ -45,20 +37,13 @@ export const createMerchantAction = actionUser
     return result;
   });
 
-export const updateMerchantAction = actionUser
-  .schema(updateSchema)
-  .action(async ({ parsedInput }) => {
-    const session = await getServerSession();
-    if (!session?.user) {
-      throw new Error("FORBIDDEN");
-    }
-
-    const tenantId = extractTenantId(session);
-    const userRole = session.user?.globalRole ?? null;
-
+export const updateMerchantAction = withTenantGuard("id")
+  .inputSchema(updateSchema)
+  .action(async ({ parsedInput, ctx }) => {
+    const userRole = ctx.isSuperAdmin ? SUPER_ADMIN : ctx.user.roles?.[0] ?? null;
     const result = await updateUseCase.execute({
       ...parsedInput,
-      tenantId,
+      tenantId: ctx.tenantId ?? parsedInput.id,
       userRole,
     });
 
@@ -67,21 +52,13 @@ export const updateMerchantAction = actionUser
     return result;
   });
 
-export const deleteMerchantAction = actionUser
-  .schema(deleteSchema)
-  .action(async ({ parsedInput }) => {
-    const session = await getServerSession();
-    if (!session?.user) {
-      throw new Error("FORBIDDEN");
-    }
-
-    const tenantId = extractTenantId(session);
-    const userRole = session.user?.globalRole ?? null;
-
+export const deleteMerchantAction = withSuperAdmin
+  .inputSchema(deleteSchema)
+  .action(async ({ parsedInput, ctx }) => {
     const deleted = await deleteUseCase.execute({
       id: parsedInput.id,
-      tenantId,
-      userRole,
+      tenantId: ctx.tenantId,
+      userRole: SUPER_ADMIN,
     });
 
     if (!deleted) {
@@ -92,12 +69,3 @@ export const deleteMerchantAction = actionUser
 
     return { ok: true } as const;
   });
-
-function extractTenantId(session: any): string | null {
-  return (
-    session?.session?.activeOrganizationId ??
-    session?.user?.activeOrganizationId ??
-    session?.user?.tenantId ??
-    null
-  );
-}

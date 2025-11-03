@@ -9,6 +9,7 @@ export type MerchantListDTO = {
   id: string;
   name: string;
   email?: string | null;
+  defaultThemeId?: string | null;
   plan: "free" | "pro" | "enterprise";
   status: "active" | "suspended";
   createdAt: string;
@@ -20,6 +21,7 @@ export const mapMerchantRow = (row: MerchantSelectRow): MerchantListDTO => ({
   id: row.id,
   name: row.name,
   email: row.email ?? null,
+  defaultThemeId: row.defaultThemeId ?? null,
   plan: row.plan,
   status: row.status,
   createdAt: toIso(row.createdAt),

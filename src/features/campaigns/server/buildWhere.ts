@@ -4,7 +4,7 @@ import type { CampaignFilters } from "../model/campaignSchema";
 
 export const buildCampaignWhere = (
   filters: CampaignFilters,
-  _tenantId?: string
+  tenantId?: string
 ): Prisma.CampaignWhereInput => ({
   ...(filters.q
     ? {
@@ -17,4 +17,5 @@ export const buildCampaignWhere = (
   ...(filters.status ? { status: filters.status } : {}),
   ...(filters.merchantId ? { merchantId: filters.merchantId } : {}),
   ...(filters.placeId ? { placeId: filters.placeId } : {}),
+  ...(tenantId ? { merchantId: tenantId } : {}),
 });

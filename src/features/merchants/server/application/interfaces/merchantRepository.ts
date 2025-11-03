@@ -3,6 +3,7 @@ export type MerchantRecord = {
   name: string;
   email: string | null;
   locale: string | null;
+  defaultThemeId: string | null;
   plan: "free" | "pro" | "enterprise";
   status: "active" | "suspended";
   createdAt: Date;
@@ -12,6 +13,7 @@ export type MerchantCreateRecord = {
   name: string;
   email?: string | null;
   locale?: string | null;
+  defaultThemeId?: string | null;
   plan: "free" | "pro" | "enterprise";
   status: "active" | "suspended";
 };
@@ -21,6 +23,7 @@ export type MerchantUpdateRecord = {
   name?: string;
   email?: string | null;
   locale?: string | null;
+  defaultThemeId?: string | null;
   plan?: "free" | "pro" | "enterprise";
   status?: "active" | "suspended";
 };

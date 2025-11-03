@@ -5,6 +5,7 @@ export const merchantSelect = {
   name: true,
   email: true,
   locale: true,
+  defaultThemeId: true,
   plan: true,
   status: true,
   createdAt: true,

@@ -251,13 +251,13 @@ Used by Merchant (default), Place (override), Campaign (override), Shortlink (fo
 
 ### 6) Settings
 
-*   Merchant name, email
+*   Merchant name, email (organization card with linked Save action)
     
 *   Default theme selector
     
-*   Locale/timezone (optional)
-    
 *   Logout
+    
+*   Save button triggers organization update action (tenant-scoped)
     
 
 Status & Permissions

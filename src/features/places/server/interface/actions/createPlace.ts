@@ -2,9 +2,9 @@
 
 import { revalidateTag } from "next/cache";
 
-import { actionUser } from "@/lib/actionUser";
-import { getServerSession } from "@/lib/auth-server";
+import { withTenantGuard } from "@/lib/actionUser";
 import { placeCreateSchema } from "@/features/places/model/placeSchema";
+import { SUPER_ADMIN } from "@/lib/utils";
 
 import { PrismaPlaceRepository } from "../../infrastructure/prisma/prismaPlaceRepository";
 import { CreatePlaceUseCase } from "../../application/usecases/createPlaceUseCase";
@@ -12,20 +12,14 @@ import { CreatePlaceUseCase } from "../../application/usecases/createPlaceUseCas
 const repository = new PrismaPlaceRepository();
 const useCase = new CreatePlaceUseCase(repository);
 
-export const createPlaceAction = actionUser
-  .schema(placeCreateSchema)
-  .action(async ({ parsedInput }) => {
-    const session = await getServerSession();
-    if (!session?.user) {
-      throw new Error("FORBIDDEN");
-    }
-
-    const tenantId = extractTenantId(session);
-    const userRole = session.user?.globalRole ?? null;
+export const createPlaceAction = withTenantGuard("merchantId")
+  .inputSchema(placeCreateSchema)
+  .action(async ({ parsedInput, ctx }) => {
+    const userRole = ctx.isSuperAdmin ? SUPER_ADMIN : ctx.user.roles?.[0] ?? null;
 
     await useCase.execute({
       ...parsedInput,
-      tenantId,
+      tenantId: ctx.tenantId ?? parsedInput.merchantId,
       userRole,
     });
 
@@ -33,12 +27,3 @@ export const createPlaceAction = actionUser
 
     return { ok: true } as const;
   });
-
-function extractTenantId(session: any): string | null {
-  return (
-    session?.session?.activeOrganizationId ??
-    session?.user?.activeOrganizationId ??
-    session?.user?.tenantId ??
-    null
-  );
-}

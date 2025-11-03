@@ -16,5 +16,5 @@ export const buildMerchantWhere = (
     : {}),
   ...(filters.plan ? { plan: filters.plan } : {}),
   ...(filters.status ? { status: filters.status } : {}),
-  ...(tenantId ? { tenantId } : {}),
+  ...(tenantId ? { merchantId: tenantId } : {}),
 });

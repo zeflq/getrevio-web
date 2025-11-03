@@ -67,7 +67,7 @@ export class PrismaMerchantQueryRepository implements MerchantQueryRepository {
     options?: MerchantQueryOptions;
   }): Promise<MerchantListDTO | null> {
     const baseWhere = { id } as Prisma.MerchantWhereInput;
-    const where = merchantQueryPolicy.enforceTenant(baseWhere, tenantId, "tenantId");
+    const where = merchantQueryPolicy.enforceTenant(baseWhere, tenantId, "id");
 
     const row = await this.runWithTimeout(
       this.client.findFirst({
@@ -105,7 +105,7 @@ export class PrismaMerchantQueryRepository implements MerchantQueryRepository {
 
   private buildScopedWhere(filters: MerchantFilters, tenantId?: string) {
     const where0 = buildMerchantWhere(filters, tenantId);
-    return merchantQueryPolicy.enforceTenant(where0, tenantId, "tenantId");
+    return merchantQueryPolicy.enforceTenant(where0, tenantId, "id");
   }
 
   private resolveOrderBy(filters: MerchantFilters, lite = false) {
