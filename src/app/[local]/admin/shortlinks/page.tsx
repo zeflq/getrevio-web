@@ -20,6 +20,7 @@ import {
   CreateShortlinkDialog,
   EditShortlinkSheet,
   DeleteShortlinkDialog,
+  ShortlinkQrDialog,
   checkRedisShortlinksAction,
 } from "@/features/shortlinks";
 import { useMerchantsLite } from "@/features/merchants/hooks/useMerchantCrud";
@@ -114,6 +115,8 @@ export default function AdminShortlinksPage() {
   const [editId, setEditId] = React.useState<string | undefined>(undefined);
   const [deleteId, setDeleteId] = React.useState<string | undefined>(undefined);
   const [deleteCode, setDeleteCode] = React.useState<string | undefined>(undefined);
+  const [qrData, setQrData] = React.useState<{ code: string; url: string } | null>(null);
+  const [qrOpen, setQrOpen] = React.useState(false);
 
   const columns = React.useMemo(
     () =>
@@ -123,8 +126,12 @@ export default function AdminShortlinksPage() {
           setDeleteId(id);
           setDeleteCode(code);
         },
+        onShowQr: (code, shortUrl) => {
+          setQrData({ code, url: shortUrl });
+          setQrOpen(true);
+        },
       }),
-    [setEditId, setDeleteId, setDeleteCode]
+    [setEditId, setDeleteId, setDeleteCode, setQrData, setQrOpen]
   );
 
   const controller = useDataTableController({
@@ -271,6 +278,18 @@ export default function AdminShortlinksPage() {
           }}
         />
       )}
+
+      <ShortlinkQrDialog
+        open={qrOpen}
+        code={qrData?.code ?? null}
+        shortUrl={qrData?.url}
+        onOpenChange={(open) => {
+          setQrOpen(open);
+          if (!open) {
+            setQrData(null);
+          }
+        }}
+      />
     </div>
   );
 }

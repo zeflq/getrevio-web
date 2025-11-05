@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Pencil, Trash2, Copy, QrCode } from "lucide-react";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   iconActionGroup as IconActionGroup,
@@ -9,33 +9,8 @@ import {
 } from "@/shared/ui/IconActionGroup";
 import type { Shortlink } from "@/types/domain";
 import { Link } from "@/i18n/navigation";
-import * as React from "react";
 
 const DEFAULT_SHORT_URL_BASE = process.env.NEXT_PUBLIC_SHORT_URL_BASE ?? "https://getrevio.app";
-
-
-
-const formatTarget = (
-  target: Shortlink["target"] | undefined | null
-): React.ReactNode => {
-  if (!target) return "—";
-  switch (target.t) {
-    case "campaign":
-      return (
-        <Link href={`/admin/campaigns/${target.cid}`} className="text-primary underline-offset-4 hover:underline">
-          Campaign
-        </Link>
-      );
-    case "place":
-      return (
-        <Link href={`/admin/places/${target.pid}`} className="text-primary underline-offset-4 hover:underline">
-          Place
-        </Link>
-      );
-    default:
-      return "Custom URL";
-  }
-};
 
 const formatDate = (value?: string | null) => {
   if (!value) return "—";
@@ -46,27 +21,52 @@ const formatDate = (value?: string | null) => {
 
 export type ShortlinkRow = Pick<
   Shortlink,
-  | "id"
-  | "code"
-  | "merchantId"
-  | "channel"
-  | "active"
-  | "redisStatus"
-  | "target"
-  | "createdAt"
-  | "updatedAt"
+  "id" | "code" | "merchantId" | "channel" | "active" | "redisStatus" | "target" | "createdAt" | "updatedAt"
 >;
 
 export function shortlinkColumns(opts: {
   onEdit: (id: string) => void;
   onDelete: (id: string, code: string) => void;
   onShowQr?: (code: string, shortUrl: string) => void; // optional QR handler
-  onCopied?: (what: "code" | "url") => void;           // optional toast hook
   getShortUrl?: (code: string) => string;              // override short URL builder
+  showMerchantColumn?: boolean;
+  mode?: "admin" | "merchant";
 }): ColumnDef<ShortlinkRow>[] {
   const buildShortUrl =
-  opts.getShortUrl ??
-  ((code: string) => `${DEFAULT_SHORT_URL_BASE.replace(/\/$/, "")}/${code}`);
+    opts.getShortUrl ?? ((code: string) => `${DEFAULT_SHORT_URL_BASE.replace(/\/$/, "")}/${code}`);
+  const showMerchantColumn = opts.showMerchantColumn ?? true;
+  const mode = opts.mode ?? "admin";
+
+  const renderTarget = (target: Shortlink["target"] | undefined | null) => {
+    if (!target) return "—";
+    if (mode === "admin") {
+      switch (target.t) {
+        case "campaign":
+          return (
+            <Link href={`/admin/campaigns/${target.cid}`} className="text-primary underline-offset-4 hover:underline">
+              Campaign
+            </Link>
+          );
+        case "place":
+          return (
+            <Link href={`/admin/places/${target.pid}`} className="text-primary underline-offset-4 hover:underline">
+              Place
+            </Link>
+          );
+        default:
+          return "Custom URL";
+      }
+    }
+
+    switch (target.t) {
+      case "campaign":
+        return "Campaign";
+      case "place":
+        return "Place";
+      default:
+        return "Custom URL";
+    }
+  };
 
   return [
     {
@@ -74,21 +74,25 @@ export function shortlinkColumns(opts: {
       header: "Code",
       enableSorting: true,
       cell: ({ row }) => (
-        <button className="text-left font-medium hover:underline">
+        <button className="text-left font-medium hover:underline" onClick={() => opts.onEdit(row.original.id)}>
           {row.original.code}
         </button>
       ),
     },
-    {
-      accessorKey: "merchantId",
-      header: "Merchant",
-      enableSorting: true,
-      cell: ({ row }) => row.original.merchantId || "—",
-    },
+    ...(showMerchantColumn
+      ? [
+          {
+            accessorKey: "merchantId",
+            header: "Merchant",
+            enableSorting: true,
+            cell: ({ row }) => row.original.merchantId || "—",
+          } as ColumnDef<ShortlinkRow>,
+        ]
+      : []),
     {
       accessorKey: "target",
       header: "Target",
-      cell: ({ row }) => formatTarget(row.original.target),
+      cell: ({ row }) => renderTarget(row.original.target),
     },
     {
       accessorKey: "channel",
@@ -134,31 +138,16 @@ export function shortlinkColumns(opts: {
         const sl = row.original;
         const shortUrl = buildShortUrl(sl.code);
 
-        const copyUrl = async () => {
-          try {
-            await navigator.clipboard.writeText(shortUrl);
-            opts.onCopied?.("url");
-          } catch {}
-        };
-
         return (
           <div className="flex justify-end">
             <IconActionGroup
               actions={
                 [
-                  // Copy short URL
-                  {
-                    onClick: copyUrl,
-                    icon: <Copy className="h-4 w-4" />,
-                    ariaLabel: "Copy short URL",
-                    tooltip: "Copy URL",
-                  },
-                  // Show QR
                   opts.onShowQr && {
-                    onClick: () => opts.onShowQr!(sl.code, shortUrl),
-                    icon: <QrCode className="h-4 w-4" />,
-                    ariaLabel: "Show QR",
-                    tooltip: "Show QR",
+                    onClick: () => opts.onShowQr?.(sl.code, shortUrl),
+                    icon: <Eye className="h-4 w-4" />,
+                    ariaLabel: "View QR code",
+                    tooltip: "View QR",
                   },
                   // Edit
                   {

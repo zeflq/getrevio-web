@@ -25,7 +25,7 @@ const statusBadgeVariant = (
 };
 
 export function CampaignColumns(opts: {
-  onView: (id: string) => void;
+  onView?: (id: string) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string, name: string) => void;
   showMerchantColumn?: boolean;
@@ -36,14 +36,17 @@ export function CampaignColumns(opts: {
       header: "Name",
       enableSorting: true,
       enableColumnFilter: true,
-      cell: ({ row }) => (
-        <button
-          className="text-left font-medium hover:underline"
-          onClick={() => opts.onView(row.original.id)}
-        >
-          {row.original.name}
-        </button>
-      ),
+      cell: ({ row }) =>
+        opts.onView ? (
+          <button
+            className="text-left font-medium hover:underline"
+            onClick={() => opts.onView?.(row.original.id)}
+          >
+            {row.original.name}
+          </button>
+        ) : (
+          <span className="text-left font-medium">{row.original.name}</span>
+        ),
     },
     ...(opts.showMerchantColumn === false
       ? []
@@ -100,8 +103,8 @@ export function CampaignColumns(opts: {
             <IconActionGroup
               actions={
                 [
-                  {
-                    onClick: () => opts.onView(campaign.id),
+                  opts.onView && {
+                    onClick: () => opts.onView?.(campaign.id),
                     icon: <Eye className="h-4 w-4" />,
                     ariaLabel: "View",
                   },

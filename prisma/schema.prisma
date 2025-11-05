@@ -61,20 +61,21 @@ model Place {
 }
 
 model Theme {
-  id                    String     @id @default(cuid())
+  id                    String      @id @default(cuid())
   merchantId            String
-  merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  merchant              Merchant    @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   name                  String
   logoUrl               String?
   brandColor            String?
   accentColor           String?
   textColor             String?
   meta                  Json?
-  createdAt             DateTime   @default(now())
-  updatedAt             DateTime   @updatedAt
-  merchantsUsingDefault Merchant[] @relation("MerchantDefaultTheme")
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+  merchantsUsingDefault Merchant[]  @relation("MerchantDefaultTheme")
   Place                 Place[]
   campaigns             Campaign[]
+  Shortlink             Shortlink[]
 }
 
 model Campaign {
@@ -110,6 +111,7 @@ model Shortlink {
   target     Json
   channel    String?
   themeId    String?
+  theme      Theme?    @relation(fields: [themeId], references: [id], onDelete: SetNull)
   active     Boolean   @default(true)
   expiresAt  DateTime?
   utm        Json?

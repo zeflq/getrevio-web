@@ -27,6 +27,7 @@ type EditShortlinkSheetProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   merchantsLite?: LiteListe[];
+  merchantId?: string;
   onSuccess?: () => void;
 };
 
@@ -35,6 +36,7 @@ export function EditShortlinkSheet({
   open,
   onOpenChange,
   merchantsLite = [],
+  merchantId,
   onSuccess,
 }: EditShortlinkSheetProps) {
   const shortlinkQuery = useShortlinkItem(open ? id : undefined);
@@ -98,6 +100,7 @@ export function EditShortlinkSheet({
       <ShortlinkFormFields
         mode="edit"
         disabled={isBusy || shortlinkQuery.isLoading}
+        merchantId={merchantId}
         merchantsLite={merchantsLite}
       />
     </SheetForm>

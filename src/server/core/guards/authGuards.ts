@@ -22,6 +22,8 @@ export type AuthContext = {
 
 export async function resolveAuthContext(): Promise<AuthContext> {
   const session = await getServerSession();
+  console.log("session")
+  console.log(session)
   if (!session?.user) {
     throw new GuardAuthError(401, "UNAUTHORIZED");
   }

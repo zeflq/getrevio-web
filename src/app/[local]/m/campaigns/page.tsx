@@ -90,7 +90,6 @@ export default function MerchantCampaignsPage() {
   const columns = React.useMemo(
     () =>
       CampaignColumns({
-        onView: (id) => setEditId(id),
         onEdit: (id) => setEditId(id),
         onDelete: (id, name) => setDeleteTarget({ id, name }),
         showMerchantColumn: false,
