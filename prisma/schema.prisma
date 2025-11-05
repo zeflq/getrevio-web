@@ -121,7 +121,11 @@ model Shortlink {
   theme      Theme?              @relation(fields: [themeId], references: [id], onDelete: SetNull)
   active     Boolean             @default(true)
   expiresAt  DateTime?
-  utm        Json?
+  utmSource  String?
+  utmMedium  String?
+  utmCampaign String?
+  utmTerm    String?
+  utmContent String?
   createdAt  DateTime            @default(now())
   updatedAt  DateTime            @updatedAt
 

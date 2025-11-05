@@ -19,7 +19,7 @@ export const mapShortlinkRow = (row: ShortlinkSelectRow): Shortlink => ({
   themeId: row.themeId ?? undefined,
   active: row.active,
   expiresAt: row.expiresAt ?? undefined,
-  utm: row.utm as Shortlink["utm"],
+  utm: buildUtm(row),
   createdAt: row.createdAt instanceof Date ? row.createdAt.toISOString() : (row.createdAt as unknown as string),
   updatedAt: row.updatedAt instanceof Date ? row.updatedAt.toISOString() : (row.updatedAt as unknown as string),
 });
@@ -28,3 +28,30 @@ export const mapShortlinkLite = (row: ShortlinkLiteRow) => ({
   value: row.id,
   label: row.code,
 });
+
+function buildUtm(row: ShortlinkSelectRow): Shortlink["utm"] {
+  const source = row.utmSource ?? undefined;
+  const medium = row.utmMedium ?? undefined;
+  const campaign = row.utmCampaign ?? undefined;
+  const term = row.utmTerm ?? undefined;
+  const content = row.utmContent ?? undefined;
+
+  const hasValue =
+    source !== undefined ||
+    medium !== undefined ||
+    campaign !== undefined ||
+    term !== undefined ||
+    content !== undefined;
+
+  if (!hasValue) {
+    return undefined;
+  }
+
+  return {
+    source,
+    medium,
+    campaign,
+    term,
+    content,
+  };
+}

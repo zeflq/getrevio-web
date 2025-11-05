@@ -12,7 +12,11 @@ export const shortlinkSelect = {
   themeId: true,
   active: true,
   expiresAt: true,
-  utm: true,
+  utmSource: true,
+  utmMedium: true,
+  utmCampaign: true,
+  utmTerm: true,
+  utmContent: true,
   createdAt: true,
   updatedAt: true,
 } satisfies Prisma.ShortlinkSelect;

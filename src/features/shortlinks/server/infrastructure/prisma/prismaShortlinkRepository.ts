@@ -32,21 +32,29 @@ export class PrismaShortlinkRepository implements ShortlinkMutationRepository {
 
   async create(data: ShortlinkCreateRecord) {
     const { targetType, campaignId, placeId } = resolveTargetMetadata(data.target);
+    const utmColumns = extractUtmColumns(data);
+
+    const createPayload: Prisma.ShortlinkUncheckedCreateInput = {
+      merchantId: data.merchantId,
+      code: data.code,
+      target: data.target,
+      targetType,
+      campaignId,
+      placeId,
+      channel: data.channel ?? null,
+      themeId: data.themeId ?? null,
+      active: data.active,
+      expiresAt: data.expiresAt ?? null,
+    };
+
+    if (utmColumns.utmSource !== undefined) createPayload.utmSource = utmColumns.utmSource;
+    if (utmColumns.utmMedium !== undefined) createPayload.utmMedium = utmColumns.utmMedium;
+    if (utmColumns.utmCampaign !== undefined) createPayload.utmCampaign = utmColumns.utmCampaign;
+    if (utmColumns.utmTerm !== undefined) createPayload.utmTerm = utmColumns.utmTerm;
+    if (utmColumns.utmContent !== undefined) createPayload.utmContent = utmColumns.utmContent;
 
     const created = await this.client.create({
-      data: {
-        merchantId: data.merchantId,
-        code: data.code,
-        target: data.target,
-        targetType,
-        campaignId,
-        placeId,
-        channel: data.channel ?? null,
-        themeId: data.themeId ?? null,
-        active: data.active,
-        expiresAt: data.expiresAt ?? null,
-        utm: data.utm ?? null,
-      },
+      data: createPayload,
       select: shortlinkSelect,
     });
 
@@ -63,7 +71,7 @@ export class PrismaShortlinkRepository implements ShortlinkMutationRepository {
       throw new Error("NOT_FOUND");
     }
 
-    const patch: Prisma.ShortlinkUpdateInput = {};
+    const patch: Prisma.ShortlinkUncheckedUpdateInput = {};
 
     if (data.code !== undefined) {
       patch.code = data.code;
@@ -74,21 +82,16 @@ export class PrismaShortlinkRepository implements ShortlinkMutationRepository {
 
       const { targetType, campaignId, placeId } = resolveTargetMetadata(data.target);
       patch.targetType = targetType;
-      patch.campaign = campaignId
-        ? { connect: { id: campaignId } }
-        : { disconnect: true };
-
-      patch.place = placeId
-        ? { connect: { id: placeId } }
-        : { disconnect: true };
-        }
+      patch.campaignId = campaignId;
+      patch.placeId = placeId;
+    }
 
     if (data.channel !== undefined) {
       patch.channel = data.channel ?? null;
     }
 
     if (data.themeId !== undefined) {
-      patch.theme = data.themeId ? { connect: { id: data.themeId } } : { disconnect: true };
+      patch.themeId = data.themeId ?? null;
     }
 
     if (data.active !== undefined) {
@@ -99,13 +102,16 @@ export class PrismaShortlinkRepository implements ShortlinkMutationRepository {
       patch.expiresAt = data.expiresAt ?? null;
     }
 
-    if (data.utm !== undefined) {
-      patch.utm = data.utm ?? null;
+    if (data.merchantId !== undefined) {
+      patch.merchantId = data.merchantId;
     }
 
-    if (data.merchantId !== undefined) {
-      patch.merchant = { connect: { id: data.merchantId } };
-    }
+    const utmColumns = extractUtmColumns(data);
+    if (utmColumns.utmSource !== undefined) patch.utmSource = utmColumns.utmSource;
+    if (utmColumns.utmMedium !== undefined) patch.utmMedium = utmColumns.utmMedium;
+    if (utmColumns.utmCampaign !== undefined) patch.utmCampaign = utmColumns.utmCampaign;
+    if (utmColumns.utmTerm !== undefined) patch.utmTerm = utmColumns.utmTerm;
+    if (utmColumns.utmContent !== undefined) patch.utmContent = utmColumns.utmContent;
 
     const updatedRow = await this.client.update({
       where: { id: data.id },
@@ -143,14 +149,66 @@ function resolveTargetMetadata(target: ShortlinkCreateRecord["target"]): {
   if (target.t === "campaign") {
     return {
       targetType: "campaign",
-      campaignId: target.cid,
-      placeId: target.pid ?? null,
+      campaignId: normalizeId(target.cid),
+      placeId: normalizeId(target.pid),
     };
   }
 
   return {
     targetType: "place",
     campaignId: null,
-    placeId: target.pid,
+    placeId: normalizeId(target.pid),
   };
+}
+
+type UTMColumns = {
+  utmSource?: string | null;
+  utmMedium?: string | null;
+  utmCampaign?: string | null;
+  utmTerm?: string | null;
+  utmContent?: string | null;
+};
+
+type UTMInput = UTMColumns & {
+  utm?: {
+    source?: string | null;
+    medium?: string | null;
+    campaign?: string | null;
+    term?: string | null;
+    content?: string | null;
+  } | null;
+};
+
+function extractUtmColumns(input: UTMInput): UTMColumns {
+  const fromObject = input.utm ?? undefined;
+
+  return {
+    utmSource: pickUtmValue(input.utmSource, fromObject?.source),
+    utmMedium: pickUtmValue(input.utmMedium, fromObject?.medium),
+    utmCampaign: pickUtmValue(input.utmCampaign, fromObject?.campaign),
+    utmTerm: pickUtmValue(input.utmTerm, fromObject?.term),
+    utmContent: pickUtmValue(input.utmContent, fromObject?.content),
+  };
+}
+
+function pickUtmValue(direct?: string | null, nested?: string | null): string | null | undefined {
+  if (direct !== undefined) {
+    return normalizeUtmValue(direct);
+  }
+  if (nested !== undefined) {
+    return normalizeUtmValue(nested);
+  }
+  return undefined;
+}
+
+function normalizeUtmValue(value?: string | null): string | null {
+  if (value === null || value === undefined) return null;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+function normalizeId(value?: string | null): string | null {
+  if (value === null || value === undefined) return null;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
 }
