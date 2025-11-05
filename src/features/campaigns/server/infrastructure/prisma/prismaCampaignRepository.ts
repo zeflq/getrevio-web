@@ -19,7 +19,7 @@ export class PrismaCampaignRepository implements CampaignRepository {
         name: data.name,
         primaryCtaUrl: data.primaryCtaUrl,
         status: data.status,
-        theme: data.theme,
+        themeId: data.themeId ?? undefined,
       },
     });
   }
@@ -49,8 +49,9 @@ export class PrismaCampaignRepository implements CampaignRepository {
       patch.status = data.status;
     }
 
-    if (data.theme !== undefined) {
-      patch.theme = data.theme ? data.theme : Prisma.JsonNull;
+    if (data.themeId !== undefined) {
+      patch.theme = data.themeId ? { connect: { id: data.themeId } } : { disconnect: true };
+      patch.themeId = data.themeId ?? null;
     }
 
     if (Object.keys(patch).length === 0) {

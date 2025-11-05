@@ -62,6 +62,7 @@ export default function AdminCampaignsPage() {
   const [deleteTarget, setDeleteTarget] = React.useState<{ id: string; name: string } | null>(null);
 
   const columns = CampaignColumns({
+    onView: (id) => router.push(`/admin/campaigns/${id}`),
     onEdit: (id) => setEditId(id),
     onDelete: (id, name) => setDeleteTarget({ id, name }),
   });

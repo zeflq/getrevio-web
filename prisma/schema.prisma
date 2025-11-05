@@ -74,6 +74,7 @@ model Theme {
   updatedAt             DateTime   @updatedAt
   merchantsUsingDefault Merchant[] @relation("MerchantDefaultTheme")
   Place                 Place[]
+  campaigns             Campaign[]
 }
 
 model Campaign {
@@ -82,12 +83,13 @@ model Campaign {
   merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   placeId    String
   place      Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  themeId    String?
+  theme      Theme?   @relation(fields: [themeId], references: [id], onDelete: SetNull)
 
   name String
   slug String? // optional
 
   primaryCtaUrl String
-  theme         Json?
   status        CampaignStatus @default(draft)
   startAt       DateTime?
   endAt         DateTime?

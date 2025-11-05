@@ -12,8 +12,9 @@ import {
   type CampaignCreateInput,
 } from "../model/campaignSchema";
 import { useCreateCampaign } from "../hooks/useCampaignCrud";
-import type { LiteListe } from "@/types/lists";
 import { usePlacesLite } from "@/features/places";
+import { useThemesLite } from "@/features/themes";
+import type { LiteListe } from "@/types/lists";
 
 export interface CreateCampaignDialogProps {
   open: boolean;
@@ -27,6 +28,11 @@ export interface CreateCampaignDialogProps {
 
   /** Optional callback after successful creation */
   onSuccess?: () => void;
+
+  /** Optional pre-fetched theme list */
+  themesLite?: LiteListe[];
+  themesLoading?: boolean;
+  showThemeSelect?: boolean;
 }
 
 export function CreateCampaignDialog({
@@ -35,6 +41,9 @@ export function CreateCampaignDialog({
   merchantId,
   merchantsLite = [],
   onSuccess,
+  themesLite,
+  themesLoading,
+  showThemeSelect: showThemeSelectOverride,
 }: CreateCampaignDialogProps) {
   const { execute, isExecuting } = useCreateCampaign<
     CampaignCreateInput,
@@ -57,7 +66,7 @@ export function CreateCampaignDialog({
       name: "",
       primaryCtaUrl: "",
       status: "draft",
-      theme: { brandColor: "", logoUrl: "" },
+      themeId: "",
     },
   });
 
@@ -82,10 +91,49 @@ export function CreateCampaignDialog({
     { enabled: !!merchantIdValue }
   );
 
+  const hasExternalThemes = Array.isArray(themesLite);
+  const themesLiteQuery = useThemesLite(
+    { merchantId: merchantIdValue || undefined, _limit: 100 },
+    { enabled: !hasExternalThemes && !!merchantIdValue }
+  );
+  const resolvedThemesLite = hasExternalThemes ? themesLite ?? [] : themesLiteQuery.data ?? [];
+  const resolvedThemesLoading = hasExternalThemes ? themesLoading ?? false : themesLiteQuery.isLoading;
+
   // Reset placeId whenever merchant changes to avoid stale selection
   React.useEffect(() => {
     setValue("placeId", "", { shouldDirty: true, shouldValidate: true });
   }, [merchantIdValue, setValue]);
+
+  // Reset themeId whenever merchant changes; auto-select when only one
+  React.useEffect(() => {
+    if (resolvedThemesLoading) return;
+
+    if (!merchantIdValue) {
+      setValue("themeId", "", { shouldDirty: false, shouldValidate: false });
+      return;
+    }
+    const themes = resolvedThemesLite;
+    const currentThemeId = methods.getValues("themeId") ?? "";
+
+    if (themes.length === 0) {
+      if (currentThemeId !== "") {
+        setValue("themeId", "", { shouldDirty: false, shouldValidate: false });
+      }
+      return;
+    }
+
+    if (themes.length === 1) {
+      if (currentThemeId !== themes[0].value) {
+        setValue("themeId", themes[0].value, { shouldDirty: false, shouldValidate: false });
+      }
+      return;
+    }
+
+    const existsInOptions = themes.some((theme) => theme.value === currentThemeId);
+    if (!existsInOptions) {
+      setValue("themeId", "", { shouldDirty: false, shouldValidate: false });
+    }
+  }, [merchantIdValue, resolvedThemesLite, resolvedThemesLoading, setValue, methods]);
 
   const resetForm = React.useCallback(
     () =>
@@ -95,22 +143,20 @@ export function CreateCampaignDialog({
         name: "",
         primaryCtaUrl: "",
         status: "draft",
-        theme: { brandColor: "", logoUrl: "" },
+        themeId: "",
       }),
     [merchantId, reset]
   );
 
   const onSubmit = (data: CampaignCreateInput) => {
-    const theme = data.theme;
+    const normalizedThemeId =
+      typeof data.themeId === "string" && data.themeId.trim().length > 0
+        ? data.themeId.trim()
+        : undefined;
+
     const payload: CampaignCreateInput = {
       ...data,
-      theme:
-        theme && (theme.brandColor || theme.logoUrl)
-          ? {
-              brandColor: theme.brandColor || undefined,
-              logoUrl: theme.logoUrl || undefined,
-            }
-          : undefined,
+      themeId: normalizedThemeId,
     };
 
     execute(payload);
@@ -124,6 +170,8 @@ export function CreateCampaignDialog({
   };
 
   const merchantReady = !!merchantId || merchantsLite.length > 0;
+  const showThemeSelect =
+    showThemeSelectOverride ?? ((resolvedThemesLite?.length ?? 0) > 1);
 
   type MethodsWithSlot = typeof methods & { _slot?: React.ReactNode };
   (methods as MethodsWithSlot)._slot = (
@@ -134,6 +182,9 @@ export function CreateCampaignDialog({
       placesLite={placesLiteQuery.data ?? []}
       placesLoading={placesLiteQuery.isLoading}
       merchantIdValue={merchantIdValue}
+      themesLite={resolvedThemesLite}
+      themesLoading={resolvedThemesLoading}
+      showThemeSelect={showThemeSelect}
     />
   );
 

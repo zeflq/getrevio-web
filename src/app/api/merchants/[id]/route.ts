@@ -1,14 +1,16 @@
-// features/merchants/routes/app/api/merchants/[id]/route.ts
 import { getMerchantServer } from "@/features/merchants/server/queries";
-import { NextRequest } from "next/server";
-//import { getSession } from "@/lib/auth";
+import { withApiSuperAdmin } from "@/server/core/apiGuards";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-//  const s = await getSession();
-  //if (!s?.user) return new Response("Unauthorized", { status: 401 });
-    const item = await getMerchantServer({ id: params.id });
-    if (!item) return new Response("Not Found", { status: 404 });
-    return Response.json(item);
-}
+export const GET = withApiSuperAdmin<{ id: string }>(async ({ params }) => {
+  const merchant = await getMerchantServer({
+    id: params.id,
+  });
+
+  if (!merchant) {
+    return new Response("Not Found", { status: 404 });
+  }
+
+  return Response.json(merchant);
+});
 
 export const dynamic = "force-dynamic";

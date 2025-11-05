@@ -12,12 +12,10 @@ import {
   campaignUpdateSchema,
   type CampaignUpdateInput,
 } from "../model/campaignSchema";
-import {
-  useCampaignItem,
-  useUpdateCampaign,
-} from "../hooks/useCampaignCrud";
+import { useCampaignItem, useUpdateCampaign } from "../hooks/useCampaignCrud";
 import { usePlacesLite } from "@/features/places";
-import { LiteListe } from "@/types/lists";
+import { useThemesLite } from "@/features/themes";
+import type { LiteListe } from "@/types/lists";
 
 export interface EditCampaignSheetProps {
   campaignId: string;
@@ -26,6 +24,9 @@ export interface EditCampaignSheetProps {
   merchantId?: string;
   merchantsLite?: LiteListe[];
   onSuccess?: () => void;
+  themesLite?: LiteListe[];
+  themesLoading?: boolean;
+  showThemeSelect?: boolean;
 }
 
 export function EditCampaignSheet({
@@ -35,6 +36,9 @@ export function EditCampaignSheet({
   merchantId,
   merchantsLite = [],
   onSuccess,
+  themesLite,
+  themesLoading,
+  showThemeSelect: showThemeSelectOverride,
 }: EditCampaignSheetProps) {
   const { data: campaign, isLoading } = useCampaignItem(campaignId);
 
@@ -57,7 +61,7 @@ export function EditCampaignSheet({
       name: "",
       primaryCtaUrl: "",
       status: "draft",
-      theme: { brandColor: "", logoUrl: "" },
+      themeId: "",
     },
   });
 
@@ -65,20 +69,13 @@ export function EditCampaignSheet({
 
   const resetToLoaded = React.useCallback(() => {
     if (!campaign) return;
-    const theme = (campaign.theme ?? {}) as {
-      brandColor?: string;
-      logoUrl?: string;
-    };
     reset({
       merchantId: merchantId ?? campaign.merchantId ?? "",
       placeId: campaign.placeId ?? "",
       name: campaign.name ?? "",
       primaryCtaUrl: campaign.primaryCtaUrl ?? "",
       status: campaign.status ?? "draft",
-      theme: {
-        brandColor: theme.brandColor ?? "",
-        logoUrl: theme.logoUrl ?? "",
-      },
+      themeId: campaign.themeId ?? "",
     });
   }, [campaign, merchantId, reset]);
 
@@ -104,6 +101,14 @@ export function EditCampaignSheet({
     { enabled: !!merchantIdValue }
   );
 
+  const hasExternalThemes = Array.isArray(themesLite);
+  const themesLiteQuery = useThemesLite(
+    { merchantId: merchantIdValue || undefined, _limit: 100 },
+    { enabled: !hasExternalThemes && !!merchantIdValue }
+  );
+  const resolvedThemesLite = hasExternalThemes ? themesLite ?? [] : themesLiteQuery.data ?? [];
+  const resolvedThemesLoading = hasExternalThemes ? themesLoading ?? false : themesLiteQuery.isLoading;
+
   const prevMerchantRef = useRef<string | null>(null);
   useEffect(() => {
     const current = merchantIdValue ?? null;
@@ -113,6 +118,7 @@ export function EditCampaignSheet({
     }
     if (prevMerchantRef.current !== current) {
       setValue("placeId", "", { shouldDirty: true, shouldValidate: false });
+      setValue("themeId", "", { shouldDirty: true, shouldValidate: false });
       prevMerchantRef.current = current;
     }
   }, [merchantIdValue, setValue]);
@@ -120,9 +126,7 @@ export function EditCampaignSheet({
   useEffect(() => {
     if (!campaign?.placeId) return;
     const options = placesLiteQuery.data ?? [];
-    const hasPlace = options.some(
-      (p) => String(p.value) === String(campaign.placeId)
-    );
+    const hasPlace = options.some((p) => String(p.value) === String(campaign.placeId));
     if (hasPlace) {
       setValue("placeId", String(campaign.placeId), {
         shouldDirty: false,
@@ -131,17 +135,57 @@ export function EditCampaignSheet({
     }
   }, [campaign?.placeId, placesLiteQuery.data, setValue]);
 
+  useEffect(() => {
+    if (resolvedThemesLoading) return;
+
+    const themes = resolvedThemesLite;
+    const currentThemeId = methods.getValues("themeId") ?? "";
+
+    if (!merchantIdValue) {
+      if (currentThemeId !== "") {
+        setValue("themeId", "", { shouldDirty: false, shouldValidate: false });
+      }
+      return;
+    }
+
+    if (themes.length === 0) {
+      if (currentThemeId !== "") {
+        setValue("themeId", "", { shouldDirty: false, shouldValidate: false });
+      }
+      return;
+    }
+
+    if (themes.length === 1) {
+      const nextThemeId = themes[0]?.value ?? "";
+      if (currentThemeId !== nextThemeId) {
+        setValue("themeId", nextThemeId, { shouldDirty: false, shouldValidate: false });
+      }
+      return;
+    }
+
+    const existsInOptions = themes.some((theme) => theme.value === currentThemeId);
+    if (!existsInOptions) {
+      setValue("themeId", campaign?.themeId ?? "", { shouldDirty: false, shouldValidate: false });
+    }
+  }, [
+    merchantIdValue,
+    resolvedThemesLite,
+    resolvedThemesLoading,
+    setValue,
+    campaign?.themeId,
+    methods,
+  ]);
+
   const onSubmit = (data: CampaignUpdateInput) => {
-    const theme = data.theme;
+    let themeId: string | null | undefined = data.themeId;
+    if (typeof data.themeId === "string") {
+      const trimmed = data.themeId.trim();
+      themeId = trimmed.length > 0 ? trimmed : null;
+    }
+
     const payload: CampaignUpdateInput = {
       ...data,
-      theme:
-        theme && (theme.brandColor || theme.logoUrl)
-          ? {
-              brandColor: theme.brandColor || undefined,
-              logoUrl: theme.logoUrl || undefined,
-            }
-          : undefined,
+      themeId,
     };
 
     execute({ id: campaignId, ...payload });
@@ -158,17 +202,15 @@ export function EditCampaignSheet({
   const merchantReady = !!merchantId || merchantsLite.length > 0;
   const placesRequired = !!merchantIdValue;
   const placesReady =
-    !placesRequired ||
-    (!placesLiteQuery.isLoading && !!placesLiteQuery.data);
+    !placesRequired || (!placesLiteQuery.isLoading && !!placesLiteQuery.data);
   const selectedPlaceIsInOptions =
     !campaign?.placeId ||
     !placesRequired ||
-    (placesLiteQuery.data ?? []).some(
-      (p) => String(p.value) === String(campaign.placeId)
-    );
+    (placesLiteQuery.data ?? []).some((p) => String(p.value) === String(campaign.placeId));
+  const formReady = campaignLoaded && merchantReady && placesReady && selectedPlaceIsInOptions;
 
-  const formReady =
-    campaignLoaded && merchantReady && placesReady && selectedPlaceIsInOptions;
+  const resolvedShowThemeSelect =
+    showThemeSelectOverride ?? ((resolvedThemesLite?.length ?? 0) > 1);
 
   return (
     <SheetForm<CampaignUpdateInput>
@@ -189,6 +231,9 @@ export function EditCampaignSheet({
         placesLite={placesLiteQuery.data ?? []}
         placesLoading={placesLiteQuery.isLoading}
         merchantIdValue={merchantIdValue}
+        themesLite={resolvedThemesLite}
+        themesLoading={resolvedThemesLoading}
+        showThemeSelect={resolvedShowThemeSelect}
       />
     </SheetForm>
   );

@@ -18,6 +18,9 @@ type Props = {
   placesLite?: LiteListe[];
   placesLoading?: boolean;
   merchantIdValue?: string;
+  themesLite?: LiteListe[];
+  themesLoading?: boolean;
+  showThemeSelect?: boolean;
 };
 
 export function CampaignFormFields({
@@ -27,8 +30,16 @@ export function CampaignFormFields({
   placesLite = [],
   placesLoading,
   merchantIdValue,
+  themesLite = [],
+  themesLoading = false,
+  showThemeSelect = false,
 }: Props) {
   const form = useFormContext();
+
+  const themeOptions = React.useMemo(() => {
+    const base: LiteListe[] = [{ value: "", label: "No theme" }];
+    return base.concat(themesLite);
+  }, [themesLite]);
 
   return (
     <div className="space-y-4">
@@ -45,21 +56,16 @@ export function CampaignFormFields({
           requiredStar
         />
       ) : (
-        <input
-          type="hidden"
-          {...form.register("merchantId")}
-          value={merchantIdLocked}
-        />
+        <input type="hidden" {...form.register("merchantId")} value={merchantIdLocked} />
       )}
+
       <RHFCombobox<LiteListe>
         name="placeId"
         label="Place"
         options={placesLite}
         getOptionValue={(p) => p.value}
         getOptionLabel={(p) => p.label}
-        placeholder={
-          merchantIdValue ? "Select place…" : "Select merchant first"
-        }
+        placeholder={merchantIdValue ? "Select place…" : "Select merchant first"}
         searchPlaceholder="Search places…"
         disabled={disabled || !merchantIdValue || placesLoading}
         loading={placesLoading}
@@ -95,20 +101,22 @@ export function CampaignFormFields({
         disabled={disabled}
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <RHFInput
-          name="theme.brandColor"
-          label="Brand Color (optional)"
-          placeholder="#FF5733"
-          disabled={disabled}
+      {showThemeSelect ? (
+        <RHFCombobox<LiteListe>
+          name="themeId"
+          label="Theme"
+          options={themeOptions}
+          getOptionValue={(option) => option.value}
+          getOptionLabel={(option) => option.label}
+          placeholder="Select theme…"
+          searchPlaceholder="Search themes…"
+          disabled={disabled || themesLoading}
+          loading={themesLoading}
+          keyBy={merchantIdValue}
         />
-        <RHFInput
-          name="theme.logoUrl"
-          label="Logo URL (optional)"
-          placeholder="https://example.com/logo.png"
-          disabled={disabled}
-        />
-      </div>
+      ) : (
+        <input type="hidden" {...form.register("themeId")} />
+      )}
     </div>
   );
 }

@@ -23,7 +23,8 @@ const list = (params: Record<string, unknown>) =>
     { cache: "no-store" }
   );
 
-const get = (id: string) => http.get<PlaceListItem>(`/api/places/${id}`, { cache: "no-store" });
+const get = (id: string) =>
+  http.get<PlaceListItem>(`/api/places/${id}`, { cache: "no-store" });
 
 const liteList = (params: Record<string, unknown>) =>
   http.get<LiteListe[]>(`/api/places/lite?${buildQuery(params)}`, {

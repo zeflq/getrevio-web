@@ -4,10 +4,7 @@ export type CampaignCreateRecord = {
   name: string;
   primaryCtaUrl: string;
   status: "draft" | "active" | "archived";
-  theme?: {
-    brandColor?: string;
-    logoUrl?: string;
-  };
+  themeId?: string | null;
 };
 
 export type CampaignUpdateRecord = {
@@ -17,10 +14,7 @@ export type CampaignUpdateRecord = {
   name?: string;
   primaryCtaUrl?: string;
   status?: "draft" | "active" | "archived";
-  theme?: {
-    brandColor?: string;
-    logoUrl?: string;
-  } | null;
+  themeId?: string | null;
 };
 
 export interface CampaignRepository {

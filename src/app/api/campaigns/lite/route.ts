@@ -1,11 +1,26 @@
 import { NextRequest } from "next/server";
 
 import { listCampaignsLiteServer } from "@/features/campaigns/server/queries";
+import { withErrorHandling } from "@/server/core/http/withErrorHandling";
+import { withApiAuth } from "@/server/core/apiGuards";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(req: NextRequest) {
-  const filters = Object.fromEntries(new URL(req.url).searchParams.entries());
-  const data = await listCampaignsLiteServer(filters);
-  return Response.json(data);
-}
+const handler = withErrorHandling(async (req: NextRequest) => {
+  const url = new URL(req.url);
+  const tenantOverride = url.searchParams.get("tenantId") ?? undefined;
+
+  if (tenantOverride) {
+    url.searchParams.delete("tenantId");
+  }
+
+  const filters = Object.fromEntries(url.searchParams.entries());
+  const payload = await listCampaignsLiteServer(
+    tenantOverride ?? filters,
+    tenantOverride ? filters : undefined
+  );
+
+  return Response.json(payload);
+});
+
+export const GET = withApiAuth(async ({ req }) => handler(req));

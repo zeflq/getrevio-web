@@ -33,6 +33,13 @@ export class UpdateCampaignUseCase {
       normalized.primaryCtaUrl = normalized.primaryCtaUrl.trim();
     }
 
+    if (normalized.themeId !== undefined) {
+      if (typeof normalized.themeId === "string") {
+        const trimmed = normalized.themeId.trim();
+        normalized.themeId = trimmed.length > 0 ? trimmed : null;
+      }
+    }
+
     return normalized;
   }
 

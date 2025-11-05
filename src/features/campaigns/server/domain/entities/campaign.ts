@@ -5,10 +5,7 @@ export type CampaignProps = {
   slug: string;
   primaryCtaUrl: string;
   status: "draft" | "active" | "archived";
-  theme?: {
-    brandColor?: string;
-    logoUrl?: string;
-  };
+  themeId?: string | null;
 };
 
 export class CampaignEntity {
@@ -38,8 +35,8 @@ export class CampaignEntity {
     return this.props.status;
   }
 
-  get theme() {
-    return this.props.theme;
+  get themeId() {
+    return this.props.themeId ?? null;
   }
 
   toJSON() {

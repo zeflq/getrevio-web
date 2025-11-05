@@ -2,7 +2,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { useRouter } from "next/navigation";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -26,18 +25,12 @@ const statusBadgeVariant = (
 };
 
 export function CampaignColumns(opts: {
-  onView?: (id: string) => void;
+  onView: (id: string) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string, name: string) => void;
+  showMerchantColumn?: boolean;
 }): ColumnDef<CampaignListItem>[] {
-  const router = useRouter();
-
-  const goToDetails = (id: string) => {
-    if (opts.onView) return opts.onView(id);
-    router.push(`/admin/campaigns/${id}`);
-  };
-
-  return [
+  const columns: ColumnDef<CampaignListItem>[] = [
     {
       accessorKey: "name",
       header: "Name",
@@ -46,25 +39,35 @@ export function CampaignColumns(opts: {
       cell: ({ row }) => (
         <button
           className="text-left font-medium hover:underline"
-          onClick={() => goToDetails(row.original.id)}
+          onClick={() => opts.onView(row.original.id)}
         >
           {row.original.name}
         </button>
       ),
     },
-    {
+    ...(opts.showMerchantColumn === false
+      ? []
+      : [
+          {
       accessorKey: "merchantId",
       header: "Merchant",
       enableColumnFilter: true,
       cell: ({ row }) =>
         row.original.merchantName ?? row.original.merchantId ?? "—",
-    },
+          } as ColumnDef<CampaignListItem>,
+        ]),
     {
       accessorKey: "placeId",
       header: "Place",
       enableColumnFilter: true,
       cell: ({ row }) =>
         row.original.placeName ?? row.original.placeId ?? "—",
+    },
+    {
+      accessorKey: "themeName",
+      header: "Theme",
+      enableColumnFilter: false,
+      cell: ({ row }) => row.original.themeName ?? "—",
     },
     {
       accessorKey: "status",
@@ -98,7 +101,7 @@ export function CampaignColumns(opts: {
               actions={
                 [
                   {
-                    onClick: () => goToDetails(campaign.id),
+                    onClick: () => opts.onView(campaign.id),
                     icon: <Eye className="h-4 w-4" />,
                     ariaLabel: "View",
                   },
@@ -123,4 +126,6 @@ export function CampaignColumns(opts: {
       },
     },
   ];
+
+  return columns;
 }

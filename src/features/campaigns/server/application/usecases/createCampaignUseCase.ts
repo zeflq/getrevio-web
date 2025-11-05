@@ -17,6 +17,8 @@ export class CreateCampaignUseCase {
       name: campaign.name.trim(),
       primaryCtaUrl: campaign.primaryCtaUrl.trim(),
     };
+    const cleanedThemeId =
+      data.themeId && data.themeId.trim().length > 0 ? data.themeId.trim() : undefined;
 
     const payload: CampaignCreateRecord = {
       merchantId: data.merchantId,
@@ -24,7 +26,7 @@ export class CreateCampaignUseCase {
       name: data.name,
       primaryCtaUrl: data.primaryCtaUrl,
       status: data.status,
-      theme: data.theme ? { ...data.theme } : undefined,
+      themeId: cleanedThemeId ?? null,
     };
 
     await this.repository.create(payload);

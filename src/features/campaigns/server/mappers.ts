@@ -10,11 +10,12 @@ export type CampaignListDTO = {
   merchantName?: string | null;
   placeId: string;
   placeName?: string | null;
+  themeId?: string | null;
+  themeName?: string | null;
   name: string;
   slug: string | null;
   primaryCtaUrl: string;
   status: "draft" | "active" | "archived";
-  theme?: Record<string, unknown> | null;
   startAt?: string | null;
   endAt?: string | null;
   createdAt: string;
@@ -32,11 +33,12 @@ export const mapCampaignRow = (row: CampaignSelectRow): CampaignListDTO => ({
   merchantName: row.merchant?.name ?? null,
   placeId: row.placeId,
   placeName: row.place?.localName ?? null,
+  themeId: row.themeId ?? null,
+  themeName: row.theme?.name ?? null,
   name: row.name,
   slug: row.slug ?? null,
   primaryCtaUrl: row.primaryCtaUrl,
   status: row.status,
-  theme: (row.theme ?? null) as Record<string, unknown> | null,
   startAt: toIsoString(row.startAt),
   endAt: toIsoString(row.endAt),
   createdAt: toIsoString(row.createdAt) ?? "",

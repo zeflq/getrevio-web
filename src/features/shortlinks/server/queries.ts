@@ -1,5 +1,3 @@
-import { ensureSuperAdmin } from "@/server/core/security/adminGuards";
-
 import { ListShortlinksUseCase } from "./application/usecases/listShortlinksUseCase";
 import { GetShortlinkUseCase } from "./application/usecases/getShortlinkUseCase";
 import type { ShortlinkQueryOptions } from "./application/interfaces/shortlinkQueryRepository";
@@ -15,24 +13,20 @@ type MaybeTenant = string | undefined;
 type Options = ShortlinkQueryOptions | undefined;
 type FiltersInput = ShortlinkFilters | unknown;
 
-export async function listShortlinksServer(
+export function listShortlinksServer(
   tenantIdOrFilters: string | FiltersInput,
   maybeFilters?: FiltersInput,
   options?: Options
 ) {
-  await ensureSuperAdmin();
-
   const { tenantId, filters } = normalizeFiltersInput(tenantIdOrFilters, maybeFilters);
   return listUseCase.execute({ filters, tenantId, options });
 }
 
-export async function getShortlinkServer(
+export function getShortlinkServer(
   tenantIdOrId: string,
   maybeId?: string,
   options?: Options
 ) {
-  await ensureSuperAdmin();
-
   const hasTenant = typeof maybeId === "string";
   const id = hasTenant ? (maybeId as string) : (tenantIdOrId as string);
   const tenantId = hasTenant ? (tenantIdOrId as string) : undefined;

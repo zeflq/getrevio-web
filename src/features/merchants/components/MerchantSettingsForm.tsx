@@ -103,8 +103,8 @@ export function MerchantSettingsForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Merchant</CardTitle>
-        <CardDescription>Update your merchant profile and defaults.</CardDescription>
+        <CardTitle>Profile</CardTitle>
+        <CardDescription>Update your profile and defaults.</CardDescription>
       </CardHeader>
       <Form {...form}>
         <form
@@ -128,7 +128,7 @@ export function MerchantSettingsForm({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Merchant name</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Revio Hospitality"
@@ -186,12 +186,12 @@ export function MerchantSettingsForm({
               <FormLabel>Email</FormLabel>
               <Input type="email" value={defaultEmail ?? ""} disabled readOnly />
             </div>
+            <div className="flex justify-end">
+              <Button type="submit" disabled={isExecuting || !form.formState.isDirty}>
+                {isExecuting ? "Saving…" : "Save changes"}
+              </Button>
+            </div>
           </CardContent>
-          <CardFooter className="flex justify-end gap-2">
-            <Button type="submit" disabled={isExecuting || !form.formState.isDirty}>
-              {isExecuting ? "Saving…" : "Save changes"}
-            </Button>
-          </CardFooter>
         </form>
       </Form>
     </Card>
