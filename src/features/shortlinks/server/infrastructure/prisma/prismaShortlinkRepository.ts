@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 
 import prisma from "@/lib/prisma";
+import type { ShortlinkTargetType } from "@/types/domain";
 
 import type {
   ShortlinkCreateRecord,
@@ -30,11 +31,16 @@ export class PrismaShortlinkRepository implements ShortlinkMutationRepository {
   }
 
   async create(data: ShortlinkCreateRecord) {
+    const { targetType, campaignId, placeId } = resolveTargetMetadata(data.target);
+
     const created = await this.client.create({
       data: {
         merchantId: data.merchantId,
         code: data.code,
         target: data.target,
+        targetType,
+        campaignId,
+        placeId,
         channel: data.channel ?? null,
         themeId: data.themeId ?? null,
         active: data.active,
@@ -65,7 +71,17 @@ export class PrismaShortlinkRepository implements ShortlinkMutationRepository {
 
     if (data.target !== undefined) {
       patch.target = data.target;
-    }
+
+      const { targetType, campaignId, placeId } = resolveTargetMetadata(data.target);
+      patch.targetType = targetType;
+      patch.campaign = campaignId
+        ? { connect: { id: campaignId } }
+        : { disconnect: true };
+
+      patch.place = placeId
+        ? { connect: { id: placeId } }
+        : { disconnect: true };
+        }
 
     if (data.channel !== undefined) {
       patch.channel = data.channel ?? null;
@@ -117,4 +133,24 @@ export class PrismaShortlinkRepository implements ShortlinkMutationRepository {
 
     return mapShortlinkRow(existing);
   }
+}
+
+function resolveTargetMetadata(target: ShortlinkCreateRecord["target"]): {
+  targetType: ShortlinkTargetType;
+  campaignId: string | null;
+  placeId: string | null;
+} {
+  if (target.t === "campaign") {
+    return {
+      targetType: "campaign",
+      campaignId: target.cid,
+      placeId: target.pid ?? null,
+    };
+  }
+
+  return {
+    targetType: "place",
+    campaignId: null,
+    placeId: target.pid,
+  };
 }

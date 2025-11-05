@@ -1,5 +1,10 @@
 import { CampaignFilters } from "@/features/campaigns/model/campaignSchema";
 import type { CampaignListDTO } from "../../mappers";
+import type { LiteListe } from "@/types/lists";
+
+export type CampaignLiteItem = LiteListe & {
+  placeId?: string;
+};
 
 export type CampaignQueryOptions = {
   signal?: AbortSignal;
@@ -23,5 +28,5 @@ export interface CampaignQueryRepository {
     filters: CampaignFilters;
     tenantId?: string;
     options?: CampaignQueryOptions;
-  }): Promise<{ value: string; label: string }[]>;
+  }): Promise<CampaignLiteItem[]>;
 }

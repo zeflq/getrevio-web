@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import type {
   CampaignQueryRepository,
   CampaignQueryOptions,
+  CampaignLiteItem,
 } from "../../application/interfaces/campaignQueryRepository";
 import { buildCampaignWhere } from "../../buildWhere";
 import { campaignQueryPolicy } from "../../policy";
@@ -87,7 +88,7 @@ export class PrismaCampaignQueryRepository implements CampaignQueryRepository {
     filters: CampaignFilters;
     tenantId?: string;
     options?: CampaignQueryOptions;
-  }): Promise<{ value: string; label: string }[]> {
+  }): Promise<CampaignLiteItem[]> {
     const where = this.buildScopedWhere(filters, tenantId);
     const orderBy = this.resolveOrderBy(filters, true);
     const requested = filters.pageSize ?? 20;
@@ -103,7 +104,11 @@ export class PrismaCampaignQueryRepository implements CampaignQueryRepository {
       options
     );
 
-    return rows.map((row) => ({ value: row.id, label: row.name ?? row.id }));
+    return rows.map((row) => ({
+      value: row.id,
+      label: row.name ?? row.id,
+      placeId: row.placeId ?? undefined,
+    }));
   }
 
   private buildScopedWhere(filters: CampaignFilters, tenantId?: string) {

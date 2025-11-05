@@ -53,7 +53,8 @@ model Place {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  campaigns Campaign[]
+  campaigns  Campaign[]
+  shortlinks Shortlink[]
 
   // ← as you asked
   @@unique([merchantId, slug], map: "place_merchant_slug_unique")
@@ -96,6 +97,7 @@ model Campaign {
   endAt         DateTime?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+  shortlinks    Shortlink[]
 
   // multiple NULLs are allowed
   @@unique([placeId, slug], map: "campaign_place_slug_unique")
@@ -104,19 +106,28 @@ model Campaign {
 }
 
 model Shortlink {
-  id         String    @id @default(cuid())
-  code       String    @unique
+  id         String              @id @default(cuid())
+  code       String              @unique
   merchantId String
-  merchant   Merchant  @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  merchant   Merchant            @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   target     Json
+  targetType ShortlinkTargetType @default(place)
+  campaignId String?
+  campaign   Campaign?           @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  placeId    String?
+  place      Place?              @relation(fields: [placeId], references: [id], onDelete: SetNull)
   channel    String?
   themeId    String?
-  theme      Theme?    @relation(fields: [themeId], references: [id], onDelete: SetNull)
-  active     Boolean   @default(true)
+  theme      Theme?              @relation(fields: [themeId], references: [id], onDelete: SetNull)
+  active     Boolean             @default(true)
   expiresAt  DateTime?
   utm        Json?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+
+  @@index([campaignId])
+  @@index([placeId])
+  @@index([targetType])
 }
 
 /// Enums matching your TS literal types
@@ -136,6 +147,11 @@ enum CampaignStatus {
   draft
   active
   archived
+}
+
+enum ShortlinkTargetType {
+  campaign
+  place
 }
 
 model User {

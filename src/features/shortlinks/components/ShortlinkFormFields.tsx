@@ -16,6 +16,7 @@ import type { LiteListe } from "@/types/lists";
 import type { ShortlinkFormValues } from "../model/shortlinkSchema";
 import { usePlacesLite } from "@/features/places";
 import { useCampaignsLite } from "@/features/campaigns";
+import type { CampaignLiteItem } from "@/features/campaigns/server/application/interfaces/campaignQueryRepository";
 import { useThemesLite } from "@/features/themes";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
@@ -47,11 +48,17 @@ export function ShortlinkFormFields({
     control,
     register,
     watch,
+    setValue,
     formState: { errors },
   } = useFormContext<ShortlinkFormValues>();
 
-  const target = watch("target");
-  const targetType: "campaign" | "place" | "none" = (target?.t ?? "none") as
+  const targetValue = watch("target");
+  const [targetTypeValue, targetCid] = watch(["target.t", "target.cid"]) as [
+    "campaign" | "place" | undefined,
+    string | undefined
+  ];
+  const targetPid = watch("target.pid");
+  const targetType: "campaign" | "place" | "none" = (targetTypeValue ?? "none") as
     | "campaign"
     | "place"
     | "none";
@@ -62,10 +69,11 @@ export function ShortlinkFormFields({
     selectedMerchantId ? { merchantId: selectedMerchantId } : {}
   );
 
-  const { data: campaignsLite = [], isLoading: campaignsLoading } = useCampaignsLite(
+  const campaignsLiteQuery = useCampaignsLite(
     selectedMerchantId ? { merchantId: selectedMerchantId } : {}
   );
-
+  const campaignsLite = (campaignsLiteQuery.data ?? []) as CampaignLiteItem[];
+  const campaignsLoading = campaignsLiteQuery.isLoading;
   const { data: themesLite = [], isLoading: themesLoading } = useThemesLite(
     selectedMerchantId ? { merchantId: selectedMerchantId } : {},
     { enabled: !!selectedMerchantId }
@@ -74,6 +82,18 @@ export function ShortlinkFormFields({
   const flatKeys = useFlattenErrors(errors);
   const hasInfoError = flatKeys.some((key) => !key.startsWith("utm"));
   const hasUtmError = flatKeys.some((key) => key.startsWith("utm"));
+
+  React.useEffect(() => {
+    if (targetType !== "campaign") return;
+    if (!targetCid) return;
+
+    const matchingCampaign = campaignsLite.find((option) => option.value === targetCid);
+    const resolvedPlaceId = matchingCampaign?.placeId ?? undefined;
+
+    if (resolvedPlaceId !== targetPid) {
+      setValue("target.pid", resolvedPlaceId, { shouldDirty: false, shouldValidate: false });
+    }
+  }, [campaignsLite, setValue, targetCid, targetPid, targetType]);
 
   return (
     <Tabs defaultValue="info" className="space-y-4">
@@ -138,7 +158,7 @@ export function ShortlinkFormFields({
                   <select
                     className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                     disabled={disabled}
-                    value={target?.t ?? "none"}
+                    value={targetValue?.t ?? "none"}
                     onChange={(event) => {
                       const next = event.target.value as "none" | "campaign" | "place";
                       const current = field.value;
@@ -150,6 +170,7 @@ export function ShortlinkFormFields({
                         field.onChange({
                           t: "campaign",
                           cid: current && current.t === "campaign" ? current.cid : "",
+                          pid: current && current.t === "campaign" ? current.pid : undefined,
                         });
                         return;
                       }
@@ -182,6 +203,7 @@ export function ShortlinkFormFields({
               key="campaign-target"
             />
           )}
+          {targetType === "campaign" && <input type="hidden" {...register("target.pid")} />}
 
           {targetType === "place" && (
             <RHFCombobox<LiteListe>

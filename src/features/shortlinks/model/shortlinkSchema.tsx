@@ -2,7 +2,11 @@
 import { z } from "zod";
 
 export const shortlinkTargetSchema = z.discriminatedUnion("t", [
-  z.object({ t: z.literal("campaign"), cid: z.string().min(1) }),
+  z.object({
+    t: z.literal("campaign"),
+    cid: z.string().min(1),
+    pid: z.string().min(1).optional(),
+  }),
   z.object({ t: z.literal("place"), pid: z.string().min(1) }),
 ]);
 
@@ -11,6 +15,9 @@ const shortlinkCommonSchema = z.object({
   target: shortlinkTargetSchema, // ⬅️ API/DTO: requis (non null)
   channel: z.enum(["qr", "nfc", "email", "web", "print", "custom"]).optional(),
   themeId: z.string().optional(),
+  targetType: z.enum(["campaign", "place"]).optional(),
+  campaignId: z.string().optional(),
+  placeId: z.string().optional(),
   active: z.boolean(),
   expiresAt: z.date().optional(), // "YYYY-MM-DD"
   utm: z.object({

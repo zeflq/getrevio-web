@@ -34,4 +34,5 @@ export const campaignSelect = {
 export const campaignLiteSelect = {
   id: true,
   name: true,
+  placeId: true,
 } satisfies Prisma.CampaignSelect;

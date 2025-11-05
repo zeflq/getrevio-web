@@ -43,9 +43,13 @@ export const shortlinkToFormValues = (s: Shortlink): ShortlinkFormValues => {
   const t = s.target;
   const formTarget =
   t?.t === "campaign"
-    ? ({ t: "campaign", cid: t.cid } as const)
+    ? ({
+        t: "campaign",
+        cid: t.cid,
+        pid: t.pid ?? s.placeId ?? undefined,
+      } as const)
     : t?.t === "place"
-    ? ({ t: "place", pid: t.pid } as const)
+    ? ({ t: "place", pid: t.pid ?? s.placeId ?? "" } as const)
     : null;
 
   return {
@@ -71,13 +75,30 @@ export const buildCreateShortlinkPayload = (values: ShortlinkFormValues): Shortl
 
   const expiresAtSan = values.expiresAt ? values.expiresAt : undefined;
 
+  const campaignPid = values.target?.t === "campaign" ? trimOrUndefined(values.target.pid) : undefined;
+  const targetType = values.target.t;
+  const campaignId = values.target.t === "campaign" ? values.target.cid.trim() : undefined;
+  const placeIdBase =
+    values.target.t === "campaign"
+      ? campaignPid ?? undefined
+      : values.target.t === "place"
+      ? values.target.pid.trim()
+      : undefined;
+
   const payload: ShortlinkCreateInput = {
     code: (values.code ?? "").trim() || undefined,
     merchantId: values.merchantId.trim(),
     target:
       values?.target?.t === "campaign"
-        ? { t: "campaign", cid: values.target.cid.trim() }
+        ? ({
+            t: "campaign",
+            cid: values.target.cid.trim(),
+            ...(campaignPid ? { pid: campaignPid } : {}),
+          } as const)
         : { t: "place",    pid: values?.target?.pid.trim() },
+    targetType,
+    campaignId,
+    placeId: placeIdBase,
     channel: values.channel,
     themeId: values.themeId?.trim() || undefined,
     active: !!values.active,
@@ -86,6 +107,8 @@ export const buildCreateShortlinkPayload = (values: ShortlinkFormValues): Shortl
   };
 
   if (!payload.code) delete payload.code;
+  if (!payload.campaignId) delete (payload as { campaignId?: string }).campaignId;
+  if (!payload.placeId) delete (payload as { placeId?: string }).placeId;
   if (payload.channel === undefined) delete payload.channel;
   if (payload.themeId === undefined) delete payload.themeId;
   if (payload.expiresAt === undefined) delete payload.expiresAt;
@@ -98,13 +121,30 @@ export const buildUpdateShortlinkPayload = (values: ShortlinkFormValues): Shortl
   // pour update, on garde la même règle: target doit être choisi
   assertTargetNonNull(values.target);
 
+  const campaignPid = values.target.t === "campaign" ? trimOrUndefined(values.target.pid) : undefined;
+  const targetType = values.target.t;
+  const campaignId = values.target.t === "campaign" ? values.target.cid.trim() : undefined;
+  const placeIdBase =
+    values.target.t === "campaign"
+      ? campaignPid ?? undefined
+      : values.target.t === "place"
+      ? values.target.pid.trim()
+      : undefined;
+
   const partial: ShortlinkUpdateInput = {
     code: (values.code ?? "").trim() || undefined, // optionnel en update
     merchantId: values.merchantId.trim(),
     target:
       values.target.t === "campaign"
-        ? { t: "campaign", cid: values.target.cid.trim() }
+        ? ({
+            t: "campaign",
+            cid: values.target.cid.trim(),
+            ...(campaignPid ? { pid: campaignPid } : {}),
+          } as const)
         : { t: "place",    pid: values.target.pid.trim() },
+    targetType,
+    campaignId,
+    placeId: placeIdBase,
     channel: values.channel,
     themeId: values.themeId?.trim() || undefined,
     active: !!values.active,
@@ -113,6 +153,8 @@ export const buildUpdateShortlinkPayload = (values: ShortlinkFormValues): Shortl
   };
 
   if (!partial.code) delete (partial as { code?: string }).code;
+  if (!partial.campaignId) delete (partial as { campaignId?: string }).campaignId;
+  if (!partial.placeId) delete (partial as { placeId?: string }).placeId;
   if (partial.channel === undefined) delete partial.channel;
   if (partial.themeId === undefined) delete partial.themeId;
   if (partial.expiresAt === undefined) delete partial.expiresAt;

@@ -68,8 +68,10 @@ export interface Campaign {
 
 // Add a union type for shortlink target
 export type ShortlinkTarget =
-  | { t: "campaign"; cid: string;}
+  | { t: "campaign"; cid: string; pid?: string }
   | { t: "place"; pid: string };
+
+export type ShortlinkTargetType = "campaign" | "place";
 
 export interface Shortlink {
   id: string;             // short id written to NFC/QR (base62-ish, 7–10 chars)
@@ -78,6 +80,9 @@ export interface Shortlink {
 
   // New targeting model
   target: ShortlinkTarget;
+  targetType: ShortlinkTargetType;
+  campaignId?: string | null;
+  placeId?: string | null;
 
   // New channel format (free-form)
   channel?: string;                  // qr | nfc | email | web | print | custom

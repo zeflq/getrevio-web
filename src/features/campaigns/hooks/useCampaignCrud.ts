@@ -8,7 +8,7 @@ import {
 } from "@/features/campaigns/server/actions";
 import { createCrudBridge, type ListEnvelope } from "@/hooks/createCrudBridge";
 import { http } from "@/shared/lib/http";
-import type { LiteListe } from "@/types/lists";
+import type { CampaignLiteItem } from "../server/application/interfaces/campaignQueryRepository";
 import type { CampaignListItem } from "../server/queries";
 
 const buildQuery = (params: Record<string, unknown>) => {
@@ -30,11 +30,11 @@ const get = (id: string) =>
   http.get<CampaignListItem>(`/api/campaigns/${id}`, { cache: "no-store" });
 
 const liteList = (params: Record<string, unknown>) =>
-  http.get<LiteListe[]>(`/api/campaigns/lite?${buildQuery(params)}`, {
+  http.get<CampaignLiteItem[]>(`/api/campaigns/lite?${buildQuery(params)}`, {
     cache: "no-store",
   });
 
-const bridge = createCrudBridge<CampaignListItem, string, LiteListe>({
+const bridge = createCrudBridge<CampaignListItem, string, CampaignLiteItem>({
   keyBase: ["campaigns"],
   list,
   get,
