@@ -61,15 +61,6 @@ type Place = {
   address?: string;
   // visuals
   themeId?: string;                  // overrides merchant default
-  // landing defaults (when no campaign override)
-  landingDefaults?: {
-    title?: string;
-    subtitle?: string;
-    primaryCtaLabel?: string;
-    primaryCtaUrl?: string;
-    secondaryCtaLabel?: string;
-    secondaryCtaUrl?: string;
-  };
   // optional platform reference (kept for future integrations)
   googlePlaceId?: string;
   // shortlink integration
@@ -102,6 +93,36 @@ type Campaign = {
   updatedAt: string;
 };
 ```
+
+### Landing (reusable page shared by campaigns & places)
+
+```js
+type Landing = {
+  id: string;
+  merchantId: string;
+  name: string;
+  status: "draft" | "published" | "archived";
+  content: {
+    layout: "full" | "boxed";
+    blocks: Array<
+      | {
+          kind: "hero";
+          title: string;
+          subtitle?: string;
+          imageUrl?: string;
+          ctas?: Array<{ label: string; url: string; style: "primary" | "secondary" }>;
+        }
+      // future blocks go here (games, offers, etc.)
+    >;
+  };
+  theme?: Record<string, unknown> | null;
+  publishedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+```
+
+*Landings* provide rich content that Places and Campaigns can point to via `landingId`, with campaign-level overrides available when needed.
 
 ### Shortlink (DB mirror; Redis is the source for redirect)
 
@@ -187,7 +208,7 @@ Input: /s/{code}?ch=qr
 
 *   **Theme (visuals):** Shortlink.theme → Campaign.theme → Place.theme → Merchant.defaultTheme
     
-*   **Landing copy:** Campaign.landingOverride → Place.landingDefaults
+*   **Landing copy:** Campaign landing overrides are optional per campaign
     
 *   **Canonical URL:** Always https://app.com/{placeSlug} (+ ?c=... for campaigns)
     

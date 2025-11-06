@@ -81,14 +81,6 @@ export function CampaignFormFields({
         requiredStar
       />
 
-      <RHFInput
-        name="primaryCtaUrl"
-        label="Primary CTA URL"
-        placeholder="https://example.com/book-now"
-        disabled={disabled}
-        requiredStar
-      />
-
       <RHFSelect
         name="status"
         label="Status"

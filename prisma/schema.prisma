@@ -28,6 +28,7 @@ model Merchant {
   defaultTheme   Theme?       @relation("MerchantDefaultTheme", fields: [defaultThemeId], references: [id])
   campaigns      Campaign[]
   shortlinks     Shortlink[]
+  landings       Landing[]
   slug           String       @default(cuid())
   logo           String?
   metadata       String?
@@ -48,17 +49,19 @@ model Place {
   address         String?
   themeId         String?
   theme           Theme?   @relation(fields: [themeId], references: [id], onDelete: SetNull)
-  landingDefaults Json?
   googlePlaceId   String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
   campaigns  Campaign[]
   shortlinks Shortlink[]
+  landingId  String?
+  landing    Landing? @relation(fields: [landingId], references: [id], onDelete: SetNull)
 
   // ← as you asked
   @@unique([merchantId, slug], map: "place_merchant_slug_unique")
   @@index([merchantId])
+  @@index([landingId])
 }
 
 model Theme {
@@ -87,11 +90,12 @@ model Campaign {
   place      Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
   themeId    String?
   theme      Theme?   @relation(fields: [themeId], references: [id], onDelete: SetNull)
+  landingId  String?
+  landing    Landing? @relation(fields: [landingId], references: [id], onDelete: SetNull)
 
   name String
   slug String? // optional
 
-  primaryCtaUrl String
   status        CampaignStatus @default(draft)
   startAt       DateTime?
   endAt         DateTime?
@@ -103,6 +107,7 @@ model Campaign {
   @@unique([placeId, slug], map: "campaign_place_slug_unique")
   @@index([merchantId])
   @@index([placeId])
+  @@index([landingId])
 }
 
 model Shortlink {
@@ -151,6 +156,31 @@ enum CampaignStatus {
   draft
   active
   archived
+}
+
+enum LandingStatus {
+  draft
+  published
+  archived
+}
+
+model Landing {
+  id          String        @id @default(cuid())
+  merchantId  String
+  merchant    Merchant      @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  name        String
+  status      LandingStatus @default(draft)
+  content     Json
+  theme       Json?
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  places      Place[]
+  campaigns   Campaign[]
+
+  @@index([merchantId, status])
 }
 
 enum ShortlinkTargetType {

@@ -2,7 +2,6 @@ export type CampaignCreateRecord = {
   merchantId: string;
   placeId: string;
   name: string;
-  primaryCtaUrl: string;
   status: "draft" | "active" | "archived";
   themeId?: string | null;
 };
@@ -12,7 +11,6 @@ export type CampaignUpdateRecord = {
   merchantId?: string;
   placeId?: string;
   name?: string;
-  primaryCtaUrl?: string;
   status?: "draft" | "active" | "archived";
   themeId?: string | null;
 };

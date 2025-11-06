@@ -83,12 +83,6 @@ async function main() {
       slug: "hotel-lumiere-lobby",
       address: "18 Rue du Louvre, Paris",
       createdAt: new Date("2025-09-21T09:05:00Z"),
-      landingDefaults: {
-        primaryCtaLabel: "Share feedback",
-        primaryCtaUrl: "https://example.com/review",
-        secondaryCtaLabel: "See menu",
-        secondaryCtaUrl: "https://example.com/menu",
-      },
     },
     {
       id: "pl_daybreak_1",
@@ -117,7 +111,6 @@ async function main() {
           slug: place.slug,
           address: place.address,
           //themeId: place?.themeId,
-          landingDefaults: place.landingDefaults,
           googlePlaceId: place.googlePlaceId,
         },
         create: place,

@@ -66,13 +66,7 @@
       "googlePlaceId": "",
       "googleUrl": "https://search.google.com/local/writereview?placeid=ABC",
       "createdAt": "2025-09-21T09:05:00Z",
-      "tripadvisorUrl": "",
-      "landingDefaults": {
-        "primaryCtaLabel": "s",
-        "primaryCtaUrl": "http:s",
-        "secondaryCtaLabel": "dddd",
-        "secondaryCtaUrl": "http:d"
-      }
+      "tripadvisorUrl": ""
     }
   ],
   "campaigns": [
@@ -81,7 +75,6 @@
       "merchantId": "mer_1",
       "placeId": "pl_bella_1",
       "name": "Lunch Sep 2025",
-      "primaryCtaUrl": "https://search.google.com/local/writereview?placeid=XYZ",
       "status": "active",
       "createdAt": "2025-09-21T09:10:00Z"
     }

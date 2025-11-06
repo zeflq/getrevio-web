@@ -3,7 +3,7 @@ import { z } from "zod";
 import { placeCreateSchema } from "@/features/places/model/placeSchema";
 
 const basePlaceSchema = placeCreateSchema
-  .omit({ merchantId: true, landingDefaults: true, slug: true })
+  .omit({ merchantId: true, slug: true })
   .extend({
     localName: placeCreateSchema.shape.localName,
     address: placeCreateSchema.shape.address.optional(),

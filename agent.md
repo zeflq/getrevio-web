@@ -46,7 +46,7 @@ Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQL
 
 **Key fields:**
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   {    id: string;    merchantId: string;    localName: string;    slug: string; // globally unique    address?: string;    // Theming    themeId?: string; // optional, overrides merchant default    brand?: { logoUrl?: string; brandColor?: string; title?: string; subtitle?: string };    // Landing defaults    landingDefaults?: { title?: string; subtitle?: string; primaryCtaLabel?: string; primaryCtaUrl?: string };    // Platform links    googlePlaceId?: string;    googleUrl?: string;       // includes ?placeid= param    tripadvisorUrl?: string;    // Shortlink integration    defaultShortlinkCode?: string; // FK → Shortlink.code (created via API)  }   `
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   {    id: string;    merchantId: string;    localName: string;    slug: string; // globally unique    address?: string;    // Theming    themeId?: string; // optional, overrides merchant default    brand?: { logoUrl?: string; brandColor?: string; title?: string; subtitle?: string };    // Platform links    googlePlaceId?: string;    googleUrl?: string;       // includes ?placeid= param    tripadvisorUrl?: string;    // Shortlink integration    defaultShortlinkCode?: string; // FK → Shortlink.code (created via API)  }   `
 
 **Lifecycle:**
 
@@ -80,7 +80,7 @@ Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQL
 
 **Landing copy (content):**
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   Campaign.landingOverride → Place.landingDefaults   `
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   Campaign landing overrides are optional per campaign   `
 
 **Canonical URL:**
 

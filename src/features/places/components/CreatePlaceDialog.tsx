@@ -44,14 +44,6 @@ export function CreatePlaceDialog({
       address: "",
       merchantId: merchantId ?? "",
       googlePlaceId: "",
-      landingDefaults: {
-        title: "",
-        subtitle: "",
-        primaryCtaLabel: "",
-        primaryCtaUrl: "",
-        secondaryCtaLabel: "",
-        secondaryCtaUrl: "",
-      },
     },
   });
 
@@ -70,14 +62,6 @@ export function CreatePlaceDialog({
       address: "",
       merchantId: merchantId ?? "",
       googlePlaceId: "",
-      landingDefaults: {
-        title: "",
-        subtitle: "",
-        primaryCtaLabel: "",
-        primaryCtaUrl: "",
-        secondaryCtaLabel: "",
-        secondaryCtaUrl: "",
-      },
     });
 
   const onSubmit = (data: PlaceCreateInput) => {

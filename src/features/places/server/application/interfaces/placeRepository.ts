@@ -1,11 +1,8 @@
-import type { PlaceCreateInput, PlaceUpdateInput } from "@/features/places/model/placeSchema";
-
 export type PlaceCreateRecord = {
   merchantId: string;
   localName: string;
   slug: string;
   address?: string | null;
-  landingDefaults: PlaceCreateInput["landingDefaults"];
   googlePlaceId?: string | null;
 };
 
@@ -15,7 +12,6 @@ export type PlaceUpdateRecord = {
   localName?: string;
   slug?: string;
   address?: string | null;
-  landingDefaults?: PlaceUpdateInput["landingDefaults"];
   googlePlaceId?: string | null;
 };
 

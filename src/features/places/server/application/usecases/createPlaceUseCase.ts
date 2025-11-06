@@ -25,7 +25,6 @@ export class CreatePlaceUseCase {
       localName: data.localName,
       slug: data.slug,
       address: data.address ?? null,
-      landingDefaults: data.landingDefaults,
       googlePlaceId: data.googlePlaceId ?? null,
     };
 

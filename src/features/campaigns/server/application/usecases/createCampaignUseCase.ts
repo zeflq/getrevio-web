@@ -15,7 +15,6 @@ export class CreateCampaignUseCase {
     const data: CampaignCreateInput = {
       ...campaign,
       name: campaign.name.trim(),
-      primaryCtaUrl: campaign.primaryCtaUrl.trim(),
     };
     const cleanedThemeId =
       data.themeId && data.themeId.trim().length > 0 ? data.themeId.trim() : undefined;
@@ -24,7 +23,6 @@ export class CreateCampaignUseCase {
       merchantId: data.merchantId,
       placeId: data.placeId,
       name: data.name,
-      primaryCtaUrl: data.primaryCtaUrl,
       status: data.status,
       themeId: cleanedThemeId ?? null,
     };

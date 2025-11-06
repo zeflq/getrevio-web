@@ -12,7 +12,6 @@ export type PlaceListDTO = {
   slug: string;
   address?: string | null;
   themeId?: string | null;
-  landingDefaults?: Record<string, unknown> | null;
   googlePlaceId?: string | null;
   createdAt: string;
   updatedAt: string;
@@ -30,7 +29,6 @@ export const mapPlaceRow = (row: PlaceSelectRow): PlaceListDTO => ({
   slug: row.slug,
   address: row.address ?? null,
   themeId: row.themeId ?? null,
-  landingDefaults: (row.landingDefaults ?? null) as Record<string, unknown> | null,
   googlePlaceId: row.googlePlaceId ?? null,
   createdAt: toIsoString(row.createdAt),
   updatedAt: toIsoString(row.updatedAt),

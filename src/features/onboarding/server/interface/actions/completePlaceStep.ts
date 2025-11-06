@@ -34,15 +34,6 @@ const getPlaceUseCase = new GetPlaceUseCase(queryRepository);
 const shortlinkRepository = new PrismaShortlinkRepository();
 const createShortlinkUseCase = new CreateShortlinkUseCase(shortlinkRepository);
 
-const DEFAULT_PLACE_LANDING = {
-  title: undefined,
-  subtitle: undefined,
-  primaryCtaLabel: "Learn more",
-  primaryCtaUrl: "https://example.com",
-  secondaryCtaLabel: undefined,
-  secondaryCtaUrl: undefined,
-} as const;
-
 export const completePlaceStepAction = withTenantGuard("organizationId")
   .inputSchema(placeStepSubmitSchema)
   .action(async ({ parsedInput, ctx }) => {
@@ -85,7 +76,6 @@ export const completePlaceStepAction = withTenantGuard("organizationId")
           localName: normalized.localName,
           slug,
           address: normalized.address,
-          landingDefaults: DEFAULT_PLACE_LANDING,
           googlePlaceId: normalized.googlePlaceId,
         });
       } catch (error) {

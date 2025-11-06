@@ -26,15 +26,6 @@ export type Theme = {
   createdAt: string;
   updatedAt: string;
 };
-export type LandingDefaults = {
-  title?: string;
-  subtitle?: string;
-  primaryCtaLabel?: string;
-  primaryCtaUrl?: string;
-  secondaryCtaLabel?: string;
-  secondaryCtaUrl?: string;
-};
-
 export interface Place {
   id: string;
   merchantId: string;
@@ -43,8 +34,6 @@ export interface Place {
   address?: string;
   // visuals
   themeId?: string;                  // overrides merchant default
-  // landing defaults (when no campaign override)
-  landingDefaults?: LandingDefaults;
   // optional platform reference (kept for future integrations)
   googlePlaceId?: string;
   // shortlink integration
@@ -58,7 +47,6 @@ export interface Campaign {
   placeId: UUID;          // FK -> places.id
   name: string;
   slug?: string;          // optional human-friendly slug
-  primaryCtaUrl: string;  // Google/Tripadvisor review URL
   theme?: { brandColor?: string; logoUrl?: string };
   status: 'draft' | 'active' | 'archived';
   startAt?: ISODate;

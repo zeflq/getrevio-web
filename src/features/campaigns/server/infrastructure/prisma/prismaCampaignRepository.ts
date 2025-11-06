@@ -17,7 +17,6 @@ export class PrismaCampaignRepository implements CampaignRepository {
         merchantId: data.merchantId,
         placeId: data.placeId,
         name: data.name,
-        primaryCtaUrl: data.primaryCtaUrl,
         status: data.status,
         theme: data.themeId ? { connect: { id: data.themeId } } : undefined,
       },
@@ -39,10 +38,6 @@ export class PrismaCampaignRepository implements CampaignRepository {
 
     if (data.name !== undefined) {
       patch.name = data.name;
-    }
-
-    if (data.primaryCtaUrl !== undefined) {
-      patch.primaryCtaUrl = data.primaryCtaUrl;
     }
 
     if (data.status !== undefined) {

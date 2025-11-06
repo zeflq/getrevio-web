@@ -4,7 +4,6 @@ export const campaignCreateSchema = z.object({
   merchantId: z.string().min(1, "Merchant ID is required"),
   placeId: z.string().min(1, "Place ID is required"),
   name: z.string().min(1, "Name is required"),
-  primaryCtaUrl: z.string().url("Must be a valid URL"),
   themeId: z.string().optional(),
   status: z.enum(["draft", "active", "archived"]),
 });

@@ -7,7 +7,6 @@ export const placeSelect = {
   slug: true,
   address: true,
   themeId: true,
-  landingDefaults: true,
   googlePlaceId: true,
   createdAt: true,
   updatedAt: true,

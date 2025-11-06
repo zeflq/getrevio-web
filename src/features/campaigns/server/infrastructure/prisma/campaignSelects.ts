@@ -7,7 +7,6 @@ export const campaignSelect = {
   themeId: true,
   name: true,
   slug: true,
-  primaryCtaUrl: true,
   status: true,
   startAt: true,
   endAt: true,

@@ -34,7 +34,7 @@ Entities (merchant scope)
 
 *   **Merchant**: owns Places, Campaigns, Themes, Shortlinks.
     
-*   **Place**: has slug (canonical URL), landingDefaults, themeId, platform links (Google/Tripadvisor), and **auto-created default shortlink** (sl:{placeSlug}).
+*   **Place**: has slug (canonical URL), optional landingId, themeId, platform links (Google/Tripadvisor), and **auto-created default shortlink** (sl:{placeSlug}).
     
 *   **Campaign**: targets a Place; can override theme/copy; can have **multiple shortlinks** (per channel).
     

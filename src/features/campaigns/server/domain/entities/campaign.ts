@@ -3,7 +3,6 @@ export type CampaignProps = {
   placeId: string;
   name: string;
   slug: string;
-  primaryCtaUrl: string;
   status: "draft" | "active" | "archived";
   themeId?: string | null;
 };
@@ -25,10 +24,6 @@ export class CampaignEntity {
 
   get slug() {
     return this.props.slug;
-  }
-
-  get primaryCtaUrl() {
-    return this.props.primaryCtaUrl;
   }
 
   get status() {

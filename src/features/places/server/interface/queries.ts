@@ -144,7 +144,8 @@ export async function getTenantFirstPlaceServer(
     },
     options,
   });
-
+console.log('listResult')
+console.log(listResult)
   const first = listResult.data.at(0);
   if (!first) {
     return null;

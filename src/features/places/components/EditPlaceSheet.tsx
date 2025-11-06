@@ -49,14 +49,6 @@ export function EditPlaceSheet({
       address: "",
       merchantId: merchantId ?? "",
       googlePlaceId: "",
-      landingDefaults: {
-        title: "",
-        subtitle: "",
-        primaryCtaLabel: "",
-        primaryCtaUrl: "",
-        secondaryCtaLabel: "",
-        secondaryCtaUrl: "",
-      },
     },
   });
 
@@ -69,7 +61,6 @@ export function EditPlaceSheet({
       address: place.address ?? "",
       merchantId: merchantId ?? place.merchantId ?? "",
       googlePlaceId: place.googlePlaceId ?? "",
-      landingDefaults: (place.landingDefaults ?? {}) as PlaceUpdateInput["landingDefaults"],
       slug: place.slug, // read-only field still needs value in form state
     });
   }, [place, merchantId, reset]);
@@ -86,7 +77,6 @@ export function EditPlaceSheet({
       address: place?.address ?? "",
       merchantId: merchantId ?? place?.merchantId ?? "",
       googlePlaceId: "",
-      landingDefaults: (place?.landingDefaults ?? {}) as PlaceUpdateInput["landingDefaults"],
       slug: place?.slug,
     });
 

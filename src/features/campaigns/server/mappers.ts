@@ -14,7 +14,6 @@ export type CampaignListDTO = {
   themeName?: string | null;
   name: string;
   slug: string | null;
-  primaryCtaUrl: string;
   status: "draft" | "active" | "archived";
   startAt?: string | null;
   endAt?: string | null;
@@ -37,7 +36,6 @@ export const mapCampaignRow = (row: CampaignSelectRow): CampaignListDTO => ({
   themeName: row.theme?.name ?? null,
   name: row.name,
   slug: row.slug ?? null,
-  primaryCtaUrl: row.primaryCtaUrl,
   status: row.status,
   startAt: toIsoString(row.startAt),
   endAt: toIsoString(row.endAt),

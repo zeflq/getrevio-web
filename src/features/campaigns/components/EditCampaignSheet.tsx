@@ -59,7 +59,6 @@ export function EditCampaignSheet({
       merchantId: merchantId ?? "",
       placeId: "",
       name: "",
-      primaryCtaUrl: "",
       status: "draft",
       themeId: "",
     },
@@ -73,7 +72,6 @@ export function EditCampaignSheet({
       merchantId: merchantId ?? campaign.merchantId ?? "",
       placeId: campaign.placeId ?? "",
       name: campaign.name ?? "",
-      primaryCtaUrl: campaign.primaryCtaUrl ?? "",
       status: campaign.status ?? "draft",
       themeId: campaign.themeId ?? "",
     });

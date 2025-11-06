@@ -29,10 +29,6 @@ export class UpdateCampaignUseCase {
       normalized.name = normalized.name.trim();
     }
 
-    if (normalized.primaryCtaUrl !== undefined && normalized.primaryCtaUrl !== null) {
-      normalized.primaryCtaUrl = normalized.primaryCtaUrl.trim();
-    }
-
     if (normalized.themeId !== undefined) {
       if (typeof normalized.themeId === "string") {
         const trimmed = normalized.themeId.trim();

@@ -18,7 +18,6 @@ export class PrismaPlaceRepository implements PlaceRepository {
         localName: data.localName,
         slug: data.slug,
         address: data.address ?? null,
-        landingDefaults: data.landingDefaults,
         googlePlaceId: data.googlePlaceId ?? null,
       },
     });
@@ -41,10 +40,6 @@ export class PrismaPlaceRepository implements PlaceRepository {
 
     if (data.address !== undefined) {
       patch.address = data.address;
-    }
-
-    if (data.landingDefaults !== undefined) {
-      patch.landingDefaults = data.landingDefaults;
     }
 
     if (data.googlePlaceId !== undefined) {
