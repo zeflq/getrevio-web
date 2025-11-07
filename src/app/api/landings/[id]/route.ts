@@ -1,0 +1,12 @@
+import { getLandingServer } from "@/features/landings/server/interface/queries";
+import { withApiAuth } from "@/server/core/apiGuards";
+
+export const dynamic = "force-dynamic";
+
+export const GET = withApiAuth<{ id: string }>(async ({ params }) => {
+  const landing = await getLandingServer(params.id);
+  if (!landing) {
+    return new Response("Not Found", { status: 404 });
+  }
+  return Response.json(landing);
+});

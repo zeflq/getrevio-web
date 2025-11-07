@@ -9,7 +9,6 @@ export const shortlinkSelect = {
   campaignId: true,
   placeId: true,
   channel: true,
-  themeId: true,
   active: true,
   expiresAt: true,
   utmSource: true,

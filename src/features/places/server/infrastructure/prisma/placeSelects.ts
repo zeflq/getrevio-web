@@ -6,7 +6,6 @@ export const placeSelect = {
   localName: true,
   slug: true,
   address: true,
-  themeId: true,
   googlePlaceId: true,
   createdAt: true,
   updatedAt: true,

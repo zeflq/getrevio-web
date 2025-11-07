@@ -4,15 +4,10 @@ export const campaignCreateSchema = z.object({
   merchantId: z.string().min(1, "Merchant ID is required"),
   placeId: z.string().min(1, "Place ID is required"),
   name: z.string().min(1, "Name is required"),
-  themeId: z.string().optional(),
   status: z.enum(["draft", "active", "archived"]),
 });
 
-export const campaignUpdateSchema = campaignCreateSchema
-  .extend({
-    themeId: z.string().optional().or(z.literal("").optional()).or(z.null().optional()),
-  })
-  .partial();
+export const campaignUpdateSchema = campaignCreateSchema.partial();
 
 export type CampaignCreateInput = z.infer<typeof campaignCreateSchema>;
 export type CampaignUpdateInput = z.infer<typeof campaignUpdateSchema>;

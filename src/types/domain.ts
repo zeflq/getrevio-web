@@ -32,8 +32,6 @@ export interface Place {
   localName: string;
   slug: string;                      // globally unique
   address?: string;
-  // visuals
-  themeId?: string;                  // overrides merchant default
   // optional platform reference (kept for future integrations)
   googlePlaceId?: string;
   // shortlink integration
@@ -47,7 +45,6 @@ export interface Campaign {
   placeId: UUID;          // FK -> places.id
   name: string;
   slug?: string;          // optional human-friendly slug
-  theme?: { brandColor?: string; logoUrl?: string };
   status: 'draft' | 'active' | 'archived';
   startAt?: ISODate;
   endAt?: ISODate;
@@ -74,9 +71,6 @@ export interface Shortlink {
 
   // New channel format (free-form)
   channel?: string;                  // qr | nfc | email | web | print | custom
-
-  // Optional overrides
-  themeId?: string | null;           // enforce theme for this shortlink
 
   // New runtime/redis status fields
   active: boolean;                   // mirror of Redis a=1/0

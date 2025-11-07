@@ -56,7 +56,6 @@ function buildPayload(args: {
   active: boolean;
   target: unknown;
   expiresAt?: string | null;
-  themeId?: string | null;
   utm?: unknown | null;
   channel?: string | null;
 }) {
@@ -68,7 +67,6 @@ function buildPayload(args: {
     tgt: args.target,
   };
   if (args.expiresAt) payload.ea = Math.floor(new Date(args.expiresAt).getTime() / 1000);
-  if (args.themeId)   payload.th = args.themeId;
   if (args.utm)       payload.utm = args.utm;
   if (args.channel)   payload.cm = { [args.channel]: { utm: { source: args.channel } } };
   return payload;
@@ -80,7 +78,6 @@ export type ShortlinkRow = {
   target: unknown;
   merchantId: string;
   channel: string | null;
-  themeId: string | null;
   active: boolean;
   expiresAt: string | null;
   utm: unknown | null;
@@ -103,7 +100,6 @@ export async function onShortlinkCreated(record: ShortlinkRow) {
       active: record.active,
       target: parsedTarget,
       expiresAt: record.expiresAt ?? undefined,
-      themeId: record.themeId ?? undefined,
       utm: record.utm ?? undefined,
       channel: record.channel ?? undefined,
     });
@@ -137,7 +133,6 @@ export async function onShortlinkUpdated(previous: ShortlinkRow, patch: Partial<
       code: patch.code ?? previous.code,
       target: patch.target ?? previous.target,
       channel: patch.channel ?? previous.channel,
-      themeId: patch.themeId ?? previous.themeId,
       active: patch.active ?? previous.active,
       expiresAt: patch.expiresAt ?? previous.expiresAt,
       utm: patch.utm ?? previous.utm,
@@ -166,7 +161,6 @@ export async function onShortlinkUpdated(previous: ShortlinkRow, patch: Partial<
       active: effective.active,
       target: parsed,
       expiresAt: effective.expiresAt ?? undefined,
-      themeId: effective.themeId ?? undefined,
       utm: effective.utm ?? undefined,
       channel: effective.channel ?? undefined,
     });

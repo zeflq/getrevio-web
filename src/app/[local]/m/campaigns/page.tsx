@@ -19,7 +19,6 @@ import {
   DeleteCampaignDialog,
 } from "@/features/campaigns";
 import { useCampaignsList } from "@/features/campaigns/hooks/useCampaignCrud";
-import { useThemesLite } from "@/features/themes";
 
 function useActiveTenantId() {
   const { data: session } = useSession();
@@ -75,13 +74,6 @@ export default function MerchantCampaignsPage() {
   const rows = campaignsResponse?.data ?? [];
   const totalPages = campaignsResponse?.totalPages ?? 1;
   const total = campaignsResponse?.total ?? 0;
-
-  const themesLiteQuery = useThemesLite(
-    { merchantId: tenantId || undefined, _limit: 100 },
-    { enabled: !!tenantId }
-  );
-  const themesLite = themesLiteQuery.data ?? [];
-  const showThemeSelect = themesLite.length > 1;
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | null>(null);
@@ -179,9 +171,6 @@ export default function MerchantCampaignsPage() {
         onOpenChange={setCreateOpen}
         merchantId={tenantId}
         onSuccess={() => controller.table.resetRowSelection()}
-        themesLite={themesLite}
-        themesLoading={themesLiteQuery.isLoading}
-        showThemeSelect={showThemeSelect}
       />
 
       {editId && (
@@ -191,9 +180,6 @@ export default function MerchantCampaignsPage() {
           onOpenChange={(open) => !open && setEditId(null)}
           merchantId={tenantId}
           onSuccess={() => setEditId(null)}
-          themesLite={themesLite}
-          themesLoading={themesLiteQuery.isLoading}
-          showThemeSelect={showThemeSelect}
         />
       )}
 

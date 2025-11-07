@@ -67,12 +67,6 @@ export function CampaignColumns(opts: {
         row.original.placeName ?? row.original.placeId ?? "—",
     },
     {
-      accessorKey: "themeName",
-      header: "Theme",
-      enableColumnFilter: false,
-      cell: ({ row }) => row.original.themeName ?? "—",
-    },
-    {
       accessorKey: "status",
       header: "Status",
       enableSorting: true,

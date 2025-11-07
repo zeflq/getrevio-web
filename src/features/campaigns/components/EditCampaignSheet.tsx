@@ -14,7 +14,6 @@ import {
 } from "../model/campaignSchema";
 import { useCampaignItem, useUpdateCampaign } from "../hooks/useCampaignCrud";
 import { usePlacesLite } from "@/features/places";
-import { useThemesLite } from "@/features/themes";
 import type { LiteListe } from "@/types/lists";
 
 export interface EditCampaignSheetProps {
@@ -24,9 +23,6 @@ export interface EditCampaignSheetProps {
   merchantId?: string;
   merchantsLite?: LiteListe[];
   onSuccess?: () => void;
-  themesLite?: LiteListe[];
-  themesLoading?: boolean;
-  showThemeSelect?: boolean;
 }
 
 export function EditCampaignSheet({
@@ -36,9 +32,6 @@ export function EditCampaignSheet({
   merchantId,
   merchantsLite = [],
   onSuccess,
-  themesLite,
-  themesLoading,
-  showThemeSelect: showThemeSelectOverride,
 }: EditCampaignSheetProps) {
   const { data: campaign, isLoading } = useCampaignItem(campaignId);
 
@@ -60,7 +53,6 @@ export function EditCampaignSheet({
       placeId: "",
       name: "",
       status: "draft",
-      themeId: "",
     },
   });
 
@@ -73,7 +65,6 @@ export function EditCampaignSheet({
       placeId: campaign.placeId ?? "",
       name: campaign.name ?? "",
       status: campaign.status ?? "draft",
-      themeId: campaign.themeId ?? "",
     });
   }, [campaign, merchantId, reset]);
 
@@ -99,14 +90,6 @@ export function EditCampaignSheet({
     { enabled: !!merchantIdValue }
   );
 
-  const hasExternalThemes = Array.isArray(themesLite);
-  const themesLiteQuery = useThemesLite(
-    { merchantId: merchantIdValue || undefined, _limit: 100 },
-    { enabled: !hasExternalThemes && !!merchantIdValue }
-  );
-  const resolvedThemesLite = hasExternalThemes ? themesLite ?? [] : themesLiteQuery.data ?? [];
-  const resolvedThemesLoading = hasExternalThemes ? themesLoading ?? false : themesLiteQuery.isLoading;
-
   const prevMerchantRef = useRef<string | null>(null);
   useEffect(() => {
     const current = merchantIdValue ?? null;
@@ -116,7 +99,6 @@ export function EditCampaignSheet({
     }
     if (prevMerchantRef.current !== current) {
       setValue("placeId", "", { shouldDirty: true, shouldValidate: false });
-      setValue("themeId", "", { shouldDirty: true, shouldValidate: false });
       prevMerchantRef.current = current;
     }
   }, [merchantIdValue, setValue]);
@@ -133,60 +115,8 @@ export function EditCampaignSheet({
     }
   }, [campaign?.placeId, placesLiteQuery.data, setValue]);
 
-  useEffect(() => {
-    if (resolvedThemesLoading) return;
-
-    const themes = resolvedThemesLite;
-    const currentThemeId = methods.getValues("themeId") ?? "";
-
-    if (!merchantIdValue) {
-      if (currentThemeId !== "") {
-        setValue("themeId", "", { shouldDirty: false, shouldValidate: false });
-      }
-      return;
-    }
-
-    if (themes.length === 0) {
-      if (currentThemeId !== "") {
-        setValue("themeId", "", { shouldDirty: false, shouldValidate: false });
-      }
-      return;
-    }
-
-    if (themes.length === 1) {
-      const nextThemeId = themes[0]?.value ?? "";
-      if (currentThemeId !== nextThemeId) {
-        setValue("themeId", nextThemeId, { shouldDirty: false, shouldValidate: false });
-      }
-      return;
-    }
-
-    const existsInOptions = themes.some((theme) => theme.value === currentThemeId);
-    if (!existsInOptions) {
-      setValue("themeId", campaign?.themeId ?? "", { shouldDirty: false, shouldValidate: false });
-    }
-  }, [
-    merchantIdValue,
-    resolvedThemesLite,
-    resolvedThemesLoading,
-    setValue,
-    campaign?.themeId,
-    methods,
-  ]);
-
   const onSubmit = (data: CampaignUpdateInput) => {
-    let themeId: string | null | undefined = data.themeId;
-    if (typeof data.themeId === "string") {
-      const trimmed = data.themeId.trim();
-      themeId = trimmed.length > 0 ? trimmed : null;
-    }
-
-    const payload: CampaignUpdateInput = {
-      ...data,
-      themeId,
-    };
-
-    execute({ id: campaignId, ...payload });
+    execute({ id: campaignId, ...data });
   };
 
   const handleSheetChange = (nextOpen: boolean) => {
@@ -207,9 +137,6 @@ export function EditCampaignSheet({
     (placesLiteQuery.data ?? []).some((p) => String(p.value) === String(campaign.placeId));
   const formReady = campaignLoaded && merchantReady && placesReady && selectedPlaceIsInOptions;
 
-  const resolvedShowThemeSelect =
-    showThemeSelectOverride ?? ((resolvedThemesLite?.length ?? 0) > 1);
-
   return (
     <SheetForm<CampaignUpdateInput>
       open={open}
@@ -229,9 +156,6 @@ export function EditCampaignSheet({
         placesLite={placesLiteQuery.data ?? []}
         placesLoading={placesLiteQuery.isLoading}
         merchantIdValue={merchantIdValue}
-        themesLite={resolvedThemesLite}
-        themesLoading={resolvedThemesLoading}
-        showThemeSelect={resolvedShowThemeSelect}
       />
     </SheetForm>
   );

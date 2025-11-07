@@ -4,7 +4,6 @@ export type CampaignProps = {
   name: string;
   slug: string;
   status: "draft" | "active" | "archived";
-  themeId?: string | null;
 };
 
 export class CampaignEntity {
@@ -28,10 +27,6 @@ export class CampaignEntity {
 
   get status() {
     return this.props.status;
-  }
-
-  get themeId() {
-    return this.props.themeId ?? null;
   }
 
   toJSON() {

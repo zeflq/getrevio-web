@@ -1,7 +1,6 @@
 // src/features/campaigns/components/CampaignFormFields.tsx
 "use client";
 
-import * as React from "react";
 import { useFormContext } from "react-hook-form";
 
 import {
@@ -18,9 +17,6 @@ type Props = {
   placesLite?: LiteListe[];
   placesLoading?: boolean;
   merchantIdValue?: string;
-  themesLite?: LiteListe[];
-  themesLoading?: boolean;
-  showThemeSelect?: boolean;
 };
 
 export function CampaignFormFields({
@@ -30,16 +26,8 @@ export function CampaignFormFields({
   placesLite = [],
   placesLoading,
   merchantIdValue,
-  themesLite = [],
-  themesLoading = false,
-  showThemeSelect = false,
 }: Props) {
   const form = useFormContext();
-
-  const themeOptions = React.useMemo(() => {
-    const base: LiteListe[] = [{ value: "", label: "No theme" }];
-    return base.concat(themesLite);
-  }, [themesLite]);
 
   return (
     <div className="space-y-4">
@@ -92,23 +80,6 @@ export function CampaignFormFields({
         placeholder="Select status"
         disabled={disabled}
       />
-
-      {showThemeSelect ? (
-        <RHFCombobox<LiteListe>
-          name="themeId"
-          label="Theme"
-          options={themeOptions}
-          getOptionValue={(option) => option.value}
-          getOptionLabel={(option) => option.label}
-          placeholder="Select theme…"
-          searchPlaceholder="Search themes…"
-          disabled={disabled || themesLoading}
-          loading={themesLoading}
-          keyBy={merchantIdValue}
-        />
-      ) : (
-        <input type="hidden" {...form.register("themeId")} />
-      )}
     </div>
   );
 }

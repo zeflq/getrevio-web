@@ -96,9 +96,6 @@ function buildRedisPatch(patch: z.output<typeof updateSchema>): ShortlinkRedisPa
   if (Object.prototype.hasOwnProperty.call(patch, "channel") && patch.channel !== undefined) {
     result.channel = patch.channel ?? null;
   }
-  if (Object.prototype.hasOwnProperty.call(patch, "themeId") && patch.themeId !== undefined) {
-    result.themeId = patch.themeId ?? null;
-  }
   if (Object.prototype.hasOwnProperty.call(patch, "active") && patch.active !== undefined) {
     result.active = patch.active;
   }
@@ -124,7 +121,6 @@ function toRedisRow(shortlink: import("@/types/domain").Shortlink | null | undef
     target: shortlink.target,
     merchantId: shortlink.merchantId,
     channel: shortlink.channel ?? null,
-    themeId: shortlink.themeId ?? null,
     active: shortlink.active,
     expiresAt: shortlink.expiresAt ? new Date(shortlink.expiresAt).toISOString() : null,
     utm: shortlink.utm ?? null,

@@ -17,7 +17,6 @@ import type { ShortlinkFormValues } from "../model/shortlinkSchema";
 import { usePlacesLite } from "@/features/places";
 import { useCampaignsLite } from "@/features/campaigns";
 import type { CampaignLiteItem } from "@/features/campaigns/server/application/interfaces/campaignQueryRepository";
-import { useThemesLite } from "@/features/themes";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { RHFDateInput } from "@/components/form/controls/RHFDateInput";
@@ -74,10 +73,6 @@ export function ShortlinkFormFields({
   );
   const campaignsLite = (campaignsLiteQuery.data ?? []) as CampaignLiteItem[];
   const campaignsLoading = campaignsLiteQuery.isLoading;
-  const { data: themesLite = [], isLoading: themesLoading } = useThemesLite(
-    selectedMerchantId ? { merchantId: selectedMerchantId } : {},
-    { enabled: !!selectedMerchantId }
-  );
 
   const flatKeys = useFlattenErrors(errors);
   const hasInfoError = flatKeys.some((key) => !key.startsWith("utm"));
@@ -97,16 +92,16 @@ export function ShortlinkFormFields({
 
   return (
     <Tabs defaultValue="info" className="space-y-4">
-      <TabsList>
+      <TabsList className="flex w-full">
         <TabsTrigger
           value="info"
-          className={cn(hasInfoError && "text-destructive font-medium")}
+          className={cn("flex-1", hasInfoError && "text-destructive font-medium")}
         >
           Info
         </TabsTrigger>
         <TabsTrigger
           value="utm"
-          className={cn(hasUtmError && "text-destructive font-medium")}
+          className={cn("flex-1", hasUtmError && "text-destructive font-medium")}
         >
           UTM Parameters
         </TabsTrigger>
@@ -242,7 +237,7 @@ export function ShortlinkFormFields({
             )}
           />
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2">
             <FormField
               control={control}
               name="channel"
@@ -269,19 +264,6 @@ export function ShortlinkFormFields({
                   <FormMessage className="text-xs" />
                 </FormItem>
               )}
-            />
-
-            <RHFCombobox<LiteListe>
-              name="themeId"
-              label="Theme Override"
-              options={themesLite}
-              getOptionValue={(t) => t.value}
-              getOptionLabel={(t) => t.label}
-              placeholder="Not specified"
-              searchPlaceholder="Search themes…"
-              disabled={disabled || themesLoading || !selectedMerchantId}
-              loading={themesLoading}
-              valueIsNullable
             />
 
             <RHFDateInput

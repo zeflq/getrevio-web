@@ -14,7 +14,6 @@ const shortlinkCommonSchema = z.object({
   merchantId: z.string().min(1),
   target: shortlinkTargetSchema, // ⬅️ API/DTO: requis (non null)
   channel: z.enum(["qr", "nfc", "email", "web", "print", "custom"]).optional(),
-  themeId: z.string().optional(),
   targetType: z.enum(["campaign", "place"]).optional(),
   campaignId: z.string().optional(),
   placeId: z.string().optional(),
@@ -50,7 +49,6 @@ export const shortlinkFormSchema = z.object({
   merchantId: z.string().min(1),
   target: shortlinkTargetSchema.nullable(), // ⬅️ UI: peut être null tant que non choisi
   channel: z.enum(["qr", "nfc", "email", "web", "print", "custom"]).optional(),
-  themeId: z.string().optional(),
   active: z.boolean(),
   expiresAt: z.date().optional(),
   utm: z.object({

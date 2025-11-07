@@ -42,7 +42,6 @@ export class PrismaShortlinkRepository implements ShortlinkMutationRepository {
       campaignId,
       placeId,
       channel: data.channel ?? null,
-      themeId: data.themeId ?? null,
       active: data.active,
       expiresAt: data.expiresAt ?? null,
     };
@@ -88,10 +87,6 @@ export class PrismaShortlinkRepository implements ShortlinkMutationRepository {
 
     if (data.channel !== undefined) {
       patch.channel = data.channel ?? null;
-    }
-
-    if (data.themeId !== undefined) {
-      patch.themeId = data.themeId ?? null;
     }
 
     if (data.active !== undefined) {

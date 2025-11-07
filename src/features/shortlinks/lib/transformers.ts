@@ -33,7 +33,6 @@ export const createInitialShortlinkValues = (
   merchantId,
   target,
   channel: undefined,
-  themeId: undefined,
   active: true,
   expiresAt: undefined,
   utm: ensureUtmForForm(),
@@ -57,7 +56,6 @@ export const shortlinkToFormValues = (s: Shortlink): ShortlinkFormValues => {
     merchantId: s.merchantId,
     target: formTarget,                          // union | null
     channel: asChannel(s.channel),
-    themeId: trimOrUndefined(s.themeId),
     active: s.active,
     expiresAt: s.expiresAt ? new Date(s.expiresAt):undefined,
     utm: ensureUtmForForm(s.utm),
@@ -100,7 +98,6 @@ export const buildCreateShortlinkPayload = (values: ShortlinkFormValues): Shortl
     campaignId,
     placeId: placeIdBase,
     channel: values.channel,
-    themeId: values.themeId?.trim() || undefined,
     active: !!values.active,
     expiresAt: expiresAtSan,
     utm: values.utm,
@@ -110,7 +107,6 @@ export const buildCreateShortlinkPayload = (values: ShortlinkFormValues): Shortl
   if (!payload.campaignId) delete (payload as { campaignId?: string }).campaignId;
   if (!payload.placeId) delete (payload as { placeId?: string }).placeId;
   if (payload.channel === undefined) delete payload.channel;
-  if (payload.themeId === undefined) delete payload.themeId;
   if (payload.expiresAt === undefined) delete payload.expiresAt;
   if (!payload.utm) delete payload.utm;
 
@@ -146,7 +142,6 @@ export const buildUpdateShortlinkPayload = (values: ShortlinkFormValues): Shortl
     campaignId,
     placeId: placeIdBase,
     channel: values.channel,
-    themeId: values.themeId?.trim() || undefined,
     active: !!values.active,
     expiresAt: values.expiresAt,
     utm: values.utm,
@@ -156,7 +151,6 @@ export const buildUpdateShortlinkPayload = (values: ShortlinkFormValues): Shortl
   if (!partial.campaignId) delete (partial as { campaignId?: string }).campaignId;
   if (!partial.placeId) delete (partial as { placeId?: string }).placeId;
   if (partial.channel === undefined) delete partial.channel;
-  if (partial.themeId === undefined) delete partial.themeId;
   if (partial.expiresAt === undefined) delete partial.expiresAt;
   if (!partial.utm) delete partial.utm;
 

@@ -16,7 +16,6 @@ export const mapShortlinkRow = (row: ShortlinkSelectRow): Shortlink => ({
   campaignId: row.campaignId ?? null,
   placeId: row.placeId ?? null,
   channel: row.channel ?? undefined,
-  themeId: row.themeId ?? undefined,
   active: row.active,
   expiresAt: row.expiresAt ?? undefined,
   utm: buildUtm(row),

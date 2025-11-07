@@ -16,15 +16,11 @@ export class CreateCampaignUseCase {
       ...campaign,
       name: campaign.name.trim(),
     };
-    const cleanedThemeId =
-      data.themeId && data.themeId.trim().length > 0 ? data.themeId.trim() : undefined;
-
     const payload: CampaignCreateRecord = {
       merchantId: data.merchantId,
       placeId: data.placeId,
       name: data.name,
       status: data.status,
-      themeId: cleanedThemeId ?? null,
     };
 
     await this.repository.create(payload);

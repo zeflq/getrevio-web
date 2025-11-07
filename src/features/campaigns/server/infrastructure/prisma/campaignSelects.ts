@@ -4,7 +4,6 @@ export const campaignSelect = {
   id: true,
   merchantId: true,
   placeId: true,
-  themeId: true,
   name: true,
   slug: true,
   status: true,
@@ -20,12 +19,6 @@ export const campaignSelect = {
   place: {
     select: {
       localName: true,
-    },
-  },
-  theme: {
-    select: {
-      id: true,
-      name: true,
     },
   },
 } satisfies Prisma.CampaignSelect;

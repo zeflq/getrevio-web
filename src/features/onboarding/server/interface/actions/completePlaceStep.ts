@@ -219,7 +219,6 @@ function toRedisRow(shortlink: import("@/types/domain").Shortlink | null | undef
     target: shortlink.target,
     merchantId: shortlink.merchantId,
     channel: shortlink.channel ?? null,
-    themeId: shortlink.themeId ?? null,
     active: shortlink.active,
     expiresAt: shortlink.expiresAt ? new Date(shortlink.expiresAt).toISOString() : null,
     utm: shortlink.utm ?? null,

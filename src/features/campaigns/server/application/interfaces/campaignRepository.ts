@@ -3,7 +3,6 @@ export type CampaignCreateRecord = {
   placeId: string;
   name: string;
   status: "draft" | "active" | "archived";
-  themeId?: string | null;
 };
 
 export type CampaignUpdateRecord = {
@@ -12,7 +11,6 @@ export type CampaignUpdateRecord = {
   placeId?: string;
   name?: string;
   status?: "draft" | "active" | "archived";
-  themeId?: string | null;
 };
 
 export interface CampaignRepository {

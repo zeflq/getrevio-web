@@ -37,6 +37,7 @@ export function AdminSidebar(props: React.ComponentProps<typeof Sidebar>) {
     { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
     { title: "Merchants", url: "/admin/merchants", icon: Users },
     { title: "Places", url: "/admin/places", icon: MapPin },
+    { title: "Landings", url: "/admin/landings", icon: Command },
     { title: "Campaigns", url: "/admin/campaigns", icon: Megaphone },
     { title: "Shortlinks", url: "/admin/shortlinks", icon: Link2 },
     { title: "Events", url: "/admin/events", icon: CalendarDays },
