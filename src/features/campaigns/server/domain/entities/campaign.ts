@@ -2,7 +2,6 @@ export type CampaignProps = {
   merchantId: string;
   placeId: string;
   name: string;
-  slug: string;
   status: "draft" | "active" | "archived";
 };
 
@@ -19,10 +18,6 @@ export class CampaignEntity {
 
   get name() {
     return this.props.name;
-  }
-
-  get slug() {
-    return this.props.slug;
   }
 
   get status() {

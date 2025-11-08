@@ -87,7 +87,6 @@ model Campaign {
   landing    Landing? @relation(fields: [landingId], references: [id], onDelete: SetNull)
 
   name String
-  slug String? // optional
 
   status     CampaignStatus @default(draft)
   startAt    DateTime?
@@ -97,7 +96,6 @@ model Campaign {
   shortlinks Shortlink[]
 
   // multiple NULLs are allowed
-  @@unique([placeId, slug], map: "campaign_place_slug_unique")
   @@index([merchantId])
   @@index([placeId])
   @@index([landingId])

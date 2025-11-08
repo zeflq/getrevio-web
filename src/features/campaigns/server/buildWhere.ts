@@ -10,7 +10,6 @@ export const buildCampaignWhere = (
     ? {
         OR: [
           { name: { contains: filters.q, mode: "insensitive" } },
-          { slug: { contains: filters.q, mode: "insensitive" } },
         ],
       }
     : {}),

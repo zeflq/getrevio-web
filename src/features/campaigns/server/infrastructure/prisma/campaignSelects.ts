@@ -5,7 +5,6 @@ export const campaignSelect = {
   merchantId: true,
   placeId: true,
   name: true,
-  slug: true,
   status: true,
   startAt: true,
   endAt: true,

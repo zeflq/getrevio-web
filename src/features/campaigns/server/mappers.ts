@@ -11,7 +11,6 @@ export type CampaignListDTO = {
   placeId: string;
   placeName?: string | null;
   name: string;
-  slug: string | null;
   status: "draft" | "active" | "archived";
   startAt?: string | null;
   endAt?: string | null;
@@ -31,7 +30,6 @@ export const mapCampaignRow = (row: CampaignSelectRow): CampaignListDTO => ({
   placeId: row.placeId,
   placeName: row.place?.localName ?? null,
   name: row.name,
-  slug: row.slug ?? null,
   status: row.status,
   startAt: toIsoString(row.startAt),
   endAt: toIsoString(row.endAt),
