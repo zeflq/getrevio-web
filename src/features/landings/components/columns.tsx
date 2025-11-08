@@ -55,6 +55,16 @@ export function landingColumns(opts: {
       cell: ({ row }) => row.original.content?.layout ?? "—",
     },
     {
+      accessorKey: "belongsTo",
+      header: "Attached To",
+      cell: ({ row }) => {
+        const target = row.original.belongsTo;
+        if (!target) return "—";
+        const label = target.label ?? target.id;
+        return target.type === "campaign" ? `Campaign · ${label}` : `Place · ${label}`;
+      },
+    },
+    {
       accessorKey: "updatedAt",
       header: "Updated",
       enableSorting: true,

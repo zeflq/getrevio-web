@@ -9,6 +9,20 @@ export const landingSelect = {
   publishedAt: true,
   createdAt: true,
   updatedAt: true,
+  places: {
+    select: {
+      id: true,
+      localName: true,
+      merchantId: true,
+    },
+  },
+  campaigns: {
+    select: {
+      id: true,
+      name: true,
+      merchantId: true,
+    },
+  },
 } satisfies Prisma.LandingSelect;
 
 export const landingLiteSelect = {

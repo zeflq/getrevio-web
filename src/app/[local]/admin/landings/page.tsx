@@ -3,6 +3,7 @@
 import * as React from "react";
 import type { ColumnFiltersState, SortingState } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
+import { useRouter } from "@/i18n/navigation";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { iconActionGroup as IconActionGroup } from "@/shared/ui/IconActionGroup";
@@ -14,12 +15,12 @@ import { useMerchantsLite } from "@/features/merchants";
 import {
   landingColumns,
   CreateLandingDialog,
-  EditLandingSheet,
   DeleteLandingDialog,
   useLandingsList,
 } from "@/features/landings";
 
 export default function LandingsPage() {
+  const router = useRouter();
   const isMobile = useIsMobile();
   const merchantsLiteQuery = useMerchantsLite();
 
@@ -37,7 +38,6 @@ export default function LandingsPage() {
   }, [isMobile, pageSize]);
 
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
-  const [editSheetOpen, setEditSheetOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState<string | undefined>(undefined);
 
@@ -59,8 +59,7 @@ export default function LandingsPage() {
 
   const columns = landingColumns({
     onEdit: (id) => {
-      setSelectedId(id);
-      setEditSheetOpen(true);
+      router.push(`/admin/landings/${id}/edit`);
     },
     onDelete: (id) => {
       setSelectedId(id);
@@ -120,10 +119,7 @@ export default function LandingsPage() {
           cardActionsColumnId="actionsMenu"
           cardExcludeColumnIds={["actions"]}
           metaColsPerRow={2}
-          onRowClick={(id) => {
-            setSelectedId(id);
-            setEditSheetOpen(true);
-          }}
+          onRowClick={(id) => router.push(`/admin/landings/${id}/edit`)}
         />
       </div>
 
@@ -132,15 +128,6 @@ export default function LandingsPage() {
         onOpenChange={setCreateDialogOpen}
         merchantsLite={merchantsLiteQuery.data ?? []}
       />
-
-      {selectedId && (
-        <EditLandingSheet
-          id={selectedId}
-          open={editSheetOpen}
-          onOpenChange={setEditSheetOpen}
-          merchantsLite={merchantsLiteQuery.data ?? []}
-        />
-      )}
 
       {selectedId && (
         <DeleteLandingDialog

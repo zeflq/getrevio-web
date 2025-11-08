@@ -10,9 +10,11 @@ import { SUPER_ADMIN } from "@/lib/utils";
 import { PrismaLandingRepository } from "../../infrastructure/prisma/prismaLandingRepository";
 import { UpdateLandingUseCase } from "../../application/usecases/updateLandingUseCase";
 import { DeleteLandingUseCase } from "../../application/usecases/deleteLandingUseCase";
+import { PrismaLandingAssociationGateway } from "../../infrastructure/prisma/prismaLandingAssociationGateway";
 
 const repository = new PrismaLandingRepository();
-const updateUseCase = new UpdateLandingUseCase(repository);
+const associations = new PrismaLandingAssociationGateway();
+const updateUseCase = new UpdateLandingUseCase(repository, associations);
 const deleteUseCase = new DeleteLandingUseCase(repository);
 
 const updateSchema = landingUpdateSchema.extend({ id: z.string() });

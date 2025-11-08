@@ -8,16 +8,18 @@ import { SUPER_ADMIN } from "@/lib/utils";
 
 import { PrismaLandingRepository } from "../../infrastructure/prisma/prismaLandingRepository";
 import { CreateLandingUseCase } from "../../application/usecases/createLandingUseCase";
+import { PrismaLandingAssociationGateway } from "../../infrastructure/prisma/prismaLandingAssociationGateway";
 
 const repository = new PrismaLandingRepository();
-const useCase = new CreateLandingUseCase(repository);
+const associations = new PrismaLandingAssociationGateway();
+const useCase = new CreateLandingUseCase(repository, associations);
 
 export const createLandingAction = withTenantGuard("merchantId")
   .inputSchema(landingCreateSchema)
   .action(async ({ parsedInput, ctx }) => {
     const userRole = ctx.isSuperAdmin ? SUPER_ADMIN : ctx.user.roles?.[0] ?? null;
 
-    await useCase.execute({
+    const id = await useCase.execute({
       ...parsedInput,
       tenantId: ctx.tenantId ?? parsedInput.merchantId,
       userRole,
@@ -25,5 +27,5 @@ export const createLandingAction = withTenantGuard("merchantId")
 
     await revalidateTag("landings");
 
-    return { ok: true } as const;
+    return { id };
   });

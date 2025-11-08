@@ -7,11 +7,11 @@ import type {
   LandingQueryRepository,
   LandingQueryOptions,
 } from "../../application/interfaces/landingQueryRepository";
-import type { LandingFilters } from "../../model/landingSchema";
 import { buildLandingWhere } from "../../buildWhere";
 import { landingQueryPolicy } from "../../policy";
 import { mapLandingRow, type LandingListDTO } from "../../mappers";
 import { landingLiteSelect, landingSelect } from "./landingSelects";
+import { LandingFilters } from "@/features/landings/model/landingSchema";
 
 const landingSortPolicy = makeSortPolicy<LandingFilters>({
   allowed: ["name", "createdAt", "status"],

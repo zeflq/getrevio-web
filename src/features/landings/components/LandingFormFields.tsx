@@ -5,162 +5,170 @@ import * as React from "react";
 import { useFormContext } from "react-hook-form";
 
 import { RHFInput, RHFSelect, RHFCombobox } from "@/components/form/controls";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { useFlattenErrors } from "@/components/form/useFlattenErrors";
 import type { LiteListe } from "@/types/lists";
+import { usePlacesLite } from "@/features/places";
+import { useCampaignsLite } from "@/features/campaigns";
+import type { CampaignLiteItem } from "@/features/campaigns/server/application/interfaces/campaignQueryRepository";
 
-import type { LandingFormValues } from "../model/landingSchema";
+import type { LandingCreateFormValues, LandingFormValues } from "../model/landingSchema";
+
+type FormShape = LandingFormValues | LandingCreateFormValues;
 
 type Props = {
-  mode: "create" | "edit";
   disabled?: boolean;
   merchantId?: string;
   merchantsLite?: LiteListe[];
 };
 
 export function LandingFormFields({
-  mode: _mode,
   disabled,
   merchantId,
   merchantsLite = [],
 }: Props) {
-  const { register, formState: { errors } } = useFormContext<LandingFormValues>();
-  const flatErrors = useFlattenErrors(errors);
+  const {
+    register,
+    setValue,
+    watch,
+  } = useFormContext<FormShape>();
 
-  const hasSettingsError = flatErrors.some((k) => k.startsWith("settings"));
-  const hasContentError = flatErrors.some((k) => k.startsWith("content"));
+  const selectedMerchantId = merchantId ?? watch("settings.merchantId");
+  const belongsTo = watch("belongsTo");
+  const attachmentType: "place" | "campaign" = belongsTo?.type ?? "place";
 
-  return (
-    <Tabs defaultValue="settings" className="space-y-4">
-      <TabsList className="flex w-full">
-        <TabsTrigger
-          value="settings"
-          className={cn("flex-1", hasSettingsError && "text-destructive font-medium")}
-        >
-          Settings
-        </TabsTrigger>
-        <TabsTrigger
-          value="content"
-          className={cn("flex-1", hasContentError && "text-destructive font-medium")}
-        >
-          Content
-        </TabsTrigger>
-      </TabsList>
+  const previousMerchantId = React.useRef<string | undefined>(selectedMerchantId);
 
-      <TabsContent value="settings" className="space-y-4">
-        {!merchantId ? (
-          <RHFCombobox<LiteListe>
-            name="settings.merchantId"
-            label="Merchant"
-            options={merchantsLite}
-            getOptionValue={(m) => m.value}
-            getOptionLabel={(m) => m.label}
-            placeholder="Select merchant"
-            searchPlaceholder="Search merchants…"
-            requiredStar
-            disabled={disabled}
-          />
-        ) : (
-          <input type="hidden" {...register("settings.merchantId")} value={merchantId} />
-        )}
+  React.useEffect(() => {
+    if (previousMerchantId.current === selectedMerchantId) return;
+    previousMerchantId.current = selectedMerchantId;
 
-        <RHFInput
-          name="settings.name"
-          label="Name"
-          placeholder="Landing name"
+    if (attachmentType === "place") {
+      setValue("belongsTo.placeId", "", { shouldDirty: true, shouldValidate: false });
+    } else {
+      setValue("belongsTo.campaignId", "", { shouldDirty: true, shouldValidate: false });
+    }
+  }, [attachmentType, selectedMerchantId, setValue]);
+
+  const { data: placesLite = [], isLoading: placesLoading } = usePlacesLite(
+    selectedMerchantId ? { merchantId: selectedMerchantId } : {}
+  );
+  const campaignsLiteQuery = useCampaignsLite(
+    selectedMerchantId ? { merchantId: selectedMerchantId } : {}
+  );
+  const campaignsLite = (campaignsLiteQuery.data ?? []) as CampaignLiteItem[];
+  const campaignsLoading = campaignsLiteQuery.isLoading;
+
+  const settingsSection = (
+    <div className="space-y-4">
+      {!merchantId ? (
+        <RHFCombobox<LiteListe>
+          name="settings.merchantId"
+          label="Merchant"
+          options={merchantsLite}
+          getOptionValue={(m) => m.value}
+          getOptionLabel={(m) => m.label}
+          placeholder="Select merchant"
+          searchPlaceholder="Search merchants…"
           requiredStar
           disabled={disabled}
         />
+      ) : (
+        <input type="hidden" {...register("settings.merchantId")} value={merchantId} />
+      )}
 
-        <RHFSelect
-          name="settings.status"
-          label="Status"
-          options={[
-            { value: "draft", label: "Draft" },
-            { value: "published", label: "Published" },
-            { value: "archived", label: "Archived" },
-          ]}
-          placeholder="Select status"
-          disabled={disabled}
-        />
-      </TabsContent>
+      <RHFInput
+        name="settings.name"
+        label="Name"
+        placeholder="Landing name"
+        requiredStar
+        disabled={disabled}
+      />
 
-      <TabsContent value="content" className="space-y-4">
-        <RHFSelect
-          name="content.layout"
-          label="Layout"
-          options={[
-            { value: "full", label: "Full" },
-            { value: "boxed", label: "Boxed" },
-          ]}
-          placeholder="Select layout"
-          disabled={disabled}
-        />
+      <RHFSelect
+        name="settings.status"
+        label="Status"
+        options={[
+          { value: "draft", label: "Draft" },
+          { value: "published", label: "Published" },
+          { value: "archived", label: "Archived" },
+        ]}
+        placeholder="Select status"
+        disabled={disabled}
+      />
 
-        <div className="rounded-lg border p-4 space-y-4">
-          <div>
-            <p className="text-sm font-medium">Hero Block</p>
-            <p className="text-xs text-muted-foreground">
-              Primary section displayed on the landing page.
-            </p>
-          </div>
-
-          <RHFInput
-            name="content.blocks.0.title"
-            label="Title"
-            placeholder="Welcome to our landing"
-            requiredStar
-            disabled={disabled}
-          />
-
-          <RHFInput
-            name="content.blocks.0.subtitle"
-            label="Subtitle"
-            placeholder="Short supporting copy"
-            disabled={disabled}
-          />
-
-          <RHFInput
-            name="content.blocks.0.imageUrl"
-            label="Hero Image URL"
-            placeholder="https://example.com/hero.jpg"
-            disabled={disabled}
-          />
-
-          <div className="space-y-3">
-            <p className="text-sm font-medium">Primary CTA</p>
-            <RHFInput
-              name="content.blocks.0.ctas.0.label"
-              label="Label"
-              placeholder="Book now"
-              disabled={disabled}
-            />
-            <RHFInput
-              name="content.blocks.0.ctas.0.url"
-              label="URL"
-              placeholder="https://example.com/book"
-              disabled={disabled}
-            />
-          </div>
-
-          <div className="space-y-3">
-            <p className="text-sm font-medium">Secondary CTA</p>
-            <RHFInput
-              name="content.blocks.0.ctas.1.label"
-              label="Label"
-              placeholder="Learn more"
-              disabled={disabled}
-            />
-            <RHFInput
-              name="content.blocks.0.ctas.1.url"
-              label="URL"
-              placeholder="https://example.com/more"
-              disabled={disabled}
-            />
-          </div>
+      <div className="space-y-3 rounded-lg border p-4">
+        <div className="flex flex-col gap-1">
+          <p className="text-sm font-medium">
+            Rattachement <span className="text-destructive">*</span>
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Choose whether this landing belongs to a place or a campaign. This link is required.
+          </p>
         </div>
-      </TabsContent>
-    </Tabs>
+
+        <div className="flex gap-2">
+          {(["place", "campaign"] as const).map((type) => (
+            <button
+              key={type}
+              type="button"
+              className={cn(
+                "flex-1 rounded-md border px-3 py-2 text-sm font-medium transition",
+                attachmentType === type
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-muted-foreground/20 text-muted-foreground hover:border-muted-foreground/50"
+              )}
+              aria-pressed={attachmentType === type}
+              onClick={() => {
+                if (type === attachmentType) return;
+                if (type === "place") {
+                  setValue("belongsTo", { type: "place", placeId: "" }, { shouldDirty: true, shouldValidate: true });
+                } else {
+                  setValue("belongsTo", { type: "campaign", campaignId: "" }, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  });
+                }
+              }}
+              disabled={disabled}
+            >
+              {type === "place" ? "Place" : "Campaign"}
+            </button>
+          ))}
+        </div>
+
+        {attachmentType === "place" ? (
+          <RHFCombobox<LiteListe>
+            name="belongsTo.placeId"
+            label="Place"
+            options={placesLite}
+            getOptionValue={(option) => option.value}
+            getOptionLabel={(option) => option.label}
+            placeholder={selectedMerchantId ? "Select place" : "Select merchant first"}
+            searchPlaceholder="Search places…"
+            requiredStar
+            disabled={disabled || !selectedMerchantId || placesLoading}
+            loading={placesLoading}
+            keyBy={`place-${selectedMerchantId}`}
+          />
+        ) : (
+          <RHFCombobox<LiteListe>
+            name="belongsTo.campaignId"
+            label="Campaign"
+            options={campaignsLite}
+            getOptionValue={(option) => option.value}
+            getOptionLabel={(option) => option.label}
+            placeholder={selectedMerchantId ? "Select campaign" : "Select merchant first"}
+            searchPlaceholder="Search campaigns…"
+            requiredStar
+            disabled={disabled || !selectedMerchantId || campaignsLoading}
+            loading={campaignsLoading}
+            keyBy={`campaign-${selectedMerchantId}`}
+          />
+        )}
+
+      </div>
+    </div>
   );
+
+  return <div className="space-y-6">{settingsSection}</div>;
 }

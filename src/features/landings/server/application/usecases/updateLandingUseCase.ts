@@ -3,19 +3,24 @@ import { SUPER_ADMIN } from "@/lib/utils";
 
 import type { UpdateLandingCommand } from "../dto/updateLandingCommand";
 import type { LandingRepository, LandingUpdateRecord } from "../interfaces/landingRepository";
+import type { LandingAssociationGateway } from "../interfaces/landingAssociationGateway";
 
 export class UpdateLandingUseCase {
-  constructor(private readonly repository: LandingRepository) {}
+  constructor(
+    private readonly repository: LandingRepository,
+    private readonly associations?: LandingAssociationGateway
+  ) {}
 
   async execute(command: UpdateLandingCommand): Promise<void> {
     this.ensureTenantAccess(command);
 
     const { id, tenantId, userRole: _role, ...payload } = command;
     const normalized = this.normalizePayload(payload);
+    const { belongsTo, ...rest } = normalized;
 
     const record: LandingUpdateRecord = {
       id,
-      ...normalized,
+      ...rest,
     };
 
     if (record.status && record.status !== "published") {
@@ -25,6 +30,10 @@ export class UpdateLandingUseCase {
     }
 
     await this.repository.update(record, tenantId ?? null);
+
+    if (belongsTo && this.associations) {
+      await this.associations.attach(belongsTo, id, tenantId ?? null);
+    }
   }
 
   private normalizePayload(input: LandingUpdateInput): LandingUpdateInput {

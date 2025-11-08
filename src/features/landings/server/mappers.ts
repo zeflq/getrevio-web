@@ -15,11 +15,40 @@ export type LandingListDTO = {
   publishedAt?: string | null;
   createdAt: string;
   updatedAt: string;
+  belongsTo?: {
+    type: "place" | "campaign";
+    id: string;
+    label?: string | null;
+  } | null;
 };
 
 const toIsoString = (value: Date | string | null | undefined) => {
   if (!value) return null;
   return value instanceof Date ? value.toISOString() : String(value);
+};
+
+const deriveBelongsTo = (
+  row: LandingSelectRow
+): LandingListDTO["belongsTo"] => {
+  const campaign = row.campaigns?.[0];
+  if (campaign) {
+    return {
+      type: "campaign",
+      id: campaign.id,
+      label: campaign.name,
+    };
+  }
+
+  const place = row.places?.[0];
+  if (place) {
+    return {
+      type: "place",
+      id: place.id,
+      label: place.localName,
+    };
+  }
+
+  return null;
 };
 
 export const mapLandingRow = (row: LandingSelectRow): LandingListDTO => ({
@@ -31,6 +60,7 @@ export const mapLandingRow = (row: LandingSelectRow): LandingListDTO => ({
   publishedAt: toIsoString(row.publishedAt),
   createdAt: toIsoString(row.createdAt) ?? "",
   updatedAt: toIsoString(row.updatedAt) ?? "",
+  belongsTo: deriveBelongsTo(row),
 });
 
 export const mapLandingLite = (row: LandingLiteRow) => ({

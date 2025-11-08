@@ -3,9 +3,13 @@ import { SUPER_ADMIN } from "@/lib/utils";
 
 import type { CreateLandingCommand } from "../dto/createLandingCommand";
 import type { LandingCreateRecord, LandingRepository } from "../interfaces/landingRepository";
+import type { LandingAssociationGateway } from "../interfaces/landingAssociationGateway";
 
 export class CreateLandingUseCase {
-  constructor(private readonly repository: LandingRepository) {}
+  constructor(
+    private readonly repository: LandingRepository,
+    private readonly associations?: LandingAssociationGateway
+  ) {}
 
   async execute(command: CreateLandingCommand): Promise<string> {
     this.ensureTenantAccess(command);
@@ -25,7 +29,13 @@ export class CreateLandingUseCase {
       publishedAt: data.status === "published" ? new Date().toISOString() : null,
     };
 
-    return this.repository.create(record);
+    const landingId = await this.repository.create(record);
+
+    if (payload.belongsTo && this.associations) {
+      await this.associations.attach(payload.belongsTo, landingId, command.tenantId);
+    }
+
+    return landingId;
   }
 
   private ensureTenantAccess(command: CreateLandingCommand) {

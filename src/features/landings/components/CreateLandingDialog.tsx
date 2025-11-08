@@ -5,18 +5,21 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useRouter } from "@/i18n/navigation";
 import { DialogForm } from "@/components/form/DialogForm";
 import type { LiteListe } from "@/types/lists";
 
 import {
-  landingFormSchema,
-  type LandingFormValues,
+  landingCreateFormSchema,
+  type LandingCreateFormValues,
   type LandingCreateInput,
-  createDefaultLandingContent,
-  mapLandingFormToPayload,
+  createLandingCreateFormDefaults,
+  type LandingBelongsTo,
 } from "../model/landingSchema";
 import { useCreateLanding } from "../hooks/useLandingCrud";
 import { LandingFormFields } from "./LandingFormFields";
+import { buildLandingPayload } from "../lib/landingForm.mappers";
+import { createDefaultBlocksForContext } from "../lib/landingContent.presets";
 
 export interface CreateLandingDialogProps {
   open: boolean;
@@ -24,16 +27,8 @@ export interface CreateLandingDialogProps {
   merchantId?: string;
   merchantsLite?: LiteListe[];
   onSuccess?: () => void;
+  initialBelongsTo?: LandingBelongsTo;
 }
-
-const makeDefaultValues = (merchantId?: string): LandingFormValues => ({
-  settings: {
-    merchantId: merchantId ?? "",
-    name: "",
-    status: "draft",
-  },
-  content: createDefaultLandingContent(),
-});
 
 export function CreateLandingDialog({
   open,
@@ -41,22 +36,36 @@ export function CreateLandingDialog({
   merchantId,
   merchantsLite = [],
   onSuccess,
+  initialBelongsTo,
 }: CreateLandingDialogProps) {
-  const { execute, isExecuting } = useCreateLanding<LandingCreateInput, { ok?: boolean }>({
-    onSuccess: () => {
+  const router = useRouter();
+  const defaultValues = React.useMemo(
+    () => createLandingCreateFormDefaults({ merchantId, belongsTo: initialBelongsTo }),
+    [merchantId, initialBelongsTo]
+  );
+
+  const { execute, isExecuting } = useCreateLanding<LandingCreateInput, { id: string }>({
+    onSuccess: ({ data }) => {
       resetForm();
       onOpenChange(false);
       onSuccess?.();
+      router.push(`/admin/landings/${data.id}/edit`);
     },
   });
 
-  const methods = useForm<LandingFormValues>({
-    resolver: zodResolver(landingFormSchema),
-    mode: "onChange",
-    defaultValues: makeDefaultValues(merchantId),
+  const methods = useForm<LandingCreateFormValues>({
+    resolver: zodResolver(landingCreateFormSchema),
+    mode: "onSubmit",
+    defaultValues,
   });
 
   const { reset, setValue } = methods;
+
+  React.useEffect(() => {
+    if (!open) {
+      reset(defaultValues);
+    }
+  }, [defaultValues, open, reset]);
 
   React.useEffect(() => {
     if (merchantId) {
@@ -67,39 +76,20 @@ export function CreateLandingDialog({
     }
   }, [merchantId, setValue]);
 
-  const resetForm = () => reset(makeDefaultValues(merchantId));
+  const resetForm = () =>
+    reset(createLandingCreateFormDefaults({ merchantId, belongsTo: initialBelongsTo }));
 
-  const onSubmit = (data: LandingFormValues) => {
-    const curatedCtas = (data.content.blocks[0]?.ctas ?? [])
-      .filter((cta) => (cta.label?.trim() ?? "") && (cta.url?.trim() ?? ""))
-      .map((cta) => ({
-        ...cta,
-        label: cta.label?.trim() ?? "",
-        url: cta.url?.trim() ?? "",
-      }));
-
-    const normalizedContent = {
-      ...data.content,
-      blocks: [
-        {
-          ...data.content.blocks[0],
-          ctas: curatedCtas.length > 0 ? curatedCtas : undefined,
-        },
-      ],
-    } as LandingFormValues["content"];
-
-    const payload = mapLandingFormToPayload({
-      ...data,
-      content: normalizedContent,
-    });
-
+  const onSubmit = (data: LandingCreateFormValues) => {
+    const payload = buildLandingPayload(data);
+    if (initialBelongsTo?.type === "campaign") {
+      payload.content.blocks = createDefaultBlocksForContext({ context: "campaign" });
+    }
     execute(payload);
   };
 
   type MethodsWithSlot = typeof methods & { _slot?: React.ReactNode };
   (methods as MethodsWithSlot)._slot = (
     <LandingFormFields
-      mode="create"
       disabled={isExecuting}
       merchantId={merchantId}
       merchantsLite={merchantsLite}
@@ -107,14 +97,14 @@ export function CreateLandingDialog({
   );
 
   return (
-    <DialogForm<LandingFormValues>
+    <DialogForm<LandingCreateFormValues>
       open={open}
       onOpenChange={(next) => {
         if (!next) resetForm();
         onOpenChange(next);
       }}
       title="Create Landing"
-      description="Define landing content available to campaigns and places."
+      description="Attach a landing to one campaign or place. You can customize the content after creation."
       methods={methods}
       onSubmit={onSubmit}
       isBusy={isExecuting}
