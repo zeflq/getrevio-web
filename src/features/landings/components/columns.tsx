@@ -10,6 +10,36 @@ import {
 
 import type { LandingListItem } from "../server/mappers";
 
+type LandingColumnLabels = {
+  nameHeader: string;
+  merchantHeader: string;
+  statusHeader: string;
+  attachedHeader: string;
+  updatedHeader: string;
+  actionsHeader: string;
+  statusDraft: string;
+  statusPublished: string;
+  statusArchived: string;
+  attachedCampaignPrefix: string;
+  attachedPlacePrefix: string;
+  emptyValue: string;
+};
+
+const DEFAULT_LABELS: LandingColumnLabels = {
+  nameHeader: "Name",
+  merchantHeader: "Merchant",
+  statusHeader: "Status",
+  attachedHeader: "Attached To",
+  updatedHeader: "Updated",
+  actionsHeader: "Actions",
+  statusDraft: "Draft",
+  statusPublished: "Published",
+  statusArchived: "Archived",
+  attachedCampaignPrefix: "Campaign · ",
+  attachedPlacePrefix: "Place · ",
+  emptyValue: "—",
+};
+
 const formatDate = (value?: string | null) => {
   if (!value) return "—";
   const date = new Date(value);
@@ -17,14 +47,24 @@ const formatDate = (value?: string | null) => {
   return date.toLocaleDateString();
 };
 
-export function landingColumns(opts: {
+type LandingColumnOptions = {
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-}): ColumnDef<LandingListItem>[] {
-  return [
+  showMerchantColumn?: boolean;
+  labels?: Partial<LandingColumnLabels>;
+};
+
+const mergeLabels = (labels?: Partial<LandingColumnLabels>): LandingColumnLabels => ({
+  ...DEFAULT_LABELS,
+  ...labels,
+});
+
+export function landingColumns(opts: LandingColumnOptions): ColumnDef<LandingListItem>[] {
+  const labels = mergeLabels(opts.labels);
+  const columns: ColumnDef<LandingListItem>[] = [
     {
       accessorKey: "name",
-      header: "Name",
+      header: labels.nameHeader,
       enableSorting: true,
       cell: ({ row }) => (
         <button className="text-left font-medium hover:underline" onClick={() => opts.onEdit(row.original.id)}>
@@ -33,46 +73,37 @@ export function landingColumns(opts: {
       ),
     },
     {
-      accessorKey: "merchantId",
-      header: "Merchant",
-      enableSorting: true,
-      cell: ({ row }) => row.original.merchantId || "—",
-    },
-    {
       accessorKey: "status",
-      header: "Status",
+      header: labels.statusHeader,
       enableSorting: true,
       cell: ({ row }) => {
         const status = row.original.status;
-        if (status === "published") return <Badge variant="default">Published</Badge>;
-        if (status === "archived") return <Badge variant="secondary">Archived</Badge>;
-        return <Badge variant="outline">Draft</Badge>;
+        if (status === "published") return <Badge variant="default">{labels.statusPublished}</Badge>;
+        if (status === "archived") return <Badge variant="secondary">{labels.statusArchived}</Badge>;
+        return <Badge variant="outline">{labels.statusDraft}</Badge>;
       },
     },
     {
-      accessorKey: "content.layout",
-      header: "Layout",
-      cell: ({ row }) => row.original.content?.layout ?? "—",
-    },
-    {
       accessorKey: "belongsTo",
-      header: "Attached To",
+      header: labels.attachedHeader,
       cell: ({ row }) => {
         const target = row.original.belongsTo;
-        if (!target) return "—";
+        if (!target) return labels.emptyValue;
         const label = target.label ?? target.id;
-        return target.type === "campaign" ? `Campaign · ${label}` : `Place · ${label}`;
+        return target.type === "campaign"
+          ? `${labels.attachedCampaignPrefix}${label}`
+          : `${labels.attachedPlacePrefix}${label}`;
       },
     },
     {
       accessorKey: "updatedAt",
-      header: "Updated",
+      header: labels.updatedHeader,
       enableSorting: true,
       cell: ({ row }) => formatDate(row.original.updatedAt),
     },
     {
       id: "actions",
-      header: () => <div className="text-right">Actions</div>,
+      header: () => <div className="text-right">{labels.actionsHeader}</div>,
       enableSorting: false,
       enableHiding: false,
       cell: ({ row }) => (
@@ -99,4 +130,15 @@ export function landingColumns(opts: {
       ),
     },
   ];
+
+  if (opts.showMerchantColumn !== false) {
+    columns.splice(1, 0, {
+      accessorKey: "merchantId",
+      header: labels.merchantHeader,
+      enableSorting: true,
+      cell: ({ row }) => row.original.merchantId || labels.emptyValue,
+    });
+  }
+
+  return columns;
 }

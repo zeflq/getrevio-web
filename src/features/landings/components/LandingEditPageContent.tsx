@@ -10,17 +10,25 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { useRouter } from "@/i18n/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { LiteListe } from "@/types/lists";
 
 import { LandingFormFields } from "./LandingFormFields";
-import { useMerchantsLite } from "@/features/merchants";
 import { useLandingForm } from "../hooks/useLandingForm";
 import { LandingContentEditor } from "../editor/LandingContentEditor";
 
 type Props = {
   id: string;
+  merchantId?: string;
+  merchantsLite: LiteListe[];
+  shortlinksPath?: string;
 };
 
-export function LandingEditPageContent({ id }: Props) {
+export function LandingEditPageContent({
+  id,
+  merchantId,
+  merchantsLite,
+  shortlinksPath = "/admin/shortlinks",
+}: Props) {
   const router = useRouter();
   const t = useTranslations("landings");
   const {
@@ -32,7 +40,6 @@ export function LandingEditPageContent({ id }: Props) {
     onSubmit,
     onReset,
   } = useLandingForm(id);
-  const merchantsLiteQuery = useMerchantsLite();
   const status = form.watch("settings.status");
   const isPublished = status === "published";
   const previewHref = landing ? `/landings/${landing.id}` : "#";
@@ -98,7 +105,7 @@ export function LandingEditPageContent({ id }: Props) {
               </Button>
               <Button
                 variant="secondary"
-                onClick={() => router.push(`/admin/shortlinks?landingId=${landing?.id ?? id}`)}
+                onClick={() => router.push(`${shortlinksPath}?landingId=${landing?.id ?? id}`)}
               >
                 {t("common.generateShortlink")}
               </Button>
@@ -136,8 +143,8 @@ export function LandingEditPageContent({ id }: Props) {
                   <TabsContent value="settings" className="space-y-4">
                     <LandingFormFields
                       disabled={isSubmitting}
-                      merchantId={landing?.merchantId}
-                      merchantsLite={merchantsLiteQuery.data ?? []}
+                      merchantId={merchantId ?? landing?.merchantId}
+                      merchantsLite={merchantsLite}
                     />
                   </TabsContent>
                   <TabsContent value="content" className="space-y-4">

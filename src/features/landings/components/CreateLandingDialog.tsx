@@ -29,6 +29,7 @@ export interface CreateLandingDialogProps {
   merchantsLite?: LiteListe[];
   onSuccess?: () => void;
   initialBelongsTo?: LandingBelongsTo;
+  redirectBasePath?: string;
 }
 
 export function CreateLandingDialog({
@@ -38,6 +39,7 @@ export function CreateLandingDialog({
   merchantsLite = [],
   onSuccess,
   initialBelongsTo,
+  redirectBasePath = "/admin/landings",
 }: CreateLandingDialogProps) {
   const t = useTranslations("landings.createDialog");
   const router = useRouter();
@@ -51,7 +53,7 @@ export function CreateLandingDialog({
       resetForm();
       onOpenChange(false);
       onSuccess?.();
-      router.push(`/admin/landings/${data.id}/edit`);
+      router.push(`${redirectBasePath}/${data.id}/edit`);
     },
   });
 

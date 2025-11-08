@@ -124,6 +124,33 @@
     },
     "toasts": {
       "updated": "Landing mis à jour"
+    },
+    "table": {
+      "title": "Landings",
+      "description": "Gérez vos landings.",
+      "searchPlaceholder": "Rechercher un landing…",
+      "empty": "Aucun landing trouvé.",
+      "total": "{count} landing(s)",
+      "create": "Créer un landing",
+      "headers": {
+        "name": "Nom",
+        "merchant": "Marchand",
+        "status": "Statut",
+        "layout": "Mise en page",
+        "attached": "Rattaché à",
+        "updated": "Mis à jour",
+        "actions": "Actions"
+      },
+      "statuses": {
+        "draft": "Brouillon",
+        "published": "Publié",
+        "archived": "Archivé"
+      },
+      "attached": {
+        "campaign": "Campagne",
+        "place": "Lieu",
+        "none": "—"
+      }
     }
   }
 }

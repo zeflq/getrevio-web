@@ -127,6 +127,33 @@
     },
     "toasts": {
       "updated": "Landing updated"
+    },
+    "table": {
+      "title": "Landings",
+      "description": "Manage your landings.",
+      "searchPlaceholder": "Search landings…",
+      "empty": "No landings found.",
+      "total": "{count} landing(s)",
+      "create": "Create landing",
+      "headers": {
+        "name": "Name",
+        "merchant": "Merchant",
+        "status": "Status",
+        "layout": "Layout",
+        "attached": "Attached To",
+        "updated": "Updated",
+        "actions": "Actions"
+      },
+      "statuses": {
+        "draft": "Draft",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "attached": {
+        "campaign": "Campaign",
+        "place": "Place",
+        "none": "—"
+      }
     }
   }
 }

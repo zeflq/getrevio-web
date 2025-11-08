@@ -16,21 +16,7 @@ import { useDataTableController } from "@/shared/ui/data-table/useDataTableContr
 import { DataTableResponsive } from "@/shared/ui/data-table/DataTableResponsive";
 import { DataTableToolbarBase } from "@/shared/ui/data-table/DataTableToolbarBase";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useSession } from "@/lib/auth-client";
-
-function useActiveTenantId() {
-  const { data: session } = useSession();
-
-  return React.useMemo(() => {
-    const raw =
-      (session as any)?.session?.activeOrganizationId ??
-      (session as any)?.user?.activeOrganizationId ??
-      (session as any)?.user?.tenantId ??
-      undefined;
-
-    return typeof raw === "string" && raw.length > 0 ? raw : undefined;
-  }, [session]);
-}
+import { useActiveTenantId } from "@/hooks/useActiveTenantId";
 
 export default function MerchantPlacesPage() {
   const isMobile = useIsMobile();

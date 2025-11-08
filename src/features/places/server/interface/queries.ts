@@ -1,7 +1,7 @@
 import { getServerSession } from "@/lib/auth-server";
 import { ActionError } from "@/lib/action-error";
 import { resolveTenantScope } from "@/server/core/utils/resolveTenantScope";
-import type { Role } from "@/server/core/utils/resolveTenantScope";
+import { createUserContext } from "@/server/core/utils/createUserContext";
 
 import { ListPlacesUseCase } from "../application/usecases/listPlacesUseCase";
 import { GetPlaceUseCase } from "../application/usecases/getPlaceUseCase";
@@ -166,22 +166,6 @@ function normalizeFiltersInput(
   const tenantId = hasTenant ? (tenantIdOrFilters as string) : undefined;
   const filters = hasTenant ? maybeFilters : tenantIdOrFilters;
   return { tenantId, filters };
-}
-
-function createUserContext(session: any) {
-  if (!session?.user?.id) {
-    throw new ActionError(401, "UNAUTHORIZED");
-  }
-
-  const role = (session?.user?.globalRole ?? "TENANT_USER") as Role;
-  const tenantId =
-    session?.session?.activeOrganizationId ?? session?.user?.activeOrganizationId ?? null;
-
-  return {
-    id: session?.user?.id as string,
-    role,
-    tenantId,
-  };
 }
 
 export type { PlaceListDTO as PlaceListItem };

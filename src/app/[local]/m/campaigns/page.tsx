@@ -4,8 +4,8 @@ import * as React from "react";
 import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
 
-import { useSession } from "@/lib/auth-client";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useActiveTenantId } from "@/hooks/useActiveTenantId";
 import { useDataTableController } from "@/shared/ui/data-table/useDataTableController";
 import { DataTableResponsive } from "@/shared/ui/data-table/DataTableResponsive";
 import { DataTableToolbarBase } from "@/shared/ui/data-table/DataTableToolbarBase";
@@ -19,20 +19,6 @@ import {
   DeleteCampaignDialog,
 } from "@/features/campaigns";
 import { useCampaignsList } from "@/features/campaigns/hooks/useCampaignCrud";
-
-function useActiveTenantId() {
-  const { data: session } = useSession();
-
-  return React.useMemo(() => {
-    const raw =
-      (session as any)?.session?.activeOrganizationId ??
-      (session as any)?.user?.activeOrganizationId ??
-      (session as any)?.user?.tenantId ??
-      undefined;
-
-    return typeof raw === "string" && raw.length > 0 ? raw : undefined;
-  }, [session]);
-}
 
 export default function MerchantCampaignsPage() {
   const isMobile = useIsMobile();

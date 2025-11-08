@@ -22,22 +22,9 @@ import {
   ShortlinkQrDialog,
   checkRedisShortlinksAction,
 } from "@/features/shortlinks";
+import { useActiveTenantId } from "@/hooks/useActiveTenantId";
 
 const SORTABLE_COLUMNS = ["code", "channel", "createdAt", "updatedAt"] as const;
-
-function useActiveTenantId() {
-  const { data: session } = useSession();
-
-  return React.useMemo(() => {
-    const raw =
-      (session as any)?.session?.activeOrganizationId ??
-      (session as any)?.user?.activeOrganizationId ??
-      (session as any)?.user?.tenantId ??
-      undefined;
-
-    return typeof raw === "string" && raw.length > 0 ? raw : undefined;
-  }, [session]);
-}
 
 export default function MerchantShortlinksPage() {
   const isMobile = useIsMobile();
