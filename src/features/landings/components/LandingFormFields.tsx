@@ -3,6 +3,7 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 import { RHFInput, RHFSelect, RHFCombobox } from "@/components/form/controls";
 import { cn } from "@/lib/utils";
@@ -35,6 +36,7 @@ export function LandingFormFields({
   const selectedMerchantId = merchantId ?? watch("settings.merchantId");
   const belongsTo = watch("belongsTo");
   const attachmentType: "place" | "campaign" = belongsTo?.type ?? "place";
+  const t = useTranslations("landings.form");
 
   const previousMerchantId = React.useRef<string | undefined>(selectedMerchantId);
 
@@ -63,12 +65,12 @@ export function LandingFormFields({
       {!merchantId ? (
         <RHFCombobox<LiteListe>
           name="settings.merchantId"
-          label="Merchant"
+          label={t("merchant")}
           options={merchantsLite}
           getOptionValue={(m) => m.value}
           getOptionLabel={(m) => m.label}
-          placeholder="Select merchant"
-          searchPlaceholder="Search merchants…"
+          placeholder={t("merchantPlaceholder")}
+          searchPlaceholder={t("merchantSearch")}
           requiredStar
           disabled={disabled}
         />
@@ -78,32 +80,30 @@ export function LandingFormFields({
 
       <RHFInput
         name="settings.name"
-        label="Name"
-        placeholder="Landing name"
+        label={t("name")}
+        placeholder={t("namePlaceholder")}
         requiredStar
         disabled={disabled}
       />
 
       <RHFSelect
         name="settings.status"
-        label="Status"
+        label={t("status")}
         options={[
-          { value: "draft", label: "Draft" },
-          { value: "published", label: "Published" },
-          { value: "archived", label: "Archived" },
+          { value: "draft", label: t("statusDraft") },
+          { value: "published", label: t("statusPublished") },
+          { value: "archived", label: t("statusArchived") },
         ]}
-        placeholder="Select status"
+        placeholder={t("status")}
         disabled={disabled}
       />
 
       <div className="space-y-3 rounded-lg border p-4">
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium">
-            Rattachement <span className="text-destructive">*</span>
+            {t("attachmentLabel")} <span className="text-destructive">*</span>
           </p>
-          <p className="text-xs text-muted-foreground">
-            Choose whether this landing belongs to a place or a campaign. This link is required.
-          </p>
+          <p className="text-xs text-muted-foreground">{t("attachmentDescription")}</p>
         </div>
 
         <div className="flex gap-2">
@@ -131,7 +131,7 @@ export function LandingFormFields({
               }}
               disabled={disabled}
             >
-              {type === "place" ? "Place" : "Campaign"}
+              {type === "place" ? t("attachmentPlace") : t("attachmentCampaign")}
             </button>
           ))}
         </div>
@@ -139,12 +139,14 @@ export function LandingFormFields({
         {attachmentType === "place" ? (
           <RHFCombobox<LiteListe>
             name="belongsTo.placeId"
-            label="Place"
+            label={t("attachmentPlace")}
             options={placesLite}
             getOptionValue={(option) => option.value}
             getOptionLabel={(option) => option.label}
-            placeholder={selectedMerchantId ? "Select place" : "Select merchant first"}
-            searchPlaceholder="Search places…"
+            placeholder={
+              selectedMerchantId ? t("placePlaceholder") : t("selectMerchantFirst")
+            }
+            searchPlaceholder={t("placeSearch")}
             requiredStar
             disabled={disabled || !selectedMerchantId || placesLoading}
             loading={placesLoading}
@@ -153,12 +155,14 @@ export function LandingFormFields({
         ) : (
           <RHFCombobox<LiteListe>
             name="belongsTo.campaignId"
-            label="Campaign"
+            label={t("attachmentCampaign")}
             options={campaignsLite}
             getOptionValue={(option) => option.value}
             getOptionLabel={(option) => option.label}
-            placeholder={selectedMerchantId ? "Select campaign" : "Select merchant first"}
-            searchPlaceholder="Search campaigns…"
+            placeholder={
+              selectedMerchantId ? t("campaignPlaceholder") : t("selectMerchantFirst")
+            }
+            searchPlaceholder={t("campaignSearch")}
             requiredStar
             disabled={disabled || !selectedMerchantId || campaignsLoading}
             loading={campaignsLoading}

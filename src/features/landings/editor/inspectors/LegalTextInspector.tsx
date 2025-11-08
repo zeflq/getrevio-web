@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 import {
   FormField,
@@ -18,6 +19,7 @@ interface LegalTextInspectorProps {
 
 export function LegalTextInspector({ index, disabled }: LegalTextInspectorProps) {
   const form = useFormContext<LandingFormValues>();
+  const t = useTranslations("landings.editor.blocks.legalText");
 
   return (
     <FormField
@@ -25,12 +27,12 @@ export function LegalTextInspector({ index, disabled }: LegalTextInspectorProps)
       name={`content.blocks.${index}.text` as const}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Legal text</FormLabel>
+          <FormLabel>{t("text")}</FormLabel>
           <FormControl>
             <textarea
               {...field}
               className="min-h-[160px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              placeholder="Add legal or compliance language"
+              placeholder={t("placeholder")}
               disabled={disabled}
             />
           </FormControl>

@@ -97,14 +97,16 @@ export const ensureLandingContentShape = (
   };
 };
 
+export type LandingContentWarningKey = "warningsMultipleGames";
+
 export const deriveContentWarnings = (
   content?: LandingContentOutput | null
-): string[] => {
+): LandingContentWarningKey[] => {
   if (!content) return [];
-  const warnings: string[] = [];
+  const warnings: LandingContentWarningKey[] = [];
   const gameBlocks = content.blocks.filter((block) => block.kind === "game").length;
   if (gameBlocks > 1) {
-    warnings.push("Multiple game blocks may confuse users.");
+    warnings.push("warningsMultipleGames");
   }
   return warnings;
 };

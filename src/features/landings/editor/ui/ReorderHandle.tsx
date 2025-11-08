@@ -1,6 +1,7 @@
 "use client";
 
 import { GripVertical } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
@@ -12,6 +13,7 @@ interface ReorderHandleProps {
 }
 
 export function ReorderHandle({ attributes, listeners, disabled }: ReorderHandleProps) {
+  const t = useTranslations("landings.editor.actions");
   return (
     <Button
       type="button"
@@ -23,7 +25,7 @@ export function ReorderHandle({ attributes, listeners, disabled }: ReorderHandle
       {...listeners}
     >
       <GripVertical className="h-4 w-4" />
-      <span className="sr-only">Reorder block</span>
+      <span className="sr-only">{t("reorder")}</span>
     </Button>
   );
 }

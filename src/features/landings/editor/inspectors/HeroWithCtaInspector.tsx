@@ -2,6 +2,7 @@
 
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Plus, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +29,8 @@ interface HeroWithCtaInspectorProps {
 
 export function HeroWithCtaInspector({ index, disabled }: HeroWithCtaInspectorProps) {
   const form = useFormContext<LandingFormValues>();
+  const t = useTranslations("landings.editor.blocks.heroWithCta");
+  const actionsT = useTranslations("landings.editor.actions");
   const name = `content.blocks.${index}.ctas` as const;
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -41,9 +44,9 @@ export function HeroWithCtaInspector({ index, disabled }: HeroWithCtaInspectorPr
         name={`content.blocks.${index}.title` as const}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Title</FormLabel>
+            <FormLabel>{t("title")}</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="Hero title" disabled={disabled} />
+              <Input {...field} placeholder={t("title")} disabled={disabled} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -55,9 +58,9 @@ export function HeroWithCtaInspector({ index, disabled }: HeroWithCtaInspectorPr
         name={`content.blocks.${index}.subtitle` as const}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Subtitle</FormLabel>
+            <FormLabel>{t("subtitle")}</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="Optional subtitle" disabled={disabled} />
+              <Input {...field} placeholder={t("subtitle")} disabled={disabled} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -66,7 +69,7 @@ export function HeroWithCtaInspector({ index, disabled }: HeroWithCtaInspectorPr
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-medium">CTAs</p>
+          <p className="text-sm font-medium">{t("ctas")}</p>
           <Button
             type="button"
             variant="outline"
@@ -76,14 +79,14 @@ export function HeroWithCtaInspector({ index, disabled }: HeroWithCtaInspectorPr
               append({ label: "", url: "", style: fields.length === 0 ? "primary" : "secondary" })
             }
           >
-            <Plus className="h-4 w-4" /> Add CTA
+            <Plus className="h-4 w-4" /> {t("addCta")}
           </Button>
         </div>
 
         {fields.map((fieldItem, ctaIndex) => (
           <div key={fieldItem.id} className="rounded-md border p-3 space-y-2">
             <div className="flex items-center justify-between text-xs font-medium text-muted-foreground">
-              CTA #{ctaIndex + 1}
+              {t("ctaCount", { count: ctaIndex + 1 })}
               {fields.length > 1 && (
                 <Button
                   type="button"
@@ -93,7 +96,7 @@ export function HeroWithCtaInspector({ index, disabled }: HeroWithCtaInspectorPr
                   onClick={() => remove(ctaIndex)}
                 >
                   <Trash2 className="h-4 w-4" />
-                  <span className="sr-only">Remove CTA</span>
+                  <span className="sr-only">{actionsT("delete")}</span>
                 </Button>
               )}
             </div>
@@ -103,9 +106,9 @@ export function HeroWithCtaInspector({ index, disabled }: HeroWithCtaInspectorPr
               name={`content.blocks.${index}.ctas.${ctaIndex}.label` as const}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Label</FormLabel>
+                  <FormLabel>{t("ctaLabel")}</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Primary CTA" disabled={disabled} />
+                    <Input {...field} placeholder={t("ctaLabel")} disabled={disabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -117,7 +120,7 @@ export function HeroWithCtaInspector({ index, disabled }: HeroWithCtaInspectorPr
               name={`content.blocks.${index}.ctas.${ctaIndex}.url` as const}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>URL</FormLabel>
+                  <FormLabel>{t("ctaUrl")}</FormLabel>
                   <FormControl>
                     <Input {...field} placeholder="https://example.com" disabled={disabled} />
                   </FormControl>
@@ -131,16 +134,16 @@ export function HeroWithCtaInspector({ index, disabled }: HeroWithCtaInspectorPr
               name={`content.blocks.${index}.ctas.${ctaIndex}.style` as const}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Style</FormLabel>
+                  <FormLabel>{t("ctaStyle")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange} disabled={disabled}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Pick style" />
+                        <SelectValue placeholder={t("ctaStyle")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="primary">Primary</SelectItem>
-                      <SelectItem value="secondary">Secondary</SelectItem>
+                      <SelectItem value="primary">{t("primary")}</SelectItem>
+                      <SelectItem value="secondary">{t("secondary")}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

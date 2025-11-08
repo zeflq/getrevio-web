@@ -1,7 +1,6 @@
 {
   "place": {
-    "form": {
-    },
+    "form": {},
     "message": {
       "slugValid": "Slug valide."
     },
@@ -14,7 +13,7 @@
     "cancel": "Annuler",
     "save": "Enregistrer"
   },
-  "errors":{
+  "errors": {
     "generic": "Une erreur est survenue. Veuillez réessayer.",
     "unauthorized": "Vous n’êtes pas autorisé à effectuer cette action.",
     "forbidden": "Accès refusé.",
@@ -22,5 +21,109 @@
     "timeout": "La requête a expiré. Veuillez réessayer plus tard.",
     "conflict": "Cette ressource existe déjà.",
     "validation": "Veuillez vérifier les informations saisies et réessayer."
+  },
+  "landings": {
+    "common": {
+      "back": "Retour",
+      "landing": "Landing",
+      "landingNotFound": "Landing introuvable",
+      "landingNotFoundDescription": "Le landing demandé n’existe pas ou vous n’y avez pas accès.",
+      "reset": "Réinitialiser",
+      "saveChanges": "Enregistrer",
+      "publish": "Publier",
+      "unpublish": "Dépublier",
+      "preview": "Prévisualiser",
+      "generateShortlink": "Générer un shortlink",
+      "changesSavedOnSubmit": "Les modifications sont enregistrées lorsque vous cliquez sur « Enregistrer »."
+    },
+    "tabs": {
+      "settings": "Paramètres",
+      "content": "Contenu"
+    },
+    "form": {
+      "title": "Modifier le landing",
+      "description": "Gérez les paramètres et le contenu par blocs.",
+      "merchant": "Marchand",
+      "merchantPlaceholder": "Sélectionnez un marchand",
+      "merchantSearch": "Rechercher un marchand…",
+      "name": "Nom",
+      "namePlaceholder": "Nom du landing",
+      "status": "Statut",
+      "statusDraft": "Brouillon",
+      "statusPublished": "Publié",
+      "statusArchived": "Archivé",
+      "attachmentLabel": "Rattachement",
+      "attachmentDescription": "Choisissez si ce landing appartient à un lieu ou une campagne. Le lien est obligatoire.",
+      "attachmentPlace": "Lieu",
+      "attachmentCampaign": "Campagne",
+      "placePlaceholder": "Sélectionnez un lieu",
+      "placeSearch": "Rechercher un lieu…",
+      "campaignPlaceholder": "Sélectionnez une campagne",
+      "campaignSearch": "Rechercher une campagne…",
+      "selectMerchantFirst": "Sélectionnez d’abord un marchand"
+    },
+    "createDialog": {
+      "title": "Créer un landing",
+      "description": "Attachez un landing à une campagne ou un lieu. Vous pourrez personnaliser le contenu ensuite.",
+      "submitCreating": "Création...",
+      "submitLabel": "Créer le landing"
+    },
+    "editor": {
+      "addBlock": "Ajouter un bloc",
+      "warningsTitle": "Avertissements",
+      "warningsMultipleGames": "Plusieurs blocs \"jeu\" peuvent perturber les utilisateurs.",
+      "emptyState": "Aucun bloc pour le moment. Utilisez le bouton « Ajouter un bloc » pour commencer.",
+      "blockNumber": "Bloc n°{index}",
+      "selectPrompt": "Sélectionnez un bloc pour modifier son contenu.",
+      "blocks": {
+        "simpleHero": {
+          "label": "Hero simple",
+          "description": "Titre avec sous-titre optionnel",
+          "title": "Titre",
+          "subtitle": "Sous-titre",
+          "convert": "Convertir en Hero avec CTA"
+        },
+        "heroWithCta": {
+          "label": "Hero avec CTA",
+          "description": "Hero avec boutons d’appel à l’action",
+          "title": "Titre",
+          "subtitle": "Sous-titre",
+          "ctaLabel": "Libellé",
+          "ctaUrl": "URL",
+          "ctaStyle": "Style",
+          "ctas": "CTA",
+          "addCta": "Ajouter un CTA",
+          "primary": "Principal",
+          "secondary": "Secondaire",
+          "ctaCount": "{count} CTA"
+        },
+        "legalText": {
+          "label": "Texte légal",
+          "description": "Bloc pour mentions légales ou conformité",
+          "text": "Texte légal",
+          "placeholder": "Ajoutez vos mentions légales"
+        },
+        "game": {
+          "label": "Jeu",
+          "description": "Bloc interactif pour campagnes ou lieux",
+          "ctaLabel": "Libellé du CTA (optionnel)",
+          "linkedCampaign": "Campagne liée",
+          "linkedPlace": "Lieu lié"
+        }
+      },
+      "actions": {
+        "duplicate": "Dupliquer le bloc",
+        "delete": "Supprimer le bloc",
+        "deleteTitle": "Supprimer ce bloc ?",
+        "deleteDescription": "Cette action est irréversible. Le bloc et son contenu seront supprimés.",
+        "confirmDelete": "Supprimer",
+        "cancel": "Annuler",
+        "togglePreview": "Afficher / Masquer l’aperçu",
+        "reorder": "Réordonner le bloc"
+      }
+    },
+    "toasts": {
+      "updated": "Landing mis à jour"
+    }
   }
 }

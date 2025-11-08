@@ -4,6 +4,7 @@ import * as React from "react";
 import { Copy, Eye } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { FieldArrayWithId } from "react-hook-form";
@@ -33,6 +34,8 @@ export function BlockCard({
 }: BlockCardProps) {
   const sortable = useSortable({ id: field.id, disabled });
   const [showPreview, setShowPreview] = React.useState(false);
+  const actionsT = useTranslations("landings.editor.actions");
+  const blocksT = useTranslations("landings.editor.blocks");
 
   const style = {
     transform: CSS.Transform.toString(sortable.transform),
@@ -57,8 +60,8 @@ export function BlockCard({
           disabled={disabled}
         />
         <div className="flex-1 space-y-1">
-          <p className="font-medium">{formatBlockLabel(block?.kind)}</p>
-          <p className="text-xs text-muted-foreground">{getBlockSummary(block)}</p>
+          <p className="font-medium">{formatBlockLabel(block?.kind, blocksT)}</p>
+          <p className="text-xs text-muted-foreground">{getBlockSummary(block, blocksT)}</p>
         </div>
         <div className="flex items-center gap-1">
           <Button
@@ -72,7 +75,7 @@ export function BlockCard({
             }}
           >
             <Copy className="h-4 w-4" />
-            <span className="sr-only">Duplicate block</span>
+            <span className="sr-only">{actionsT("duplicate")}</span>
           </Button>
           <Button
             type="button"
@@ -85,7 +88,7 @@ export function BlockCard({
             }}
           >
             <Eye className="h-4 w-4" />
-            <span className="sr-only">Toggle preview</span>
+            <span className="sr-only">{actionsT("togglePreview")}</span>
           </Button>
           <ConfirmDeleteDialog
             disabled={disabled}
@@ -97,45 +100,54 @@ export function BlockCard({
       </div>
       {showPreview && (
         <div className="mt-3 rounded-md bg-muted/40 p-3 text-xs text-muted-foreground">
-          {renderPreview(block)}
+          {renderPreview(block, blocksT)}
         </div>
       )}
     </div>
   );
 }
 
-function formatBlockLabel(kind?: string) {
+function formatBlockLabel(
+  kind: string | undefined,
+  blocksT: (key: string, values?: Record<string, unknown>) => string
+) {
   switch (kind) {
     case "heroWithCta":
-      return "Hero with CTA";
+      return blocksT("heroWithCta.label");
     case "legalText":
-      return "Legal Text";
+      return blocksT("legalText.label");
     case "game":
-      return "Game";
+      return blocksT("game.label");
     case "simpleHero":
     default:
-      return "Simple Hero";
+      return blocksT("simpleHero.label");
   }
 }
 
-function getBlockSummary(block?: LandingBlockOutput) {
-  if (!block) return "No content";
+function getBlockSummary(
+  block: LandingBlockOutput | undefined,
+  blocksT: (key: string, values?: Record<string, unknown>) => string
+) {
+  if (!block) return blocksT("simpleHero.label");
   switch (block.kind) {
     case "simpleHero":
       return block.subtitle ? `${block.title} · ${block.subtitle}` : block.title;
     case "heroWithCta":
-      return `${block.title} · ${block.ctas.length} CTA${block.ctas.length > 1 ? "s" : ""}`;
+      return blocksT("heroWithCta.ctaCount", { count: block.ctas.length });
     case "legalText":
       return block.text.slice(0, 60) + (block.text.length > 60 ? "…" : "");
     case "game":
-      return block.ctaLabel ? `CTA: ${block.ctaLabel}` : "No CTA label";
+      return block.ctaLabel ? `${blocksT("game.ctaLabel")}: ${block.ctaLabel}` : blocksT("game.label");
     default:
-      return "Block";
+      return blocksT("simpleHero.label");
   }
 }
 
-function renderPreview(block?: LandingBlockOutput) {
-  if (!block) return "Empty block";
+function renderPreview(
+  block: LandingBlockOutput | undefined,
+  blocksT: (key: string, values?: Record<string, unknown>) => string
+) {
+  if (!block) return blocksT("simpleHero.label");
   switch (block.kind) {
     case "simpleHero":
       return (
@@ -161,8 +173,8 @@ function renderPreview(block?: LandingBlockOutput) {
     case "legalText":
       return <p>{block.text}</p>;
     case "game":
-      return <p>CTA label: {block.ctaLabel ?? "none"}</p>;
+      return <p>{block.ctaLabel ? `${blocksT("game.ctaLabel")}: ${block.ctaLabel}` : blocksT("game.label")}</p>;
     default:
-      return "Preview unavailable";
+      return blocksT("simpleHero.label");
   }
 }

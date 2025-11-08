@@ -1,6 +1,7 @@
 "use client";
 
 import { Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -11,28 +12,30 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { LandingBlockOutput } from "../../model/landingSchema";
 
-const BLOCK_OPTIONS: { kind: LandingBlockOutput["kind"]; label: string; description: string }[] = [
-  { kind: "simpleHero", label: "Simple Hero", description: "Heading + optional subtitle" },
-  { kind: "heroWithCta", label: "Hero with CTA", description: "Hero plus 1-2 call-to-action buttons" },
-  { kind: "legalText", label: "Legal Text", description: "Body copy for legal or compliance" },
-  { kind: "game", label: "Game", description: "Interactive block for campaigns or places" },
-];
-
 type Props = {
   onAdd: (kind: LandingBlockOutput["kind"]) => void;
   disabled?: boolean;
 };
 
 export function AddBlockMenu({ onAdd, disabled }: Props) {
+  const t = useTranslations("landings.editor");
+  const blocksT = useTranslations("landings.editor.blocks");
+  const options: { kind: LandingBlockOutput["kind"]; label: string; description: string }[] = [
+    { kind: "simpleHero", label: blocksT("simpleHero.label"), description: blocksT("simpleHero.description") },
+    { kind: "heroWithCta", label: blocksT("heroWithCta.label"), description: blocksT("heroWithCta.description") },
+    { kind: "legalText", label: blocksT("legalText.label"), description: blocksT("legalText.description") },
+    { kind: "game", label: blocksT("game.label"), description: blocksT("game.description") },
+  ];
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild disabled={disabled}>
         <Button variant="outline" size="sm" className="justify-start gap-2">
-          <Plus className="h-4 w-4" /> Add block
+          <Plus className="h-4 w-4" /> {t("addBlock")}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-64">
-        {BLOCK_OPTIONS.map((option) => (
+        {options.map((option) => (
           <DropdownMenuItem
             key={option.kind}
             className="flex flex-col items-start space-y-1"

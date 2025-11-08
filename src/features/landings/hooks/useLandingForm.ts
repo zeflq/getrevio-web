@@ -4,6 +4,7 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import {
   createLandingFormDefaults,
@@ -22,6 +23,7 @@ import {
 
 export function useLandingForm(id: string) {
   const readableError = useReadableError();
+  const t = useTranslations("landings.toasts");
   const landingQuery = useLandingItem(id);
   const landing = landingQuery.data;
 
@@ -49,7 +51,7 @@ export function useLandingForm(id: string) {
     { ok?: boolean }
   >({
     onSuccess: () => {
-      toast.success("Landing updated");
+      toast.success(t("updated"));
       if (lastPayloadRef.current) {
         form.reset(fillLandingFormFromPayload(lastPayloadRef.current));
         lastPayloadRef.current = null;

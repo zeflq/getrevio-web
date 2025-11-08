@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +22,7 @@ interface SimpleHeroInspectorProps {
 
 export function SimpleHeroInspector({ index, disabled, onConvert }: SimpleHeroInspectorProps) {
   const form = useFormContext<LandingFormValues>();
+  const t = useTranslations("landings.editor.blocks.simpleHero");
 
   return (
     <div className="space-y-4">
@@ -29,9 +31,9 @@ export function SimpleHeroInspector({ index, disabled, onConvert }: SimpleHeroIn
         name={`content.blocks.${index}.title` as const}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Title</FormLabel>
+            <FormLabel>{t("title")}</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="Welcome to our landing" disabled={disabled} />
+              <Input {...field} placeholder={t("title")} disabled={disabled} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -43,9 +45,9 @@ export function SimpleHeroInspector({ index, disabled, onConvert }: SimpleHeroIn
         name={`content.blocks.${index}.subtitle` as const}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Subtitle</FormLabel>
+            <FormLabel>{t("subtitle")}</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="Short supporting copy" disabled={disabled} />
+              <Input {...field} placeholder={t("subtitle")} disabled={disabled} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -53,7 +55,7 @@ export function SimpleHeroInspector({ index, disabled, onConvert }: SimpleHeroIn
       />
 
       <Button type="button" variant="outline" disabled={disabled} onClick={onConvert}>
-        Convert to Hero with CTA
+        {t("convert")}
       </Button>
     </div>
   );

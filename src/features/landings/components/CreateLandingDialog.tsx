@@ -4,6 +4,7 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 
 import { useRouter } from "@/i18n/navigation";
 import { DialogForm } from "@/components/form/DialogForm";
@@ -38,6 +39,7 @@ export function CreateLandingDialog({
   onSuccess,
   initialBelongsTo,
 }: CreateLandingDialogProps) {
+  const t = useTranslations("landings.createDialog");
   const router = useRouter();
   const defaultValues = React.useMemo(
     () => createLandingCreateFormDefaults({ merchantId, belongsTo: initialBelongsTo }),
@@ -103,13 +105,13 @@ export function CreateLandingDialog({
         if (!next) resetForm();
         onOpenChange(next);
       }}
-      title="Create Landing"
-      description="Attach a landing to one campaign or place. You can customize the content after creation."
+      title={t("title")}
+      description={t("description")}
       methods={methods}
       onSubmit={onSubmit}
       isBusy={isExecuting}
       isReady={true}
-      submitLabel={isExecuting ? "Creating..." : "Create Landing"}
+      submitLabel={isExecuting ? t("submitCreating") : t("submitLabel")}
     />
   );
 }

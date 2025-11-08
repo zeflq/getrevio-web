@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   DndContext,
   PointerSensor,
@@ -42,6 +43,7 @@ export function BlockList({
   disabled,
   warnings,
 }: BlockListProps) {
+  const t = useTranslations("landings.editor");
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: 5 },
@@ -66,7 +68,7 @@ export function BlockList({
         <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
           <div className="flex items-center gap-2">
             <AlertCircle className="h-4 w-4" />
-            <span>Warnings</span>
+            <span>{t("warningsTitle")}</span>
           </div>
           <ul className="mt-2 list-disc space-y-1 pl-4">
             {warnings.map((warning) => (

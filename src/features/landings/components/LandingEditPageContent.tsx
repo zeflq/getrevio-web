@@ -3,6 +3,7 @@
 import * as React from "react";
 import { FormProvider } from "react-hook-form";
 import { ArrowLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -21,6 +22,7 @@ type Props = {
 
 export function LandingEditPageContent({ id }: Props) {
   const router = useRouter();
+  const t = useTranslations("landings");
   const {
     form,
     landing,
@@ -60,11 +62,13 @@ export function LandingEditPageContent({ id }: Props) {
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" className="-ml-2" onClick={() => router.back()}>
             <ArrowLeft className="h-4 w-4 mr-1" />
-            Back
+            {t("common.back")}
           </Button>
           <div>
-            <h1 className="text-2xl font-semibold">Landing not found</h1>
-            <p className="text-sm text-muted-foreground">The requested landing does not exist or you do not have access.</p>
+            <h1 className="text-2xl font-semibold">{t("common.landingNotFound")}</h1>
+            <p className="text-sm text-muted-foreground">
+              {t("common.landingNotFoundDescription")}
+            </p>
           </div>
         </div>
       </div>
@@ -77,11 +81,11 @@ export function LandingEditPageContent({ id }: Props) {
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" className="-ml-2" onClick={() => router.back()}>
             <ArrowLeft className="h-4 w-4 mr-1" />
-            Back
+            {t("common.back")}
           </Button>
           <div>
-            <h1 className="text-2xl font-semibold">Edit Landing</h1>
-            <p className="text-sm text-muted-foreground">Manage settings and block-based content.</p>
+            <h1 className="text-2xl font-semibold">{t("form.title")}</h1>
+            <p className="text-sm text-muted-foreground">{t("form.description")}</p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -89,27 +93,27 @@ export function LandingEditPageContent({ id }: Props) {
             <>
               <Button variant="outline" asChild>
                 <a href={previewHref} target="_blank" rel="noreferrer">
-                  Preview
+                  {t("common.preview")}
                 </a>
               </Button>
               <Button
                 variant="secondary"
                 onClick={() => router.push(`/admin/shortlinks?landingId=${landing?.id ?? id}`)}
               >
-                Generate Shortlink
+                {t("common.generateShortlink")}
               </Button>
             </>
           )}
           <Button variant={isPublished ? "secondary" : "default"} onClick={togglePublish}>
-            {isPublished ? "Unpublish" : "Publish"}
+            {isPublished ? t("common.unpublish") : t("common.publish")}
           </Button>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>{landing?.name ?? "Landing"}</CardTitle>
-          <CardDescription>Changes are saved when you click “Save changes”.</CardDescription>
+          <CardTitle>{landing?.name ?? t("common.landing")}</CardTitle>
+          <CardDescription>{t("common.changesSavedOnSubmit")}</CardDescription>
         </CardHeader>
         <CardContent>
           {!isReady ? (
@@ -126,8 +130,8 @@ export function LandingEditPageContent({ id }: Props) {
               <form onSubmit={onSubmit} className="space-y-6">
                 <Tabs defaultValue="settings" className="space-y-4">
                   <TabsList>
-                    <TabsTrigger value="settings">Settings</TabsTrigger>
-                    <TabsTrigger value="content">Content</TabsTrigger>
+                    <TabsTrigger value="settings">{t("tabs.settings")}</TabsTrigger>
+                    <TabsTrigger value="content">{t("tabs.content")}</TabsTrigger>
                   </TabsList>
                   <TabsContent value="settings" className="space-y-4">
                     <LandingFormFields
@@ -143,13 +147,13 @@ export function LandingEditPageContent({ id }: Props) {
 
                 <div className="flex justify-end gap-2">
                   <Button type="button" variant="outline" onClick={onReset} disabled={isSubmitting}>
-                    Reset
+                    {t("common.reset")}
                   </Button>
                   <Button
                     type="submit"
                     disabled={!form.formState.isDirty || isSubmitting}
                   >
-                    {isSubmitting ? "Saving..." : "Save changes"}
+                    {isSubmitting ? t("common.loading") : t("common.saveChanges")}
                   </Button>
                 </div>
               </form>

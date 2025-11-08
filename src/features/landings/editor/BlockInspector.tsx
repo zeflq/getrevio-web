@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
 import type { LandingBelongsTo, LandingFormValues } from "../model/landingSchema";
@@ -28,25 +29,29 @@ export function BlockInspector({
 }: BlockInspectorProps) {
   const { watch } = useFormContext<LandingFormValues>();
   const block = watch(`content.blocks.${selectedIndex}`);
+  const t = useTranslations("landings.editor");
+  const blocksT = useTranslations("landings.editor.blocks");
 
   if (selectedIndex === -1 || !block) {
     return (
       <div className="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
-        Select a block to edit its content.
+        {t("selectPrompt")}
       </div>
     );
   }
 
   const contextLabel =
     belongsTo?.type === "campaign"
-      ? landing?.belongsTo?.label ?? belongsTo?.campaignId ?? "Linked campaign"
-      : landing?.belongsTo?.label ?? belongsTo?.placeId ?? "Linked place";
+      ? landing?.belongsTo?.label ?? belongsTo?.campaignId ?? blocksT("game.linkedCampaign")
+      : landing?.belongsTo?.label ?? belongsTo?.placeId ?? blocksT("game.linkedPlace");
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Badge variant="outline">{formatBlockLabel(block.kind)}</Badge>
-        <p className="text-sm text-muted-foreground">Block #{selectedIndex + 1}</p>
+        <Badge variant="outline">{formatBlockLabel(block.kind, blocksT)}</Badge>
+        <p className="text-sm text-muted-foreground">
+          {t("blockNumber", { index: selectedIndex + 1 })}
+        </p>
       </div>
 
       <div className="rounded-lg border p-4">
@@ -76,16 +81,19 @@ export function BlockInspector({
   );
 }
 
-function formatBlockLabel(kind: string) {
+function formatBlockLabel(
+  kind: string,
+  blocksT: (key: string, values?: Record<string, unknown>) => string
+) {
   switch (kind) {
     case "heroWithCta":
-      return "Hero with CTA";
+      return blocksT("heroWithCta.label");
     case "legalText":
-      return "Legal Text";
+      return blocksT("legalText.label");
     case "game":
-      return "Game";
+      return blocksT("game.label");
     case "simpleHero":
     default:
-      return "Simple Hero";
+      return blocksT("simpleHero.label");
   }
 }

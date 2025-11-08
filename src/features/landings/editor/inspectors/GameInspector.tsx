@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 import {
   FormField,
@@ -21,13 +22,14 @@ interface GameInspectorProps {
 
 export function GameInspector({ index, disabled, contextLabel, belongsTo }: GameInspectorProps) {
   const form = useFormContext<LandingFormValues>();
-  const contextDescription = belongsTo?.type === "campaign" ? "Campaign" : "Place";
+  const t = useTranslations("landings.editor.blocks.game");
+  const contextDescription = belongsTo?.type === "campaign" ? t("linkedCampaign") : t("linkedPlace");
 
   return (
     <div className="space-y-4">
       <div className="rounded-md border bg-muted/30 p-3 text-xs text-muted-foreground">
-        <p className="font-medium text-foreground">Linked {contextDescription}</p>
-        <p>{contextLabel ?? "This landing will attach to the selected entity."}</p>
+        <p className="font-medium text-foreground">{contextDescription}</p>
+        <p>{contextLabel ?? contextDescription}</p>
       </div>
 
       <FormField
@@ -35,9 +37,9 @@ export function GameInspector({ index, disabled, contextLabel, belongsTo }: Game
         name={`content.blocks.${index}.ctaLabel` as const}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>CTA label (optional)</FormLabel>
+            <FormLabel>{t("ctaLabel")}</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="Play now" disabled={disabled} />
+              <Input {...field} placeholder={t("ctaLabel")} disabled={disabled} />
             </FormControl>
             <FormMessage />
           </FormItem>

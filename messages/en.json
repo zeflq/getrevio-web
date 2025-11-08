@@ -22,5 +22,111 @@
     "timeout": "The request took too long. Please try again later.",
     "conflict": "This resource already exists.",
     "validation": "Please check the entered information and try again."
+  },
+  "landings": {
+    "common": {
+      "back": "Back",
+      "landing": "Landing",
+      "landingNotFound": "Landing not found",
+      "landingNotFoundDescription": "The requested landing does not exist or you do not have access.",
+      "reset": "Reset",
+      "saveChanges": "Save changes",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "preview": "Preview",
+      "generateShortlink": "Generate Shortlink",
+      "changesSavedOnSubmit": "Changes are saved when you click “Save changes”."
+    },
+    "tabs": {
+      "settings": "Settings",
+      "content": "Content"
+    },
+    "form": {
+      "title": "Edit Landing",
+      "description": "Manage settings and block-based content.",
+      "merchant": "Merchant",
+      "merchantPlaceholder": "Select merchant",
+      "merchantSearch": "Search merchants…",
+      "name": "Name",
+      "namePlaceholder": "Landing name",
+      "status": "Status",
+      "statusDraft": "Draft",
+      "statusPublished": "Published",
+      "statusArchived": "Archived",
+      "attachmentLabel": "Attachment",
+      "attachmentDescription": "Choose whether this landing belongs to a place or a campaign. This link is required.",
+      "attachmentPlace": "Place",
+      "attachmentCampaign": "Campaign",
+      "placePlaceholder": "Select place",
+      "placeSearch": "Search places…",
+      "campaignPlaceholder": "Select campaign",
+      "campaignSearch": "Search campaigns…",
+      "selectMerchantFirst": "Select merchant first"
+    },
+    "createDialog": {
+      "title": "Create Landing",
+      "description": "Attach a landing to one campaign or place. You can customize the content after creation.",
+      "submitCreating": "Creating...",
+      "submitLabel": "Create Landing"
+    },
+    "editor": {
+      "addBlock": "Add block",
+      "warningsTitle": "Warnings",
+      "warningsMultipleGames": "Multiple game blocks may confuse users.",
+      "emptyState": "No blocks yet. Use the “Add block” button to get started.",
+      "blockNumber": "Block #{index}",
+      "selectPrompt": "Select a block to edit its content.",
+      "blocks": {
+        "simpleHero": {
+          "label": "Simple Hero",
+          "description": "Heading with optional subtitle",
+          "title": "Title",
+          "subtitle": "Subtitle",
+          "convert": "Convert to Hero with CTA",
+          "previewTitle": "{title}",
+          "previewSubtitle": "{subtitle}"
+        },
+        "heroWithCta": {
+          "label": "Hero with CTA",
+          "description": "Hero plus call-to-action buttons",
+          "title": "Title",
+          "subtitle": "Subtitle",
+          "ctaLabel": "Label",
+          "ctaUrl": "URL",
+          "ctaStyle": "Style",
+          "ctas": "CTAs",
+          "addCta": "Add CTA",
+          "primary": "Primary",
+          "secondary": "Secondary",
+          "ctaCount": "{count} CTA(s)"
+        },
+        "legalText": {
+          "label": "Legal Text",
+          "description": "Body copy for compliance",
+          "text": "Legal text",
+          "placeholder": "Add legal or compliance language"
+        },
+        "game": {
+          "label": "Game",
+          "description": "Interactive block for places or campaigns",
+          "ctaLabel": "CTA label (optional)",
+          "linkedCampaign": "Linked campaign",
+          "linkedPlace": "Linked place"
+        }
+      },
+      "actions": {
+        "duplicate": "Duplicate block",
+        "delete": "Delete block",
+        "deleteTitle": "Delete block?",
+        "deleteDescription": "This cannot be undone. The block and its content will be removed from the landing.",
+        "confirmDelete": "Delete",
+        "cancel": "Cancel",
+        "togglePreview": "Toggle preview",
+        "reorder": "Reorder block"
+      }
+    },
+    "toasts": {
+      "updated": "Landing updated"
+    }
   }
 }
