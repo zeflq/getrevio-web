@@ -20,6 +20,7 @@ export const fillLandingFormFromEntity = (landing?: LandingListItem | null): Lan
     settings: {
       merchantId: landing.merchantId ?? "",
       name: landing.name ?? "",
+      slug: landing.slug ?? "",
       status: landing.status ?? "draft",
     },
     belongsTo: ensureBelongsToForForm(landing.belongsTo ?? undefined),
@@ -31,6 +32,7 @@ export const fillLandingFormFromPayload = (payload: LandingCreateInput): Landing
   settings: {
     merchantId: payload.merchantId,
     name: payload.name,
+    slug: payload.slug,
     status: payload.status ?? "draft",
   },
   belongsTo: payload.belongsTo,

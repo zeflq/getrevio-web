@@ -16,6 +16,7 @@ export class PrismaLandingRepository implements LandingRepository {
       data: {
         merchantId: data.merchantId,
         name: data.name,
+        slug: data.slug,
         status: data.status,
         content: data.content,
         publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,

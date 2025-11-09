@@ -19,6 +19,12 @@ export interface LandingQueryRepository {
     options?: LandingQueryOptions;
   }): Promise<LandingListDTO | null>;
 
+  existsWithSlug(args: {
+    slug: string;
+    tenantId?: string;
+    options?: LandingQueryOptions;
+  }): Promise<boolean>;
+
   listLite(args: {
     filters: LandingFilters;
     tenantId?: string;

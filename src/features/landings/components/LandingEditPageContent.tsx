@@ -145,6 +145,7 @@ export function LandingEditPageContent({
                       disabled={isSubmitting}
                       merchantId={merchantId ?? landing?.merchantId}
                       merchantsLite={merchantsLite}
+                      existingSlug={landing?.slug}
                     />
                   </TabsContent>
                   <TabsContent value="content" className="space-y-4">

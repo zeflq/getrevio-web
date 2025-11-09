@@ -49,7 +49,7 @@ const formatDate = (value?: string | null) => {
 
 type LandingColumnOptions = {
   onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
+  onDelete: (landing: LandingListItem) => void;
   showMerchantColumn?: boolean;
   labels?: Partial<LandingColumnLabels>;
 };
@@ -117,7 +117,7 @@ export function landingColumns(opts: LandingColumnOptions): ColumnDef<LandingLis
                   ariaLabel: "Edit",
                 },
                 {
-                  onClick: () => opts.onDelete(row.original.id),
+                  onClick: () => opts.onDelete(row.original),
                   icon: <Trash2 className="h-4 w-4" />,
                   ariaLabel: "Delete",
                   variant: "linkDestructive",

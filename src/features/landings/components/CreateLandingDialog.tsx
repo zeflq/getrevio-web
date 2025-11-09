@@ -5,6 +5,7 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
+import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 
 import { useRouter } from "@/i18n/navigation";
 import { DialogForm } from "@/components/form/DialogForm";
@@ -21,6 +22,7 @@ import { useCreateLanding } from "../hooks/useLandingCrud";
 import { LandingFormFields } from "./LandingFormFields";
 import { buildLandingPayload } from "../lib/landingForm.mappers";
 import { createDefaultBlocksForContext } from "../lib/landingContent.presets";
+import { useLandingSlugCheck } from "../hooks/useLandingSlugCheck";
 
 export interface CreateLandingDialogProps {
   open: boolean;
@@ -42,6 +44,7 @@ export function CreateLandingDialog({
   redirectBasePath = "/admin/landings",
 }: CreateLandingDialogProps) {
   const t = useTranslations("landings.createDialog");
+  const tForm = useTranslations("landings.form");
   const router = useRouter();
   const defaultValues = React.useMemo(
     () => createLandingCreateFormDefaults({ merchantId, belongsTo: initialBelongsTo }),
@@ -63,7 +66,7 @@ export function CreateLandingDialog({
     defaultValues,
   });
 
-  const { reset, setValue } = methods;
+  const { reset, setValue, watch } = methods;
 
   React.useEffect(() => {
     if (!open) {
@@ -91,12 +94,43 @@ export function CreateLandingDialog({
     execute(payload);
   };
 
+  const slugValue = watch("settings.slug");
+  const [debouncedSlug, setDebouncedSlug] = React.useState("");
+  React.useEffect(() => {
+    const handle = setTimeout(() => setDebouncedSlug(slugValue ?? ""), 300);
+    return () => clearTimeout(handle);
+  }, [slugValue]);
+
+  const { data: slugCheck, isFetching: slugChecking } = useLandingSlugCheck(
+    debouncedSlug || undefined
+  );
+  const slugExists = !!slugCheck?.exists;
+
+  const slugSuffix = slugChecking ? (
+    <Loader2 className="h-4 w-4 text-muted-foreground animate-spin" aria-hidden="true" />
+  ) : debouncedSlug ? (
+    slugExists ? (
+      <AlertCircle className="h-4 w-4 text-destructive" aria-hidden="true" />
+    ) : (
+      <CheckCircle2 className="h-4 w-4 text-emerald-600" aria-hidden="true" />
+    )
+  ) : null;
+
+  const slugDescription = debouncedSlug
+    ? slugExists
+      ? tForm("slugTaken")
+      : tForm("slugAvailable")
+    : undefined;
+
   type MethodsWithSlot = typeof methods & { _slot?: React.ReactNode };
   (methods as MethodsWithSlot)._slot = (
     <LandingFormFields
+      mode="create"
       disabled={isExecuting}
       merchantId={merchantId}
       merchantsLite={merchantsLite}
+      slugSuffix={slugSuffix}
+      slugDescription={slugDescription}
     />
   );
 

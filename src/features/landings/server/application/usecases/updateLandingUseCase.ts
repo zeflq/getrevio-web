@@ -16,7 +16,7 @@ export class UpdateLandingUseCase {
 
     const { id, tenantId, userRole: _role, ...payload } = command;
     const normalized = this.normalizePayload(payload);
-    const { belongsTo, ...rest } = normalized;
+    const { belongsTo, slug: _slug, ...rest } = normalized;
 
     const record: LandingUpdateRecord = {
       id,

@@ -113,9 +113,15 @@ const toInternalBelongsTo = (
 /** =========================
  *  Settings & Form Schemas
  *  ========================= */
+const alphanumericSlug = z
+  .string()
+  .min(1, "Slug is required")
+  .regex(/^[a-zA-Z0-9]+$/, "Slug must contain only letters and numbers");
+
 export const landingSettingsSchema = z.object({
   merchantId: z.string().min(1, "Merchant is required"),
   name: z.string().min(1, "Name is required"),
+  slug: alphanumericSlug,
   status: landingStatusEnum.default("draft"),
 });
 
@@ -141,6 +147,7 @@ export type LandingCreateFormValues = z.input<typeof landingCreateFormSchema>;
 const landingPayloadSchema = z.object({
   merchantId: z.string().min(1, "Merchant is required"),
   name: z.string().min(1, "Name is required"),
+  slug: alphanumericSlug,
   status: landingStatusEnum.default("draft"),
   content: LandingContentSchema,
   belongsTo: landingBelongsToSchema,
@@ -174,6 +181,7 @@ const resolveContent = (form: LandingFormLikeValues): LandingContentOutput => {
 export const mapLandingFormToPayload = (form: LandingFormLikeValues): LandingCreateInput => ({
   merchantId: form.settings.merchantId,
   name: form.settings.name,
+  slug: form.settings.slug,
   status: form.settings.status ?? "draft",
   content: resolveContent(form),
   belongsTo: form.belongsTo,
@@ -193,6 +201,7 @@ export const createLandingFormDefaults = (args?: {
   settings: {
     merchantId: args?.merchantId ?? "",
     name: "",
+    slug: "",
     status: "draft",
   },
   belongsTo: emptyBelongsTo(args?.belongsTo),
@@ -206,6 +215,7 @@ export const createLandingCreateFormDefaults = (args?: {
   settings: {
     merchantId: args?.merchantId ?? "",
     name: "",
+    slug: "",
     status: "draft",
   },
   belongsTo: emptyBelongsTo(args?.belongsTo),

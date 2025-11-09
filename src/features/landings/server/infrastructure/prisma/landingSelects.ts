@@ -4,6 +4,7 @@ export const landingSelect = {
   id: true,
   merchantId: true,
   name: true,
+  slug: true,
   status: true,
   content: true,
   publishedAt: true,

@@ -17,15 +17,23 @@ import type { LandingCreateFormValues, LandingFormValues } from "../model/landin
 type FormShape = LandingFormValues | LandingCreateFormValues;
 
 type Props = {
+  mode?: "create" | "edit";
   disabled?: boolean;
   merchantId?: string;
   merchantsLite?: LiteListe[];
+  slugSuffix?: React.ReactNode;
+  slugDescription?: string;
+  existingSlug?: string;
 };
 
 export function LandingFormFields({
+  mode = "edit",
   disabled,
   merchantId,
   merchantsLite = [],
+  slugSuffix,
+  slugDescription,
+  existingSlug,
 }: Props) {
   const {
     register,
@@ -85,6 +93,26 @@ export function LandingFormFields({
         requiredStar
         disabled={disabled}
       />
+
+      {mode === "create" ? (
+        <RHFInput
+          name="settings.slug"
+          label={t("slug")}
+          placeholder={t("slugPlaceholder")}
+          description={slugDescription}
+          requiredStar
+          disabled={disabled}
+          suffix={slugSuffix}
+        />
+      ) : (
+        <RHFInput
+          name="settings.slug"
+          label={t("slug")}
+          placeholder={existingSlug ?? ""}
+          description={t("slugLocked")}
+          disabled
+        />
+      )}
 
       <RHFSelect
         name="settings.status"

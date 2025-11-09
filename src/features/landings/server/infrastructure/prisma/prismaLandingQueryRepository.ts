@@ -88,6 +88,25 @@ export class PrismaLandingQueryRepository implements LandingQueryRepository {
     return row ? mapLandingRow(row) : null;
   }
 
+  async existsWithSlug({
+    slug,
+    tenantId,
+    options,
+  }: {
+    slug: string;
+    tenantId?: string;
+    options?: LandingQueryOptions;
+  }): Promise<boolean> {
+    const where = landingQueryPolicy.enforceTenant(
+      { slug } as Prisma.LandingWhereInput,
+      tenantId,
+      "merchantId"
+    );
+
+    const count = await this.runWithTimeout(this.client.count({ where }), options);
+    return count > 0;
+  }
+
   async listLite({
     filters,
     tenantId,

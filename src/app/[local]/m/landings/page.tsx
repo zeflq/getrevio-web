@@ -33,7 +33,7 @@ export default function MerchantLandingsPage() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<string | undefined>();
+  const [selectedLanding, setSelectedLanding] = React.useState<{ id: string; name: string } | null>(null);
 
   React.useEffect(() => {
     const newSize = isMobile ? 5 : 10;
@@ -70,8 +70,8 @@ export default function MerchantLandingsPage() {
         onEdit: (id) => {
           router.push(`/m/landings/${id}/edit`);
         },
-        onDelete: (id) => {
-          setSelectedId(id);
+        onDelete: (landing) => {
+          setSelectedLanding({ id: landing.id, name: landing.name ?? "" });
           setDeleteDialogOpen(true);
         },
         showMerchantColumn: false,
@@ -158,14 +158,15 @@ export default function MerchantLandingsPage() {
         redirectBasePath="/m/landings"
       />
 
-      {selectedId && (
+      {selectedLanding && (
         <DeleteLandingDialog
-          id={selectedId}
+          id={selectedLanding.id}
+          name={selectedLanding.name}
           open={deleteDialogOpen}
           onOpenChange={(open) => {
             if (!open) {
               setDeleteDialogOpen(false);
-              setSelectedId(undefined);
+              setSelectedLanding(null);
             }
           }}
         />

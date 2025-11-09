@@ -159,6 +159,7 @@ model Landing {
   merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
   name        String
+  slug        String
   status      LandingStatus @default(draft)
   content     Json
   publishedAt DateTime?
@@ -169,6 +170,7 @@ model Landing {
   campaigns Campaign[]
 
   @@index([merchantId, status])
+  @@unique([merchantId, slug], map: "landing_merchant_slug_unique")
 }
 
 enum ShortlinkTargetType {

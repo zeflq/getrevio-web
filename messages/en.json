@@ -35,7 +35,8 @@
       "unpublish": "Unpublish",
       "preview": "Preview",
       "generateShortlink": "Generate Shortlink",
-      "changesSavedOnSubmit": "Changes are saved when you click “Save changes”."
+      "changesSavedOnSubmit": "Changes are saved when you click “Save changes”.",
+      "loading": "Loading..."
     },
     "tabs": {
       "settings": "Settings",
@@ -49,6 +50,11 @@
       "merchantSearch": "Search merchants…",
       "name": "Name",
       "namePlaceholder": "Landing name",
+      "slug": "Slug",
+      "slugPlaceholder": "unique-landing-slug",
+      "slugAvailable": "Slug is available",
+      "slugTaken": "Slug already taken",
+      "slugLocked": "Slug cannot be changed after creation.",
       "status": "Status",
       "statusDraft": "Draft",
       "statusPublished": "Published",

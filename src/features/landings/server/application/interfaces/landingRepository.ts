@@ -3,6 +3,7 @@ import type { LandingCreateInput, LandingUpdateInput } from "@/features/landings
 export type LandingCreateRecord = {
   merchantId: string;
   name: string;
+  slug: string;
   status: LandingCreateInput["status"];
   content: LandingCreateInput["content"];
   publishedAt?: string | Date | null;

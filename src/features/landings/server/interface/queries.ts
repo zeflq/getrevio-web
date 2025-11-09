@@ -10,11 +10,13 @@ import { PrismaLandingQueryRepository } from "../infrastructure/prisma/prismaLan
 import { ListLandingsUseCase } from "../application/usecases/listLandingsUseCase";
 import { GetLandingUseCase } from "../application/usecases/getLandingUseCase";
 import { ListLandingsLiteUseCase } from "../application/usecases/listLandingsLiteUseCase";
+import { CheckLandingSlugUseCase } from "../application/usecases/checkLandingSlugUseCase";
 
 const repository = new PrismaLandingQueryRepository();
 const listUseCase = new ListLandingsUseCase(repository);
 const getUseCase = new GetLandingUseCase(repository);
 const listLiteUseCase = new ListLandingsLiteUseCase(repository);
+const checkSlugUseCase = new CheckLandingSlugUseCase(repository);
 
 type MaybeTenant = string | undefined;
 type Options = LandingQueryOptions | undefined;
@@ -83,6 +85,28 @@ export async function listLandingsLiteServer(
   );
 
   return listLiteUseCase.execute({ filters: parsedFilters, tenantId, options });
+}
+
+export async function checkLandingSlugServer(args: { slug: string; tenantId?: string | null }) {
+  const session = await getServerSession();
+  if (!session?.user) {
+    throw new ActionError(401, "UNAUTHORIZED");
+  }
+
+  const { tenantId } = resolveTenantScope(
+    createUserContext(session),
+    {},
+    { tenantIdOverride: args.tenantId ?? undefined }
+  );
+
+  if (!tenantId) {
+    throw new ActionError(400, "TENANT_REQUIRED");
+  }
+
+  return checkSlugUseCase.execute({
+    slug: args.slug,
+    tenantId,
+  });
 }
 
 function normalizeFiltersInput(

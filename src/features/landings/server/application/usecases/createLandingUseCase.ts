@@ -19,11 +19,13 @@ export class CreateLandingUseCase {
     const data: LandingCreateInput = {
       ...payload,
       name: payload.name.trim(),
+      slug: payload.slug.trim(),
     };
 
     const record: LandingCreateRecord = {
       merchantId: data.merchantId,
       name: data.name,
+      slug: data.slug,
       status: data.status,
       content: data.content,
       publishedAt: data.status === "published" ? new Date().toISOString() : null,

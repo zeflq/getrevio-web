@@ -34,7 +34,8 @@
       "unpublish": "Dépublier",
       "preview": "Prévisualiser",
       "generateShortlink": "Générer un shortlink",
-      "changesSavedOnSubmit": "Les modifications sont enregistrées lorsque vous cliquez sur « Enregistrer »."
+      "changesSavedOnSubmit": "Les modifications sont enregistrées lorsque vous cliquez sur « Enregistrer ».",
+      "loading": "Chargement..."
     },
     "tabs": {
       "settings": "Paramètres",
@@ -48,6 +49,11 @@
       "merchantSearch": "Rechercher un marchand…",
       "name": "Nom",
       "namePlaceholder": "Nom du landing",
+      "slug": "Slug",
+      "slugPlaceholder": "slug-landing-unique",
+      "slugAvailable": "Le slug est disponible",
+      "slugTaken": "Slug déjà utilisé",
+      "slugLocked": "Le slug ne peut pas être modifié après création.",
       "status": "Statut",
       "statusDraft": "Brouillon",
       "statusPublished": "Publié",

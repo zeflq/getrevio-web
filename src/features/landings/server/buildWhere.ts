@@ -8,7 +8,10 @@ export const buildLandingWhere = (
 ): Prisma.LandingWhereInput => ({
   ...(filters.q
     ? {
-        name: { contains: filters.q, mode: "insensitive" },
+        OR: [
+          { name: { contains: filters.q, mode: "insensitive" } },
+          { slug: { contains: filters.q, mode: "insensitive" } },
+        ],
       }
     : {}),
   ...(filters.status ? { status: filters.status } : {}),

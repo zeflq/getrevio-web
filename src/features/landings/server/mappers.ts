@@ -10,6 +10,7 @@ export type LandingListDTO = {
   id: string;
   merchantId: string;
   name: string;
+  slug: string;
   status: "draft" | "published" | "archived";
   content: LandingContent;
   publishedAt?: string | null;
@@ -55,6 +56,7 @@ export const mapLandingRow = (row: LandingSelectRow): LandingListDTO => ({
   id: row.id,
   merchantId: row.merchantId,
   name: row.name,
+  slug: row.slug,
   status: row.status,
   content: ensureLandingContentShape(row.content as LandingContent | null | undefined),
   publishedAt: toIsoString(row.publishedAt),

@@ -39,7 +39,7 @@ export default function LandingsPage() {
 
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<string | undefined>(undefined);
+  const [selectedLanding, setSelectedLanding] = React.useState<{ id: string; name: string } | null>(null);
 
   const q = getFilterValue(columnFilters, "name");
   const sortId = (sorting[0]?.id as "name" | "createdAt" | "status" | undefined) ?? "createdAt";
@@ -61,8 +61,8 @@ export default function LandingsPage() {
     onEdit: (id) => {
       router.push(`/admin/landings/${id}/edit`);
     },
-    onDelete: (id) => {
-      setSelectedId(id);
+    onDelete: (landing) => {
+      setSelectedLanding({ id: landing.id, name: landing.name ?? "" });
       setDeleteDialogOpen(true);
     },
   });
@@ -129,11 +129,17 @@ export default function LandingsPage() {
         merchantsLite={merchantsLiteQuery.data ?? []}
       />
 
-      {selectedId && (
+      {selectedLanding && (
         <DeleteLandingDialog
-          id={selectedId}
+          id={selectedLanding.id}
+          name={selectedLanding.name}
           open={deleteDialogOpen}
-          onOpenChange={setDeleteDialogOpen}
+          onOpenChange={(open) => {
+            setDeleteDialogOpen(open);
+            if (!open) {
+              setSelectedLanding(null);
+            }
+          }}
         />
       )}
     </div>
