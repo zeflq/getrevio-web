@@ -45,9 +45,9 @@ model Place {
   merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   localName  String
 
-  address       String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   campaigns  Campaign[]
   shortlinks Shortlink[]
@@ -59,18 +59,18 @@ model Place {
 }
 
 model Theme {
-  id                    String      @id @default(cuid())
+  id                    String     @id @default(cuid())
   merchantId            String
-  merchant              Merchant    @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   name                  String
   logoUrl               String?
   brandColor            String?
   accentColor           String?
   textColor             String?
   meta                  Json?
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
-  merchantsUsingDefault Merchant[]  @relation("MerchantDefaultTheme")
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+  merchantsUsingDefault Merchant[] @relation("MerchantDefaultTheme")
 }
 
 model Campaign {
@@ -98,30 +98,30 @@ model Campaign {
 }
 
 model Shortlink {
-  id          String              @id @default(cuid())
-  code        String              @unique
+  id          String    @id @default(cuid())
+  code        String    @unique
   merchantId  String
-  merchant    Merchant            @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  target      Json
-  targetType  ShortlinkTargetType @default(place)
+  merchant    Merchant  @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   campaignId  String?
-  campaign    Campaign?           @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  campaign    Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
   placeId     String?
-  place       Place?              @relation(fields: [placeId], references: [id], onDelete: SetNull)
+  place       Place?    @relation(fields: [placeId], references: [id], onDelete: SetNull)
+  landingId   String?
+  landing     Landing?  @relation(fields: [landingId], references: [id], onDelete: SetNull)
   channel     String?
-  active      Boolean             @default(true)
+  active      Boolean   @default(true)
   expiresAt   DateTime?
   utmSource   String?
   utmMedium   String?
   utmCampaign String?
   utmTerm     String?
   utmContent  String?
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@index([campaignId])
   @@index([placeId])
-  @@index([targetType])
+  @@index([landingId])
 }
 
 /// Enums matching your TS literal types
@@ -162,16 +162,12 @@ model Landing {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
-  places    Place[]
-  campaigns Campaign[]
+  places     Place[]
+  campaigns  Campaign[]
+  shortlinks Shortlink[]
 
-  @@index([merchantId, status])
   @@unique([merchantId, slug], map: "landing_merchant_slug_unique")
-}
-
-enum ShortlinkTargetType {
-  campaign
-  place
+  @@index([merchantId, status])
 }
 
 model User {

@@ -54,7 +54,9 @@ function toRedisRow(shortlink: import("@/types/domain").Shortlink | null | undef
   return {
     id: shortlink.id,
     code: shortlink.code,
-    target: shortlink.target,
+    landingId: shortlink.landingId ?? null,
+    campaignId: shortlink.campaignId ?? null,
+    placeId: shortlink.placeId ?? null,
     merchantId: shortlink.merchantId,
     channel: shortlink.channel ?? null,
     active: shortlink.active,

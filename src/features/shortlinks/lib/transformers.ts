@@ -1,8 +1,7 @@
 // lib/transformers.ts
 import type { Shortlink } from "@/types/domain";
 import type { ShortlinkCreateInput, ShortlinkUpdateInput } from "../model/shortlinkSchema";
-import { shortlinkTargetSchema, type ShortlinkFormValues } from "../model/shortlinkSchema";
-import type { z } from "zod";
+import type { ShortlinkFormValues } from "../model/shortlinkSchema";
 
 // helpers identiques à ceux que tu as déjà
 const CHANNELS = ["qr", "nfc", "email", "web", "print", "custom"] as const;
@@ -27,76 +26,35 @@ const ensureUtmForForm = (utm?: ShortlinkFormValues["utm"]) => ({
 // === Defaults / mapping vers Form ===
 export const createInitialShortlinkValues = (
   merchantId = "",
-  target: ShortlinkFormValues["target"] = null,
+  landingId = "",
 ): ShortlinkFormValues => ({
   code: undefined,
   merchantId,
-  target,
+  landingId,
   channel: undefined,
   active: true,
   expiresAt: undefined,
   utm: ensureUtmForForm(),
 });
 
-export const shortlinkToFormValues = (s: Shortlink): ShortlinkFormValues => {
-  const t = s.target;
-  const formTarget =
-  t?.t === "campaign"
-    ? ({
-        t: "campaign",
-        cid: t.cid,
-        pid: t.pid ?? s.placeId ?? undefined,
-      } as const)
-    : t?.t === "place"
-    ? ({ t: "place", pid: t.pid ?? s.placeId ?? "" } as const)
-    : null;
-
-  return {
-    code: s.code,
-    merchantId: s.merchantId,
-    target: formTarget,                          // union | null
-    channel: asChannel(s.channel),
-    active: s.active,
-    expiresAt: s.expiresAt ? new Date(s.expiresAt):undefined,
-    utm: ensureUtmForForm(s.utm),
-  };
-};
+export const shortlinkToFormValues = (s: Shortlink): ShortlinkFormValues => ({
+  code: s.code,
+  merchantId: s.merchantId,
+  landingId: s.landingId ?? "",
+  channel: asChannel(s.channel),
+  active: s.active,
+  expiresAt: s.expiresAt ? new Date(s.expiresAt) : undefined,
+  utm: ensureUtmForForm(s.utm),
+});
 
 // === Sanitize Form → DTO (Create/Update payloads) ===
-function assertTargetNonNull(t: ShortlinkFormValues["target"]): asserts t is z.infer<typeof shortlinkTargetSchema> {
-  if (t === null) throw new Error("Target is required");
-}
-
 export const buildCreateShortlinkPayload = (values: ShortlinkFormValues): ShortlinkCreateInput => {
-  // refuse submit si target null (au cas où la validation UI est bypassée)
-  assertTargetNonNull(values.target);
-
   const expiresAtSan = values.expiresAt ? values.expiresAt : undefined;
-
-  const campaignPid = values.target?.t === "campaign" ? trimOrUndefined(values.target.pid) : undefined;
-  const targetType = values.target.t;
-  const campaignId = values.target.t === "campaign" ? values.target.cid.trim() : undefined;
-  const placeIdBase =
-    values.target.t === "campaign"
-      ? campaignPid ?? undefined
-      : values.target.t === "place"
-      ? values.target.pid.trim()
-      : undefined;
 
   const payload: ShortlinkCreateInput = {
     code: (values.code ?? "").trim() || undefined,
     merchantId: values.merchantId.trim(),
-    target:
-      values?.target?.t === "campaign"
-        ? ({
-            t: "campaign",
-            cid: values.target.cid.trim(),
-            ...(campaignPid ? { pid: campaignPid } : {}),
-          } as const)
-        : { t: "place",    pid: values?.target?.pid.trim() },
-    targetType,
-    campaignId,
-    placeId: placeIdBase,
+    landingId: values.landingId.trim(),
     channel: values.channel,
     active: !!values.active,
     expiresAt: expiresAtSan,
@@ -104,8 +62,6 @@ export const buildCreateShortlinkPayload = (values: ShortlinkFormValues): Shortl
   };
 
   if (!payload.code) delete payload.code;
-  if (!payload.campaignId) delete (payload as { campaignId?: string }).campaignId;
-  if (!payload.placeId) delete (payload as { placeId?: string }).placeId;
   if (payload.channel === undefined) delete payload.channel;
   if (payload.expiresAt === undefined) delete payload.expiresAt;
   if (!payload.utm) delete payload.utm;
@@ -114,33 +70,10 @@ export const buildCreateShortlinkPayload = (values: ShortlinkFormValues): Shortl
 };
 
 export const buildUpdateShortlinkPayload = (values: ShortlinkFormValues): ShortlinkUpdateInput => {
-  // pour update, on garde la même règle: target doit être choisi
-  assertTargetNonNull(values.target);
-
-  const campaignPid = values.target.t === "campaign" ? trimOrUndefined(values.target.pid) : undefined;
-  const targetType = values.target.t;
-  const campaignId = values.target.t === "campaign" ? values.target.cid.trim() : undefined;
-  const placeIdBase =
-    values.target.t === "campaign"
-      ? campaignPid ?? undefined
-      : values.target.t === "place"
-      ? values.target.pid.trim()
-      : undefined;
-
   const partial: ShortlinkUpdateInput = {
     code: (values.code ?? "").trim() || undefined, // optionnel en update
     merchantId: values.merchantId.trim(),
-    target:
-      values.target.t === "campaign"
-        ? ({
-            t: "campaign",
-            cid: values.target.cid.trim(),
-            ...(campaignPid ? { pid: campaignPid } : {}),
-          } as const)
-        : { t: "place",    pid: values.target.pid.trim() },
-    targetType,
-    campaignId,
-    placeId: placeIdBase,
+    landingId: values.landingId.trim(),
     channel: values.channel,
     active: !!values.active,
     expiresAt: values.expiresAt,
@@ -148,8 +81,6 @@ export const buildUpdateShortlinkPayload = (values: ShortlinkFormValues): Shortl
   };
 
   if (!partial.code) delete (partial as { code?: string }).code;
-  if (!partial.campaignId) delete (partial as { campaignId?: string }).campaignId;
-  if (!partial.placeId) delete (partial as { placeId?: string }).placeId;
   if (partial.channel === undefined) delete partial.channel;
   if (partial.expiresAt === undefined) delete partial.expiresAt;
   if (!partial.utm) delete partial.utm;

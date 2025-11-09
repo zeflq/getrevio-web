@@ -1,8 +1,6 @@
 import { Prisma } from "@prisma/client";
 
 import prisma from "@/lib/prisma";
-import type { ShortlinkTargetType } from "@/types/domain";
-
 import type {
   ShortlinkCreateRecord,
   ShortlinkMutationRepository,
@@ -31,16 +29,14 @@ export class PrismaShortlinkRepository implements ShortlinkMutationRepository {
   }
 
   async create(data: ShortlinkCreateRecord) {
-    const { targetType, campaignId, placeId } = resolveTargetMetadata(data.target);
     const utmColumns = extractUtmColumns(data);
 
     const createPayload: Prisma.ShortlinkUncheckedCreateInput = {
       merchantId: data.merchantId,
       code: data.code,
-      target: data.target,
-      targetType,
-      campaignId,
-      placeId,
+      landingId: data.landingId,
+      campaignId: data.campaignId ?? null,
+      placeId: data.placeId ?? null,
       channel: data.channel ?? null,
       active: data.active,
       expiresAt: data.expiresAt ?? null,
@@ -76,13 +72,16 @@ export class PrismaShortlinkRepository implements ShortlinkMutationRepository {
       patch.code = data.code;
     }
 
-    if (data.target !== undefined) {
-      patch.target = data.target;
+    if (data.landingId !== undefined) {
+      patch.landingId = data.landingId;
+    }
 
-      const { targetType, campaignId, placeId } = resolveTargetMetadata(data.target);
-      patch.targetType = targetType;
-      patch.campaignId = campaignId;
-      patch.placeId = placeId;
+    if (data.campaignId !== undefined) {
+      patch.campaignId = data.campaignId;
+    }
+
+    if (data.placeId !== undefined) {
+      patch.placeId = data.placeId;
     }
 
     if (data.channel !== undefined) {
@@ -136,26 +135,6 @@ export class PrismaShortlinkRepository implements ShortlinkMutationRepository {
   }
 }
 
-function resolveTargetMetadata(target: ShortlinkCreateRecord["target"]): {
-  targetType: ShortlinkTargetType;
-  campaignId: string | null;
-  placeId: string | null;
-} {
-  if (target.t === "campaign") {
-    return {
-      targetType: "campaign",
-      campaignId: normalizeId(target.cid),
-      placeId: normalizeId(target.pid),
-    };
-  }
-
-  return {
-    targetType: "place",
-    campaignId: null,
-    placeId: normalizeId(target.pid),
-  };
-}
-
 type UTMColumns = {
   utmSource?: string | null;
   utmMedium?: string | null;
@@ -197,12 +176,6 @@ function pickUtmValue(direct?: string | null, nested?: string | null): string | 
 }
 
 function normalizeUtmValue(value?: string | null): string | null {
-  if (value === null || value === undefined) return null;
-  const trimmed = value.trim();
-  return trimmed.length > 0 ? trimmed : null;
-}
-
-function normalizeId(value?: string | null): string | null {
   if (value === null || value === undefined) return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;

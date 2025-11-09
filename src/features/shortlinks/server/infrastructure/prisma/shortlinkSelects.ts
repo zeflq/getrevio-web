@@ -4,10 +4,9 @@ export const shortlinkSelect = {
   id: true,
   code: true,
   merchantId: true,
-  target: true,
-  targetType: true,
   campaignId: true,
   placeId: true,
+  landingId: true,
   channel: true,
   active: true,
   expiresAt: true,
@@ -18,6 +17,12 @@ export const shortlinkSelect = {
   utmContent: true,
   createdAt: true,
   updatedAt: true,
+  landing: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
 } satisfies Prisma.ShortlinkSelect;
 
 export const shortlinkLiteSelect = {

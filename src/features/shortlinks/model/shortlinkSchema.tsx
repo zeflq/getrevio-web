@@ -3,18 +3,17 @@ import { z } from "zod";
 
 export const shortlinkTargetSchema = z.discriminatedUnion("t", [
   z.object({
-    t: z.literal("campaign"),
-    cid: z.string().min(1),
-    pid: z.string().min(1).optional(),
-  }),
-  z.object({ t: z.literal("place"), pid: z.string().min(1) }),
+    t: z.enum(["campaign", "place"]) ,
+    lid: z.string().min(1),
+    cid: z.string().min(1).optional(),
+    pid: z.string().min(1),
+  })
 ]);
 
 const shortlinkCommonSchema = z.object({
   merchantId: z.string().min(1),
-  target: shortlinkTargetSchema, // ⬅️ API/DTO: requis (non null)
+  landingId: z.string().min(1),
   channel: z.enum(["qr", "nfc", "email", "web", "print", "custom"]).optional(),
-  targetType: z.enum(["campaign", "place"]).optional(),
   campaignId: z.string().optional(),
   placeId: z.string().optional(),
   active: z.boolean(),
@@ -44,10 +43,10 @@ export const shortlinkUpdateSchema = shortlinkCommonSchema.partial().extend({
 
 
 // === FORM / UI ===
-// target nullable pour permettre defaultValue = null en création
+// landingId can be empty string until user selects one in the UI
 export const shortlinkFormSchema = z.object({
   merchantId: z.string().min(1),
-  target: shortlinkTargetSchema.nullable(), // ⬅️ UI: peut être null tant que non choisi
+  landingId: z.string().min(1, "Landing is required"),
   channel: z.enum(["qr", "nfc", "email", "web", "print", "custom"]).optional(),
   active: z.boolean(),
   expiresAt: z.date().optional(),
@@ -59,19 +58,13 @@ export const shortlinkFormSchema = z.object({
     content: z.string().optional(),
   }).optional(),
   code: z.string().min(1).regex(/^[a-zA-Z0-9_-]+$/).optional(),
-})
-.superRefine((v, ctx) => {
-  // on veut que l’utilisateur choisisse un target avant submit
-  if (v.target === null) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["target"], message: "Select a target type" });
-  }
 });
 
 const shortlinkQuerySchemaRaw = z.object({
   merchantId: z.string().optional(),
-  target: z.enum(["campaign", "place", "url"]).optional(),
-  pid: z.string().optional(),
-  cid: z.string().optional(),
+  landingId: z.string().optional(),
+  placeId: z.string().optional(),
+  campaignId: z.string().optional(),
   channel: z
     .enum(["qr", "nfc", "email", "web", "print", "custom"])
     .optional(),
@@ -90,9 +83,9 @@ export const shortlinkQuerySchema = shortlinkQuerySchemaRaw;
 
 export const shortlinkFiltersSchema = shortlinkQuerySchemaRaw.transform((params) => ({
   merchantId: params.merchantId,
-  target: params.target,
-  pid: params.pid,
-  cid: params.cid,
+  landingId: params.landingId,
+  placeId: params.placeId,
+  campaignId: params.campaignId,
   channel: params.channel,
   status: params.status,
   redis: params.redis,
@@ -107,5 +100,6 @@ export type ShortlinkCreateInput = z.infer<typeof shortlinkCreateSchema>;
 export type ShortlinkUpdateInput = z.infer<typeof shortlinkUpdateSchema>;
 export type ShortlinkQueryParams = z.infer<typeof shortlinkQuerySchema>;
 export type ShortlinkFilters = z.output<typeof shortlinkFiltersSchema>;
+export type ShortlinkTargetInput = z.infer<typeof shortlinkTargetSchema>;
 
-export type ShortlinkFormValues = z.infer<typeof shortlinkFormSchema>; // target: union | null
+export type ShortlinkFormValues = z.infer<typeof shortlinkFormSchema>;

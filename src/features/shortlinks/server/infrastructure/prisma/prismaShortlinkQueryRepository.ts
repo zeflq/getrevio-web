@@ -7,11 +7,11 @@ import type {
   ShortlinkQueryRepository,
   ShortlinkQueryOptions,
 } from "../../application/interfaces/shortlinkQueryRepository";
-import type { ShortlinkFilters } from "../../model/shortlinkSchema";
 import { buildShortlinkWhere } from "../../buildWhere";
 import { shortlinkQueryPolicy } from "../../policy";
 import { mapShortlinkRow } from "../../mappers";
 import { shortlinkSelect } from "./shortlinkSelects";
+import { ShortlinkFilters } from "@/features/shortlinks/model/shortlinkSchema";
 
 const shortlinkSortPolicy = makeSortPolicy<ShortlinkFilters>({
   allowed: ["code", "merchantId", "channel", "createdAt", "updatedAt"],

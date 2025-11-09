@@ -21,7 +21,7 @@ const formatDate = (value?: string | null) => {
 
 export type ShortlinkRow = Pick<
   Shortlink,
-  "id" | "code" | "merchantId" | "channel" | "active" | "redisStatus" | "target" | "createdAt" | "updatedAt"
+  "id" | "code" | "merchantId" | "channel" | "active" | "redisStatus" | "landing" | "landingId" | "createdAt" | "updatedAt"
 >;
 
 export function shortlinkColumns(opts: {
@@ -36,37 +36,6 @@ export function shortlinkColumns(opts: {
     opts.getShortUrl ?? ((code: string) => `${DEFAULT_SHORT_URL_BASE.replace(/\/$/, "")}/${code}`);
   const showMerchantColumn = opts.showMerchantColumn ?? true;
   const mode = opts.mode ?? "admin";
-
-  const renderTarget = (target: Shortlink["target"] | undefined | null) => {
-    if (!target) return "—";
-    if (mode === "admin") {
-      switch (target.t) {
-        case "campaign":
-          return (
-            <Link href={`/admin/campaigns/${target.cid}`} className="text-primary underline-offset-4 hover:underline">
-              Campaign
-            </Link>
-          );
-        case "place":
-          return (
-            <Link href={`/admin/places/${target.pid}`} className="text-primary underline-offset-4 hover:underline">
-              Place
-            </Link>
-          );
-        default:
-          return "Custom URL";
-      }
-    }
-
-    switch (target.t) {
-      case "campaign":
-        return "Campaign";
-      case "place":
-        return "Place";
-      default:
-        return "Custom URL";
-    }
-  };
 
   return [
     {
@@ -90,9 +59,28 @@ export function shortlinkColumns(opts: {
         ]
       : []),
     {
-      accessorKey: "target",
-      header: "Target",
-      cell: ({ row }) => renderTarget(row.original.target),
+      accessorKey: "landing",
+      header: "Landing",
+      cell: ({ row }) =>
+        row.original.landing?.name ? (
+          mode === "admin" ? (
+            <Link href={`/admin/landings/${row.original.landing.id}/edit`} className="text-primary underline-offset-4 hover:underline">
+              {row.original.landing.name}
+            </Link>
+          ) : (
+            row.original.landing.name
+          )
+        ) : row.original.landingId ? (
+          mode === "admin" ? (
+            <Link href={`/admin/landings/${row.original.landingId}/edit`} className="text-primary underline-offset-4 hover:underline">
+              {row.original.landingId}
+            </Link>
+          ) : (
+            row.original.landingId
+          )
+        ) : (
+          "—"
+        ),
     },
     {
       accessorKey: "channel",

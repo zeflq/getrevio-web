@@ -4,6 +4,7 @@ import type { CreateShortlinkCommand } from "../dto/createShortlinkCommand";
 import type { ShortlinkMutationRepository } from "../interfaces/shortlinkRepository";
 import { generateRandomCode } from "../../domain/services/codeGenerator";
 import { shortlinkCreateSchema } from "@/features/shortlinks/model/shortlinkSchema";
+import { resolveLandingAssociations } from "../services/resolveLandingAssociations";
 
 const MAX_CODE_ATTEMPTS = 10;
 
@@ -17,9 +18,14 @@ export class CreateShortlinkUseCase {
 
     const code = await this.resolveCode(parsed.code);
 
+    const landingRefs = await resolveLandingAssociations(parsed.landingId);
+
     const created = await this.repository.create({
       ...parsed,
       code,
+      landingId: parsed.landingId,
+      campaignId: landingRefs.campaignId,
+      placeId: landingRefs.placeId,
     });
 
     return created;

@@ -11,8 +11,13 @@ export const mapShortlinkRow = (row: ShortlinkSelectRow): Shortlink => ({
   id: row.id,
   code: row.code,
   merchantId: row.merchantId,
-  target: row.target as Shortlink["target"],
-  targetType: (row.targetType ?? "place") as Shortlink["targetType"],
+  landingId: row.landingId ?? null,
+  landing: row.landing
+    ? {
+        id: row.landing.id,
+        name: row.landing.name ?? null,
+      }
+    : null,
   campaignId: row.campaignId ?? null,
   placeId: row.placeId ?? null,
   channel: row.channel ?? undefined,

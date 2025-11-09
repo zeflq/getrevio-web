@@ -21,32 +21,14 @@ function getBaseUrl(): string | null {
   return raw.replace(/\/$/, "");
 }
 
-/** Calcule l’URL finale à partir de l’identifiant du lieu (slug deprecated). */
-async function resolveDestinationUrl(
-  baseUrl: string,
-  parsedTarget: ReturnType<typeof shortlinkTargetSchema.parse>
-): Promise<string | undefined> {
-  if (parsedTarget.t === "place") {
-    const place = await prisma.place.findUnique({
-      where: { id: parsedTarget.pid },
-      select: { id: true },
-    });
-    if (!place?.id) return undefined;
-    return `${baseUrl}/places/${place.id}`;
-  }
-
-  if (parsedTarget.t === "campaign") {
-    const campaign = await prisma.campaign.findUnique({
-      where: { id: parsedTarget.cid },
-      select: { place: { select: { id: true } } },
-    });
-    const placeId = campaign?.place?.id;
-    if (!placeId) return undefined;
-    const params = new URLSearchParams({ c: parsedTarget.cid }).toString();
-    return `${baseUrl}/places/${placeId}${params ? `?${params}` : ""}`;
-  }
-
-  return undefined;
+async function resolveDestinationUrl(baseUrl: string, landingId: string | null): Promise<string | undefined> {
+  if (!landingId) return undefined;
+  const landing = await prisma.landing.findUnique({
+    where: { id: landingId },
+    select: { slug: true },
+  });
+  if (!landing?.slug) return undefined;
+  return `${baseUrl}/landings/${landing.slug}`;
 }
 
 /** Payload JSON stocké sous sl:${code} */
@@ -54,17 +36,26 @@ function buildPayload(args: {
   destinationUrl: string;
   merchantId: string;
   active: boolean;
-  target: unknown;
+  landingId?: string | null;
+  campaignId?: string | null;
+  placeId?: string | null;
   expiresAt?: string | null;
   utm?: unknown | null;
   channel?: string | null;
 }) {
+  const tgt = shortlinkTargetSchema.parse({
+    t: args.campaignId ? "campaign" : "place",
+    lid: args.landingId ?? "",
+    cid: args.campaignId ?? undefined,
+    pid: args.placeId ?? "",
+  });
+
   const payload: Record<string, unknown> = {
     v: 1,
     a: args.active ? 1 : 0,
     u: args.destinationUrl,
     mid: args.merchantId,
-    tgt: args.target,
+    tgt,
   };
   if (args.expiresAt) payload.ea = Math.floor(new Date(args.expiresAt).getTime() / 1000);
   if (args.utm)       payload.utm = args.utm;
@@ -75,8 +66,10 @@ function buildPayload(args: {
 export type ShortlinkRow = {
   id: string;
   code: string;
-  target: unknown;
   merchantId: string;
+  landingId: string | null;
+  campaignId: string | null;
+  placeId: string | null;
   channel: string | null;
   active: boolean;
   expiresAt: string | null;
@@ -90,15 +83,16 @@ export async function onShortlinkCreated(record: ShortlinkRow) {
     const baseUrl = getBaseUrl();
     if (!baseUrl) return;
 
-    const parsedTarget = shortlinkTargetSchema.parse(record.target);
-    const destinationUrl = await resolveDestinationUrl(baseUrl, parsedTarget);
+    const destinationUrl = await resolveDestinationUrl(baseUrl, record.landingId ?? null);
     if (!destinationUrl) return;
 
     const payload = buildPayload({
       destinationUrl,
       merchantId: record.merchantId,
       active: record.active,
-      target: parsedTarget,
+      landingId: record.landingId ?? null,
+      campaignId: record.campaignId ?? null,
+      placeId: record.placeId ?? null,
       expiresAt: record.expiresAt ?? undefined,
       utm: record.utm ?? undefined,
       channel: record.channel ?? undefined,
@@ -131,15 +125,16 @@ export async function onShortlinkUpdated(previous: ShortlinkRow, patch: Partial<
       ...previous,
       ...patch,
       code: patch.code ?? previous.code,
-      target: patch.target ?? previous.target,
+      landingId: patch.landingId ?? previous.landingId,
+      campaignId: patch.campaignId ?? previous.campaignId,
+      placeId: patch.placeId ?? previous.placeId,
       channel: patch.channel ?? previous.channel,
       active: patch.active ?? previous.active,
       expiresAt: patch.expiresAt ?? previous.expiresAt,
       utm: patch.utm ?? previous.utm,
     };
 
-    const parsed = shortlinkTargetSchema.parse(effective.target);
-    const destinationUrl = await resolveDestinationUrl(baseUrl, parsed);
+    const destinationUrl = await resolveDestinationUrl(baseUrl, effective.landingId ?? null);
 
     const m = redis.multi();
 
@@ -156,14 +151,16 @@ export async function onShortlinkUpdated(previous: ShortlinkRow, patch: Partial<
     }
 
     const payload = buildPayload({
-      destinationUrl,
-      merchantId: effective.merchantId,
-      active: effective.active,
-      target: parsed,
-      expiresAt: effective.expiresAt ?? undefined,
-      utm: effective.utm ?? undefined,
-      channel: effective.channel ?? undefined,
-    });
+    destinationUrl,
+    merchantId: effective.merchantId,
+    active: effective.active,
+    landingId: effective.landingId ?? null,
+    campaignId: effective.campaignId ?? null,
+    placeId: effective.placeId ?? null,
+    expiresAt: effective.expiresAt ?? undefined,
+    utm: effective.utm ?? undefined,
+    channel: effective.channel ?? undefined,
+  });
 
     const key = codeKeyOf(effective.code);
     m.set(key, JSON.stringify(payload));

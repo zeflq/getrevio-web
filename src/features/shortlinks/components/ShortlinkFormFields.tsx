@@ -14,9 +14,7 @@ import { RHFInput, RHFCombobox } from "@/components/form/controls";
 import { useFlattenErrors } from "@/components/form/useFlattenErrors";
 import type { LiteListe } from "@/types/lists";
 import type { ShortlinkFormValues } from "../model/shortlinkSchema";
-import { usePlacesLite } from "@/features/places";
-import { useCampaignsLite } from "@/features/campaigns";
-import type { CampaignLiteItem } from "@/features/campaigns/server/application/interfaces/campaignQueryRepository";
+import { useLandingsLite } from "@/features/landings";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { RHFDateInput } from "@/components/form/controls/RHFDateInput";
@@ -47,48 +45,18 @@ export function ShortlinkFormFields({
     control,
     register,
     watch,
-    setValue,
     formState: { errors },
   } = useFormContext<ShortlinkFormValues>();
 
-  const targetValue = watch("target");
-  const [targetTypeValue, targetCid] = watch(["target.t", "target.cid"]) as [
-    "campaign" | "place" | undefined,
-    string | undefined
-  ];
-  const targetPid = watch("target.pid");
-  const targetType: "campaign" | "place" | "none" = (targetTypeValue ?? "none") as
-    | "campaign"
-    | "place"
-    | "none";
   const selectedMerchantId = merchantId ?? watch("merchantId");
 
-  // fetch places (lite) for combobox (scoped to merchant if available)
-  const { data: placesLite = [], isLoading: placesLoading } = usePlacesLite(
+  const { data: landingsLite = [], isLoading: landingsLoading } = useLandingsLite(
     selectedMerchantId ? { merchantId: selectedMerchantId } : {}
   );
-
-  const campaignsLiteQuery = useCampaignsLite(
-    selectedMerchantId ? { merchantId: selectedMerchantId } : {}
-  );
-  const campaignsLite = (campaignsLiteQuery.data ?? []) as CampaignLiteItem[];
-  const campaignsLoading = campaignsLiteQuery.isLoading;
 
   const flatKeys = useFlattenErrors(errors);
   const hasInfoError = flatKeys.some((key) => !key.startsWith("utm"));
   const hasUtmError = flatKeys.some((key) => key.startsWith("utm"));
-
-  React.useEffect(() => {
-    if (targetType !== "campaign") return;
-    if (!targetCid) return;
-
-    const matchingCampaign = campaignsLite.find((option) => option.value === targetCid);
-    const resolvedPlaceId = matchingCampaign?.placeId ?? undefined;
-
-    if (resolvedPlaceId !== targetPid) {
-      setValue("target.pid", resolvedPlaceId, { shouldDirty: false, shouldValidate: false });
-    }
-  }, [campaignsLite, setValue, targetCid, targetPid, targetType]);
 
   return (
     <Tabs defaultValue="info" className="space-y-4">
@@ -141,79 +109,19 @@ export function ShortlinkFormFields({
             />
           )}
 
-          <FormField
-            control={control}
-            name="target"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Target Type <span className="text-destructive">*</span>
-                </FormLabel>
-                <FormControl>
-                  <select
-                    className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    disabled={disabled}
-                    value={targetValue?.t ?? "none"}
-                    onChange={(event) => {
-                      const next = event.target.value as "none" | "campaign" | "place";
-                      const current = field.value;
-                      if (next === "none") {
-                        field.onChange(null);
-                        return;
-                      }
-                      if (next === "campaign") {
-                        field.onChange({
-                          t: "campaign",
-                          cid: current && current.t === "campaign" ? current.cid : "",
-                          pid: current && current.t === "campaign" ? current.pid : undefined,
-                        });
-                        return;
-                      }
-                      field.onChange({
-                        t: "place",
-                        pid: current && current.t === "place" ? current.pid : "",
-                      });
-                    }}
-                  >
-                    <option value="none">Select target…</option>
-                    <option value="campaign">Campaign</option>
-                    <option value="place">Place</option>
-                  </select>
-                </FormControl>
-                <FormMessage className="text-xs" />
-              </FormItem>
-            )}
+          <RHFCombobox<LiteListe>
+            name="landingId"
+            label="Landing"
+            options={landingsLite}
+            getOptionValue={(option) => option.value}
+            getOptionLabel={(option) => option.label}
+            placeholder={selectedMerchantId ? "Select landing" : "Select merchant first"}
+            searchPlaceholder="Search landings…"
+            requiredStar
+            disabled={disabled || !selectedMerchantId || landingsLoading}
+            loading={landingsLoading}
+            keyBy={`landing-${selectedMerchantId}`}
           />
-
-          {targetType === "campaign" && (
-            <RHFCombobox<LiteListe>
-              name="target.cid"
-              label="Campaign ID"
-              options={campaignsLite}
-              getOptionValue={(option) => option.value}
-              getOptionLabel={(option) => option.label}
-              placeholder="Select campaign"
-              requiredStar
-              disabled={disabled || !selectedMerchantId || campaignsLoading}
-              key="campaign-target"
-            />
-          )}
-          {targetType === "campaign" && <input type="hidden" {...register("target.pid")} />}
-
-          {targetType === "place" && (
-            <RHFCombobox<LiteListe>
-              name="target.pid"
-              label="Place"
-              options={placesLite}
-              getOptionValue={(option) => option.value}
-              getOptionLabel={(option) => option.label}
-              placeholder="Select place"
-              searchPlaceholder="Search places…"
-              requiredStar
-              disabled={disabled || !selectedMerchantId || placesLoading}
-              key="place-target"
-            />
-          )}
 
           <FormField
             control={control}

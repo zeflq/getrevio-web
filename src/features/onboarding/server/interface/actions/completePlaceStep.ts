@@ -12,6 +12,7 @@ import { GetPlaceUseCase } from "@/features/places/server/application/usecases/g
 import { CreateShortlinkUseCase } from "@/features/shortlinks/server/application/usecases/createShortlinkUseCase";
 import { PrismaShortlinkRepository } from "@/features/shortlinks/server/infrastructure/prisma/prismaShortlinkRepository";
 import { onShortlinkCreated } from "@/features/shortlinks/server/redis.actions";
+import prisma from "@/lib/prisma";
 
 import { placeStepSubmitSchema, type PlaceStepData } from "../../../model/placeStepSchema";
 import type { OrganizationStepData } from "../../../model/organizationStepSchema";
@@ -166,11 +167,24 @@ async function createDefaultPlaceShortlink(args: {
   userRole?: string | null;
 }): Promise<ShortlinkSummary | null> {
   try {
+    // Try to find a landing attached to this place; if none, skip creation
+    const landing = await prisma.landing.findFirst({
+      where: {
+        merchantId: args.organizationId,
+        places: { some: { id: args.placeId } },
+      },
+      select: { id: true },
+    });
+
+    if (!landing?.id) {
+      return null;
+    }
+
     const shortlink = await createShortlinkUseCase.execute({
       merchantId: args.organizationId,
       tenantId: args.organizationId,
       userRole: args.userRole ?? null,
-      target: { t: "place", pid: args.placeId },
+      landingId: landing.id,
       active: true,
     });
 
@@ -200,7 +214,9 @@ function toRedisRow(shortlink: import("@/types/domain").Shortlink | null | undef
   return {
     id: shortlink.id,
     code: shortlink.code,
-    target: shortlink.target,
+    landingId: shortlink.landingId ?? null,
+    campaignId: shortlink.campaignId ?? null,
+    placeId: shortlink.placeId ?? null,
     merchantId: shortlink.merchantId,
     channel: shortlink.channel ?? null,
     active: shortlink.active,

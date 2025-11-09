@@ -49,20 +49,16 @@ export interface Campaign {
 }
 
 // Add a union type for shortlink target
-export type ShortlinkTarget =
-  | { t: "campaign"; cid: string; pid?: string }
-  | { t: "place"; pid: string };
-
-export type ShortlinkTargetType = "campaign" | "place";
-
 export interface Shortlink {
   id: string;             // short id written to NFC/QR (base62-ish, 7–10 chars)
   code: string;           // canonical code used in public URLs / Redis
   merchantId: UUID;       // FK -> merchants.id
 
-  // New targeting model
-  target: ShortlinkTarget;
-  targetType: ShortlinkTargetType;
+  landingId?: string | null;
+  landing?: {
+    id: string;
+    name?: string | null;
+  } | null;
   campaignId?: string | null;
   placeId?: string | null;
 

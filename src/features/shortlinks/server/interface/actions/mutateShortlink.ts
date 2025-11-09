@@ -90,8 +90,8 @@ function buildRedisPatch(patch: z.output<typeof updateSchema>): ShortlinkRedisPa
   if (Object.prototype.hasOwnProperty.call(patch, "code") && patch.code !== undefined) {
     result.code = patch.code;
   }
-  if (Object.prototype.hasOwnProperty.call(patch, "target") && patch.target !== undefined) {
-    result.target = patch.target;
+  if (Object.prototype.hasOwnProperty.call(patch, "landingId") && patch.landingId !== undefined) {
+    result.landingId = patch.landingId ?? null;
   }
   if (Object.prototype.hasOwnProperty.call(patch, "channel") && patch.channel !== undefined) {
     result.channel = patch.channel ?? null;
@@ -100,9 +100,7 @@ function buildRedisPatch(patch: z.output<typeof updateSchema>): ShortlinkRedisPa
     result.active = patch.active;
   }
   if (Object.prototype.hasOwnProperty.call(patch, "expiresAt") && patch.expiresAt !== undefined) {
-    result.expiresAt = patch.expiresAt
-      ? new Date(patch.expiresAt).toISOString()
-      : null;
+    result.expiresAt = patch.expiresAt ? new Date(patch.expiresAt).toISOString() : null;
   }
   if (Object.prototype.hasOwnProperty.call(patch, "utm") && patch.utm !== undefined) {
     result.utm = patch.utm ?? null;
@@ -118,7 +116,9 @@ function toRedisRow(shortlink: import("@/types/domain").Shortlink | null | undef
   return {
     id: shortlink.id,
     code: shortlink.code,
-    target: shortlink.target,
+    landingId: shortlink.landingId ?? null,
+    campaignId: shortlink.campaignId ?? null,
+    placeId: shortlink.placeId ?? null,
     merchantId: shortlink.merchantId,
     channel: shortlink.channel ?? null,
     active: shortlink.active,

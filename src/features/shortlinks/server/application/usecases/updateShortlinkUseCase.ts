@@ -3,6 +3,7 @@ import { SUPER_ADMIN } from "@/lib/utils";
 
 import type { UpdateShortlinkCommand } from "../dto/updateShortlinkCommand";
 import type { ShortlinkMutationRepository } from "../interfaces/shortlinkRepository";
+import { resolveLandingAssociations } from "../services/resolveLandingAssociations";
 
 export class UpdateShortlinkUseCase {
   constructor(private readonly repository: ShortlinkMutationRepository) {}
@@ -16,10 +17,24 @@ export class UpdateShortlinkUseCase {
       await this.assertCodeAvailability(parsed.code, command.id, command.tenantId ?? null);
     }
 
-    const result = await this.repository.update({
-      ...parsed,
-      id: command.id,
-    }, command.tenantId ?? null);
+    let landingRefs: { campaignId: string | undefined; placeId: string | undefined } | undefined;
+    if (parsed.landingId) {
+      landingRefs = await resolveLandingAssociations(parsed.landingId);
+    }
+
+    const result = await this.repository.update(
+      {
+        ...parsed,
+        ...(landingRefs
+          ? {
+              campaignId: landingRefs.campaignId ,
+              placeId: landingRefs.placeId,
+            }
+          : {}),
+        id: command.id,
+      },
+      command.tenantId ?? null
+    );
 
     return result;
   }

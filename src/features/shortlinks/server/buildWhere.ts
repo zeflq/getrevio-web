@@ -15,6 +15,9 @@ export const buildShortlinkWhere = (
       }
     : {}),
   ...(filters.merchantId ? { merchantId: filters.merchantId } : {}),
+  ...(filters.landingId ? { landingId: filters.landingId } : {}),
+  ...(filters.placeId ? { placeId: filters.placeId } : {}),
+  ...(filters.campaignId ? { campaignId: filters.campaignId } : {}),
   ...(filters.channel ? { channel: filters.channel } : {}),
   ...(filters.status ? { active: filters.status === "active" } : {}),
   ...(tenantId ? { merchantId: tenantId } : {}),
