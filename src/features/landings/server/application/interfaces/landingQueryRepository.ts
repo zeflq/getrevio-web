@@ -1,5 +1,6 @@
 import type { LandingFilters } from "@/features/landings/model/landingSchema";
 import type { LandingListDTO } from "../../mappers";
+import type { MerchantListDTO } from "@/features/merchants/server/mappers";
 
 export type LandingQueryOptions = {
   signal?: AbortSignal;
@@ -30,4 +31,10 @@ export interface LandingQueryRepository {
     tenantId?: string;
     options?: LandingQueryOptions;
   }): Promise<{ value: string; label: string }[]>;
+
+  getLandingWithMerchant(args: {
+    id: string;
+    tenantId?: string;
+    options?: LandingQueryOptions;
+  }): Promise<{ landing: LandingListDTO | null; merchant: MerchantListDTO | null } | null>;
 }

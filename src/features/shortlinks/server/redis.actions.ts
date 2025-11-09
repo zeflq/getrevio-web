@@ -1,9 +1,10 @@
 'use server';
 
 // src/features/shortlinks/server/redis.actions.ts
-import prisma from "@/lib/prisma";
 import { getRedis } from "@/lib/redis";
 import { shortlinkTargetSchema } from "../model/shortlinkSchema";
+import { ResolveDestinationUrlUseCase } from "@/features/landings/server/application/usecases/resolveDestinationUrlUseCase";
+import { PrismaLandingQueryRepository } from "@/features/landings/server/infrastructure/prisma/prismaLandingQueryRepository";
 
 const codeKeyOf = (code: string) => `sl:${code}`;
 
@@ -21,59 +22,87 @@ function getBaseUrl(): string | null {
   return raw.replace(/\/$/, "");
 }
 
+const landingQueryRepository = new PrismaLandingQueryRepository();
+const resolveDestinationUrlUseCase = new ResolveDestinationUrlUseCase(landingQueryRepository);
+
 async function resolveDestinationUrl(baseUrl: string, landingId: string | null): Promise<string | undefined> {
   if (!landingId) return undefined;
-  const landing = await prisma.landing.findUnique({
-    where: { id: landingId },
-    select: { slug: true },
+  return resolveDestinationUrlUseCase.execute({ 
+    landingId,
+    baseUrl 
   });
-  if (!landing?.slug) return undefined;
-  return `${baseUrl}/landings/${landing.slug}`;
 }
-
-/** Payload JSON stocké sous sl:${code} */
 function buildPayload(args: {
   destinationUrl: string;
   merchantId: string;
   active: boolean;
-  landingId?: string | null;
+  landingId: string;                  // always required now
   campaignId?: string | null;
   placeId?: string | null;
   expiresAt?: string | null;
-  utm?: unknown | null;
+  utm?: Record<string, unknown> | null;
   channel?: string | null;
 }) {
-  const tgt = shortlinkTargetSchema.parse({
-    t: args.campaignId ? "campaign" : "place",
-    lid: args.landingId ?? "",
-    cid: args.campaignId ?? undefined,
-    pid: args.placeId ?? "",
-  });
+  if (!args.landingId) {
+    throw new Error("buildPayload: landingId is required.");
+  }
+
+  // Store only the type in tgt, keep IDs at top level
+  // const tgt = shortlinkTargetSchema.parse({
+  //   t: args.campaignId ? "campaign" : "place"
+  // });
 
   const payload: Record<string, unknown> = {
     v: 1,
     a: args.active ? 1 : 0,
-    u: args.destinationUrl,
+    u: args.destinationUrl,          // the shortlink's public URL (debug/analytics)
     mid: args.merchantId,
-    tgt,
+    lid: args.landingId,             // canonical redirect target
+    //tgt,                              // context type only (campaign/place)
   };
-  if (args.expiresAt) payload.ea = Math.floor(new Date(args.expiresAt).getTime() / 1000);
-  if (args.utm)       payload.utm = args.utm;
-  if (args.channel)   payload.cm = { [args.channel]: { utm: { source: args.channel } } };
+
+  // Add campaignId and placeId at top level if they exist
+  if (args.campaignId) {
+    payload.cid = args.campaignId;
+  }
+  if (args.placeId) {
+    payload.pid = args.placeId;
+  }
+
+  // Expiry (epoch seconds) if valid and in the future
+  if (args.expiresAt) {
+    const ts = Date.parse(args.expiresAt);
+    if (!Number.isNaN(ts) && ts > Date.now()) {
+      payload.ea = Math.floor(ts / 1000);
+    }
+  }
+
+  // UTM bundle (omit if empty)
+  if (args.utm && Object.keys(args.utm).length > 0) {
+    payload.utm = args.utm;
+  }
+
+  // Simple channel flag
+  if (args.channel) {
+    payload.channel = args.channel;
+  }
+
   return payload;
 }
+
+
 
 export type ShortlinkRow = {
   id: string;
   code: string;
   merchantId: string;
-  landingId: string | null;
+  landingId: string;
   campaignId: string | null;
   placeId: string | null;
   channel: string | null;
   active: boolean;
   expiresAt: string | null;
-  utm: unknown | null;
+  utm?: Record<string, unknown> | null;
 };
 
 /** CREATE -> écrit uniquement sl:${code} */
@@ -90,11 +119,11 @@ export async function onShortlinkCreated(record: ShortlinkRow) {
       destinationUrl,
       merchantId: record.merchantId,
       active: record.active,
-      landingId: record.landingId ?? null,
+      landingId: record.landingId,
       campaignId: record.campaignId ?? null,
       placeId: record.placeId ?? null,
       expiresAt: record.expiresAt ?? undefined,
-      utm: record.utm ?? undefined,
+      utm: record.utm ?? null,
       channel: record.channel ?? undefined,
     });
 

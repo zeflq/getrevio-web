@@ -13,6 +13,7 @@ export type MerchantListDTO = {
   plan: "free" | "pro" | "enterprise";
   status: "active" | "suspended";
   createdAt: string;
+  slug: string;
 };
 
 const toIso = (value: Date | string) => (value instanceof Date ? value.toISOString() : String(value));
@@ -25,6 +26,7 @@ export const mapMerchantRow = (row: MerchantSelectRow): MerchantListDTO => ({
   plan: row.plan,
   status: row.status,
   createdAt: toIso(row.createdAt),
+  slug: row.slug,
 });
 
 export const mapMerchantLite = (row: MerchantLiteRow) => ({

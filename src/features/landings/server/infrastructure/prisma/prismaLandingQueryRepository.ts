@@ -10,6 +10,7 @@ import type {
 import { buildLandingWhere } from "../../buildWhere";
 import { landingQueryPolicy } from "../../policy";
 import { mapLandingRow, type LandingListDTO } from "../../mappers";
+import { mapMerchantRow, type MerchantListDTO } from "@/features/merchants/server/mappers";
 import { landingLiteSelect, landingSelect } from "./landingSelects";
 import { LandingFilters } from "@/features/landings/model/landingSchema";
 
@@ -141,6 +142,52 @@ export class PrismaLandingQueryRepository implements LandingQueryRepository {
   private buildScopedWhere(filters: LandingFilters, tenantId?: string) {
     const where0 = buildLandingWhere(filters, tenantId);
     return landingQueryPolicy.enforceTenant(where0, tenantId, "merchantId");
+  }
+
+  async getLandingWithMerchant({
+    id,
+    tenantId,
+    options,
+  }: {
+    id: string;
+    tenantId?: string;
+    options?: LandingQueryOptions;
+  }): Promise<{ landing: LandingListDTO | null; merchant: MerchantListDTO | null } | null> {
+    const where = landingQueryPolicy.enforceTenant(
+      { id } as Prisma.LandingWhereInput,
+      tenantId,
+      "merchantId"
+    );
+
+    const row = await this.runWithTimeout(
+      this.client.findFirst({
+        where,
+        select: {
+          ...landingSelect,
+          merchant: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              locale: true,
+              defaultThemeId: true,
+              plan: true,
+              status: true,
+              createdAt: true,
+              slug: true,
+            },
+          },
+        },
+      }),
+      options
+    );
+
+    if (!row) return null;
+
+    return {
+      landing: mapLandingRow(row),
+      merchant: row.merchant ? mapMerchantRow(row.merchant) : null,
+    };
   }
 
   private runWithTimeout<T>(promise: Promise<T>, options?: LandingQueryOptions) {

@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "a": 1,
+  "u": "https://my.li/xYz12",
+  "mid": "m_123",
+  "lid": "landing_456",
+  "tgt": { "t": "campaign" },
+  "cid": "campaign_9",
+  "pid": "place_7",
+  "utm": { "source": "poster" },
+  "channel": "qr"
+}

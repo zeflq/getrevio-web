@@ -1,14 +1,9 @@
 // model/shortlinkSchema.ts
 import { z } from "zod";
 
-export const shortlinkTargetSchema = z.discriminatedUnion("t", [
-  z.object({
-    t: z.enum(["campaign", "place"]) ,
-    lid: z.string().min(1),
-    cid: z.string().min(1).optional(),
-    pid: z.string().min(1),
-  })
-]);
+export const shortlinkTargetSchema = z.object({
+  t: z.enum(["campaign", "place"])
+});
 
 const shortlinkCommonSchema = z.object({
   merchantId: z.string().min(1),

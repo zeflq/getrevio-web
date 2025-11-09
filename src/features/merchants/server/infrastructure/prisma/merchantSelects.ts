@@ -9,6 +9,7 @@ export const merchantSelect = {
   plan: true,
   status: true,
   createdAt: true,
+  slug: true,
 } satisfies Prisma.MerchantSelect;
 
 export const merchantLiteSelect = {
