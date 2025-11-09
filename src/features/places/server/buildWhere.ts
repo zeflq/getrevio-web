@@ -8,10 +8,7 @@ export const buildPlaceWhere = (
 ): Prisma.PlaceWhereInput => ({
   ...(filters.q
     ? {
-        OR: [
-          { localName: { contains: filters.q, mode: "insensitive" } },
-          { slug: { contains: filters.q, mode: "insensitive" } },
-        ],
+        localName: { contains: filters.q, mode: "insensitive" },
       }
     : {}),
   ...(filters.localName

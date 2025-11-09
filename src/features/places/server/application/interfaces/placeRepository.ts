@@ -1,18 +1,14 @@
 export type PlaceCreateRecord = {
   merchantId: string;
   localName: string;
-  slug: string;
   address?: string | null;
-  googlePlaceId?: string | null;
 };
 
 export type PlaceUpdateRecord = {
   id: string;
   merchantId?: string;
   localName?: string;
-  slug?: string;
   address?: string | null;
-  googlePlaceId?: string | null;
 };
 
 export interface PlaceRepository {

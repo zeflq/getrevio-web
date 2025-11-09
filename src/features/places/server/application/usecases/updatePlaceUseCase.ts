@@ -29,16 +29,8 @@ export class UpdatePlaceUseCase {
       normalized.localName = normalized.localName.trim();
     }
 
-    if (normalized.slug !== undefined && normalized.slug !== null) {
-      normalized.slug = normalized.slug.trim();
-    }
-
     if (normalized.address !== undefined && normalized.address !== null) {
       normalized.address = normalized.address.trim();
-    }
-
-    if (normalized.googlePlaceId !== undefined && normalized.googlePlaceId !== null) {
-      normalized.googlePlaceId = normalized.googlePlaceId.trim();
     }
 
     return normalized;

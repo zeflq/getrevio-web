@@ -1,10 +1,8 @@
 import { z } from "zod";
 export const placeCreateSchema = z.object({
   localName: z.string().min(1, "Local name is required"),
-  slug: z.string().min(1, "Slug is required"),
   address: z.string().optional(),
   merchantId: z.string().min(1, "Merchant ID is required"),
-  googlePlaceId: z.string().optional(),
 });
 
 export const placeUpdateSchema = placeCreateSchema

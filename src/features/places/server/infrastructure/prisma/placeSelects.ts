@@ -4,9 +4,7 @@ export const placeSelect = {
   id: true,
   merchantId: true,
   localName: true,
-  slug: true,
   address: true,
-  googlePlaceId: true,
   createdAt: true,
   updatedAt: true,
 } satisfies Prisma.PlaceSelect;

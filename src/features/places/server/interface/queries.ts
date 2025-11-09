@@ -6,7 +6,6 @@ import { createUserContext } from "@/server/core/utils/createUserContext";
 import { ListPlacesUseCase } from "../application/usecases/listPlacesUseCase";
 import { GetPlaceUseCase } from "../application/usecases/getPlaceUseCase";
 import { ListPlacesLiteUseCase } from "../application/usecases/listPlacesLiteUseCase";
-import { CheckPlaceSlugUseCase } from "../application/usecases/checkPlaceSlugUseCase";
 import type { PlaceQueryOptions } from "../application/interfaces/placeQueryRepository";
 import { PrismaPlaceQueryRepository } from "../infrastructure/prisma/prismaPlaceQueryRepository";
 import type { PlaceFilters } from "../../model/placeSchema";
@@ -16,7 +15,6 @@ const repository = new PrismaPlaceQueryRepository();
 const listUseCase = new ListPlacesUseCase(repository);
 const getUseCase = new GetPlaceUseCase(repository);
 const listLiteUseCase = new ListPlacesLiteUseCase(repository);
-const checkSlugUseCase = new CheckPlaceSlugUseCase(repository);
 
 type MaybeTenant = string | undefined;
 type Options = PlaceQueryOptions | undefined;
@@ -85,28 +83,6 @@ export async function listPlacesLiteServer(
   return listLiteUseCase.execute({ filters, tenantId, options });
 }
 
-export async function checkPlaceSlugServer(args: { slug: string; tenantId?: string | null }) {
-  const session = await getServerSession();
-  if (!session?.user) {
-    throw new ActionError(401, "UNAUTHORIZED");
-  }
-
-  const { tenantId } = resolveTenantScope(
-    createUserContext(session),
-    {},
-    { tenantIdOverride: args.tenantId ?? undefined }
-  );
-
-  if (!tenantId) {
-    throw new ActionError(400, "TENANT_REQUIRED");
-  }
-
-  return checkSlugUseCase.execute({
-    slug: args.slug,
-    tenantId,
-  });
-}
-
 export async function getTenantFirstPlaceServer(
   tenantIdOverride?: string | null,
   options?: Options
@@ -144,8 +120,6 @@ export async function getTenantFirstPlaceServer(
     },
     options,
   });
-console.log('listResult')
-console.log(listResult)
   const first = listResult.data.at(0);
   if (!first) {
     return null;

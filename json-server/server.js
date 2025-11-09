@@ -31,16 +31,6 @@ server.get('/merchants/:id/stats', (req, res) => {
   return res.json({ places, campaigns, shortlinks });
 });
 
-// Slug check for places
-server.get('/places/slug-check', (req, res) => {
-  const url = new URL(req.originalUrl, 'http://localhost');
-  const slug = url.searchParams.get('slug');
-  if (!slug) return res.json({ exists: false });
-  const db = router.db;
-  const exists = !!db.get('places').find({ slug }).value();
-  return res.json({ exists });
-});
-
 // Set default theme for a merchant
 server.post('/merchants/:id/themes/:themeId/default', (req, res) => {
   const { id, themeId } = req.params;

@@ -39,7 +39,6 @@ function toFormValues(data: PlaceStepData | null | undefined): PlaceStepFormInpu
   return {
     localName: data?.localName ?? "",
     address: data?.address ?? "",
-    googlePlaceId: data?.googlePlaceId ?? "",
   };
 }
 
@@ -112,11 +111,6 @@ export function PlaceStep({ organizationId, defaultValues, onComplete }: Props) 
             placeholder="123 Main St, City"
           />
 
-          <RHFInput
-            name="googlePlaceId"
-            label="Google Place ID"
-            placeholder="Optional ID for Google Places sync"
-          />
         </div>
 
         {generalError ? (
@@ -143,7 +137,6 @@ function normalizeFormValues(values: PlaceStepFormInput) {
   return {
     localName: values.localName.trim(),
     address: trim(values.address),
-    googlePlaceId: trim(values.googlePlaceId),
   };
 }
 

@@ -15,17 +15,13 @@ export class CreatePlaceUseCase {
     const data: PlaceCreateInput = {
       ...payload,
       localName: payload.localName.trim(),
-      slug: payload.slug.trim(),
       address: payload.address?.trim() ?? undefined,
-      googlePlaceId: payload.googlePlaceId?.trim() ?? undefined,
     };
 
     const record: PlaceCreateRecord = {
       merchantId: data.merchantId,
       localName: data.localName,
-      slug: data.slug,
       address: data.address ?? null,
-      googlePlaceId: data.googlePlaceId ?? null,
     };
 
     return this.repository.create(record);

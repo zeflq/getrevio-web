@@ -6,8 +6,7 @@
   },
   "places": {
     "base": "/places",
-    "byId": "/places/:id",
-    "checkSlug": "/places/slug-check"
+    "byId": "/places/:id"
   },
   "campaigns": {
     "base": "/campaigns",

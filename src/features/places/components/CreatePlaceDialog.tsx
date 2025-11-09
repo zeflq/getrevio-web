@@ -8,8 +8,6 @@ import { DialogForm } from "@/components/form/DialogForm";
 import { placeCreateSchema, type PlaceCreateInput } from "../model/placeSchema";
 import { useCreatePlace } from "../hooks/usePlaceCrud";
 import type { LiteListe } from "@/types/lists";
-import { usePlaceSlugCheck } from "../hooks/usePlaceSlugCheck";
-import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { PlaceFormFields } from "./PlaceFormFields";
 
 export interface CreatePlaceDialogProps {
@@ -40,14 +38,12 @@ export function CreatePlaceDialog({
     mode: "onChange",
     defaultValues: {
       localName: "",
-      slug: "",
       address: "",
       merchantId: merchantId ?? "",
-      googlePlaceId: "",
     },
   });
 
-  const { reset, setValue, watch } = methods;
+  const { reset, setValue } = methods;
 
   React.useEffect(() => {
     if (merchantId) {
@@ -58,10 +54,8 @@ export function CreatePlaceDialog({
   const resetForm = () =>
     reset({
       localName: "",
-      slug: "",
       address: "",
       merchantId: merchantId ?? "",
-      googlePlaceId: "",
     });
 
   const onSubmit = (data: PlaceCreateInput) => {
@@ -69,42 +63,10 @@ export function CreatePlaceDialog({
   };
 
   // Slug availability (debounced)
-  const slug = watch("slug");
-  const [debouncedSlug, setDebouncedSlug] = React.useState("");
-  React.useEffect(() => {
-    const t = setTimeout(() => setDebouncedSlug(slug ?? ""), 300);
-    return () => clearTimeout(t);
-  }, [slug]);
-
-  const { data: slugCheck, isFetching: slugChecking } = usePlaceSlugCheck(
-    debouncedSlug || undefined
-  );
-  const slugExists = !!slugCheck?.exists;
-
-  const slugSuffix = slugChecking ? (
-    <Loader2 className="h-4 w-4 text-muted-foreground animate-spin" aria-hidden="true" />
-  ) : debouncedSlug ? (
-    slugExists ? (
-      <AlertCircle className="h-4 w-4 text-destructive" aria-hidden="true" />
-    ) : (
-      <CheckCircle2 className="h-4 w-4 text-emerald-600" aria-hidden="true" />
-    )
-  ) : null;
-
-  const slugDescription =
-    debouncedSlug && (slugExists ? "Slug already taken" : "Slug is available");
-
   // Provide children to the DialogForm via the Slot mechanism
   type MethodsWithSlot = typeof methods & { _slot?: React.ReactNode };
   (methods as MethodsWithSlot)._slot = (
-    <PlaceFormFields
-      mode="create"
-      disabled={isExecuting}
-      merchantId={merchantId}
-      merchantsLite={merchantsLite}
-      slugSuffix={slugSuffix}
-      slugDescription={slugDescription}
-    />
+    <PlaceFormFields disabled={isExecuting} merchantId={merchantId} merchantsLite={merchantsLite} />
   );
 
   return (

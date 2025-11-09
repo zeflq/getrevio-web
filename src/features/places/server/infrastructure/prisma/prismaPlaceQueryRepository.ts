@@ -103,28 +103,6 @@ export class PrismaPlaceQueryRepository implements PlaceQueryRepository {
     return rows.map((row) => ({ value: row.id, label: row.localName ?? row.id }));
   }
 
-  async existsWithSlug({ slug, tenantId, options }: {
-    slug: string;
-    tenantId?: string;
-    options?: PlaceQueryOptions;
-  }): Promise<boolean> {
-    const where = placeQueryPolicy.enforceTenant(
-      { slug } as Prisma.PlaceWhereInput,
-      tenantId,
-      "merchantId"
-    );
-
-    const row = await this.runWithTimeout(
-      this.client.findFirst({
-        where,
-        select: { id: true },
-      }),
-      options
-    );
-
-    return Boolean(row);
-  }
-
   private buildScopedWhere(filters: PlaceFilters, tenantId?: string) {
     const where0 = buildPlaceWhere(filters, tenantId);
     return placeQueryPolicy.enforceTenant(where0, tenantId, "merchantId");

@@ -2,13 +2,7 @@ import { z } from "zod";
 
 import { placeCreateSchema } from "@/features/places/model/placeSchema";
 
-const basePlaceSchema = placeCreateSchema
-  .omit({ merchantId: true, slug: true })
-  .extend({
-    localName: placeCreateSchema.shape.localName,
-    address: placeCreateSchema.shape.address.optional(),
-    googlePlaceId: placeCreateSchema.shape.googlePlaceId.optional(),
-  });
+const basePlaceSchema = placeCreateSchema.omit({ merchantId: true });
 
 export const placeStepFormSchema = basePlaceSchema;
 
@@ -22,5 +16,4 @@ export type PlaceStepFormData = z.output<typeof placeStepFormSchema>;
 
 export type PlaceStepData = PlaceStepFormData & {
   id?: string;
-  googlePlaceId?: string;
 };

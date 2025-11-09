@@ -51,7 +51,6 @@ export default async function MerchantLayout({ children }: { children: React.Rea
           id: firstPlace.id,
           localName: firstPlace.localName ?? "",
           address: firstPlace.address ?? undefined,
-          googlePlaceId: firstPlace.googlePlaceId ?? undefined,
         }
       : null;
   }

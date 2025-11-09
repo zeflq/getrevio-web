@@ -1,13 +1,4 @@
 {
-  "place": {
-    "form": {},
-    "message": {
-      "slugValid": "Slug valide."
-    },
-    "error": {
-      "slugTaken": "Ce slug est déjà pris. Veuillez en choisir un autre."
-    }
-  },
   "common": {
     "loading": "Chargement...",
     "cancel": "Annuler",

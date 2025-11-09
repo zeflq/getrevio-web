@@ -21,7 +21,7 @@ function getBaseUrl(): string | null {
   return raw.replace(/\/$/, "");
 }
 
-/** Calcule l’URL finale UNIQUEMENT à partir du place.slug (pas d’alias stocké). */
+/** Calcule l’URL finale à partir de l’identifiant du lieu (slug deprecated). */
 async function resolveDestinationUrl(
   baseUrl: string,
   parsedTarget: ReturnType<typeof shortlinkTargetSchema.parse>
@@ -29,21 +29,21 @@ async function resolveDestinationUrl(
   if (parsedTarget.t === "place") {
     const place = await prisma.place.findUnique({
       where: { id: parsedTarget.pid },
-      select: { slug: true },
+      select: { id: true },
     });
-    if (!place?.slug) return undefined;
-    return `${baseUrl}/${place.slug}`;
+    if (!place?.id) return undefined;
+    return `${baseUrl}/places/${place.id}`;
   }
 
   if (parsedTarget.t === "campaign") {
     const campaign = await prisma.campaign.findUnique({
       where: { id: parsedTarget.cid },
-      select: { place: { select: { slug: true } } },
+      select: { place: { select: { id: true } } },
     });
-    const placeSlug = campaign?.place?.slug;
-    if (!placeSlug) return undefined;
+    const placeId = campaign?.place?.id;
+    if (!placeId) return undefined;
     const params = new URLSearchParams({ c: parsedTarget.cid }).toString();
-    return `${baseUrl}/${placeSlug}${params ? `?${params}` : ""}`;
+    return `${baseUrl}/places/${placeId}${params ? `?${params}` : ""}`;
   }
 
   return undefined;

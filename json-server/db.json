@@ -48,22 +48,18 @@
   "places": [
     {
       "id": "pl_bella_1",
-      "slug": "bella-pizza",
       "merchantId": "mer_1",
       "localName": "Bella Pizza",
       "address": "12 Rue Exemple, Paris",
-      "googlePlaceId": "1Zza",
       "googleUrl": "https://search.google.com/local/writereview?placeid=XYZ",
       "tripadvisorUrl": "https://www.tripadvisor.com/Restaurant_Review-g12345-Bella_Pizza.html",
       "createdAt": "2025-09-20T10:05:00Z"
     },
     {
       "id": "pl_lum_1",
-      "slug": "pl-lum-10",
       "merchantId": "mer_2",
       "localName": "PL Lumière 10",
       "address": "",
-      "googlePlaceId": "",
       "googleUrl": "https://search.google.com/local/writereview?placeid=ABC",
       "createdAt": "2025-09-21T09:05:00Z",
       "tripadvisorUrl": ""

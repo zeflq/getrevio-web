@@ -25,22 +25,9 @@ export function placeColumns(opts: {
       ),
     },
     {
-      accessorKey: "slug",
-      header: "Slug",
-      enableSorting: true,
-      cell: ({ row }) => row.original.slug || "—",
-    },
-    {
       accessorKey: "address",
       header: "Address",
       cell: ({ row }) => row.original.address || "—",
-    },
-    {
-      accessorKey: "googlePlaceId",
-      header: "Google Place ID",
-      enableSorting: true,
-      enableColumnFilter: true,
-      cell: ({ row }) => row.original.googlePlaceId || "—",
     },
     {
       accessorKey: "createdAt",

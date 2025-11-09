@@ -16,9 +16,7 @@ export class PrismaPlaceRepository implements PlaceRepository {
       data: {
         merchantId: data.merchantId,
         localName: data.localName,
-        slug: data.slug,
         address: data.address ?? null,
-        googlePlaceId: data.googlePlaceId ?? null,
       },
     });
 
@@ -34,16 +32,8 @@ export class PrismaPlaceRepository implements PlaceRepository {
       patch.localName = data.localName;
     }
 
-    if (data.slug !== undefined) {
-      patch.slug = data.slug;
-    }
-
     if (data.address !== undefined) {
       patch.address = data.address;
-    }
-
-    if (data.googlePlaceId !== undefined) {
-      patch.googlePlaceId = data.googlePlaceId;
     }
 
     if (data.merchantId !== undefined) {

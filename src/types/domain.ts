@@ -30,10 +30,7 @@ export interface Place {
   id: string;
   merchantId: string;
   localName: string;
-  slug: string;                      // globally unique
   address?: string;
-  // optional platform reference (kept for future integrations)
-  googlePlaceId?: string;
   // shortlink integration
   createdAt: string;
   updatedAt: string;

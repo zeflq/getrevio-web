@@ -1,7 +1,5 @@
 "use server";
 
-import { randomUUID } from "node:crypto";
-
 import { withTenantGuard } from "@/lib/actionUser";
 import { auth } from "@/lib/auth";
 import { ActionError } from "@/lib/action-error";
@@ -60,23 +58,18 @@ export const completePlaceStepAction = withTenantGuard("organizationId")
           merchantId: organizationId,
           localName: normalized.localName,
           address: normalized.address,
-          googlePlaceId: normalized.googlePlaceId,
         });
       } catch (error) {
         handlePlaceError(error);
       }
     } else {
-      const slug = generateRandomSlug();
-
       try {
         placeId = await createUseCase.execute({
           merchantId: organizationId,
           tenantId: organizationId,
           userRole,
           localName: normalized.localName,
-          slug,
           address: normalized.address,
-          googlePlaceId: normalized.googlePlaceId,
         });
       } catch (error) {
         handlePlaceError(error);
@@ -138,7 +131,6 @@ function normalizePlaceInput(
   input: {
     localName: string;
     address?: string | null;
-    googlePlaceId?: string | null;
   }
 ) {
   const trimOrUndefined = (value?: string | null) => {
@@ -152,7 +144,6 @@ function normalizePlaceInput(
   return {
     localName: input.localName.trim(),
     address: trimOrUndefined(input.address),
-    googlePlaceId: trimOrUndefined(input.googlePlaceId),
   };
 }
 
@@ -160,20 +151,13 @@ function mapPlaceToStepData(place: {
   id: string;
   merchantId: string;
   localName: string;
-  slug: string;
   address?: string | null;
-  googlePlaceId?: string | null;
 }): PlaceStepData {
   return {
     id: place.id,
     localName: place.localName,
     address: place.address ?? undefined,
-    googlePlaceId: place.googlePlaceId ?? undefined,
   };
-}
-
-function generateRandomSlug(): string {
-  return randomUUID().replace(/-/g, "").slice(0, 10);
 }
 
 async function createDefaultPlaceShortlink(args: {
@@ -233,10 +217,6 @@ function handlePlaceError(error: unknown): never {
 
   if (error instanceof Error) {
     const message = error.message.toLowerCase();
-    if (message.includes("unique") && message.includes("slug")) {
-      throw new ActionError(409, "SLUG_TAKEN");
-    }
-
     throw new ActionError(500, error.message || "UNKNOWN_ERROR");
   }
 

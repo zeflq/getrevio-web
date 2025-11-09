@@ -45,10 +45,8 @@ export function EditPlaceSheet({
     mode: "onChange",
     defaultValues: {
       localName: "",
-      slug: "",
       address: "",
       merchantId: merchantId ?? "",
-      googlePlaceId: "",
     },
   });
 
@@ -60,8 +58,6 @@ export function EditPlaceSheet({
       localName: place.localName ?? "",
       address: place.address ?? "",
       merchantId: merchantId ?? place.merchantId ?? "",
-      googlePlaceId: place.googlePlaceId ?? "",
-      slug: place.slug, // read-only field still needs value in form state
     });
   }, [place, merchantId, reset]);
 
@@ -76,8 +72,6 @@ export function EditPlaceSheet({
       localName: place?.localName ?? "",
       address: place?.address ?? "",
       merchantId: merchantId ?? place?.merchantId ?? "",
-      googlePlaceId: "",
-      slug: place?.slug,
     });
 
   const onSubmit = (data: PlaceUpdateInput) => {
@@ -104,13 +98,7 @@ export function EditPlaceSheet({
       isReady={isReady}
       onCancel={resetForm}
     >
-      <PlaceFormFields
-        mode="edit"
-        disabled={isBusy}
-        merchantId={merchantId}
-        merchantsLite={merchantsLite}
-        existingSlug={place?.slug}
-      />
+      <PlaceFormFields disabled={isBusy} merchantId={merchantId} merchantsLite={merchantsLite} />
     </SheetForm>
   );
 }
