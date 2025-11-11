@@ -23,5 +23,5 @@ export interface PlaceQueryRepository {
     filters: PlaceFilters;
     tenantId?: string;
     options?: PlaceQueryOptions;
-  }): Promise<{ value: string; label: string }[]>;
+  }): Promise<{ value: string; label: string; googlePlaceId?: string | null }[]>;
 }

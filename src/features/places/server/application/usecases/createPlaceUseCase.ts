@@ -22,6 +22,7 @@ export class CreatePlaceUseCase {
       merchantId: data.merchantId,
       localName: data.localName,
       address: data.address ?? null,
+      googlePlaceId: data.googlePlaceId ?? null,
     };
 
     return this.repository.create(record);

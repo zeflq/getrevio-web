@@ -31,6 +31,7 @@ export interface Place {
   merchantId: string;
   localName: string;
   address?: string;
+  googlePlaceId?: string | null;
   // shortlink integration
   createdAt: string;
   updatedAt: string;

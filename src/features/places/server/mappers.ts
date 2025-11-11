@@ -10,6 +10,7 @@ export type PlaceListDTO = {
   merchantId: string;
   localName: string;
   address?: string | null;
+  googlePlaceId?: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -24,6 +25,7 @@ export const mapPlaceRow = (row: PlaceSelectRow): PlaceListDTO => ({
   merchantId: row.merchantId,
   localName: row.localName,
   address: row.address ?? null,
+  googlePlaceId: row.googlePlaceId ?? null,
   createdAt: toIsoString(row.createdAt),
   updatedAt: toIsoString(row.updatedAt),
 });

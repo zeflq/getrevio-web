@@ -19,7 +19,7 @@ export const auth = betterAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
             scope: ["https://www.googleapis.com/auth/business.manage"],
             accessType: "offline",        // important: pour avoir refresh_token
-            prompt: "consent",            // important: pour forcer refresh_token
+            prompt: "select_account consent",            // important: pour forcer refresh_token
         },
     }, 
     user:{

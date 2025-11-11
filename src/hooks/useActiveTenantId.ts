@@ -6,12 +6,7 @@ export function useActiveTenantId() {
   const { data: session } = useSession();
 
   return React.useMemo(() => {
-    const raw =
-      (session as any)?.session?.activeOrganizationId ??
-      (session as any)?.user?.activeOrganizationId ??
-      (session as any)?.user?.tenantId ??
-      undefined;
-
+    const raw = session?.session.activeOrganizationId ?? null;
     return typeof raw === "string" && raw.length > 0 ? raw : undefined;
   }, [session]);
 }

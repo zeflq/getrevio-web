@@ -11,6 +11,8 @@ export class ListPlacesLiteUseCase {
     tenantId?: string | null;
     options?: PlaceQueryOptions;
   }) {
+    console.log('filterssssssss')
+    console.log(args)
     const parsed = placeFiltersSchema.parse(args.filters);
     const filters = placeQueryPolicy.validateAndClamp(parsed);
 

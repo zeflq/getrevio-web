@@ -2,6 +2,7 @@ export type PlaceCreateRecord = {
   merchantId: string;
   localName: string;
   address?: string | null;
+  googlePlaceId?: string | null;
 };
 
 export type PlaceUpdateRecord = {
@@ -9,6 +10,7 @@ export type PlaceUpdateRecord = {
   merchantId?: string;
   localName?: string;
   address?: string | null;
+  googlePlaceId?: string | null;
 };
 
 export interface PlaceRepository {

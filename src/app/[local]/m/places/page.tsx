@@ -17,6 +17,7 @@ import { DataTableResponsive } from "@/shared/ui/data-table/DataTableResponsive"
 import { DataTableToolbarBase } from "@/shared/ui/data-table/DataTableToolbarBase";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useActiveTenantId } from "@/hooks/useActiveTenantId";
+import { GooglePlacesTable } from "@/features/google-places/components/GooglePlacesTable";
 
 export default function MerchantPlacesPage() {
   const isMobile = useIsMobile();
@@ -42,7 +43,8 @@ export default function MerchantPlacesPage() {
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
   const [editSheetOpen, setEditSheetOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<string | undefined>(undefined);
+  const [editId, setEditId] = React.useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = React.useState<{ id: string; localName?: string } | null>(null);
 
   const q = getFilterValue(columnFilters, "localName");
   const sortId = (sorting[0]?.id as "localName" | "createdAt" | undefined) ?? "createdAt";
@@ -63,11 +65,12 @@ export default function MerchantPlacesPage() {
 
   const columns = placeColumns({
     onEdit: (id) => {
-      setSelectedId(id);
+      setEditId(id);
       setEditSheetOpen(true);
     },
     onDelete: (id) => {
-      setSelectedId(id);
+      const row = rows.find((row) => row.id === id);
+      setDeleteTarget(row ? { id: row.id, localName: row.localName } : { id });
       setDeleteDialogOpen(true);
     },
   });
@@ -129,7 +132,7 @@ export default function MerchantPlacesPage() {
           cardExcludeColumnIds={["actions"]}
           metaColsPerRow={2}
           onRowClick={(id) => {
-            setSelectedId(id);
+            setEditId(id);
             setEditSheetOpen(true);
           }}
         />
@@ -141,22 +144,25 @@ export default function MerchantPlacesPage() {
         merchantId={activeTenantId}
       />
 
-      {selectedId && (
+      {editId && (
         <EditPlaceSheet
-          id={selectedId}
-          open={editSheetOpen}
-          onOpenChange={setEditSheetOpen}
+          id={editId}
+          open={!!editSheetOpen}
           merchantId={activeTenantId}
+          onOpenChange={(open) => !open && setEditId(null)}
+          onSuccess={() => setEditId(null)}
         />
       )}
 
-      {selectedId && (
+      {deleteTarget && deleteTarget.id && (
         <DeletePlaceDialog
-          id={selectedId}
-          open={deleteDialogOpen}
-          onOpenChange={setDeleteDialogOpen}
+          id={deleteTarget.id}
+          localName={deleteTarget.localName}
+          open={!!deleteDialogOpen}
+          onOpenChange={(open) => !open && setDeleteTarget(null)}
         />
       )}
+      <GooglePlacesTable/>
     </div>
   );
 }

@@ -6,6 +6,10 @@ export const buildPlaceWhere = (
   filters: PlaceFilters,
   tenantId?: string
 ): Prisma.PlaceWhereInput => ({
+  ...(filters.hasGooglePlaceId === true
+    ? { googlePlaceId: { not: null } }
+    : {}),
+  ...(filters.hasGooglePlaceId === false ? { googlePlaceId: null } : {}),
   ...(filters.q
     ? {
         localName: { contains: filters.q, mode: "insensitive" },

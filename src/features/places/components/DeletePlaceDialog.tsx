@@ -2,18 +2,19 @@
 
 import * as React from 'react';
 import { ConfirmByNameDialog } from '@/components/ui/confirmByNameDialog';
-import { usePlaceItem, useDeletePlace } from '../hooks/usePlaceCrud';
+import { useDeletePlace } from '../hooks/usePlaceCrud';
 
 export interface DeletePlaceDialogProps {
   id: string;
+  localName?: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function DeletePlaceDialog({ id, open, onOpenChange }: DeletePlaceDialogProps) {
-  const { data: place } = usePlaceItem(id);
+export function DeletePlaceDialog({ id, localName, open, onOpenChange }: DeletePlaceDialogProps) {
   const { execute, isExecuting } = useDeletePlace<{ id: string }, { ok?: boolean }>({
     onSuccess: () => onOpenChange(false),
+    extraInvalidateKeys:[["googlePlaces"]]
   });
 
   return (
@@ -22,7 +23,7 @@ export function DeletePlaceDialog({ id, open, onOpenChange }: DeletePlaceDialogP
       onOpenChange={onOpenChange}
       title="Delete Place"
       description="This action cannot be undone. This will permanently delete the place and related data."
-      expectedName={place?.localName}
+      expectedName={localName}
       confirmPromptLabel="Type"
       inputPlaceholder="Enter place name"
       confirmLabel="Delete Place"

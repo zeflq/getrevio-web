@@ -4,7 +4,8 @@ import { withApiAuth } from "@/server/core/apiGuards";
 export const dynamic = "force-dynamic";
 
 export const GET = withApiAuth<{ id: string }>(async ({ params }) => {
-  const place = await getPlaceServer(params.id);
+  const { id } = await params;
+  const place = await getPlaceServer(id);
   if (!place) {
     return new Response("Not Found", { status: 404 });
   }

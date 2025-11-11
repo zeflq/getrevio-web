@@ -149,5 +149,11 @@
         "none": "—"
       }
     }
+  },
+  "googlePlaces": {
+    "description": "Voici vos emplacements Google Business. Associez chaque lieu non lié à un lieu interne existant.",
+    "linkDialog": {
+      "noUnlinkedPlaces": "Aucun lieu interne n’est disponible sans liaison Google."
+    }
   }
 }

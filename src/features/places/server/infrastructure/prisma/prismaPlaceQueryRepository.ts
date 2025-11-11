@@ -7,11 +7,11 @@ import type {
   PlaceQueryRepository,
   PlaceQueryOptions,
 } from "../../application/interfaces/placeQueryRepository";
-import type { PlaceFilters } from "../../model/placeSchema";
 import { buildPlaceWhere } from "../../buildWhere";
 import { placeQueryPolicy } from "../../policy";
 import { mapPlaceRow, type PlaceListDTO } from "../../mappers";
 import { placeLiteSelect, placeSelect } from "./placeSelects";
+import { PlaceFilters } from "@/features/places/model/placeSchema";
 
 const placeSortPolicy = makeSortPolicy<PlaceFilters>({
   allowed: ["localName", "createdAt"],
@@ -100,7 +100,11 @@ export class PrismaPlaceQueryRepository implements PlaceQueryRepository {
       options
     );
 
-    return rows.map((row) => ({ value: row.id, label: row.localName ?? row.id }));
+    return rows.map((row) => ({
+      value: row.id,
+      label: row.localName ?? row.id,
+      googlePlaceId: row.googlePlaceId ?? null,
+    }));
   }
 
   private buildScopedWhere(filters: PlaceFilters, tenantId?: string) {

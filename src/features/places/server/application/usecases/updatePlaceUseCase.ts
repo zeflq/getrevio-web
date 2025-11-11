@@ -33,6 +33,15 @@ export class UpdatePlaceUseCase {
       normalized.address = normalized.address.trim();
     }
 
+    if (normalized.googlePlaceId !== undefined) {
+      if (normalized.googlePlaceId !== null) {
+        normalized.googlePlaceId = normalized.googlePlaceId.trim();
+        if (normalized.googlePlaceId === "") {
+          normalized.googlePlaceId = null;
+        }
+      }
+    }
+
     return normalized;
   }
 

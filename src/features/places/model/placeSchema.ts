@@ -1,7 +1,10 @@
 import { z } from "zod";
+const googlePlaceIdSchema = z.union([z.string().trim().min(1), z.literal(null)]);
+
 export const placeCreateSchema = z.object({
   localName: z.string().min(1, "Local name is required"),
   address: z.string().optional(),
+  googlePlaceId: googlePlaceIdSchema.optional(),
   merchantId: z.string().min(1, "Merchant ID is required"),
 });
 
@@ -16,6 +19,14 @@ export const placeFiltersSchema = z
     q: z.string().optional(),
     localName: z.string().optional(),
     merchantId: z.string().optional(),
+    hasGooglePlaceId: z
+      .preprocess((val) => {
+        if (typeof val === "string") {
+          if (val.toLowerCase() === "true") return true;
+          if (val.toLowerCase() === "false") return false;
+        }
+        return val;
+      }, z.boolean().optional()),
     _page: z.coerce.number().int().min(1).optional(),
     _limit: z.coerce.number().int().min(1).max(100).optional(),
     _sort: z.enum(["localName", "createdAt"]).optional(),
@@ -25,6 +36,7 @@ export const placeFiltersSchema = z
     q: params.q,
     localName: params.localName,
     merchantId: params.merchantId,
+    hasGooglePlaceId: params.hasGooglePlaceId,
     page: params._page ?? 1,
     pageSize: params._limit ?? 10,
     sort: params._sort ?? ("createdAt" as const),

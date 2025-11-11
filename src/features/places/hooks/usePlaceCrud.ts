@@ -6,7 +6,7 @@ import {
 import { createCrudBridge, type ListEnvelope } from "@/hooks/createCrudBridge";
 import { http } from "@/shared/lib/http";
 import type { LiteListe } from "@/types/lists";
-import type { PlaceListItem } from "../server/queries";
+import { PlaceListItem } from "../server/interface/queries";
 
 const buildQuery = (params: Record<string, unknown>) => {
   const search = new URLSearchParams();

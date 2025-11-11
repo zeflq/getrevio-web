@@ -151,5 +151,11 @@
         "none": "—"
       }
     }
+  },
+  "googlePlaces": {
+    "description": "These are your Google Business locations. Link any unlinked place to associate it with an internal place.",
+    "linkDialog": {
+      "noUnlinkedPlaces": "There are no internal places without a Google linkage."
+    }
   }
 }

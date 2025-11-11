@@ -37,6 +37,7 @@ export default function PlacesPage() {
   const [editSheetOpen, setEditSheetOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState<string | undefined>(undefined);
+  const [selectedTarget, setSelectedTarget] = React.useState<{ id: string; localName?: string } | null>(null);
 
   // --- derived filters
   const q = getFilterValue(columnFilters, "localName");
@@ -62,6 +63,8 @@ export default function PlacesPage() {
       setEditSheetOpen(true);
     },
     onDelete: (id) => {
+      const row = rows.find((row) => row.id === id);
+      setSelectedTarget(row ? { id: row.id, localName: row.localName } : { id });
       setSelectedId(id);
       setDeleteDialogOpen(true);
     },
@@ -147,8 +150,13 @@ export default function PlacesPage() {
           merchantsLite={merchantsLiteQuery.data ?? []}
         />
       )}
-      {selectedId && (
-        <DeletePlaceDialog id={selectedId} open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen} />
+      {selectedId && selectedTarget && (
+        <DeletePlaceDialog
+          id={selectedId}
+          localName={selectedTarget.localName}
+          open={deleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+        />
       )}
     </div>
   );
