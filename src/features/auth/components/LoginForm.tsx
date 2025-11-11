@@ -4,8 +4,6 @@ import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { useRouter } from "next/navigation"
-
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -17,9 +15,10 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Link } from "@/i18n/navigation"
-import { authClient, useSession } from "@/lib/auth-client"
+import { authClient } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
 import { AuthFormDivider } from "./FormDivider"
+import { GoogleSignInButton } from "./GoogleSignInButton"
 
 const REMEMBER_ME_KEY = "auth.remember-email"
 
@@ -34,8 +33,6 @@ export type LoginFormProps = React.ComponentProps<"form">
 
 export function LoginForm({ className, ...props }: LoginFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
-  const { data: session, isPending } = useSession()
-  const router = useRouter();
 
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -154,6 +151,8 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
         </div>
 
         <AuthFormDivider />
+
+        <GoogleSignInButton />
 
         <p className="text-muted-foreground text-center text-sm">
           Don&apos;t have an account?{" "}

@@ -4,7 +4,6 @@ import * as React from "react";
 import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
 
-import { useSession } from "@/lib/auth-client";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useDataTableController } from "@/shared/ui/data-table/useDataTableController";
 import { DataTableResponsive } from "@/shared/ui/data-table/DataTableResponsive";

@@ -1,8 +1,9 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+
 // If your Prisma file is located elsewhere, you can change the path
 import { PrismaClient } from "@prisma/client";
-import { organization } from "better-auth/plugins"
+import { customSession, organization } from "better-auth/plugins"
 
 const prisma = new PrismaClient();
 export const auth = betterAuth({
@@ -12,6 +13,15 @@ export const auth = betterAuth({
     emailAndPassword: { 
         enabled: true, 
     },
+    socialProviders: {
+        google: {
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            scope: ["https://www.googleapis.com/auth/business.manage"],
+            accessType: "offline",        // important: pour avoir refresh_token
+            prompt: "consent",            // important: pour forcer refresh_token
+        },
+    }, 
     user:{
         additionalFields: {
             globalRole: { 
@@ -60,15 +70,23 @@ export const auth = betterAuth({
                 },
             }
         ),
-        // customSession(async ({ user, session }) => {
-        //     return {
-        //         user: {
-        //             ...user,
-        //             x: "x",
-        //         },
-        //         session
-        //     };
-        // }),
+        customSession(async ({ user, session }) => {
+            // Fetch the user's account to determine the provider
+            const account = await prisma.account.findFirst({
+                where: { userId: user.id },
+                orderBy: { createdAt: 'desc' }
+            });
+            
+            const provider = account?.providerId || 'email';
+            
+            return {
+                user: {
+                    ...user,
+                    provider
+                },
+                session
+            };
+        }),
     ],
 });
 
