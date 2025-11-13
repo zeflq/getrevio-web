@@ -78,13 +78,17 @@ export const auth = betterAuth({
             });
             
             const provider = account?.providerId || 'email';
+            const organizationId = await getActiveOrganization(session.userId);
             
             return {
                 user: {
                     ...user,
                     provider
                 },
-                session
+                session:{
+                    ...session,
+                    activeOrganizationId: organizationId
+                }
             };
         }),
     ],

@@ -1,7 +1,6 @@
 import { z } from "zod";
+import { LandingBlockSchema } from "../blocks";
 
-import { createDefaultLandingContent } from "../lib/landingContent.presets";
-import { ensureLandingContentShape } from "../lib/landingContent.normalizers";
 
 /** =========================
  *  Enums & Basic Schemas
@@ -9,55 +8,15 @@ import { ensureLandingContentShape } from "../lib/landingContent.normalizers";
 export const landingStatusEnum = z.enum(["draft", "published", "archived"]);
 export const landingLayoutEnum = z.enum(["full", "boxed"]);
 
-export const CtaSchema = z.object({
-  label: z.string().min(1, "CTA label is required"),
-  url: z.string().url("Must be a valid URL"),
-  style: z.enum(["primary", "secondary"]).default("primary"),
-});
-
-/** =========================
- *  Content Blocks & Content
- *  ========================= */
-export const SimpleHeroBlock = z.object({
-  kind: z.literal("simpleHero"),
-  title: z.string().min(1, "Title is required"),
-  subtitle: z.string().optional(),
-});
-
-export const HeroWithCtaBlock = z.object({
-  kind: z.literal("heroWithCta"),
-  title: z.string().min(1, "Title is required"),
-  subtitle: z.string().optional(),
-  ctas: z.array(CtaSchema).min(1).max(2),
-});
-
-export const LegalTextBlock = z.object({
-  kind: z.literal("legalText"),
-  text: z.string().min(1, "Text is required"),
-});
-
-export const GameBlock = z.object({
-  kind: z.literal("game"),
-  ctaLabel: z.string().optional(),
-});
-
-export const LandingBlockSchema = z.discriminatedUnion("kind", [
-  SimpleHeroBlock,
-  HeroWithCtaBlock,
-  LegalTextBlock,
-  GameBlock,
-]);
-
 export const LandingContentSchema = z.object({
   layout: z.enum(["full", "boxed"]).default("full"),
+  templateId: z.string().nullable().optional(),
   blocks: z.array(LandingBlockSchema).min(1, "At least one block is required"),
 });
 
 /** =========================
  *  Input vs Output Types
  *  ========================= */
-export type CtaInput = z.input<typeof CtaSchema>;
-export type CtaOutput = z.output<typeof CtaSchema>;
 
 export type LandingBlockInput = z.input<typeof LandingBlockSchema>;
 export type LandingBlockOutput = z.output<typeof LandingBlockSchema>;
@@ -67,6 +26,23 @@ export type LandingContentOutput = z.output<typeof LandingContentSchema>;
 
 /** Alias (si utilisé ailleurs) */
 export type LandingContent = LandingContentOutput;
+
+export const createLandingContentDefaults = (): LandingContentInput => ({
+  layout: "full",
+  templateId: null,
+  blocks: [],
+});
+
+export const ensureLandingContentShape = (
+  value?: LandingContentInput | LandingContent | null
+): LandingContent => {
+  const content = value ?? createLandingContentDefaults();
+  return {
+    layout: content.layout ?? "full",
+    templateId: content.templateId ?? null,
+    blocks: Array.isArray(content.blocks) ? content.blocks : [],
+  };
+};
 
 /** =========================
  *  BelongsTo Schemas & Types
@@ -164,28 +140,18 @@ export type LandingUpdateInput = z.input<typeof landingUpdateSchema>; // INPUT (
  *  ========================= */
 type LandingFormLikeValues = LandingFormValues | LandingCreateFormValues;
 
-const hasContent = (form: LandingFormLikeValues): form is LandingFormValues =>
-  "content" in form && !!form.content;
 
-/** Résout toujours en OUTPUT strict */
-const resolveContent = (form: LandingFormLikeValues): LandingContentOutput => {
-  if (hasContent(form)) {
-    return ensureLandingContentShape(form.content);
-  }
-  if ((form.settings.status ?? "draft") === "published") {
-    throw new Error("Landing content is required before publishing.");
-  }
-  return createDefaultLandingContent();
+export const mapLandingFormToPayload = (form: LandingFormLikeValues): LandingCreateInput => {
+  const contentInput = "content" in form ? form.content : undefined;
+  return {
+    merchantId: form.settings.merchantId,
+    name: form.settings.name,
+    slug: form.settings.slug,
+    status: form.settings.status ?? "draft",
+    content: ensureLandingContentShape(contentInput),
+    belongsTo: form.belongsTo,
+  };
 };
-
-export const mapLandingFormToPayload = (form: LandingFormLikeValues): LandingCreateInput => ({
-  merchantId: form.settings.merchantId,
-  name: form.settings.name,
-  slug: form.settings.slug,
-  status: form.settings.status ?? "draft",
-  content: resolveContent(form),
-  belongsTo: form.belongsTo,
-});
 
 /** emptyBelongsTo accepte désormais interne ou externe */
 const emptyBelongsTo = (
@@ -205,7 +171,7 @@ export const createLandingFormDefaults = (args?: {
     status: "draft",
   },
   belongsTo: emptyBelongsTo(args?.belongsTo),
-  content: createDefaultLandingContent(), // output est assignable à input
+  content: createLandingContentDefaults(),
 });
 
 export const createLandingCreateFormDefaults = (args?: {
@@ -224,12 +190,6 @@ export const createLandingCreateFormDefaults = (args?: {
 export const ensureBelongsToForForm = (
   belongsTo?: LandingBelongsTo | LandingBelongsToExternal | null
 ): LandingBelongsTo => toInternalBelongsTo(belongsTo);
-
-export { createDefaultLandingContent } from "../lib/landingContent.presets";
-export {
-  ensureLandingContentShape,
-  deriveContentWarnings,
-} from "../lib/landingContent.normalizers";
 
 /** =========================
  *  Filters

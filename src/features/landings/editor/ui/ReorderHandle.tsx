@@ -19,7 +19,7 @@ export function ReorderHandle({ attributes, listeners, disabled }: ReorderHandle
       type="button"
       variant="ghost"
       size="icon"
-      className="cursor-grab text-muted-foreground"
+      className="cursor-grab text-muted-foreground bg-secondary"
       disabled={disabled}
       {...attributes}
       {...listeners}

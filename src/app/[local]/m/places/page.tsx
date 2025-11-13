@@ -18,8 +18,10 @@ import { DataTableToolbarBase } from "@/shared/ui/data-table/DataTableToolbarBas
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useActiveTenantId } from "@/hooks/useActiveTenantId";
 import { GooglePlacesTable } from "@/features/google-places/components/GooglePlacesTable";
+import { useSession } from "@/lib/auth-client";
 
 export default function MerchantPlacesPage() {
+  const session = useSession();
   const isMobile = useIsMobile();
   const activeTenantId = useActiveTenantId();
 
@@ -162,7 +164,9 @@ export default function MerchantPlacesPage() {
           onOpenChange={(open) => !open && setDeleteTarget(null)}
         />
       )}
-      <GooglePlacesTable/>
+      {session && session.data?.user.provider === "google"
+        && <GooglePlacesTable/>
+      }
     </div>
   );
 }

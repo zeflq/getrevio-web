@@ -67,10 +67,15 @@
     },
     "editor": {
       "addBlock": "Add block",
+      "templates": {
+        "label": "Template",
+        "placeholder": "Select template"
+      ,   "description": "One of our curated layouts for your landing."
+      },
       "warningsTitle": "Warnings",
       "warningsMultipleGames": "Multiple game blocks may confuse users.",
       "emptyState": "No blocks yet. Use the “Add block” button to get started.",
-      "blockNumber": "Block #{index}",
+      "blockNumber": "#{index}",
       "selectPrompt": "Select a block to edit its content.",
       "blocks": {
         "simpleHero": {
@@ -94,7 +99,8 @@
           "addCta": "Add CTA",
           "primary": "Primary",
           "secondary": "Secondary",
-          "ctaCount": "{count} CTA(s)"
+          "ctaCount": "{count} CTA(s)",
+          "removeCta": "Remove CTA"
         },
         "legalText": {
           "label": "Legal Text",

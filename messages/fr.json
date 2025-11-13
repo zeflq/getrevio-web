@@ -67,10 +67,15 @@
     },
     "editor": {
       "addBlock": "Ajouter un bloc",
+      "templates": {
+        "label": "Modèle",
+        "placeholder": "Choisir un modèle",
+        "description": "Une disposition prête à l’emploi pour inspirer votre landing."
+      },
       "warningsTitle": "Avertissements",
       "warningsMultipleGames": "Plusieurs blocs \"jeu\" peuvent perturber les utilisateurs.",
       "emptyState": "Aucun bloc pour le moment. Utilisez le bouton « Ajouter un bloc » pour commencer.",
-      "blockNumber": "Bloc n°{index}",
+      "blockNumber": "N°{index}",
       "selectPrompt": "Sélectionnez un bloc pour modifier son contenu.",
       "blocks": {
         "simpleHero": {
@@ -92,7 +97,8 @@
           "addCta": "Ajouter un CTA",
           "primary": "Principal",
           "secondary": "Secondaire",
-          "ctaCount": "{count} CTA"
+          "ctaCount": "{count} CTA",
+          "removeCta": "Supprimer le CTA"
         },
         "legalText": {
           "label": "Texte légal",

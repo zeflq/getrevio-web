@@ -21,7 +21,6 @@ import {
 import { useCreateLanding } from "../hooks/useLandingCrud";
 import { LandingFormFields } from "./LandingFormFields";
 import { buildLandingPayload } from "../lib/landingForm.mappers";
-import { createDefaultBlocksForContext } from "../lib/landingContent.presets";
 import { useLandingSlugCheck } from "../hooks/useLandingSlugCheck";
 
 export interface CreateLandingDialogProps {
@@ -89,7 +88,7 @@ export function CreateLandingDialog({
   const onSubmit = (data: LandingCreateFormValues) => {
     const payload = buildLandingPayload(data);
     if (initialBelongsTo?.type === "campaign") {
-      payload.content.blocks = createDefaultBlocksForContext({ context: "campaign" });
+      payload.content.blocks = []
     }
     execute(payload);
   };

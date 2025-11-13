@@ -1,58 +1,59 @@
+"use client";
+
 import * as React from "react";
-import type { FieldArrayWithId } from "react-hook-form";
 
-import type { LandingFormValues } from "../../model/landingSchema";
+import type { LandingBlockField } from "./useBlocksFieldArray";
 
-export function useSelectedBlock(
-  fields: FieldArrayWithId<LandingFormValues, "content.blocks", "id">[]
-) {
-  const [selectedId, setSelectedId] = React.useState<string | null>(fields[0]?.id ?? null);
+export function useSelectedBlock(fields: LandingBlockField[]) {
+  const [selectedId, setSelectedId] = React.useState<string | null>(null);
+  const prevFieldsLengthRef = React.useRef(fields.length);
 
   React.useEffect(() => {
+    const prevLength = prevFieldsLengthRef.current;
+    prevFieldsLengthRef.current = fields.length;
+    const lengthChanged = fields.length !== prevLength;
+
     if (!fields.length) {
       setSelectedId(null);
       return;
     }
 
-    if (!selectedId) {
-      setSelectedId(fields[0].id);
+    if (lengthChanged && fields.length > prevLength) {
+      setSelectedId(fields[fields.length - 1].id);
       return;
     }
 
-    const stillExists = fields.some((block) => block.id === selectedId);
-    if (!stillExists) {
+    if (selectedId && fields.some((field) => field.id === selectedId)) {
+      return;
+    }
+
+    if (prevLength === 0) {
       setSelectedId(fields[0].id);
     }
   }, [fields, selectedId]);
 
-  const selectedIndex = selectedId ? fields.findIndex((block) => block.id === selectedId) : -1;
+  const selectedIndex = React.useMemo(() => {
+    if (selectedId === null) {
+      return -1;
+    }
+    return fields.findIndex((field) => field.id === selectedId);
+  }, [fields, selectedId]);
 
-  const selectById = (id: string) => setSelectedId(id);
-  const selectByIndex = (index: number) => {
+  const selectById = React.useCallback((id: string) => {
+    setSelectedId((prev) => (prev === id ? null : id));
+  }, []);
+
+  const selectByIndex = React.useCallback((index: number) => {
     const field = fields[index];
     if (field) {
       setSelectedId(field.id);
     }
-  };
-
-  const selectNext = () => {
-    if (!fields.length) return;
-    const nextIndex = selectedIndex < fields.length - 1 ? selectedIndex + 1 : 0;
-    selectByIndex(nextIndex);
-  };
-
-  const selectPrevious = () => {
-    if (!fields.length) return;
-    const prevIndex = selectedIndex > 0 ? selectedIndex - 1 : fields.length - 1;
-    selectByIndex(prevIndex);
-  };
+  }, [fields]);
 
   return {
     selectedId,
     selectedIndex,
     selectById,
     selectByIndex,
-    selectNext,
-    selectPrevious,
   };
 }

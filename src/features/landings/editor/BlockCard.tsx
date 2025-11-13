@@ -1,180 +1,193 @@
 "use client";
 
 import * as React from "react";
-import { Copy, Eye } from "lucide-react";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { ArrowUp, ArrowDown, MoreHorizontal, ChevronDown, LockIcon, Pin } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+
+import { landingBlockPluginMap, type LandingBlock } from "../blocks";
+import type { LandingBelongsTo } from "../model/landingSchema";
+import type { LandingListItem } from "../server/mappers";
+
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import type { FieldArrayWithId } from "react-hook-form";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
-import type { LandingFormValues, LandingBlockOutput } from "../model/landingSchema";
-import { ReorderHandle } from "./ui/ReorderHandle";
-import { ConfirmDeleteDialog } from "./ui/ConfirmDeleteDialog";
-
-interface BlockCardProps {
-  field: FieldArrayWithId<LandingFormValues, "content.blocks", "id">;
-  block?: LandingBlockOutput;
-  isSelected: boolean;
-  disabled?: boolean;
+interface BlockCardAccordionProps {
+  id: string;
+  block: LandingBlock;
+  index: number;
+  total: number;
+  selected?: boolean;
   onSelect: () => void;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
   onDuplicate: () => void;
   onDelete: () => void;
+  disabled?: boolean;
+  preview?: React.ReactNode;
+  disableDuplicate?: boolean;
+  disableDelete?: boolean;
+  belongsTo?: LandingBelongsTo | null;
+  landing?: LandingListItem | null;
 }
 
 export function BlockCard({
-  field,
+  id,
   block,
-  isSelected,
-  disabled,
+  index,
+  total,
+  selected = false,
   onSelect,
+  onMoveUp,
+  onMoveDown,
   onDuplicate,
   onDelete,
-}: BlockCardProps) {
-  const sortable = useSortable({ id: field.id, disabled });
-  const [showPreview, setShowPreview] = React.useState(false);
-  const actionsT = useTranslations("landings.editor.actions");
-  const blocksT = useTranslations("landings.editor.blocks");
+  disabled,
+  preview,
+  disableDuplicate,
+  disableDelete,
+  belongsTo,
+  landing,
+}: BlockCardAccordionProps) {
+  const t = useTranslations("landings.editor");
+  const blocksTranslations = useTranslations("landings.editor.blocks");
+  const actions = useTranslations("landings.editor.actions");
 
-  const style = {
-    transform: CSS.Transform.toString(sortable.transform),
-    transition: sortable.transition,
-  };
+  const typeLabel = blocksTranslations(`${block.kind}.label` as const) ?? block.kind;
+  const description = blocksTranslations(`${block.kind}.description` as const);
+  const plugin = landingBlockPluginMap[block.kind];
+  const InspectorComponent = plugin?.Inspector;
+
+  const isFixedBlock = block.__templateFixed ?? false;
+  const headerClasses = cn(
+    "bg-background border-b-1 rounded-lg flex items-center gap-4 px-4 py-3 text-left cursor-pointer hover:no-underline transition",
+    //selected ? "bg-secondary border border-border" : "bg-background border border-border",
+    isFixedBlock && "border-l-4 border-primary/50"
+  );
 
   return (
-    <div
-      ref={sortable.setNodeRef}
-      style={style}
-      className={cn(
-        "rounded-lg border bg-card p-3 text-left text-sm",
-        isSelected ? "border-primary ring-1 ring-primary" : "border-border",
-        sortable.isDragging && "opacity-50"
-      )}
-      onClick={onSelect}
+    <Collapsible
+      open={selected}
+      onOpenChange={() => {
+        onSelect();
+      }}
+      className="bg-background rounded-lg border"
     >
-      <div className="flex items-center gap-2">
-        <ReorderHandle
-          attributes={sortable.attributes}
-          listeners={sortable.listeners}
-          disabled={disabled}
-        />
-        <div className="flex-1 space-y-1">
-          <p className="font-medium">{formatBlockLabel(block?.kind, blocksT)}</p>
-          <p className="text-xs text-muted-foreground">{getBlockSummary(block, blocksT)}</p>
-        </div>
-        <div className="flex items-center gap-1">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            disabled={disabled}
-            onClick={(event) => {
-              event.stopPropagation();
-              onDuplicate();
+      <CollapsibleTrigger asChild>
+        <div
+          className={headerClasses}
+        >
+          {/* Reorder buttons */}
+          <div className="flex flex-col gap-2"
+            onClick={(e) => {
+              e.stopPropagation();
             }}
-          >
-            <Copy className="h-4 w-4" />
-            <span className="sr-only">{actionsT("duplicate")}</span>
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            disabled={disabled}
-            onClick={(event) => {
-              event.stopPropagation();
-              setShowPreview((prev) => !prev);
-            }}
-          >
-            <Eye className="h-4 w-4" />
-            <span className="sr-only">{actionsT("togglePreview")}</span>
-          </Button>
-          <ConfirmDeleteDialog
-            disabled={disabled}
-            onConfirm={() => {
-              onDelete();
-            }}
+            >
+            <Button
+              type="button"
+              variant="ghost"
+              size="xs"
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveUp();
+              }}
+              disabled={disabled || index === 0}
+              aria-label={actions("reorder")}
+            >
+              <ArrowUp className="size-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="xs"
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveDown();
+              }}
+              disabled={disabled || index === total - 1}
+              aria-label={actions("reorder")}
+            >
+              <ArrowDown className="size-4" />
+            </Button>
+          </div>
+
+          {/* Main label and metadata */}
+          <div className="flex-1 flex items-center gap-2">
+            {/* {dragHandle} */}
+            <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+              {t("blockNumber", { index: index + 1 })}
+            </div>
+            <div>
+              <div className="font-semibold">{typeLabel}</div>
+              {description && (
+                <p className="text-xs text-muted-foreground">{description}</p>
+              )}
+            </div>
+          </div>
+
+          {/* {isFixedBlock && (
+            <Pin className="size-4 text-muted-foreground" />
+          )} */}
+
+          {/* Actions dropdown */}
+          {(!disableDuplicate || !disableDelete) && (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={cn(buttonVariants({ variant: "ghost", size: "xs" }))}
+                onClick={(e) => e.stopPropagation()}
+                disabled={disabled}
+              >
+                <MoreHorizontal className="size-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem
+                  onSelect={() => onDuplicate()}
+                  disabled={disabled || disableDuplicate}
+                >
+                  {actions("duplicate")}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onSelect={() => onDelete()}
+                  disabled={disabled || disableDelete}
+                >
+                  {actions("delete")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+
+          {/* Chevron indicator */}
+          <ChevronDown
+            className={cn(
+              "size-4 transition-transform",
+              selected ? "rotate-180" : "rotate-0"
+            )}
           />
         </div>
-      </div>
-      {showPreview && (
-        <div className="mt-3 rounded-md bg-muted/40 p-3 text-xs text-muted-foreground">
-          {renderPreview(block, blocksT)}
-        </div>
-      )}
-    </div>
+      </CollapsibleTrigger>
+
+      <CollapsibleContent className="space-y-4 px-4 py-3">
+        {InspectorComponent ? (
+          <InspectorComponent
+            index={index}
+            disabled={disabled}
+            belongsTo={belongsTo}
+            landing={landing}
+          />
+        ) : (
+          <div>{preview ?? <p className="text-sm text-muted-foreground">{typeLabel}</p>}</div>
+        )}
+      </CollapsibleContent>
+    </Collapsible>
   );
-}
-
-function formatBlockLabel(
-  kind: string | undefined,
-  blocksT: (key: string, values?: Record<string, unknown>) => string
-) {
-  switch (kind) {
-    case "heroWithCta":
-      return blocksT("heroWithCta.label");
-    case "legalText":
-      return blocksT("legalText.label");
-    case "game":
-      return blocksT("game.label");
-    case "simpleHero":
-    default:
-      return blocksT("simpleHero.label");
-  }
-}
-
-function getBlockSummary(
-  block: LandingBlockOutput | undefined,
-  blocksT: (key: string, values?: Record<string, unknown>) => string
-) {
-  if (!block) return blocksT("simpleHero.label");
-  switch (block.kind) {
-    case "simpleHero":
-      return block.subtitle ? `${block.title} · ${block.subtitle}` : block.title;
-    case "heroWithCta":
-      return blocksT("heroWithCta.ctaCount", { count: block.ctas.length });
-    case "legalText":
-      return block.text.slice(0, 60) + (block.text.length > 60 ? "…" : "");
-    case "game":
-      return block.ctaLabel ? `${blocksT("game.ctaLabel")}: ${block.ctaLabel}` : blocksT("game.label");
-    default:
-      return blocksT("simpleHero.label");
-  }
-}
-
-function renderPreview(
-  block: LandingBlockOutput | undefined,
-  blocksT: (key: string, values?: Record<string, unknown>) => string
-) {
-  if (!block) return blocksT("simpleHero.label");
-  switch (block.kind) {
-    case "simpleHero":
-      return (
-        <div>
-          <p className="font-medium text-foreground">{block.title}</p>
-          {block.subtitle && <p>{block.subtitle}</p>}
-        </div>
-      );
-    case "heroWithCta":
-      return (
-        <div className="space-y-2">
-          <p className="font-medium text-foreground">{block.title}</p>
-          {block.subtitle && <p>{block.subtitle}</p>}
-          <ul className="space-y-1">
-            {block.ctas.map((cta) => (
-              <li key={cta.label}>
-                <span className="font-medium">{cta.label}</span> · {cta.url}
-              </li>
-            ))}
-          </ul>
-        </div>
-      );
-    case "legalText":
-      return <p>{block.text}</p>;
-    case "game":
-      return <p>{block.ctaLabel ? `${blocksT("game.ctaLabel")}: ${block.ctaLabel}` : blocksT("game.label")}</p>;
-    default:
-      return blocksT("simpleHero.label");
-  }
 }

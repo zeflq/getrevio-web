@@ -83,7 +83,7 @@ export function LandingEditPageContent({
   }
 
   return (
-    <div className="flex flex-col gap-6 p-4">
+    <div className="flex flex-col gap-6 p-4 w-full">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" className="-ml-2" onClick={() => router.back()}>
@@ -95,7 +95,7 @@ export function LandingEditPageContent({
             <p className="text-sm text-muted-foreground">{t("form.description")}</p>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        {/* <div className="flex flex-wrap items-center gap-2">
           {isPublished && (
             <>
               <Button variant="outline" asChild>
@@ -114,10 +114,10 @@ export function LandingEditPageContent({
           <Button variant={isPublished ? "secondary" : "default"} onClick={togglePublish}>
             {isPublished ? t("common.unpublish") : t("common.publish")}
           </Button>
-        </div>
+        </div> */}
       </div>
 
-      <Card>
+      <Card className="w-full md:max-w-3/4 m-auto">
         <CardHeader>
           <CardTitle>{landing?.name ?? t("common.landing")}</CardTitle>
           <CardDescription>{t("common.changesSavedOnSubmit")}</CardDescription>
