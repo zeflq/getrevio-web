@@ -114,7 +114,7 @@ export function LandingFormFields({
         />
       )}
 
-      <RHFSelect
+      {/* <RHFSelect
         name="settings.status"
         label={t("status")}
         options={[
@@ -124,7 +124,7 @@ export function LandingFormFields({
         ]}
         placeholder={t("status")}
         disabled={disabled}
-      />
+      /> */}
 
       <div className="space-y-3 rounded-lg border p-4">
         <div className="flex flex-col gap-1">

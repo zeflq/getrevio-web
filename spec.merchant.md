@@ -304,3 +304,18 @@ Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQL
 *   Places rely on an **auto-created default shortlink** (slug-based) for QR.
     
 *   Themes & Settings are minimal and consistent
+
+### GAME
+export type LotteryConfig = {
+  playLimitPerUser: number; // e.g. 1 spin per day/week/lifetime
+  resetPlayLimit?: "daily" | "weekly" | "lifetime"; // determines reset interval
+  maxWinners?: number; // optional global prize cap
+  requiresAction?: "review" | "formSubmit"; // must complete before eligible
+  gifts: {
+    id: string;
+    label: string;
+    probability: number; // between 0 and 1
+    couponCode?: string; // optional
+    stock?: number; // optional per-gift limit
+  }[];
+};

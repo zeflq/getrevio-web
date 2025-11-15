@@ -34,7 +34,6 @@ interface BlockCardAccordionProps {
   onDuplicate: () => void;
   onDelete: () => void;
   disabled?: boolean;
-  preview?: React.ReactNode;
   disableDuplicate?: boolean;
   disableDelete?: boolean;
   belongsTo?: LandingBelongsTo | null;
@@ -53,7 +52,6 @@ export function BlockCard({
   onDuplicate,
   onDelete,
   disabled,
-  preview,
   disableDuplicate,
   disableDelete,
   belongsTo,
@@ -177,15 +175,13 @@ export function BlockCard({
       </CollapsibleTrigger>
 
       <CollapsibleContent className="space-y-4 px-4 py-3">
-        {InspectorComponent ? (
+        {InspectorComponent && (
           <InspectorComponent
             index={index}
             disabled={disabled}
             belongsTo={belongsTo}
             landing={landing}
           />
-        ) : (
-          <div>{preview ?? <p className="text-sm text-muted-foreground">{typeLabel}</p>}</div>
         )}
       </CollapsibleContent>
     </Collapsible>

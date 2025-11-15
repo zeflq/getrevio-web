@@ -18,134 +18,102 @@ const listPlacesLiteUseCase = new ListPlacesLiteUseCase(placeRepository);
 export const dynamic = "force-dynamic";
 
 export const GET = withApiAuth(async ({ req, auth }) => {
-  // try {
-  //   const linkedPlaceIdsPromise = collectLinkedPlaceIds(auth.tenantId);
+  try {
+    const linkedPlaceIdsPromise = collectLinkedPlaceIds(auth.tenantId);
 
-  //   const { accessToken } = await betterAuth.api.getAccessToken({
-  //     body: { providerId: "google" },
-  //     headers: await serverHeaders(),
-  //   });
+    const { accessToken } = await betterAuth.api.getAccessToken({
+      body: { providerId: "google" },
+      headers: await serverHeaders(),
+    });
 
-  //   if (!accessToken) {
-  //     return new Response("Google OAuth required", { status: 401 });
-  //   }
+    if (!accessToken) {
+      return new Response("Google OAuth required", { status: 401 });
+    }
+console.log("Google Access Token:", accessToken);
+    // Step 1: Get accountId from Google
+    const accountListRes = await fetch("https://mybusinessbusinessinformation.googleapis.com/v1/accounts", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+        Accept: "application/json",
+      },
+    });
+    console.log("Google Accounts response status:", accountListRes);
 
-  //   // Step 1: Get accountId from Google
-  //   const accountListRes = await fetch("https://mybusinessbusinessinformation.googleapis.com/v1/accounts", {
-  //     headers: {
-  //       Authorization: `Bearer ${accessToken}`,
-  //       'Content-Type': 'application/json',
-  //       Accept: "application/json",
-  //     },
-  //   });
-
-  //   if (!accountListRes.ok) {
-  //     const err = await accountListRes.json().catch(() => null);
-  //     const status = err?.error?.code ?? 500;
-  //     const message = err?.error?.message ?? "Unable to retrieve Google account";
-  //     console.error("Failed to fetch Google account:", err);
-  //     return new Response(message, { status });
-  //   }
-
-  //   const accountData = await accountListRes.json();
-  //   const accountId = accountData?.accounts?.[0]?.name; // e.g. "accounts/123456"
-
-  //   if (!accountId) {
-  //     return new Response("No linked Google Business account found", { status: 404 });
-  //   }
-
-  //   // Step 2: Build query
-  //   const url = new URL(req.url);
-  //   const searchParams = new URLSearchParams();
-
-  //   const requestedLimit = Math.max(
-  //     1,
-  //     Number(url.searchParams.get("_limit") ?? url.searchParams.get("pageSize") ?? 10)
-  //   );
-
-  //   const allowedParams = ["readMask", "pageSize", "pageToken", "filter"];
-  //   allowedParams.forEach((param) => {
-  //     const value = url.searchParams.get(param);
-  //     if (value) searchParams.append(param, value);
-  //   });
-
-  //   if (!searchParams.has("pageSize")) {
-  //     searchParams.set("pageSize", String(requestedLimit));
-  //   }
-
-  //   if (!searchParams.has("readMask")) {
-  //     searchParams.set("readMask", "name,title,locationName,primaryPhone,websiteUri,storeCode,regularHours");
-  //   }
-
-  //   const googleApiUrl = `https://mybusinessbusinessinformation.googleapis.com/v1/${accountId}/locations${
-  //     searchParams.size ? `?${searchParams.toString()}` : ""
-  //   }`;
-
-  //   const response = await fetch(googleApiUrl, {
-  //     headers: {
-  //       Authorization: `Bearer ${accessToken}`,
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //   });
-
-  //   if (!response.ok) {
-  //     const errorData = await response.text();
-  //     console.error("Google My Business API error:", errorData);
-  //     return new Response(`Google API error: ${response.status} ${response.statusText}`, {
-  //       status: response.status,
-  //     });
-  //   }
-
-  //   const raw = (await response.json()) as GooglePlacesApiResponse;
-  //   const rows = raw.locations ?? [];
-  //   const total = raw.totalSize ?? rows.length;
-  //   const totalPages = Math.max(1, Math.ceil(total / requestedLimit));
-  //   const linkedPlaceIds = await linkedPlaceIdsPromise;
-
-  //   const envelope: ListEnvelope<GooglePlaceRow> = {
-  //     data: rows.map((location) => mapGoogleLocationToRow(location, linkedPlaceIds)),
-  //     total,
-  //     totalPages,
-  //   };
-
-  //   return Response.json(envelope);
-  // } catch (error) {
-  //   console.error("Google Places fetch failed:", error);
-  //   return new Response("Internal server error", { status: 500 });
-  // }
-  const envelope = {
-      data:[
-            {
-              "id": "accounts/123/locations/abcd",
-              "name": "Sunset Grill",
-              "address": "101 Main St, San Francisco, CA 94105",
-              "locationName": "Sunset Grill",
-              "googlePlaceId": "abcd",
-              "isLinked": true
-            },
-            {
-              "id": "accounts/123/locations/efgh",
-              "name": "Golden Gate Coffee",
-              "address": "200 Market St, San Francisco, CA 94103",
-              "locationName": "Golden Gate Coffee",
-              "googlePlaceId": "efgh",
-              "isLinked": false
-            },
-            {
-              "id": "accounts/123/locations/ijkl",
-              "name": "Pier 39 Eats",
-              "address": "Pier 39, San Francisco, CA 94133",
-              "locationName": "Pier 39 Eats",
-              "googlePlaceId": "ijkl",
-              "isLinked": false
-            }
-      ],
-      total:3,
-      totalPages:1
+    if (!accountListRes.ok) {
+      const err = await accountListRes.json().catch(() => null);
+      const status = err?.error?.code ?? 500;
+      const message = err?.error?.message ?? "Unable to retrieve Google account";
+      console.error("Failed to fetch Google account:", err);
+      return new Response(message, { status });
     }
 
+    const accountData = await accountListRes.json();
+    const accountId = accountData?.accounts?.[0]?.name; // e.g. "accounts/123456"
+
+    if (!accountId) {
+      return new Response("No linked Google Business account found", { status: 404 });
+    }
+    // Step 2: Build query
+    const url = new URL(req.url);
+    const searchParams = new URLSearchParams();
+
+    const requestedLimit = Math.max(
+      1,
+      Number(url.searchParams.get("_limit") ?? url.searchParams.get("pageSize") ?? 10)
+    );
+
+    const allowedParams = ["readMask", "pageSize", "pageToken", "filter"];
+    allowedParams.forEach((param) => {
+      const value = url.searchParams.get(param);
+      if (value) searchParams.append(param, value);
+    });
+
+    if (!searchParams.has("pageSize")) {
+      searchParams.set("pageSize", String(requestedLimit));
+    }
+
+    if (!searchParams.has("readMask")) {
+      searchParams.set("readMask", "name,title,locationName,primaryPhone,websiteUri,storeCode,regularHours");
+    }
+
+    const googleApiUrl = `https://mybusinessbusinessinformation.googleapis.com/v1/${accountId}/locations${
+      searchParams.size ? `?${searchParams.toString()}` : ""
+    }`;
+
+    const response = await fetch(googleApiUrl, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error("Google My Business API error:", errorData);
+      return new Response(`Google API error: ${response.status} ${response.statusText}`, {
+        status: response.status,
+      });
+    }
+
+    const raw = (await response.json()) as GooglePlacesApiResponse;
+    const rows = raw.locations ?? [];
+    const total = raw.totalSize ?? rows.length;
+    const totalPages = Math.max(1, Math.ceil(total / requestedLimit));
+    const linkedPlaceIds = await linkedPlaceIdsPromise;
+
+    const envelope: ListEnvelope<GooglePlaceRow> = {
+      data: rows.map((location) => mapGoogleLocationToRow(location, linkedPlaceIds)),
+      total,
+      totalPages,
+    };
+
     return Response.json(envelope);
+  } catch (error) {
+    console.error("Google Places fetch failed:", error);
+    return new Response("Internal server error", { status: 500 });
+  }
 });
 
 async function collectLinkedPlaceIds(tenantId?: string | null) {

@@ -142,18 +142,18 @@ export function BlockList({
     return disabled ?? false;
   };
 
-  const renderPreview = (block: LandingBlock) => {
-    const plugin = landingBlockPluginMap[block.kind];
-    if (plugin) {
-      const Renderer = plugin.Renderer;
-      return <Renderer data={block.data} />;
-    }
-    return (
-      <div className="space-y-1 text-sm text-muted-foreground">
-        <p>{blocksTranslations(`${block.kind}.label`)}</p>
-      </div>
-    );
-  };
+  // const renderPreview = (block: LandingBlock) => {
+  //   const plugin = landingBlockPluginMap[block.kind];
+  //   if (plugin) {
+  //     const Renderer = plugin.Renderer;
+  //     return <Renderer data={block.data} />;
+  //   }
+  //   return (
+  //     <div className="space-y-1 text-sm text-muted-foreground">
+  //       <p>{blocksTranslations(`${block.kind}.label`)}</p>
+  //     </div>
+  //   );
+  // };
   if (!fields.length) {
     return (
       <div className="space-y-4 rounded-lg border border-dashed p-6">
@@ -228,7 +228,7 @@ export function BlockList({
                   onDuplicate={() => onDuplicate(index)}
                   onDelete={() => onDelete(index)}
                   disabled={disabled}
-                  preview={renderPreview(block)}
+                 // preview={renderPreview(block)}
                   disableDuplicate={
                     templateLimits.has(block.kind) &&
                     (counts[block.kind] ?? 0) >= templateLimits.get(block.kind)!

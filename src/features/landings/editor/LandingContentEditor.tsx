@@ -41,18 +41,18 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
   const { selectedId, selectById, selectByIndex } = useSelectedBlock(fields);
 
   const [templateId, setTemplateId] = React.useState<string | null>(() =>
-    landing?.content.templateId ?? landingTemplates[0]?.id ?? null
+    landing?.contentDraft.templateId ?? landingTemplates[0]?.id ?? null
   );
 
   React.useEffect(() => {
-    if (landing?.content.templateId && landing.content.templateId !== templateId) {
-      setTemplateId(landing.content.templateId);
+    if (landing?.contentDraft.templateId && landing.contentDraft.templateId !== templateId) {
+      setTemplateId(landing.contentDraft.templateId);
       return;
     }
     if (!landing && templateId === null && landingTemplates[0]) {
       setTemplateId(landingTemplates[0].id);
     }
-  }, [landing?.content.templateId, landing, templateId]);
+  }, [landing?.contentDraft.templateId, landing, templateId]);
 
   React.useEffect(() => {
     form.setValue("content.templateId", templateId, {

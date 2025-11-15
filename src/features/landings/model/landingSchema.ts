@@ -8,10 +8,19 @@ import { LandingBlockSchema } from "../blocks";
 export const landingStatusEnum = z.enum(["draft", "published", "archived"]);
 export const landingLayoutEnum = z.enum(["full", "boxed"]);
 
-export const LandingContentSchema = z.object({
+const landingContentBase = z.object({
   layout: z.enum(["full", "boxed"]).default("full"),
   templateId: z.string().nullable().optional(),
-  blocks: z.array(LandingBlockSchema).min(1, "At least one block is required"),
+});
+
+const landingContentBlocks = z.array(LandingBlockSchema);
+
+export const LandingContentSchema = landingContentBase.extend({
+  blocks: landingContentBlocks.min(1, "At least one block is required"),
+});
+
+export const LandingContentCreateSchema = landingContentBase.extend({
+  blocks: landingContentBlocks.default([]),
 });
 
 /** =========================
@@ -120,7 +129,7 @@ export type LandingCreateFormValues = z.input<typeof landingCreateFormSchema>;
 /** =========================
  *  Payloads & API Schemas
  *  ========================= */
-const landingPayloadSchema = z.object({
+const landingPayloadCore = z.object({
   merchantId: z.string().min(1, "Merchant is required"),
   name: z.string().min(1, "Name is required"),
   slug: alphanumericSlug,
@@ -129,7 +138,13 @@ const landingPayloadSchema = z.object({
   belongsTo: landingBelongsToSchema,
 });
 
-export const landingCreateSchema = landingPayloadSchema;
+export const landingPayloadSchema = landingPayloadCore.extend({
+  content: LandingContentSchema,
+});
+
+export const landingCreateSchema = landingPayloadCore.extend({
+  content: LandingContentCreateSchema,
+});
 export const landingUpdateSchema = landingPayloadSchema.partial();
 
 export type LandingCreateInput = z.input<typeof landingCreateSchema>; // INPUT

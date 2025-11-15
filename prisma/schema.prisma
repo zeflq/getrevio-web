@@ -158,7 +158,8 @@ model Landing {
   name        String
   slug        String
   status      LandingStatus @default(draft)
-  content     Json
+  contentDraft Json
+  contentPublished Json?
   publishedAt DateTime?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

@@ -27,7 +27,8 @@ export class CreateLandingUseCase {
       name: data.name,
       slug: data.slug,
       status: data.status,
-      content: data.content,
+      contentDraft: data.content,
+      contentPublished: data.status === "published" ? data.content : null,
       publishedAt: data.status === "published" ? new Date().toISOString() : null,
     };
 

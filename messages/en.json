@@ -23,7 +23,10 @@
       "saveChanges": "Save changes",
       "publish": "Publish",
       "unpublish": "Unpublish",
+      "publishChanges": "Publish changes",
       "preview": "Preview",
+      "previewLive": "Preview live",
+      "previewDraft": "Preview draft",
       "generateShortlink": "Generate Shortlink",
       "changesSavedOnSubmit": "Changes are saved when you click “Save changes”.",
       "loading": "Loading..."
@@ -128,7 +131,9 @@
       }
     },
     "toasts": {
-      "updated": "Landing updated"
+      "updated": "Landing updated",
+      "published": "Landing published",
+      "unpublished": "Landing unpublished"
     },
     "table": {
       "title": "Landings",

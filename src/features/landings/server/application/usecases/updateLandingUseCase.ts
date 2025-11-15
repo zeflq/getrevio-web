@@ -16,12 +16,16 @@ export class UpdateLandingUseCase {
 
     const { id, tenantId, userRole: _role, ...payload } = command;
     const normalized = this.normalizePayload(payload);
-    const { belongsTo, slug: _slug, ...rest } = normalized;
+    const { belongsTo, slug: _slug, content, ...rest } = normalized;
 
     const record: LandingUpdateRecord = {
       id,
       ...rest,
     };
+
+    if (content !== undefined) {
+      record.contentDraft = content;
+    }
 
     if (record.status && record.status !== "published") {
       record.publishedAt = null;

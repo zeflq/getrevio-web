@@ -24,7 +24,7 @@ export const fillLandingFormFromEntity = (landing?: LandingListItem | null): Lan
       status: landing.status ?? "draft",
     },
     belongsTo: ensureBelongsToForForm(landing.belongsTo ?? undefined),
-    content: ensureLandingContentShape(landing.content),
+    content: ensureLandingContentShape(landing.contentDraft),
   };
 };
 

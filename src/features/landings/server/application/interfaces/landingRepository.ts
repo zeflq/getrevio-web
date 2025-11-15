@@ -5,7 +5,8 @@ export type LandingCreateRecord = {
   name: string;
   slug: string;
   status: LandingCreateInput["status"];
-  content: LandingCreateInput["content"];
+  contentDraft: LandingCreateInput["content"];
+  contentPublished?: LandingCreateInput["content"] | null;
   publishedAt?: string | Date | null;
 };
 
@@ -14,7 +15,8 @@ export type LandingUpdateRecord = {
   merchantId?: string;
   name?: string;
   status?: LandingUpdateInput["status"];
-  content?: LandingUpdateInput["content"];
+  contentDraft?: LandingUpdateInput["content"];
+  contentPublished?: LandingUpdateInput["content"] | null;
   publishedAt?: string | Date | null;
 };
 

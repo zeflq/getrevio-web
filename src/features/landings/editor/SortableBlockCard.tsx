@@ -22,7 +22,6 @@ interface SortableBlockCardProps {
   onDuplicate: () => void;
   onDelete: () => void;
   disabled?: boolean;
-  preview?: React.ReactNode;
   disableDuplicate?: boolean;
   disableDelete?: boolean;
   belongsTo?: LandingBelongsTo | null;
@@ -41,7 +40,6 @@ export function SortableBlockCard({
   onDuplicate,
   onDelete,
   disabled,
-  preview,
   disableDuplicate,
   disableDelete,
   belongsTo,
@@ -73,7 +71,6 @@ export function SortableBlockCard({
         onDuplicate={onDuplicate}
         onDelete={onDelete}
         disabled={disabled}
-        preview={preview}
         disableDuplicate={disableDuplicate}
         disableDelete={disableDelete}
         belongsTo={belongsTo}

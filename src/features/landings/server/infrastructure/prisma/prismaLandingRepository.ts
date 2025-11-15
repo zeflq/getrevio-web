@@ -18,7 +18,8 @@ export class PrismaLandingRepository implements LandingRepository {
         name: data.name,
         slug: data.slug,
         status: data.status,
-        content: data.content,
+        contentDraft: data.contentDraft,
+        contentPublished: data.contentPublished ?? null,
         publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
       },
     });
@@ -39,8 +40,12 @@ export class PrismaLandingRepository implements LandingRepository {
       patch.status = data.status;
     }
 
-    if (data.content !== undefined) {
-      patch.content = data.content;
+    if (data.contentDraft !== undefined) {
+      patch.contentDraft = data.contentDraft;
+    }
+
+    if (data.contentPublished !== undefined) {
+      patch.contentPublished = data.contentPublished;
     }
 
     if (data.merchantId !== undefined) {

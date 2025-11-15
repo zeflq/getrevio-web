@@ -23,7 +23,10 @@
       "saveChanges": "Enregistrer",
       "publish": "Publier",
       "unpublish": "Dépublier",
+      "publishChanges": "Publier les modifications",
       "preview": "Prévisualiser",
+      "previewLive": "Prévoir en ligne",
+      "previewDraft": "Prévoir le brouillon",
       "generateShortlink": "Générer un shortlink",
       "changesSavedOnSubmit": "Les modifications sont enregistrées lorsque vous cliquez sur « Enregistrer ».",
       "loading": "Chargement..."
@@ -126,7 +129,9 @@
       }
     },
     "toasts": {
-      "updated": "Landing mis à jour"
+      "updated": "Landing mis à jour",
+      "published": "Landing publié",
+      "unpublished": "Landing dépublié"
     },
     "table": {
       "title": "Landings",
