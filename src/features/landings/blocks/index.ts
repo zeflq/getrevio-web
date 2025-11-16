@@ -5,6 +5,7 @@ import simpleHeroPlugin from "./simpleHero";
 import heroWithCtaPlugin from "./heroWithCta";
 import legalTextPlugin from "./legalText";
 import gamePlugin from "./game";
+import intentHeroPlugin from "./intentHero";
 
 //const landingBlockPlugins = [simpleHeroPlugin, heroWithCtaPlugin, legalTextPlugin, gamePlugin] as const;
 const landingBlockPlugins = [
@@ -12,6 +13,7 @@ const landingBlockPlugins = [
   heroWithCtaPlugin,
   legalTextPlugin,
   gamePlugin,
+  intentHeroPlugin,
 ] as const satisfies readonly LandingBlockPlugin<any>[];
 
 type LandingBlockPluginTuple = typeof landingBlockPlugins;
@@ -35,11 +37,12 @@ const buildBlockSchema = <P extends LandingBlockPlugin<any>>(plugin: P) =>
     __templateBlockId: z.string().optional(),
   });
 
-const schemas = [
+  const schemas = [
   buildBlockSchema(simpleHeroPlugin),
   buildBlockSchema(heroWithCtaPlugin),
   buildBlockSchema(legalTextPlugin),
   buildBlockSchema(gamePlugin),
+  buildBlockSchema(intentHeroPlugin),
 ] as const;
 
 export const LandingBlockSchema = z.discriminatedUnion("kind", schemas);

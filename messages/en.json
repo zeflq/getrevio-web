@@ -117,6 +117,14 @@
           "ctaLabel": "CTA label (optional)",
           "linkedCampaign": "Linked campaign",
           "linkedPlace": "Linked place"
+        },
+        "intentHero": {
+          "label": "Intent Hero",
+          "description": "High-visibility CTA designed for slot-game launches.",
+          "title": "Title",
+          "subtitle": "Subtitle",
+          "ctaLabel": "Button label",
+          "ctaUrl": "Button URL"
         }
       },
       "actions": {

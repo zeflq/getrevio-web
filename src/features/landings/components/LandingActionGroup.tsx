@@ -53,7 +53,7 @@ export function LandingActionGroup({
   return (
     <div className="flex flex-wrap items-center gap-2">
       {landingId && (
-        <Button variant="outline" asChild>
+        <Button variant="primaryOutline" asChild>
           <a href={previewHref} target="_blank" rel="noreferrer">
             {previewLabel}
           </a>
@@ -74,7 +74,7 @@ export function LandingActionGroup({
       {showUnpublish && (
         <Button
           type="button"
-          variant="outline"
+          variant="destructiveOutline"
           onClick={onUnpublish}
           disabled={isSubmitting || isToggleLoading}
         >

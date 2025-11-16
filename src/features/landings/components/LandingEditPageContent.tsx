@@ -18,6 +18,7 @@ import { useRouter } from "@/i18n/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { LiteListe } from "@/types/lists";
+import { cn } from "@/lib/utils";
 
 import { LandingFormFields } from "./LandingFormFields";
 import { useLandingForm } from "../hooks/useLandingForm";
@@ -81,6 +82,25 @@ export function LandingEditPageContent({
   const previewHref = isPublished
     ? `/landings/${landing?.id}?preview=live`
     : `/landings/${landing?.id}?preview=draft`;
+
+  const [activeTab, setActiveTab] = React.useState<"settings" | "content">("settings");
+  const {
+    settings: settingsErrors,
+    belongsTo: belongsToErrors,
+    content: contentErrors,
+  } = form.formState.errors;
+
+  const hasSettingsErrors = Boolean(settingsErrors || belongsToErrors);
+  const hasContentErrors = Boolean(contentErrors);
+  const hasFormErrors = hasSettingsErrors || hasContentErrors;
+  const getTabTriggerClass = (hasErrors: boolean) =>
+    cn(
+      hasErrors &&
+        "relative border-destructive/60 text-destructive data-[state=active]:border-destructive data-[state=active]:text-destructive",
+      hasErrors &&
+        "before:absolute before:right-2 before:top-1/2 before:-translate-y-1/2 before:block before:h-1 before:w-1 before:rounded-full before:border before:border-destructive/60 before:bg-destructive before:opacity-90",
+      "transition-colors"
+    );
 
   const toggleButtonLabel = (() => {
     if (isToggleLoading) return t("common.loading");
@@ -162,24 +182,26 @@ export function LandingEditPageContent({
           </div>
         </div>
 
-        <LandingActionGroup
-          landingId={landing?.id}
-          previewHref={previewHref}
-          isPublished={isPublished}
-          hasUnpublishedChanges={hasUnpublishedChanges}
-          previewLiveLabel={t("common.previewLive")}
-          previewDraftLabel={t("common.previewDraft")}
-          canPublish={canPublish}
-          publishVariant={publishVariant}
-          toggleButtonLabel={toggleButtonLabel}
-          onPublish={handlePublish}
-          onUnpublish={handleUnpublish}
-          showUnpublish={isPublished && !hasUnpublishedChanges}
-          isSubmitting={isSubmitting}
-          isToggleLoading={isToggleLoading}
-          isFormDirty={form.formState.isDirty}
-          unpublishLabel={t("common.unpublish")}
-        />
+        {activeTab === "content" && (
+          <LandingActionGroup
+            landingId={landing?.id}
+            previewHref={previewHref}
+            isPublished={isPublished}
+            hasUnpublishedChanges={hasUnpublishedChanges}
+            previewLiveLabel={t("common.previewLive")}
+            previewDraftLabel={t("common.previewDraft")}
+            canPublish={canPublish}
+            publishVariant={publishVariant}
+            toggleButtonLabel={toggleButtonLabel}
+            onPublish={handlePublish}
+            onUnpublish={handleUnpublish}
+            showUnpublish={isPublished && !hasUnpublishedChanges}
+            isSubmitting={isSubmitting}
+            isToggleLoading={isToggleLoading}
+            isFormDirty={form.formState.isDirty}
+            unpublishLabel={t("common.unpublish")}
+          />
+        )}
       </div>
 
       {/* MAIN FORM */}
@@ -202,10 +224,24 @@ export function LandingEditPageContent({
           ) : (
             <FormProvider {...form} key={id}>
               <form onSubmit={onSubmit} className="space-y-6">
-                <Tabs defaultValue="settings" className="space-y-4">
+                <Tabs
+                  value={activeTab}
+                  onValueChange={(value) => setActiveTab(value as "settings" | "content")}
+                  className="space-y-4"
+                >
                   <TabsList>
-                    <TabsTrigger value="settings">{t("tabs.settings")}</TabsTrigger>
-                    <TabsTrigger value="content">{t("tabs.content")}</TabsTrigger>
+                    <TabsTrigger
+                      value="settings"
+                      className={getTabTriggerClass(hasSettingsErrors)}
+                    >
+                      {t("tabs.settings")}
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="content"
+                      className={getTabTriggerClass(hasContentErrors)}
+                    >
+                      {t("tabs.content")}
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="settings" className="space-y-4">

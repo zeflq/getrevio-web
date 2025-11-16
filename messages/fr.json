@@ -115,6 +115,14 @@
           "ctaLabel": "Libellé du CTA (optionnel)",
           "linkedCampaign": "Campagne liée",
           "linkedPlace": "Lieu lié"
+        },
+        "intentHero": {
+          "label": "Intent Hero",
+          "description": "CTA très visible taillé pour les landings slot-game.",
+          "title": "Titre",
+          "subtitle": "Sous-titre",
+          "ctaLabel": "Libellé du bouton",
+          "ctaUrl": "URL du bouton"
         }
       },
       "actions": {

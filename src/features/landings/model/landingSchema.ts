@@ -31,6 +31,7 @@ export type LandingBlockInput = z.input<typeof LandingBlockSchema>;
 export type LandingBlockOutput = z.output<typeof LandingBlockSchema>;
 
 export type LandingContentInput = z.input<typeof LandingContentSchema>;
+export type LandingContentCreateInput = z.input<typeof LandingContentCreateSchema>;
 export type LandingContentOutput = z.output<typeof LandingContentSchema>;
 
 /** Alias (si utilisé ailleurs) */
@@ -43,11 +44,11 @@ export const createLandingContentDefaults = (): LandingContentInput => ({
 });
 
 export const ensureLandingContentShape = (
-  value?: LandingContentInput | LandingContent | null
+  value?: LandingContentCreateInput | LandingContentInput | LandingContent | null
 ): LandingContent => {
   const content = value ?? createLandingContentDefaults();
   return {
-    layout: content.layout ?? "full",
+    layout: "full",
     templateId: content.templateId ?? null,
     blocks: Array.isArray(content.blocks) ? content.blocks : [],
   };
@@ -133,19 +134,19 @@ const landingPayloadCore = z.object({
   merchantId: z.string().min(1, "Merchant is required"),
   name: z.string().min(1, "Name is required"),
   slug: alphanumericSlug,
-  status: landingStatusEnum.default("draft"),
+  //status: landingStatusEnum.default("draft"),
   content: LandingContentSchema,
   belongsTo: landingBelongsToSchema,
 });
 
-export const landingPayloadSchema = landingPayloadCore.extend({
-  content: LandingContentSchema,
-});
+// export const landingPayloadSchema = landingPayloadCore.extend({
+//   content: LandingContentSchema,
+// });
 
 export const landingCreateSchema = landingPayloadCore.extend({
   content: LandingContentCreateSchema,
 });
-export const landingUpdateSchema = landingPayloadSchema.partial();
+export const landingUpdateSchema = landingPayloadCore.partial();
 
 export type LandingCreateInput = z.input<typeof landingCreateSchema>; // INPUT
 export type LandingUpdateInput = z.input<typeof landingUpdateSchema>; // INPUT (partial)
@@ -162,7 +163,7 @@ export const mapLandingFormToPayload = (form: LandingFormLikeValues): LandingCre
     merchantId: form.settings.merchantId,
     name: form.settings.name,
     slug: form.settings.slug,
-    status: form.settings.status ?? "draft",
+  //  status: form.settings.status ?? "draft",
     content: ensureLandingContentShape(contentInput),
     belongsTo: form.belongsTo,
   };

@@ -4,8 +4,6 @@ import * as React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useLocale, useTranslations } from "next-intl";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
 import { createBlockByKind, type LandingBlock, type LandingBlockKind } from "../blocks";
 import type { LandingBelongsTo, LandingFormValues } from "../model/landingSchema";
 import type { LandingListItem } from "../server/mappers";
@@ -24,36 +22,28 @@ interface LandingContentEditorProps {
 export function LandingContentEditor({ landing, disabled }: LandingContentEditorProps) {
   const t = useTranslations("landings.editor");
   const form = useFormContext<LandingFormValues>();
+
   const blocks =
     (useWatch<LandingFormValues, "content.blocks">({
       name: "content.blocks",
       control: form.control,
     }) ?? []) as LandingBlock[];
 
-  const {
-    fields,
-    append,
-    insert,
-    move,
-    remove,
-  } = useBlocksFieldArray();
-
+  const { fields, append, insert, move, remove } = useBlocksFieldArray();
   const { selectedId, selectById, selectByIndex } = useSelectedBlock(fields);
 
-  const [templateId, setTemplateId] = React.useState<string | null>(() =>
-    landing?.contentDraft.templateId ?? landingTemplates[0]?.id ?? null
+  // Template is now fully controlled by the system:
+  // - existing landing: landing.contentDraft.templateId
+  // - new landing: first template
+  const templateId =
+    landing?.contentDraft.templateId ?? landingTemplates[0]?.id ?? null;
+
+  const template = React.useMemo(
+    () => landingTemplates.find((entry) => entry.id === templateId) ?? null,
+    [templateId]
   );
 
-  React.useEffect(() => {
-    if (landing?.contentDraft.templateId && landing.contentDraft.templateId !== templateId) {
-      setTemplateId(landing.contentDraft.templateId);
-      return;
-    }
-    if (!landing && templateId === null && landingTemplates[0]) {
-      setTemplateId(landingTemplates[0].id);
-    }
-  }, [landing?.contentDraft.templateId, landing, templateId]);
-
+  // Keep form in sync with derived templateId
   React.useEffect(() => {
     form.setValue("content.templateId", templateId, {
       shouldDirty: true,
@@ -61,33 +51,29 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
     });
   }, [form, templateId]);
 
-  const template = React.useMemo(
-    () => landingTemplates.find((entry) => entry.id === templateId) ?? null,
-    [templateId]
-  );
-
   const templateRequiredFixed = React.useMemo(
     () => getTemplateFixedCountMap(template),
     [template]
   );
 
   const hasSeededTemplate = React.useRef(false);
+
+  // Seed fixed blocks from template once
   React.useEffect(() => {
-    if (hasSeededTemplate.current) {
-      return;
-    }
-    const fixedSlots = template?.blocks?.filter((definition) => definition.mode === "fixed") ?? [];
-    if (!fixedSlots.length) {
-      return;
-    }
-    if (blocks.length > 0) {
-      return;
-    }
+    if (hasSeededTemplate.current) return;
+
+    const fixedSlots =
+      template?.blocks?.filter((definition) => definition.mode === "fixed") ?? [];
+    if (!fixedSlots.length) return;
+    if (blocks.length > 0) return;
 
     hasSeededTemplate.current = true;
 
     fixedSlots.forEach((definition) => {
-      const block = createBlockByKind(definition.blockType, definition.defaultData as any);
+      const block = createBlockByKind(
+        definition.blockType,
+        definition.defaultData as any
+      );
       block.__templateBlockId = definition.id;
       block.__templateFixed = true;
       append(block);
@@ -107,9 +93,8 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
 
   const handleDuplicate = (index: number) => {
     const source = blocks[index];
-    if (!source) {
-      return;
-    }
+    if (!source) return;
+
     const duplicate = createBlockByKind(source.kind, source.data as any);
     insert(index + 1, duplicate);
     selectByIndex(index + 1);
@@ -117,9 +102,7 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
 
   const handleDelete = (index: number) => {
     const block = blocks[index];
-    if (!block) {
-      return;
-    }
+    if (!block) return;
 
     if (block.__templateFixed) {
       const requiredCount = templateRequiredFixed.get(block.kind);
@@ -140,14 +123,12 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
     move(fromIndex, toIndex);
   };
 
-  const templateLabel = t("templates.label");
-  const templatePlaceholder = t("templates.placeholder");
   const templateDescriptionLabel = t("templates.description");
   const locale = useLocale();
   const templateDescription =
     template?.description?.[locale as "en" | "fr"] ?? template?.description?.en;
 
-  const belongsTo : LandingBelongsTo | undefined =
+  const belongsTo: LandingBelongsTo | undefined =
     landing?.belongsTo?.type === "place"
       ? { type: "place", placeId: landing.belongsTo.id }
       : landing?.belongsTo?.type === "campaign"
@@ -156,27 +137,17 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-2 rounded-lg border border-border p-4 lg:flex-row lg:items-center">
+      {/* <div className="flex flex-col gap-2 rounded-lg border border-border p-4 lg:flex-row lg:items-center">
         <div className="flex-1 space-y-1">
           <p className="text-sm font-semibold">{t("addBlock")}</p>
           <p className="text-sm text-muted-foreground">{t("selectPrompt")}</p>
+          {template && (
+            <p className="text-xs text-muted-foreground">
+              Template: <span className="font-medium">{template.name}</span>
+            </p>
+          )}
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-medium text-muted-foreground">{templateLabel}</span>
-          <Select value={templateId ?? ""} onValueChange={(value) => setTemplateId(value || null)}>
-            <SelectTrigger className="h-9 w-48">
-              <SelectValue placeholder={templatePlaceholder} />
-            </SelectTrigger>
-            <SelectContent>
-              {landingTemplates.map((entry) => (
-                <SelectItem key={entry.id} value={entry.id}>
-                  {entry.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+      </div> */}
 
       {templateDescription ? (
         <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">

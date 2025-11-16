@@ -123,6 +123,7 @@ async function collectLinkedPlaceIds(tenantId?: string | null) {
     q: undefined,
     localName: undefined,
     merchantId: tenantId,
+    hasGooglePlaceId: undefined,
     page: 1,
     pageSize,
     sort: "createdAt",

@@ -3,9 +3,10 @@
 import * as React from "react";
 import { ArrowUp, ArrowDown, MoreHorizontal, ChevronDown, LockIcon, Pin } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useFormContext } from "react-hook-form";
 
 import { landingBlockPluginMap, type LandingBlock } from "../blocks";
-import type { LandingBelongsTo } from "../model/landingSchema";
+import type { LandingBelongsTo, LandingFormValues } from "../model/landingSchema";
 import type { LandingListItem } from "../server/mappers";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -67,10 +68,13 @@ export function BlockCard({
   const InspectorComponent = plugin?.Inspector;
 
   const isFixedBlock = block.__templateFixed ?? false;
+  const { formState } = useFormContext<LandingFormValues>();
+  const blockErrors = formState.errors.content?.blocks?.[index];
+  const hasBlockErrors = Boolean(blockErrors);
   const headerClasses = cn(
-    "bg-background border-b-1 rounded-lg flex items-center gap-4 px-4 py-3 text-left cursor-pointer hover:no-underline transition",
-    //selected ? "bg-secondary border border-border" : "bg-background border border-border",
-    isFixedBlock && "border-l-4 border-primary/50"
+    "bg-background border border-border/60 rounded-lg flex items-center gap-4 px-4 py-3 text-left cursor-pointer hover:no-underline transition",
+    isFixedBlock && "border-l-4 border-primary/50",
+    hasBlockErrors && "border-destructive/70 bg-destructive/5 text-destructive",
   );
 
   return (
@@ -86,7 +90,7 @@ export function BlockCard({
           className={headerClasses}
         >
           {/* Reorder buttons */}
-          <div className="flex flex-col gap-2"
+          <div className="flex flex-col gap-2 text-foreground"
             onClick={(e) => {
               e.stopPropagation();
             }}

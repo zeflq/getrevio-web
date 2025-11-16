@@ -84,6 +84,34 @@ export const landingTemplates: LandingTemplate[] = [
       },
     ],
   },
+  {
+    id: "slot-game",
+    name: "Slot game",
+    description: {
+      en: "A bold CTA hero to kick off your slot-game-specific landing.",
+      fr: "Un hero accrocheur pour lancer votre landing dédié au slot-game.",
+    },
+    blocks: [
+      {
+        id: "slot-game-intent",
+        blockType: "intentHero",
+        label: "Intent hero",
+        mode: "fixed",
+        maxInstances: 1,
+        defaultData: {
+          title: "Play the slot—big fun awaits",
+          subtitle: "Spin the reels and grab a bonus",
+        },
+      },
+      {
+        id: "slot-game-legal",
+        blockType: "legalText",
+        label: "Legal text",
+        mode: "optional",
+        maxInstances: 1,
+      },
+    ],
+  },
 ];
 
 export const getTemplateById = (id?: string | null) =>
