@@ -119,6 +119,7 @@
         "intentHero": {
           "label": "Intent Hero",
           "description": "CTA très visible taillé pour les landings slot-game.",
+          "descriptionLabel": "Description",
           "title": "Titre",
           "subtitle": "Sous-titre",
           "ctaLabel": "Libellé du bouton",
@@ -139,6 +140,7 @@
     "toasts": {
       "updated": "Landing mis à jour",
       "published": "Landing publié",
+      "publishedChanges": "Landing publié avec modifications",
       "unpublished": "Landing dépublié"
     },
     "table": {

@@ -40,9 +40,9 @@
   --sidebar-accent-foreground: oklch(0.3729 0.0306 259.7328);
   --sidebar-border: oklch(0.8717 0.0093 258.3382);
   --sidebar-ring: oklch(0.5854 0.2041 277.1173);
-  --font-sans: Inter, sans-serif;
+  /* --font-sans: Inter, sans-serif;
   --font-serif: Merriweather, serif;
-  --font-mono: JetBrains Mono, monospace;
+  --font-mono: JetBrains Mono, monospace; */
   --radius: 0.5rem;
   --shadow-x: 0px;
   --shadow-y: 4px;
@@ -99,9 +99,9 @@
   --sidebar-accent-foreground: oklch(0.8717 0.0093 258.3382);
   --sidebar-border: oklch(0.4461 0.0263 256.8018);
   --sidebar-ring: oklch(0.6801 0.1583 276.9349);
-  --font-sans: Inter, sans-serif;
+  /* --font-sans: Inter, sans-serif;
   --font-serif: Merriweather, serif;
-  --font-mono: JetBrains Mono, monospace;
+  --font-mono: JetBrains Mono, monospace; */
   --radius: 0.5rem;
   --shadow-x: 0px;
   --shadow-y: 4px;
@@ -157,10 +157,6 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-  --font-serif: var(--font-serif);
-
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -183,5 +179,18 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+@keyframes slotIconGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    box-shadow: 0 0 14px var(--landing-accent);
+    transform: translateY(-1px);
+    opacity: 1;
   }
 }

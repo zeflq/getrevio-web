@@ -121,6 +121,7 @@
         "intentHero": {
           "label": "Intent Hero",
           "description": "High-visibility CTA designed for slot-game launches.",
+          "descriptionLabel": "Description",
           "title": "Title",
           "subtitle": "Subtitle",
           "ctaLabel": "Button label",
@@ -141,6 +142,7 @@
     "toasts": {
       "updated": "Landing updated",
       "published": "Landing published",
+      "publishedChanges": "Landing published with changes",
       "unpublished": "Landing unpublished"
     },
     "table": {

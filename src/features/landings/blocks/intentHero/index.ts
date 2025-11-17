@@ -12,8 +12,8 @@ const intentHeroPlugin: LandingBlockPlugin<IntentHeroData> = {
     subtitle: "Give it a spin and try your luck",
     cta: {
       label: "Je tente ma chance",
-      url: "",
     },
+    description: "Lancer la machine et tenter de gagner des lots incroyables !",
   },
   Renderer: IntentHeroRenderer,
   Inspector: IntentHeroInspector,

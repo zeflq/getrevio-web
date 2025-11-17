@@ -101,6 +101,9 @@ export const landingTemplates: LandingTemplate[] = [
         defaultData: {
           title: "Play the slot—big fun awaits",
           subtitle: "Spin the reels and grab a bonus",
+          cta: {
+            label: "Je tente ma chance",
+          },
         },
       },
       {
