@@ -38,7 +38,7 @@ Entities (merchant scope)
     
 *   **Campaign**: targets a Place; can override theme/copy; can have **multiple shortlinks** (per channel).
     
-*   **Theme**: reusable visual tokens; precedence: Shortlink.theme → Campaign.theme → Place.theme → Merchant.defaultTheme.
+*   **Theme**: reusable visual tokens; precedence: Shortlink.theme → Campaign.theme → Place.theme.
     
 *   **Shortlink** (DB registry + Redis key): independent entries targeting a Campaign/Place/custom URL.
     

@@ -5,5 +5,5 @@ export * from './components/DeleteMerchantDialog';
 export * from './components/MerchantDetailsCard';
 export * from './components/MerchantHeader';
 export * from './components/QuickStatsCard';
-export * from './hooks/useMerchantQuickStats';
+// export * from './hooks/useMerchantQuickStats';
 export * from './hooks/useMerchantCrud';

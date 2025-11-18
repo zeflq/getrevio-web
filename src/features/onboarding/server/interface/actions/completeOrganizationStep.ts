@@ -8,7 +8,6 @@ import { ActionError } from "@/lib/action-error";
 import { SUPER_ADMIN } from "@/lib/utils";
 import { PrismaThemeRepository } from "@/features/themes/server/infrastructure/prisma/prismaThemeRepository";
 import { CreateThemeUseCase } from "@/features/themes/server/application/usecases/createThemeUseCase";
-import { SetDefaultThemeUseCase } from "@/features/themes/server/application/usecases/setDefaultThemeUseCase";
 import { buildThemeMeta } from "@/features/themes/lib/themeMeta";
 
 import {
@@ -18,8 +17,6 @@ import {
 
 const themeRepository = new PrismaThemeRepository();
 const createThemeUseCase = new CreateThemeUseCase(themeRepository);
-const setDefaultThemeUseCase = new SetDefaultThemeUseCase(themeRepository);
-
 const MAX_SLUG_ATTEMPTS = 15;
 const DEFAULT_THEME_NAME = "Default";
 
@@ -196,12 +193,6 @@ async function ensureDefaultTheme(args: { organizationId: string; userRole?: str
       userRole,
     });
 
-    await setDefaultThemeUseCase.execute({
-      merchantId: organizationId,
-      tenantId: organizationId,
-      themeId,
-      userRole,
-    });
   } catch (error) {
     if (error instanceof Error) {
       throw new ActionError(500, error.message || "DEFAULT_THEME_FAILED");

@@ -5,4 +5,3 @@ export * from './components/columns';
 export * from './components/CreateThemeDialog';
 export * from './components/EditThemeSheet';
 export * from './components/DeleteThemeDialog';
-export * from './hooks/useSetDefaultTheme';

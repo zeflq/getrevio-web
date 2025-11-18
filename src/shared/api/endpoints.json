@@ -14,8 +14,7 @@
   },
   "themes": {
     "base": "/themes",
-    "byId": "/themes/:id",
-    "setDefaultForMerchant": "/merchants/:merchantId/themes/:themeId/default"
+    "byId": "/themes/:id"
   },
   "shortlinks": {
     "base": "/shortlinks",

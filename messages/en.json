@@ -173,6 +173,22 @@
       }
     }
   },
+  "merchantSettings": {
+    "theme": {
+      "title": "Reset theme",
+      "description": "Choose a landing preset to overwrite colors and tokens.",
+      "presetPlaceholder": "Preset",
+      "resetButton": "Reset theme",
+      "resettingLabel": "Resetting…",
+      "colors": {
+        "primary": "Primary",
+        "secondary": "Secondary",
+        "accent": "Accent",
+        "background": "Background",
+        "text": "Text"
+      }
+    }
+  },
   "googlePlaces": {
     "description": "These are your Google Business locations. Link any unlinked place to associate it with an internal place.",
     "linkDialog": {

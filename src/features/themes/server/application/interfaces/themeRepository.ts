@@ -17,5 +17,4 @@ export interface ThemeRepository {
   create(data: ThemeCreateRecord): Promise<string>;
   update(data: ThemeUpdateRecord, tenantId?: string | null): Promise<void>;
   delete(id: string, tenantId?: string | null): Promise<void>;
-  setDefaultTheme(merchantId: string, themeId: string, tenantId?: string | null): Promise<void>;
 }

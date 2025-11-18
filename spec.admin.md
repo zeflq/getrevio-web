@@ -24,7 +24,6 @@ Product & Data Spec — Admin + Merchant (Final)
 type Merchant = {
   id: string;
   name: string;
-  defaultThemeId?: string;           // reference to Theme
   email?: string;
   plan: 'free' | 'pro' | 'enterprise';
   status: 'active' | 'suspended';
@@ -60,7 +59,7 @@ type Place = {
   slug: string;                      // globally unique
   address?: string;
   // visuals
-  themeId?: string;                  // overrides merchant default
+  themeId?: string;                  // optional visual override
   // optional platform reference (kept for future integrations)
   googlePlaceId?: string;
   // shortlink integration
@@ -206,7 +205,7 @@ Input: /s/{code}?ch=qr
 3) Rendering Precedence
 -----------------------
 
-*   **Theme (visuals):** Shortlink.theme → Campaign.theme → Place.theme → Merchant.defaultTheme
+*   **Theme (visuals):** Shortlink.theme → Campaign.theme → Place.theme
     
 *   **Landing copy:** Campaign landing overrides are optional per campaign
     

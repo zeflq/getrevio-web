@@ -13,7 +13,6 @@ export class CreateMerchantUseCase {
       name: parsed.name,
       email: parsed.email ?? null,
       locale: parsed.locale ?? null,
-      defaultThemeId: parsed.defaultThemeId ?? null,
       plan: parsed.plan,
       status: parsed.status,
     });

@@ -8,7 +8,6 @@ import {
   CreateThemeDialog,
   EditThemeSheet,
   DeleteThemeDialog,
-  useSetDefaultTheme,
 } from "@/features/themes";
 import { useDataTableController } from "@/shared/ui/data-table/useDataTableController";
 import { DataTableCards } from "@/shared/ui/data-table/DataTableCards";
@@ -18,10 +17,9 @@ import type { Theme } from "@/types/domain";
 
 type Props = {
   merchantId: string;
-  defaultThemeId?: string;
 };
 
-export function MerchantThemesTab({ merchantId, defaultThemeId }: Props) {
+export function MerchantThemesTab({ merchantId }: Props) {
   // --- table state
   const [pageIndex, setPageIndex] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
@@ -55,8 +53,6 @@ export function MerchantThemesTab({ merchantId, defaultThemeId }: Props) {
   const totalPages = themesResponse?.totalPages ?? 1;
   const total = themesResponse?.total ?? 0;
 
-  const { execute: setDefaultTheme, isExecuting: isSettingDefault } = useSetDefaultTheme(merchantId);
-
   const columns = themeColumns({
     onEdit: (id) => setEditId(id),
     onDelete: (id) => {
@@ -67,9 +63,6 @@ export function MerchantThemesTab({ merchantId, defaultThemeId }: Props) {
         merchantId,
       });
     },
-    onSetDefault: (id) => setDefaultTheme({ merchantId, themeId: id }),
-    defaultThemeId,
-    isSettingDefault,
   });
 
   const controller = useDataTableController({
@@ -144,12 +137,7 @@ export function MerchantThemesTab({ merchantId, defaultThemeId }: Props) {
         isLoading={isLoading}
         emptyText="No themes found."
         serverTotalRowsLabel={`${total} theme(s)`}
-        rowClassName={(row) => {
-          const theme = row.original as Theme;
-          return defaultThemeId && theme.id === defaultThemeId
-            ? "bg-muted/60 ring-1 ring-primary/50"
-            : undefined;
-        }}
+        rowClassName={() => undefined}
       />
     </div>
   );

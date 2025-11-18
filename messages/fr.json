@@ -171,6 +171,22 @@
       }
     }
   },
+  "merchantSettings": {
+    "theme": {
+      "title": "Réinitialiser le thème",
+      "description": "Choisissez un preset pour rétablir les couleurs et tokens du landing.",
+      "presetPlaceholder": "Preset",
+      "resetButton": "Réinitialiser le thème",
+      "resettingLabel": "Réinitialisation…",
+      "colors": {
+        "primary": "Primaire",
+        "secondary": "Secondaire",
+        "accent": "Accent",
+        "background": "Fond",
+        "text": "Texte"
+      }
+    }
+  },
   "googlePlaces": {
     "description": "Voici vos emplacements Google Business. Associez chaque lieu non lié à un lieu interne existant.",
     "linkDialog": {

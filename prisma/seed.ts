@@ -1,6 +1,9 @@
 import { PrismaClient, Plan, Status } from "@prisma/client";
+import { buildThemeMeta } from "../src/features/themes/lib/themeMeta";
 
 const prisma = new PrismaClient();
+
+const defaultThemeMeta = buildThemeMeta();
 
 async function main() {
   const merchants = [
@@ -59,7 +62,6 @@ async function main() {
           locale: merchant.locale,
           plan: merchant.plan,
           status: merchant.status,
-          defaultThemeId: merchant?.defaultThemeId,
         },
         create: merchant,
       })
@@ -116,28 +118,25 @@ async function main() {
       merchantId: "mer_1",
       name: "Modern Minimal",
       logoUrl: "https://example.com/assets/bella-logo.png",
-      brandColor: "#1D3557",
-      accentColor: "#E63946",
-      textColor: "#F1FAEE",
+      meta: defaultThemeMeta,
       createdAt: new Date("2025-09-20T10:10:00Z"),
+      updatedAt: new Date("2025-09-20T10:10:00Z"),
     },
     {
       id: "th_warm",
       merchantId: "mer_2",
       name: "Warm Luxe",
-      brandColor: "#8D5524",
-      accentColor: "#C68642",
-      textColor: "#F5E6DA",
+      meta: defaultThemeMeta,
       createdAt: new Date("2025-09-21T09:10:00Z"),
+      updatedAt: new Date("2025-09-21T09:10:00Z"),
     },
     {
       id: "th_daybreak",
       merchantId: "mer_3",
       name: "Daybreak Espresso",
-      brandColor: "#2a9d8f",
-      accentColor: "#e9c46a",
-      textColor: "#264653",
+      meta: defaultThemeMeta,
       createdAt: new Date("2025-09-22T08:50:00Z"),
+      updatedAt: new Date("2025-09-22T08:50:00Z"),
     },
   ];
 
@@ -148,19 +147,12 @@ async function main() {
         update: {
           name: theme.name,
           logoUrl: theme.logoUrl,
-          brandColor: theme.brandColor,
-          accentColor: theme.accentColor,
-          textColor: theme.textColor,
+          meta: theme.meta,
         },
         create: theme,
       })
     )
   );
-
-  await prisma.merchant.updateMany({
-    where: { id: "mer_1" },
-    data: { defaultThemeId: "th_modern" },
-  });
 
   const superAdminEmail = "flaviodelmondo@gmail.com";
 

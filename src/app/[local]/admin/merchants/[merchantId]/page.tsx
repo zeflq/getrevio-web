@@ -64,10 +64,7 @@ export default function MerchantDetailPage({
         </TabsContent>
         <TabsContent value="themes">
           {merchant?.id ? (
-            <MerchantThemesTab
-              merchantId={merchant.id}
-              defaultThemeId={merchant.defaultThemeId}
-            />
+            <MerchantThemesTab merchantId={merchant.id} />
           ) : (
             <div className="p-4 text-muted-foreground">Loading…</div>
           )}

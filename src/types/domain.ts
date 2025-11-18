@@ -35,7 +35,6 @@ export interface Merchant {
   name: string;
   email?: string;
   locale?: string;
-  defaultThemeId?: string
   plan: 'free' | 'pro' | 'enterprise';
   status: 'active' | 'suspended';
   createdAt: ISODate;

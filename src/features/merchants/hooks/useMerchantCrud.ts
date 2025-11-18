@@ -14,7 +14,6 @@ type MerchantListItem = {
   id: string;
   name: string;
   email: string;
-  defaultThemeId?: string;
   plan: "free" | "pro" | "enterprise";
   status: "active" | "suspended";
   createdAt: string;

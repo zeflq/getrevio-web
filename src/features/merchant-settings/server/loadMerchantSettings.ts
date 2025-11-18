@@ -12,7 +12,6 @@ export type MerchantSettingsMerchant = {
   id: string;
   name: string;
   email?: string | null;
-  defaultThemeId?: string | null;
 };
 
 export type MerchantSettingsData = {
@@ -47,7 +46,6 @@ export async function loadMerchantSettings(args: { tenantId?: string | null }): 
         id: record.id,
         name: record.name ?? "",
         email: record.email ?? null,
-        defaultThemeId: record.defaultThemeId ?? null,
       };
     }
   } catch (error) {

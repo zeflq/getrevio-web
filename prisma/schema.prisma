@@ -18,14 +18,12 @@ model Merchant {
   name           String
   email          String?      @unique
   locale         String?
-  defaultThemeId String?
   plan           Plan         @default(free)
   status         Status       @default(active)
   createdAt      DateTime     @default(now())
   onboardingStep Int          @default(0)
   places         Place[]
   themes         Theme[]
-  defaultTheme   Theme?       @relation("MerchantDefaultTheme", fields: [defaultThemeId], references: [id])
   campaigns      Campaign[]
   shortlinks     Shortlink[]
   landings       Landing[]
@@ -60,14 +58,13 @@ model Place {
 }
 
 model Theme {
-  id                    String     @id @default(cuid())
-  merchantId            String
-  merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  name                  String
-  meta                  Json?
-  createdAt             DateTime   @default(now())
-  updatedAt             DateTime   @updatedAt
-  merchantsUsingDefault Merchant[] @relation("MerchantDefaultTheme")
+  id         String   @id @default(cuid())
+  merchantId String
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  name       String
+  meta       Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Campaign {

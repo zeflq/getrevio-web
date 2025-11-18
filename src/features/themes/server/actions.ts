@@ -1,2 +1,6 @@
 export { createThemeAction } from "./interface/actions/createTheme";
-export { updateThemeAction, deleteThemeAction, setDefaultThemeAction } from "./interface/actions/mutateTheme";
+export {
+  updateThemeAction,
+  deleteThemeAction,
+  resetThemeAction,
+} from "./interface/actions/mutateTheme";

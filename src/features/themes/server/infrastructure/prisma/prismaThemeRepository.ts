@@ -69,17 +69,6 @@ export class PrismaThemeRepository implements ThemeRepository {
     await this.client.delete({ where: { id } });
   }
 
-  async setDefaultTheme(merchantId: string, themeId: string, tenantId?: string | null): Promise<void> {
-    if (tenantId && tenantId !== merchantId) {
-      throw new Error("FORBIDDEN");
-    }
-
-    await prisma.merchant.update({
-      where: { id: merchantId },
-      data: { defaultThemeId: themeId },
-    });
-  }
-
   private async ensureTenant(id: string, tenantId: string | null) {
     if (!tenantId) return;
     const existing = await this.client.findFirst({

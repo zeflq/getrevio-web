@@ -164,19 +164,18 @@ export class PrismaLandingQueryRepository implements LandingQueryRepository {
         where,
         select: {
           ...landingSelect,
-          merchant: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              locale: true,
-              defaultThemeId: true,
-              plan: true,
-              status: true,
-              createdAt: true,
-              slug: true,
+            merchant: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                locale: true,
+                plan: true,
+                status: true,
+                createdAt: true,
+                slug: true,
+              },
             },
-          },
         },
       }),
       options

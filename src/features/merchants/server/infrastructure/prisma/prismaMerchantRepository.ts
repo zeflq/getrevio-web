@@ -19,7 +19,6 @@ export class PrismaMerchantRepository implements MerchantRepository {
         name: data.name,
         email: data.email ?? null,
         locale: data.locale ?? null,
-        defaultThemeId: data.defaultThemeId ?? null,
         plan: data.plan,
         status: data.status,
       },
@@ -42,12 +41,6 @@ export class PrismaMerchantRepository implements MerchantRepository {
 
     if (Object.prototype.hasOwnProperty.call(data, "locale")) {
       patch.locale = data.locale ?? null;
-    }
-
-    if (Object.prototype.hasOwnProperty.call(data, "defaultThemeId")) {
-      patch.defaultTheme = data.defaultThemeId
-        ? { connect: { id: data.defaultThemeId } }
-        : { disconnect: true };
     }
 
     if (Object.prototype.hasOwnProperty.call(data, "plan")) {
@@ -106,7 +99,6 @@ export class PrismaMerchantRepository implements MerchantRepository {
       name: row.name,
       email: row.email ?? null,
       locale: row.locale ?? null,
-      defaultThemeId: row.defaultThemeId ?? null,
       plan: row.plan,
       status: row.status,
       createdAt: row.createdAt,

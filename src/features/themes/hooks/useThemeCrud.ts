@@ -2,12 +2,15 @@ import {
   createThemeAction,
   updateThemeAction,
   deleteThemeAction,
+  resetThemeAction,
 } from "@/features/themes/server/actions";
 import { createCrudBridge, type ListEnvelope } from "@/hooks/createCrudBridge";
 import { http } from "@/shared/lib/http";
 import type { LiteListe } from "@/types/lists";
 import type { ThemeQueryParams } from "../model/themeSchema";
 import type { ThemeListItem } from "../server/queries";
+import { QueryKey, useQueryClient } from "@tanstack/react-query";
+import { useAction } from "next-safe-action/hooks";
 
 const buildQuery = (params: Record<string, unknown>) => {
   const search = new URLSearchParams();
@@ -53,3 +56,25 @@ export const useThemeItem = (id?: string) => bridge.useItem!(id);
 export const useCreateTheme = bridge.useCreateAction!;
 export const useUpdateTheme = bridge.useUpdateAction!;
 export const useDeleteTheme = bridge.useRemoveAction!;
+
+export type ResetThemeInput = { id: string; merchantId: string; presetKey: string };
+export const useResetTheme = (options?: {
+  onSuccess?: (args: { data: { ok?: boolean }; input: ResetThemeInput }) => void;
+  onError?: (args: { error: unknown; input: ResetThemeInput }) => void;
+  extraInvalidateKeys?: QueryKey[];
+}) => {
+  const qc = useQueryClient();
+  const { onSuccess, onError, extraInvalidateKeys, ...rest } = options ?? {};
+  return useAction(resetThemeAction, {
+    ...rest,
+    onSuccess: (args) => {
+      qc.invalidateQueries({ queryKey: ["themes", "list"] });
+      qc.invalidateQueries({ queryKey: ["themes", "lite"] });
+      extraInvalidateKeys?.forEach((k) => qc.invalidateQueries({ queryKey: k }));
+      onSuccess?.({ data: args.data, input: args.input as ResetThemeInput });
+    },
+    onError: (args) => {
+      onError?.({ error: args.error, input: args.input as ResetThemeInput });
+    },
+  });
+};

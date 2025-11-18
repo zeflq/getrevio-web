@@ -31,18 +31,6 @@ server.get('/merchants/:id/stats', (req, res) => {
   return res.json({ places, campaigns, shortlinks });
 });
 
-// Set default theme for a merchant
-server.post('/merchants/:id/themes/:themeId/default', (req, res) => {
-  const { id, themeId } = req.params;
-  const db = router.db;
-
-  const merchant = db.get('merchants').find({ id });
-  if (!merchant.value()) return res.status(404).json({ error: 'Merchant not found' });
-
-  merchant.assign({ defaultThemeId: themeId }).write();
-  return res.json({ success: true, merchantId: id, defaultThemeId: themeId });
-});
-
 /* -------------------------- Custom renderer stays --------------------------- */
 router.render = (req, res) => {
   const totalHeader = res.getHeader('X-Total-Count');

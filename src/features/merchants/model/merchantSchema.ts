@@ -24,7 +24,6 @@ export const merchantCreateSchema = z.object({
   locale: localeSchema,   // => string | undefined after transform
   plan: z.enum(["free", "pro", "enterprise"]),
   status: z.enum(["active", "suspended"]),
-  defaultThemeId: z.string().optional().nullable(),
 });
 
 // For update, make all fields optional (id optional if you send it in body)
