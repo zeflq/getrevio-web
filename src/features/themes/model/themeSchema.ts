@@ -1,25 +1,56 @@
-import { z } from 'zod';
+import { z } from "zod";
+import { landingThemes } from "@/features/landings/theme/themes";
+
+const presetKeys = z.enum(Object.keys(landingThemes) as [string, ...string[]]);
+
+const paletteSchema = z.object({
+  primary: z
+    .string()
+    .regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color like #1E1E1E"),
+  secondary: z
+    .string()
+    .regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  accent: z
+    .string()
+    .regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  background: z
+    .string()
+    .regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  text: z
+    .string()
+    .regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+});
+
+const tokensSchema = z.object({
+  surface: z.string().regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  surfaceSoft: z.string().regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  border: z.string().regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  mutedText: z.string().regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  ctaBg: z.string().regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  ctaText: z.string().regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  ctaHoverBg: z.string().regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  slotBackground: z
+    .string()
+    .regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  slotTileBg: z.string().regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  slotTileBorder: z.string().regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  slotIcon: z.string().regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  slotCenterBg: z.string().regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  slotCenterText: z.string().regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color"),
+  slotGlowPrimary: z.string(),
+  slotGlowAccent: z.string(),
+});
+
+const themeMetaSchema = z.object({
+  presetKey: presetKeys,
+  palette: paletteSchema,
+  tokens: tokensSchema,
+});
 
 export const themeCreateSchema = z.object({
-  merchantId: z.string().min(1, 'Merchant is required'),
-  name: z.string().min(1, 'Name is required'),
-  logoUrl: z.string().url('Must be a valid URL').optional(),
-   brandColor: z
-    .string()
-    .regex(/^#([0-9a-fA-F]{3}){1,2}$/, "Use hex color like #FF6600")
-    .optional()
-    .or(z.literal("")),
-  accentColor: z
-    .string()
-    .regex(/^#([0-9a-fA-F]{3}){1,2}$/,"Use hex color")
-    .optional()
-    .or(z.literal("")),
-  textColor: z
-    .string()
-    .regex(/^#([0-9a-fA-F]{3}){1,2}$/,"Use hex color")
-    .optional()
-    .or(z.literal("")),
-  meta: z.record(z.string(), z.unknown()).optional(),
+  merchantId: z.string().min(1, "Merchant is required"),
+  name: z.string().min(1, "Name is required"),
+  meta: themeMetaSchema,
 });
 
 export const themeUpdateSchema = themeCreateSchema.partial().extend({

@@ -10,7 +10,6 @@ export const buildThemeWhere = (
     ? {
         OR: [
           { name: { contains: filters.q, mode: "insensitive" } },
-          { logoUrl: { contains: filters.q, mode: "insensitive" } },
         ],
       }
     : {}),

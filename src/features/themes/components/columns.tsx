@@ -4,17 +4,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Pencil, Trash2, Star } from "lucide-react";
 import { iconActionGroup as IconActionGroup, iconAction } from "@/shared/ui/IconActionGroup";
+import type { Theme } from "@/types/domain";
 
-export type ThemeRow = {
-  id: string;
-  merchantId?: string;
-  name: string;
-  logoUrl?: string;
-  brandColor?: string;
-  accentColor?: string;
-  textColor?: string;
-  createdAt: string;
-};
+export type ThemeRow = Theme;
 
 function ColorSwatch({ color }: { color?: string }) {
   const c = color ?? "#ccc";
@@ -53,19 +45,22 @@ export function themeColumns(opts: {
     },
     { accessorKey: "merchantId", header: "Merchant" },
     {
-      accessorKey: "brandColor",
-      header: "Brand",
-      cell: ({ row }) => <ColorSwatch color={row.original.brandColor} />,
+      id: "primary",
+      header: "Primary",
+      cell: ({ row }) => <ColorSwatch color={row.original.meta?.palette.primary} />,
+      accessorFn: (row) => row.meta?.palette.primary ?? "",
     },
     {
-      accessorKey: "accentColor",
+      id: "accent",
       header: "Accent",
-      cell: ({ row }) => <ColorSwatch color={row.original.accentColor} />,
+      cell: ({ row }) => <ColorSwatch color={row.original.meta?.palette.accent} />,
+      accessorFn: (row) => row.meta?.palette.accent ?? "",
     },
     {
-      accessorKey: "textColor",
+      id: "text",
       header: "Text",
-      cell: ({ row }) => <ColorSwatch color={row.original.textColor} />,
+      cell: ({ row }) => <ColorSwatch color={row.original.meta?.palette.text} />,
+      accessorFn: (row) => row.meta?.palette.text ?? "",
     },
 
     // TABLE actions (inline)

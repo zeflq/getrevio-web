@@ -15,19 +15,11 @@ export class CreateThemeUseCase {
     const data: ThemeCreateInput = {
       ...payload,
       name: payload.name.trim(),
-      logoUrl: payload.logoUrl?.trim(),
-      brandColor: payload.brandColor?.trim(),
-      accentColor: payload.accentColor?.trim(),
-      textColor: payload.textColor?.trim(),
     };
 
     const record: ThemeCreateRecord = {
       merchantId: data.merchantId,
       name: data.name,
-      logoUrl: data.logoUrl ?? null,
-      brandColor: data.brandColor ?? null,
-      accentColor: data.accentColor ?? null,
-      textColor: data.textColor ?? null,
       meta: data.meta,
     };
 

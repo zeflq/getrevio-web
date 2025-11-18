@@ -16,10 +16,6 @@ export class PrismaThemeRepository implements ThemeRepository {
       data: {
         merchantId: data.merchantId,
         name: data.name,
-        logoUrl: data.logoUrl ?? null,
-        brandColor: data.brandColor ?? null,
-        accentColor: data.accentColor ?? null,
-        textColor: data.textColor ?? null,
         meta:
           data.meta === undefined
             ? undefined // ne pas toucher à la colonne
@@ -39,22 +35,6 @@ export class PrismaThemeRepository implements ThemeRepository {
 
     if (data.name !== undefined) {
       patch.name = data.name;
-    }
-
-    if (data.logoUrl !== undefined) {
-      patch.logoUrl = data.logoUrl;
-    }
-
-    if (data.brandColor !== undefined) {
-      patch.brandColor = data.brandColor;
-    }
-
-    if (data.accentColor !== undefined) {
-      patch.accentColor = data.accentColor;
-    }
-
-    if (data.textColor !== undefined) {
-      patch.textColor = data.textColor;
     }
 
     if (data.meta !== undefined) {

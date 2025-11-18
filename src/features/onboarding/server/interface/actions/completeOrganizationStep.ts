@@ -9,24 +9,19 @@ import { SUPER_ADMIN } from "@/lib/utils";
 import { PrismaThemeRepository } from "@/features/themes/server/infrastructure/prisma/prismaThemeRepository";
 import { CreateThemeUseCase } from "@/features/themes/server/application/usecases/createThemeUseCase";
 import { SetDefaultThemeUseCase } from "@/features/themes/server/application/usecases/setDefaultThemeUseCase";
+import { buildThemeMeta } from "@/features/themes/lib/themeMeta";
 
 import {
   organizationStepSubmitSchema,
   type OrganizationStepData,
 } from "../../../model/organizationStepSchema";
 
-const DEFAULT_THEME_PRESET = {
-  name: "Default",
-  brandColor: "#0EA5E9",
-  accentColor: "#F97316",
-  textColor: "#111827",
-} as const;
-
 const themeRepository = new PrismaThemeRepository();
 const createThemeUseCase = new CreateThemeUseCase(themeRepository);
 const setDefaultThemeUseCase = new SetDefaultThemeUseCase(themeRepository);
 
 const MAX_SLUG_ATTEMPTS = 15;
+const DEFAULT_THEME_NAME = "Default";
 
 function slugify(value: string) {
   return value
@@ -196,10 +191,8 @@ async function ensureDefaultTheme(args: { organizationId: string; userRole?: str
     const themeId = await createThemeUseCase.execute({
       merchantId: organizationId,
       tenantId: organizationId,
-      name: DEFAULT_THEME_PRESET.name,
-      brandColor: DEFAULT_THEME_PRESET.brandColor,
-      accentColor: DEFAULT_THEME_PRESET.accentColor,
-      textColor: DEFAULT_THEME_PRESET.textColor,
+      name: DEFAULT_THEME_NAME,
+      meta: buildThemeMeta(),
       userRole,
     });
 

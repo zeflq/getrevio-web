@@ -11,6 +11,7 @@ import { SheetForm } from "@/components/form/SheetForm";
 import { themeUpdateSchema, type ThemeUpdateInput } from "../model/themeSchema";
 import { useThemeItem, useUpdateTheme } from "../hooks/useThemeCrud";
 import ThemeFormFields from "./ThemeFormFields";
+import { buildThemeMeta } from "../lib/themeMeta";
 
 export interface EditThemeSheetProps {
   themeId: string;
@@ -43,14 +44,9 @@ export function EditThemeSheet({
       id: "",
       merchantId: "",
       name: "",
-      logoUrl: "",
-      brandColor: "",
-      accentColor: "",
-      textColor: "",
-      meta: {}, // keep controlled
+      meta: buildThemeMeta(),
     },
   });
-
   const { reset } = form;
 
   // Hydrate form when theme loads/changes
@@ -60,24 +56,21 @@ export function EditThemeSheet({
       id: theme.id ?? "",
       merchantId: theme.merchantId ?? "",
       name: theme.name ?? "",
-      logoUrl: theme.logoUrl ?? "",
-      brandColor: theme.brandColor ?? "",
-      accentColor: theme.accentColor ?? "",
-      textColor: theme.textColor ?? "",
-      meta: theme.meta ?? {},
+      meta: theme.meta ?? buildThemeMeta(),
     });
   }, [theme, reset]);
 
   const onSubmit = (data: ThemeUpdateInput) => {
+    const merchantId = theme?.merchantId;
+    if (!merchantId) {
+      return;
+    }
+
     const cleaned: ThemeUpdateInput = {
       ...data,
-      logoUrl: data.logoUrl || undefined,
-      brandColor: data.brandColor || undefined,
-      accentColor: data.accentColor || undefined,
-      textColor: data.textColor || undefined,
-      meta: data.meta && Object.keys(data.meta).length > 0 ? data.meta : undefined,
+      meta: data.meta,
     };
-    execute({ id: themeId, ...cleaned });
+    execute({ id: themeId, merchantId, ...cleaned });
   };
 
   const isBusy = isExecuting || isLoading;
@@ -89,11 +82,7 @@ export function EditThemeSheet({
         id: theme.id ?? "",
         merchantId: theme.merchantId ?? "",
         name: theme.name ?? "",
-        logoUrl: theme.logoUrl ?? "",
-        brandColor: theme.brandColor ?? "",
-        accentColor: theme.accentColor ?? "",
-        textColor: theme.textColor ?? "",
-        meta: theme.meta ?? {},
+        meta: theme.meta ?? buildThemeMeta(),
       });
     }
     onOpenChange(next);

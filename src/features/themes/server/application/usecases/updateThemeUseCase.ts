@@ -29,22 +29,6 @@ export class UpdateThemeUseCase {
       normalized.name = normalized.name.trim();
     }
 
-    if (normalized.logoUrl !== undefined && normalized.logoUrl !== null) {
-      normalized.logoUrl = normalized.logoUrl.trim();
-    }
-
-    if (normalized.brandColor !== undefined && normalized.brandColor !== null) {
-      normalized.brandColor = normalized.brandColor.trim();
-    }
-
-    if (normalized.accentColor !== undefined && normalized.accentColor !== null) {
-      normalized.accentColor = normalized.accentColor.trim();
-    }
-
-    if (normalized.textColor !== undefined && normalized.textColor !== null) {
-      normalized.textColor = normalized.textColor.trim();
-    }
-
     return normalized;
   }
 

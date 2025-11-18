@@ -33,7 +33,9 @@ export function MerchantThemesTab({ merchantId, defaultThemeId }: Props) {
   // --- dialogs state
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | null>(null);
-  const [deleteTarget, setDeleteTarget] = React.useState<{ id: string; name: string } | null>(null);
+  const [deleteTarget, setDeleteTarget] = React.useState<{ id: string; name: string; merchantId: string } | null>(
+    null
+  );
 
   // --- derived filters
   const q = getFilterValue(columnFilters, "name");
@@ -59,7 +61,11 @@ export function MerchantThemesTab({ merchantId, defaultThemeId }: Props) {
     onEdit: (id) => setEditId(id),
     onDelete: (id) => {
       const t = rows.find((r) => r.id === id);
-      setDeleteTarget({ id, name: t?.name ?? "" });
+      setDeleteTarget({
+        id,
+        name: t?.name ?? "",
+        merchantId,
+      });
     },
     onSetDefault: (id) => setDefaultTheme({ merchantId, themeId: id }),
     defaultThemeId,
@@ -125,6 +131,7 @@ export function MerchantThemesTab({ merchantId, defaultThemeId }: Props) {
         <DeleteThemeDialog
           themeId={deleteTarget.id}
           themeName={deleteTarget.name}
+          merchantId={deleteTarget.merchantId}
           open={!!deleteTarget}
           onOpenChange={(open) => !open && setDeleteTarget(null)}
         />

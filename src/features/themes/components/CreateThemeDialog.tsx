@@ -11,6 +11,7 @@ import ThemeFormFields from "./ThemeFormFields";
 import { themeCreateSchema, type ThemeCreateInput } from "../model/themeSchema";
 import { useCreateTheme } from "../hooks/useThemeCrud";
 import type { LiteListe } from "@/types/lists";
+import { buildThemeMeta } from "../lib/themeMeta";
 
 export interface CreateThemeDialogProps {
   open: boolean;
@@ -41,11 +42,7 @@ export function CreateThemeDialog({
     defaultValues: {
       merchantId: merchantId ?? "",
       name: "",
-      logoUrl: "",
-      brandColor: "",
-      accentColor: "",
-      textColor: "",
-      meta: {}, // stays controlled; cleaned on submit
+      meta: buildThemeMeta(),
     },
   });
 
@@ -64,21 +61,13 @@ export function CreateThemeDialog({
     reset({
       merchantId: merchantId ?? "",
       name: "",
-      logoUrl: "",
-      brandColor: "",
-      accentColor: "",
-      textColor: "",
-      meta: {},
+      meta: buildThemeMeta(),
     });
 
   const onSubmit = (d: ThemeCreateInput) => {
     const cleaned: ThemeCreateInput = {
       ...d,
-      logoUrl: d.logoUrl || undefined,
-      brandColor: d.brandColor || undefined,
-      accentColor: d.accentColor || undefined,
-      textColor: d.textColor || undefined,
-      meta: d.meta && Object.keys(d.meta).length > 0 ? d.meta : undefined,
+      meta: d.meta,
     };
 
     execute(cleaned);

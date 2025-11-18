@@ -1,35 +1,9 @@
-export type ThemePalette = {
-  primary: string;
-  secondary: string;
-  accent: string;
-  background: string;
-  text: string;
-};
+import type { ThemePalette, ThemeTokens } from "@/types/domain";
 
 export type ThemeType = {
   id: string;
   name: string;
   colors: ThemePalette;
-};
-
-type ThemeTokens = {
-  surface: string;
-  surfaceSoft: string;
-  border: string;
-  mutedText: string;
-
-  ctaBg: string;
-  ctaText: string;
-  ctaHoverBg: string;
-
-  slotBackground: string;
-  slotTileBg: string;
-  slotTileBorder: string;
-  slotIcon: string;
-  slotCenterBg: string;
-  slotCenterText: string;
-  slotGlowPrimary: string;
-  slotGlowAccent: string;
 };
 
 export const landingThemes: Record<string, ThemeType> = {

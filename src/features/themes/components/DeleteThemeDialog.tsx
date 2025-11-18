@@ -1,18 +1,24 @@
 "use client";
 
-import * as React from "react";
 import { ConfirmByNameDialog } from "@/components/ui/confirmByNameDialog";
-import { useThemeItem, useDeleteTheme } from "../hooks/useThemeCrud";
+import { useDeleteTheme } from "../hooks/useThemeCrud";
 
 export interface DeleteThemeDialogProps {
   themeId: string;
   themeName: string;
+  merchantId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function DeleteThemeDialog({ themeId, themeName, open, onOpenChange }: DeleteThemeDialogProps) {
-  const { execute, isExecuting } = useDeleteTheme<{ id: string }, { ok?: boolean }>({
+export function DeleteThemeDialog({
+  themeId,
+  themeName,
+  merchantId,
+  open,
+  onOpenChange,
+}: DeleteThemeDialogProps) {
+  const { execute, isExecuting } = useDeleteTheme<{ id: string; merchantId: string }, { ok?: boolean }>({
     onSuccess: () => onOpenChange(false),
   });
 
@@ -28,7 +34,7 @@ export function DeleteThemeDialog({ themeId, themeName, open, onOpenChange }: De
       confirmLabel="Delete Theme"
       confirmVariant="destructive"
       loading={isExecuting}
-      onConfirm={() => execute({ id: themeId })}
+      onConfirm={() => execute({ id: themeId, merchantId })}
       preventCloseWhileLoading
     />
   );

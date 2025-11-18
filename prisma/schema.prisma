@@ -64,10 +64,6 @@ model Theme {
   merchantId            String
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   name                  String
-  logoUrl               String?
-  brandColor            String?
-  accentColor           String?
-  textColor             String?
   meta                  Json?
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt

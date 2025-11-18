@@ -3,10 +3,6 @@ import type { ThemeCreateInput, ThemeUpdateInput } from "@/features/themes/model
 export type ThemeCreateRecord = {
   merchantId: string;
   name: string;
-  logoUrl?: string | null;
-  brandColor?: string | null;
-  accentColor?: string | null;
-  textColor?: string | null;
   meta?: ThemeCreateInput["meta"];
 };
 
@@ -14,10 +10,6 @@ export type ThemeUpdateRecord = {
   id: string;
   merchantId?: string;
   name?: string;
-  logoUrl?: string | null;
-  brandColor?: string | null;
-  accentColor?: string | null;
-  textColor?: string | null;
   meta?: ThemeUpdateInput["meta"];
 };
 

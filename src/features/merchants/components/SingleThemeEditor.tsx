@@ -12,6 +12,7 @@ import ThemeFormFields from "@/features/themes/components/ThemeFormFields";
 import { themeUpdateSchema, type ThemeUpdateInput } from "@/features/themes/model/themeSchema";
 import { useThemeItem, useUpdateTheme } from "@/features/themes/hooks/useThemeCrud";
 import type { ThemeListItem } from "@/features/themes/server/queries";
+import { buildThemeMeta } from "@/features/themes/lib/themeMeta";
 
 type Props = {
   themeId: string;
@@ -26,10 +27,7 @@ export function SingleThemeEditor({ themeId, theme }: Props) {
     mode: "onSubmit",
     defaultValues: {
       name: "",
-      logoUrl: "",
-      brandColor: "",
-      accentColor: "",
-      textColor: "",
+      meta: buildThemeMeta(),
     },
   });
   const { reset, handleSubmit, getValues, formState } = themeForm;
@@ -48,22 +46,22 @@ export function SingleThemeEditor({ themeId, theme }: Props) {
     if (!resolvedTheme) return;
     reset({
       name: resolvedTheme.name ?? "",
-      logoUrl: resolvedTheme.logoUrl ?? "",
-      brandColor: resolvedTheme.brandColor ?? "",
-      accentColor: resolvedTheme.accentColor ?? "",
-      textColor: resolvedTheme.textColor ?? "",
+      meta: resolvedTheme.meta ?? buildThemeMeta(),
     });
   }, [resolvedTheme, reset]);
 
   const onSubmit = (values: ThemeUpdateInput) => {
+    const merchantId = resolvedTheme?.merchantId;
+    if (!merchantId) {
+      toast.error("Unable to determine merchant for this theme.");
+      return;
+    }
+
     const cleaned: ThemeUpdateInput = {
       ...values,
-      logoUrl: values.logoUrl || undefined,
-      brandColor: values.brandColor || undefined,
-      accentColor: values.accentColor || undefined,
-      textColor: values.textColor || undefined,
+      meta: values.meta,
     };
-    execute({ id: themeId, ...cleaned });
+    execute({ id: themeId, merchantId, ...cleaned });
   };
 
   const busy = isExecuting || (!theme && isLoading);

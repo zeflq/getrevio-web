@@ -1,6 +1,7 @@
 import type { Prisma } from "@prisma/client";
 
 import { themeLiteSelect, themeSelect } from "./infrastructure/prisma/themeSelects";
+import type { ThemeMeta } from "@/types/domain";
 
 export type ThemeSelectRow = Prisma.ThemeGetPayload<{ select: typeof themeSelect }>;
 export type ThemeLiteRow = Prisma.ThemeGetPayload<{ select: typeof themeLiteSelect }>;
@@ -9,11 +10,7 @@ export type ThemeListDTO = {
   id: string;
   merchantId: string;
   name: string;
-  logoUrl?: string | null;
-  brandColor?: string | null;
-  accentColor?: string | null;
-  textColor?: string | null;
-  meta?: Record<string, unknown> | null;
+  meta?: ThemeMeta | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -24,11 +21,7 @@ export const mapThemeRow = (row: ThemeSelectRow): ThemeListDTO => ({
   id: row.id,
   merchantId: row.merchantId,
   name: row.name,
-  logoUrl: row.logoUrl ?? null,
-  brandColor: row.brandColor ?? null,
-  accentColor: row.accentColor ?? null,
-  textColor: row.textColor ?? null,
-  meta: (row.meta ?? null) as Record<string, unknown> | null,
+  meta: (row.meta ?? null) as ThemeMeta | null,
   createdAt: toIsoString(row.createdAt),
   updatedAt: toIsoString(row.updatedAt),
 });

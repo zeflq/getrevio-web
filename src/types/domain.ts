@@ -4,6 +4,32 @@ export type UUID = string;
 export type ISODate = string;
 export type Channel = 'QR' | 'NFC' | 'SMS' | 'OTHER';
 
+export type ThemePalette = {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  text: string;
+};
+
+export type ThemeTokens = {
+  surface: string;
+  surfaceSoft: string;
+  border: string;
+  mutedText: string;
+  ctaBg: string;
+  ctaText: string;
+  ctaHoverBg: string;
+  slotBackground: string;
+  slotTileBg: string;
+  slotTileBorder: string;
+  slotIcon: string;
+  slotCenterBg: string;
+  slotCenterText: string;
+  slotGlowPrimary: string;
+  slotGlowAccent: string;
+};
+
 export interface Merchant {
   id: UUID;
   name: string;
@@ -14,15 +40,18 @@ export interface Merchant {
   status: 'active' | 'suspended';
   createdAt: ISODate;
 }
+
+export type ThemeMeta = {
+  presetKey: string;
+  palette: ThemePalette;
+  tokens: ThemeTokens;
+};
+
 export type Theme = {
   id: string;
   merchantId: string;
   name: string;
-  logoUrl?: string;
-  brandColor?: string;
-  accentColor?: string;
-  textColor?: string;
-  meta?: Record<string, string | number>;
+  meta?: ThemeMeta;
   createdAt: string;
   updatedAt: string;
 };
