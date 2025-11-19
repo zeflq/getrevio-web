@@ -12,15 +12,14 @@ import { DialogForm } from "@/components/form/DialogForm";
 import type { LiteListe } from "@/types/lists";
 
 import {
-  landingCreateFormSchema,
-  type LandingCreateFormValues,
+  landingFormSchema,
+  type LandingFormValues,
   type LandingCreateInput,
-  createLandingCreateFormDefaults,
   type LandingBelongsTo,
 } from "../model/landingSchema";
 import { useCreateLanding } from "../hooks/useLandingCrud";
 import { LandingFormFields } from "./LandingFormFields";
-import { buildLandingPayload } from "../lib/landingForm.mappers";
+import { buildLandingPayload, createLandingFormDefaults } from "../lib/landingForm.mappers";
 import { useLandingSlugCheck } from "../hooks/useLandingSlugCheck";
 
 export interface CreateLandingDialogProps {
@@ -46,7 +45,7 @@ export function CreateLandingDialog({
   const tForm = useTranslations("landings.form");
   const router = useRouter();
   const defaultValues = React.useMemo(
-    () => createLandingCreateFormDefaults({ merchantId, belongsTo: initialBelongsTo }),
+    () => createLandingFormDefaults({ merchantId, belongsTo: initialBelongsTo }),
     [merchantId, initialBelongsTo]
   );
 
@@ -59,14 +58,13 @@ export function CreateLandingDialog({
     },
   });
 
-  const methods = useForm<LandingCreateFormValues>({
-    resolver: zodResolver(landingCreateFormSchema),
+  const methods = useForm<LandingFormValues>({
+    resolver: zodResolver(landingFormSchema),
     mode: "onSubmit",
     defaultValues,
   });
 
   const { reset, setValue, watch } = methods;
-
   React.useEffect(() => {
     if (!open) {
       reset(defaultValues);
@@ -83,13 +81,10 @@ export function CreateLandingDialog({
   }, [merchantId, setValue]);
 
   const resetForm = () =>
-    reset(createLandingCreateFormDefaults({ merchantId, belongsTo: initialBelongsTo }));
+    reset(createLandingFormDefaults({ merchantId, belongsTo: initialBelongsTo }));
 
-  const onSubmit = (data: LandingCreateFormValues) => {
-    const payload = buildLandingPayload(data);
-    if (initialBelongsTo?.type === "campaign") {
-      payload.content.blocks = []
-    }
+  const onSubmit = (data: LandingFormValues) => {
+    const payload = buildLandingPayload(data, { seedTemplateContent: true });
     execute(payload);
   };
 
@@ -124,7 +119,7 @@ export function CreateLandingDialog({
   type MethodsWithSlot = typeof methods & { _slot?: React.ReactNode };
   (methods as MethodsWithSlot)._slot = (
     <LandingFormFields
-      mode="create"
+      isEdit={false}
       disabled={isExecuting}
       merchantId={merchantId}
       merchantsLite={merchantsLite}
@@ -134,7 +129,7 @@ export function CreateLandingDialog({
   );
 
   return (
-    <DialogForm<LandingCreateFormValues>
+    <DialogForm<LandingFormValues>
       open={open}
       onOpenChange={(next) => {
         if (!next) resetForm();

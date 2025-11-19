@@ -150,6 +150,7 @@ model Landing {
 
   name        String
   slug        String
+  templateId  String?
   status      LandingStatus @default(draft)
   contentDraft Json
   contentPublished Json?

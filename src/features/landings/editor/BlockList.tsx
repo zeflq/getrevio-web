@@ -61,8 +61,7 @@ type MenuOption = {
 };
 
 const getMenuOptions = (
-  templateBlocks: TemplateBlockDefinition[] | undefined,
-  blocksTranslation: (key: string) => string
+  templateBlocks?: TemplateBlockDefinition[] | []
 ): MenuOption[] => {
   if (templateBlocks && templateBlocks.length > 0) {
     return templateBlocks
@@ -73,11 +72,7 @@ const getMenuOptions = (
         template: block,
       }));
   }
-
-  return landingBlockPlugins.map((plugin) => ({
-    kind: plugin.kind,
-    label: blocksTranslation(`${plugin.kind}.label`),
-  }));
+  return [];
 };
 
 export function BlockList({
@@ -95,7 +90,6 @@ export function BlockList({
   landing,
 }: BlockListProps) {
   const t = useTranslations("landings.editor");
-  const blocksTranslations = useTranslations("landings.editor.blocks");
 
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -130,8 +124,8 @@ export function BlockList({
   );
 
   const menuOptions = React.useMemo(
-    () => getMenuOptions(template?.blocks, blocksTranslations),
-    [template, blocksTranslations]
+    () => getMenuOptions(template?.blocks),
+    [template]
   );
 
   const addOptionDisabled = (option: { kind: LandingBlockKind; template?: TemplateBlockDefinition }) => {
@@ -141,41 +135,31 @@ export function BlockList({
     }
     return disabled ?? false;
   };
-
-  // const renderPreview = (block: LandingBlock) => {
-  //   const plugin = landingBlockPluginMap[block.kind];
-  //   if (plugin) {
-  //     const Renderer = plugin.Renderer;
-  //     return <Renderer data={block.data} />;
-  //   }
-  //   return (
-  //     <div className="space-y-1 text-sm text-muted-foreground">
-  //       <p>{blocksTranslations(`${block.kind}.label`)}</p>
-  //     </div>
-  //   );
-  // };
+  
   if (!fields.length) {
     return (
       <div className="space-y-4 rounded-lg border border-dashed p-6">
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-sm font-semibold">{t("addBlock")}</span>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button disabled={disabled}>{t("addBlock")}</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {menuOptions.map((option) => (
-                <DropdownMenuItem
-                  key={option.kind}
-                  disabled={addOptionDisabled(option)}
-                  onSelect={() => onAdd(option.kind, option.template)}
-                >
-                  {option.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        {menuOptions && menuOptions.length > 0 && (
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-sm font-semibold">{t("addBlock")}</span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button disabled={disabled}>{t("addBlock")}</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {menuOptions.map((option) => (
+                  <DropdownMenuItem
+                    key={option.kind}
+                    disabled={addOptionDisabled(option)}
+                    onSelect={() => onAdd(option.kind, option.template)}
+                  >
+                    {option.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+      )}
         <EmptyState />
       </div>
     );

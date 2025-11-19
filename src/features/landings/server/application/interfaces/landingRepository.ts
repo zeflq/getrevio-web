@@ -4,20 +4,20 @@ export type LandingCreateRecord = {
   merchantId: string;
   name: string;
   slug: string;
-  status: LandingCreateInput["status"];
   contentDraft: LandingCreateInput["content"];
   contentPublished?: LandingCreateInput["content"] | null;
   publishedAt?: string | Date | null;
+  templateId?: string | null;
 };
 
 export type LandingUpdateRecord = {
   id: string;
   merchantId?: string;
   name?: string;
-  status?: LandingUpdateInput["status"];
   contentDraft?: LandingUpdateInput["content"];
   contentPublished?: LandingUpdateInput["content"] | null;
   publishedAt?: string | Date | null;
+  templateId?: string | null;
 };
 
 export interface LandingRepository {

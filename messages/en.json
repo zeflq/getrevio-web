@@ -60,7 +60,10 @@
       "placeSearch": "Search places…",
       "campaignPlaceholder": "Select campaign",
       "campaignSearch": "Search campaigns…",
-      "selectMerchantFirst": "Select merchant first"
+      "selectMerchantFirst": "Select merchant first",
+      "template": "Template",
+      "templatePlaceholder": "Select a template",
+      "templateClear": "Clear selection"
     },
     "createDialog": {
       "title": "Create Landing",

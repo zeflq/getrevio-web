@@ -30,6 +30,7 @@ export class CreateLandingUseCase {
       contentDraft: data.content,
       contentPublished: data.status === "published" ? data.content : null,
       publishedAt: data.status === "published" ? new Date().toISOString() : null,
+      templateId: data.templateId ?? null,
     };
 
     const landingId = await this.repository.create(record);

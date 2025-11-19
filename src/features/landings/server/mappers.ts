@@ -1,7 +1,7 @@
 import type { Prisma } from "@prisma/client";
 
-import { ensureLandingContentShape, type LandingContent } from "../model/landingSchema";
 import { landingSelect, landingLiteSelect } from "./infrastructure/prisma/landingSelects";
+import { ensureLandingContentShape, LandingContent } from "../model/landingContentSchema";
 
 export type LandingSelectRow = Prisma.LandingGetPayload<{ select: typeof landingSelect }>;
 export type LandingLiteRow = Prisma.LandingGetPayload<{ select: typeof landingLiteSelect }>;
@@ -14,6 +14,7 @@ export type LandingListDTO = {
   status: "draft" | "published" | "archived";
   contentDraft: LandingContent;
   contentPublished?: LandingContent | null;
+  templateId?: string | null;
   publishedAt?: string | null;
   createdAt: string;
   updatedAt: string;
@@ -65,6 +66,7 @@ export const mapLandingRow = (row: LandingSelectRow): LandingListDTO => ({
   contentPublished: row.contentPublished
     ? ensureLandingContentShape(row.contentPublished as LandingContent)
     : null,
+  templateId: row.templateId ?? null,
   publishedAt: toIsoString(row.publishedAt),
   createdAt: toIsoString(row.createdAt) ?? "",
   updatedAt: toIsoString(row.updatedAt) ?? "",

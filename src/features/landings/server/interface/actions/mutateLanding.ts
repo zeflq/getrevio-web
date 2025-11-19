@@ -25,8 +25,23 @@ export const updateLandingAction = withTenantGuard("merchantId")
   .action(async ({ parsedInput, ctx }) => {
     const userRole = ctx.isSuperAdmin ? SUPER_ADMIN : ctx.user.roles?.[0] ?? null;
 
+    // On sépare ce qui est sensible
+    const { slug, templateId, merchantId, ...rest } = parsedInput;
+
+    // Si super admin → il peut tout modifier
+    const safeInput = ctx.isSuperAdmin
+      ? parsedInput
+      : {
+          ...rest,
+          // on force le merchantId côté serveur
+          merchantId: ctx.tenantId ?? merchantId,
+          // on ignore slug et templateId (ils ne seront jamais passés au use case)
+          slug: undefined,
+          templateId: undefined,
+        };
+
     await updateUseCase.execute({
-      ...parsedInput,
+      ...safeInput,
       tenantId: ctx.tenantId ?? parsedInput.merchantId,
       userRole,
     });
@@ -35,6 +50,7 @@ export const updateLandingAction = withTenantGuard("merchantId")
 
     return { ok: true } as const;
   });
+
 
 export const deleteLandingAction = withAuth
   .inputSchema(deleteSchema)

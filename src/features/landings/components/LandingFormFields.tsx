@@ -5,19 +5,20 @@ import * as React from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslations } from "next-intl";
 
-import { RHFInput, RHFSelect, RHFCombobox } from "@/components/form/controls";
+import { RHFInput, RHFCombobox, RHFSelect } from "@/components/form/controls";
 import { cn } from "@/lib/utils";
 import type { LiteListe } from "@/types/lists";
 import { usePlacesLite } from "@/features/places";
 import { useCampaignsLite } from "@/features/campaigns";
 import type { CampaignLiteItem } from "@/features/campaigns/server/application/interfaces/campaignQueryRepository";
 
-import type { LandingCreateFormValues, LandingFormValues } from "../model/landingSchema";
+import type { LandingFormValues } from "../model/landingSchema";
+import { landingTemplates } from "../templates";
 
-type FormShape = LandingFormValues | LandingCreateFormValues;
+type FormShape = LandingFormValues;
 
 type Props = {
-  mode?: "create" | "edit";
+  isEdit?: boolean;
   disabled?: boolean;
   merchantId?: string;
   merchantsLite?: LiteListe[];
@@ -27,7 +28,7 @@ type Props = {
 };
 
 export function LandingFormFields({
-  mode = "edit",
+  isEdit = false,
   disabled,
   merchantId,
   merchantsLite = [],
@@ -94,37 +95,33 @@ export function LandingFormFields({
         disabled={disabled}
       />
 
-      {mode === "create" ? (
-        <RHFInput
-          name="settings.slug"
-          label={t("slug")}
-          placeholder={t("slugPlaceholder")}
-          description={slugDescription}
-          requiredStar
-          disabled={disabled}
-          suffix={slugSuffix}
-        />
-      ) : (
-        <RHFInput
-          name="settings.slug"
-          label={t("slug")}
-          placeholder={existingSlug ?? ""}
-          description={t("slugLocked")}
-          disabled
-        />
-      )}
-
-      {/* <RHFSelect
-        name="settings.status"
-        label={t("status")}
-        options={[
-          { value: "draft", label: t("statusDraft") },
-          { value: "published", label: t("statusPublished") },
-          { value: "archived", label: t("statusArchived") },
-        ]}
-        placeholder={t("status")}
-        disabled={disabled}
+      <RHFInput
+        name="settings.slug"
+        label={t("slug")}
+        placeholder={isEdit ? existingSlug ?? "" : t("slugPlaceholder")}
+        description={isEdit ? t("slugLocked") : slugDescription}
+        requiredStar
+        disabled={disabled || isEdit}
+        suffix={slugSuffix}
+      />
+      {/* 
+      <RHFSelect
+        name="templateId"
+        label={t("template")}
+        options={landingTemplates.map((tpl) => ({ value: tpl.id, label: tpl.name }))}
+        placeholder={t("templatePlaceholder")}
+        disabled={disabled || isEdit}
       /> */}
+      <RHFCombobox<LiteListe>
+        name="templateId"
+        label={t("template")}
+        options={landingTemplates.map((tpl) => ({ value: tpl.id, label: tpl.name }))}
+        getOptionValue={(option) => option.value}
+        getOptionLabel={(option) => option.label}
+        placeholder={t("templatePlaceholder")}
+        disabled={disabled || isEdit}
+        keyBy={`template-${selectedMerchantId}`}
+      />
 
       <div className="space-y-3 rounded-lg border p-4">
         <div className="flex flex-col gap-1">

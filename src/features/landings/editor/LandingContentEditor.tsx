@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { createBlockByKind, type LandingBlock, type LandingBlockKind } from "../blocks";
 import type { LandingBelongsTo, LandingFormValues } from "../model/landingSchema";
 import type { LandingListItem } from "../server/mappers";
-import { landingTemplates } from "../templates";
+import { getTemplateById, landingTemplates } from "../templates";
 import type { TemplateBlockDefinition } from "../templates/types";
 import { getTemplateFixedCountMap } from "../templates/utils";
 import { useBlocksFieldArray } from "./hooks/useBlocksFieldArray";
@@ -33,52 +33,49 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
   const { selectedId, selectById, selectByIndex } = useSelectedBlock(fields);
 
   // Template is now fully controlled by the system:
-  // - existing landing: landing.contentDraft.templateId
-  // - new landing: first template
-  const templateId =
-    landing?.contentDraft.templateId ?? landingTemplates[0]?.id ?? null;
+  const templateId = landing?.templateId;
 
   const template = React.useMemo(
-    () => landingTemplates.find((entry) => entry.id === templateId) ?? null,
+    () => getTemplateById(templateId),
     [templateId]
   );
 
   // Keep form in sync with derived templateId
-  React.useEffect(() => {
-    form.setValue("content.templateId", templateId, {
-      shouldDirty: true,
-      shouldValidate: false,
-    });
-  }, [form, templateId]);
+  // React.useEffect(() => {
+  //   form.setValue("templateId", templateId, {
+  //     shouldDirty: true,
+  //     shouldValidate: false,
+  //   });
+  // }, [form, templateId]);
 
   const templateRequiredFixed = React.useMemo(
     () => getTemplateFixedCountMap(template),
     [template]
   );
 
-  const hasSeededTemplate = React.useRef(false);
+ // const hasSeededTemplate = React.useRef(false);
 
   // Seed fixed blocks from template once
-  React.useEffect(() => {
-    if (hasSeededTemplate.current) return;
+  // React.useEffect(() => {
+  //   if (hasSeededTemplate.current) return;
 
-    const fixedSlots =
-      template?.blocks?.filter((definition) => definition.mode === "fixed") ?? [];
-    if (!fixedSlots.length) return;
-    if (blocks.length > 0) return;
+  //   const fixedSlots =
+  //     template?.blocks?.filter((definition) => definition.mode === "fixed") ?? [];
+  //   if (!fixedSlots.length) return;
+  //   if (blocks.length > 0) return;
 
-    hasSeededTemplate.current = true;
+  //   hasSeededTemplate.current = true;
 
-    fixedSlots.forEach((definition) => {
-      const block = createBlockByKind(
-        definition.blockType,
-        definition.defaultData as any
-      );
-      block.__templateBlockId = definition.id;
-      block.__templateFixed = true;
-      append(block);
-    });
-  }, [append, blocks.length, template]);
+  //   fixedSlots.forEach((definition) => {
+  //     const block = createBlockByKind(
+  //       definition.blockType,
+  //       definition.defaultData as any
+  //     );
+  //     block.__templateBlockId = definition.id;
+  //     block.__templateFixed = true;
+  //     append(block);
+  //   });
+  // }, [append, blocks.length, template]);
 
   const handleAddBlock = (kind: LandingBlockKind, templateBlock?: TemplateBlockDefinition) => {
     const block = createBlockByKind(kind, templateBlock?.defaultData as any);

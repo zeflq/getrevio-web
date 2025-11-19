@@ -5,6 +5,7 @@ export const landingSelect = {
   merchantId: true,
   name: true,
   slug: true,
+  templateId: true,
   status: true,
   contentDraft: true,
   contentPublished: true,

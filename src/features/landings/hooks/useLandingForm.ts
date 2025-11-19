@@ -7,33 +7,30 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
 import {
-  createLandingFormDefaults,
-  landingFormSchema,
+  createLandingFormSchema,
   type LandingFormValues,
   type LandingUpdateInput,
-  type LandingCreateInput,
 } from "../model/landingSchema";
 import { useLandingItem, useUpdateLanding } from "./useLandingCrud";
 import { useReadableError } from "@/lib/useReadableError";
 import {
   buildLandingPayload,
+  createLandingFormDefaults,
   fillLandingFormFromEntity,
-  fillLandingFormFromPayload,
 } from "../lib/landingForm.mappers";
 
-export function useLandingForm(id: string) {
+export function useLandingForm(id: string, isEdit: boolean) {
   const readableError = useReadableError();
   const t = useTranslations("landings.toasts");
   const landingQuery = useLandingItem(id);
   const landing = landingQuery.data;
-
   const form = useForm<LandingFormValues>({
-    resolver: zodResolver(landingFormSchema),
+    resolver: zodResolver(createLandingFormSchema(isEdit)),
     mode: "onChange",
-    defaultValues: createLandingFormDefaults(),
+    defaultValues: fillLandingFormFromEntity(landing),
   });
 
-  const lastPayloadRef = React.useRef<LandingCreateInput | null>(null);
+  const lastPayloadRef = React.useRef<LandingUpdateInput | null>(null);
 
   const resetFromEntity = React.useCallback(() => {
     if (!landing) return;
@@ -52,14 +49,11 @@ export function useLandingForm(id: string) {
   >({
     onSuccess: () => {
       toast.success(t("updated"));
-      if (lastPayloadRef.current) {
-        form.reset(fillLandingFormFromPayload(lastPayloadRef.current));
-        lastPayloadRef.current = null;
-      } else if (landing) {
+      if (landing) {
         resetFromEntity();
       }
     },
-    onError: ({ error }) => {
+    onError: (error: unknown) => {
       lastPayloadRef.current = null;
       toast.error(readableError(error, "generic"));
     },

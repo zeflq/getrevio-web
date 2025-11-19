@@ -53,13 +53,12 @@ export function LandingEditPageContent({
     isSubmitting,
     onSubmit,
     onReset,
-  } = useLandingForm(id);
+  } = useLandingForm(id, true);
   const readableError = useReadableError();
   const { execute: publishLanding, isExecuting: isPublishing } = usePublishAction();
   const { execute: unpublishLanding, isExecuting: isUnpublishing } = useUnpublishAction();
 
   const isToggleLoading = isPublishing || isUnpublishing;
-  
   const isPublished = landing?.status === "published";
   const contentDraft = landing?.contentDraft ?? null;
   const contentPublished = landing?.contentPublished ?? null;
@@ -246,6 +245,7 @@ export function LandingEditPageContent({
 
                   <TabsContent value="settings" className="space-y-4">
                     <LandingFormFields
+                      isEdit={true}
                       disabled={isSubmitting}
                       merchantId={merchantId ?? landing?.merchantId}
                       merchantsLite={merchantsLite}

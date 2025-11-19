@@ -9,7 +9,9 @@ import type {
 } from "../../application/interfaces/landingRepository";
 
 export class PrismaLandingRepository implements LandingRepository {
-  constructor(private readonly client: Prisma.LandingDelegate = prisma.landing) {}
+  constructor(
+    private readonly client: Prisma.LandingDelegate = prisma.landing
+  ) {}
 
   async create(data: LandingCreateRecord): Promise<string> {
     const created = await this.client.create({
@@ -17,9 +19,24 @@ export class PrismaLandingRepository implements LandingRepository {
         merchantId: data.merchantId,
         name: data.name,
         slug: data.slug,
-        status: data.status,
-        contentDraft: data.contentDraft,
-        contentPublished: data.contentPublished ?? null,
+        templateId: data.templateId ?? null,
+
+        // IMPORTANT : pas de `undefined` ici.
+        contentDraft:
+          data.contentDraft === undefined
+            ? Prisma.JsonNull
+            : (JSON.parse(
+                JSON.stringify(data.contentDraft)
+              ) as Prisma.InputJsonValue),
+
+        // Ici ton champ est certainement un JSON nullable (NullableJsonNullValueInput)
+        contentPublished:
+          data.contentPublished === undefined
+            ? Prisma.JsonNull
+            : (JSON.parse(
+                JSON.stringify(data.contentPublished)
+              ) as Prisma.InputJsonValue),
+
         publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
       },
     });
@@ -36,16 +53,27 @@ export class PrismaLandingRepository implements LandingRepository {
       patch.name = data.name;
     }
 
-    if (data.status !== undefined) {
-      patch.status = data.status;
-    }
-
     if (data.contentDraft !== undefined) {
-      patch.contentDraft = data.contentDraft;
+      // même logique : JsonNull pour “vider” le JSON non nullable
+      patch.contentDraft =
+        data.contentDraft === null
+          ? Prisma.JsonNull
+          : (JSON.parse(
+              JSON.stringify(data.contentDraft)
+            ) as Prisma.InputJsonValue);
     }
 
     if (data.contentPublished !== undefined) {
-      patch.contentPublished = data.contentPublished;
+      patch.contentPublished =
+        data.contentPublished === null
+          ? Prisma.DbNull
+          : (JSON.parse(
+              JSON.stringify(data.contentPublished)
+            ) as Prisma.InputJsonValue);
+    }
+
+    if (data.templateId !== undefined) {
+      patch.templateId = data.templateId ?? null;
     }
 
     if (data.merchantId !== undefined) {
