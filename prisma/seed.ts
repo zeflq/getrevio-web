@@ -1,7 +1,11 @@
 import { PrismaClient, Plan, Status } from "@prisma/client";
 import { buildThemeMeta } from "../src/features/themes/lib/themeMeta";
+import { PrismaPg } from '@prisma/adapter-pg';
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ 
+  connectionString: process.env.DATABASE_URL 
+});
+const prisma = new PrismaClient({ adapter });
 
 const defaultThemeMeta = buildThemeMeta();
 
@@ -146,7 +150,6 @@ async function main() {
         where: { id: theme.id },
         update: {
           name: theme.name,
-          logoUrl: theme.logoUrl,
           meta: theme.meta,
         },
         create: theme,

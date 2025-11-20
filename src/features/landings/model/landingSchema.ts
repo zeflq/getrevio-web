@@ -56,7 +56,8 @@ export const createLandingFormSchema = (isEdit: boolean) =>
   landingFormCoreSchema
     .extend({
       content: isEdit ? LandingContentSchema : LandingContentCreateSchema,
-      templateId: z.string().optional(),
+      templateId: z.string().nullable().optional(),
+      themeId: z.string().nullable().optional(),
     })
 ;
 
@@ -78,7 +79,8 @@ const landingPayloadCore = z.object({
   //status: landingStatusEnum.default("draft"),
   content: LandingContentSchema,
   belongsTo: landingBelongsToSchema,
-  templateId: z.string().optional(),
+  templateId: z.string().nullable().optional(),
+  themeId: z.string().nullable().optional(),
 });
 
 // export const landingPayloadSchema = landingPayloadCore.extend({

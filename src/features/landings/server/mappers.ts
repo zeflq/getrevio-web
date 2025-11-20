@@ -15,6 +15,7 @@ export type LandingListDTO = {
   contentDraft: LandingContent;
   contentPublished?: LandingContent | null;
   templateId?: string | null;
+  themeId?: string | null;
   publishedAt?: string | null;
   createdAt: string;
   updatedAt: string;
@@ -67,6 +68,7 @@ export const mapLandingRow = (row: LandingSelectRow): LandingListDTO => ({
     ? ensureLandingContentShape(row.contentPublished as LandingContent)
     : null,
   templateId: row.templateId ?? null,
+  themeId: row.themeId ?? null,
   publishedAt: toIsoString(row.publishedAt),
   createdAt: toIsoString(row.createdAt) ?? "",
   updatedAt: toIsoString(row.updatedAt) ?? "",

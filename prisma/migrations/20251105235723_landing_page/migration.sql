@@ -1,2 +1,0 @@
--- This migration was superseded by 20251106104500_add_landing_model.
--- All landing-related schema changes are defined there. Intentionally left blank.

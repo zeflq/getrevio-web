@@ -63,7 +63,10 @@
       "selectMerchantFirst": "Sélectionnez d’abord un marchand",
       "template": "Modèle",
       "templatePlaceholder": "Sélectionnez un modèle",
-      "templateClear": "Effacer la sélection"
+      "templateClear": "Effacer la sélection",
+      "theme": "Thème",
+      "themePlaceholder": "Sélectionnez un thème",
+      "themeClear": "Effacer la sélection"
     },
     "createDialog": {
       "title": "Créer un landing",

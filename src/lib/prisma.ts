@@ -1,6 +1,8 @@
-import {
-    PrismaClient
-} from "@prisma/client";
+import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '@prisma/client';
+
+const connectionString = `${process.env.DATABASE_URL}`
+const adapter = new PrismaPg({ connectionString })
 
 /**
  * In Next.js dev, modules can re-run on HMR, which would create multiple Prisma clients.
@@ -14,6 +16,7 @@ const globalForPrisma = globalThis as unknown as {
 export const prisma =
     globalForPrisma.__prisma ??
     new PrismaClient({
+        adapter,
         // Optional: enable query logging in dev
         log: process.env.NODE_ENV === "development" ?
             ["query", "error", "warn"] :

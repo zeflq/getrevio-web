@@ -1,11 +1,10 @@
-import { Prisma } from "@prisma/client";
-
 import prisma from "@/lib/prisma";
 
 import type {
   LandingAssociationGateway,
   LandingAssociationTarget,
 } from "../../application/interfaces/landingAssociationGateway";
+import { Prisma } from "@prisma/client";
 
 export class PrismaLandingAssociationGateway implements LandingAssociationGateway {
   constructor(

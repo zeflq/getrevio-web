@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export const landingSelect = {
   id: true,
@@ -6,6 +6,7 @@ export const landingSelect = {
   name: true,
   slug: true,
   templateId: true,
+  themeId: true,
   status: true,
   contentDraft: true,
   contentPublished: true,

@@ -11,6 +11,7 @@ import type { LiteListe } from "@/types/lists";
 import { usePlacesLite } from "@/features/places";
 import { useCampaignsLite } from "@/features/campaigns";
 import type { CampaignLiteItem } from "@/features/campaigns/server/application/interfaces/campaignQueryRepository";
+import { useThemesLite } from "@/features/themes/hooks/useThemeCrud";
 
 import type { LandingFormValues } from "../model/landingSchema";
 import { landingTemplates } from "../templates";
@@ -68,6 +69,12 @@ export function LandingFormFields({
   );
   const campaignsLite = (campaignsLiteQuery.data ?? []) as CampaignLiteItem[];
   const campaignsLoading = campaignsLiteQuery.isLoading;
+  const themesLiteQuery = useThemesLite(
+    selectedMerchantId ? { merchantId: selectedMerchantId } : {},
+    { enabled: Boolean(selectedMerchantId) }
+  );
+  const themesLite = themesLiteQuery.data ?? [];
+  const themesLoading = themesLiteQuery.isLoading;
 
   const settingsSection = (
     <div className="space-y-4">
@@ -121,6 +128,16 @@ export function LandingFormFields({
         placeholder={t("templatePlaceholder")}
         disabled={disabled || isEdit}
         keyBy={`template-${selectedMerchantId}`}
+      />
+
+      <RHFSelect
+        name="themeId"
+        label={t("theme")}
+        options={themesLite}
+        placeholder={t("themePlaceholder")}
+        disabled={disabled || !selectedMerchantId || themesLoading}
+        allowClear
+        clearLabel={t("themeClear")}
       />
 
       <div className="space-y-3 rounded-lg border p-4">

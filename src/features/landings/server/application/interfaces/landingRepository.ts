@@ -1,23 +1,26 @@
+import type { Prisma } from "@prisma/client";
 import type { LandingCreateInput, LandingUpdateInput } from "@/features/landings/model/landingSchema";
 
 export type LandingCreateRecord = {
   merchantId: string;
   name: string;
   slug: string;
-  contentDraft: LandingCreateInput["content"];
-  contentPublished?: LandingCreateInput["content"] | null;
+  contentDraft: Prisma.InputJsonValue;
+  contentPublished?: Prisma.InputJsonValue | null;
   publishedAt?: string | Date | null;
   templateId?: string | null;
+  themeId?: string | null;
 };
 
 export type LandingUpdateRecord = {
   id: string;
   merchantId?: string;
   name?: string;
-  contentDraft?: LandingUpdateInput["content"];
-  contentPublished?: LandingUpdateInput["content"] | null;
+  contentDraft?: Prisma.InputJsonValue;
+  contentPublished?: Prisma.InputJsonValue | null;
   publishedAt?: string | Date | null;
   templateId?: string | null;
+  themeId?: string | null;
 };
 
 export interface LandingRepository {

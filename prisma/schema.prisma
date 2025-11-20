@@ -5,12 +5,12 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "./generated"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Merchant {
@@ -43,10 +43,10 @@ model Place {
   merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   localName  String
 
-  address   String?
+  address       String?
   googlePlaceId String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   campaigns  Campaign[]
   shortlinks Shortlink[]
@@ -58,13 +58,14 @@ model Place {
 }
 
 model Theme {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   merchantId String
-  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  merchant   Merchant  @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   name       String
   meta       Json?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  landings   Landing[]
 }
 
 model Campaign {
@@ -148,15 +149,17 @@ model Landing {
   merchantId String
   merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
-  name        String
-  slug        String
-  templateId  String?
-  status      LandingStatus @default(draft)
-  contentDraft Json
+  name             String
+  slug             String
+  templateId       String?
+  themeId          String?
+  theme            Theme?        @relation(fields: [themeId], references: [id], onDelete: SetNull)
+  status           LandingStatus @default(draft)
+  contentDraft     Json
   contentPublished Json?
-  publishedAt DateTime?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  publishedAt      DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
   places     Place[]
   campaigns  Campaign[]

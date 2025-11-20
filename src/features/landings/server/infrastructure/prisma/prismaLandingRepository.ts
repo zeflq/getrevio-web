@@ -20,6 +20,7 @@ export class PrismaLandingRepository implements LandingRepository {
         name: data.name,
         slug: data.slug,
         templateId: data.templateId ?? null,
+        themeId: data.themeId ?? null,
 
         // IMPORTANT : pas de `undefined` ici.
         contentDraft:
@@ -74,6 +75,10 @@ export class PrismaLandingRepository implements LandingRepository {
 
     if (data.templateId !== undefined) {
       patch.templateId = data.templateId ?? null;
+    }
+
+    if (data.themeId !== undefined) {
+      patch.themeId = data.themeId ?? null;
     }
 
     if (data.merchantId !== undefined) {

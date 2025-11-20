@@ -77,6 +77,7 @@ export const createLandingFormDefaults = (args?: {
   belongsTo: ensureBelongsToForForm(args?.belongsTo),
   content: createLandingContentDefaults(),
   templateId: undefined,
+  themeId: undefined,
 });
 
 export const fillLandingFormFromEntity = (landing?: LandingListItem | null): LandingFormValues => {
@@ -94,6 +95,7 @@ export const fillLandingFormFromEntity = (landing?: LandingListItem | null): Lan
     belongsTo: ensureBelongsToForForm(landing.belongsTo ?? undefined),
     content: ensureLandingContentShape(landing.contentDraft),
     templateId: landing.templateId ?? undefined,
+    themeId: landing.themeId ?? undefined,
   };
 };
 
@@ -129,6 +131,7 @@ export const buildLandingPayload = (
     slug: values.settings.slug,
     content,
     belongsTo: values.belongsTo,
-    templateId: values.templateId ?? "",
+    templateId: values.templateId ?? null,
+    themeId: values.themeId ?? null,
   };
 };
