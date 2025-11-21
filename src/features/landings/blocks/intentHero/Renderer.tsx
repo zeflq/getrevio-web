@@ -15,7 +15,7 @@ export function IntentHeroRenderer({ data }: { data: IntentHeroData }) {
   return (
     <section
       className="
-        relative flex flex-col items-center
+        flex flex-col items-center
         min-h-[80vh]
         pt-10 pb-16 px-4
         bg-[var(--landing-background)]
@@ -27,68 +27,72 @@ export function IntentHeroRenderer({ data }: { data: IntentHeroData }) {
         <SlotBanner name={data.title} />
 
         {/* Content */}
-        {/* Title */}
-        <h1
-          className="
-            text-2xl md:text-3xl font-bold mb-4
-            text-[var(--landing-primary)]
-          "
+        <div
+          className="text-center"
         >
-          {data.title}
-        </h1>
-
-        {/* Subtitle */}
-        {data.subtitle && (
-          <p
+          {/* Title */}
+          <h1
             className="
-              text-xl md:text-2xl font-semibold mb-6
-              text-[var(--landing-muted-text)]
+              text-2xl md:text-3xl font-bold mb-4
+              text-[var(--landing-primary)]
             "
           >
-            {data.subtitle}
-          </p>
-        )}
+            {data.title}
+          </h1>
 
-        {/* Description */}
-        {data.description && (
-          <p
-            className="
-              text-lg md:text-xl mx-auto mb-8 italic
-              text-[var(--landing-secondary)]
-            "
-            style={{
-              textShadow: `
-                0 0 6px var(--landing-accent),
-                0 0 12px var(--landing-accent)
-              `,
-            }}
-          >
-            {data.description}
-          </p>
-        )}
-
-        {/* CTA */}
-        {data.cta?.label && (
-          <div className="flex justify-center mt-4">
-            <Button
-              type="button"
-              onClick={next}
+          {/* Subtitle */}
+          {data.subtitle && (
+            <p
               className="
-                h-12 px-6 mt-4
-                text-base font-semibold
-                flex items-center justify-center gap-2
-                rounded-xl
-                bg-[var(--landing-cta-bg)]
-                text-[var(--landing-cta-text)]
-                hover:bg-[var(--landing-cta-hover-bg)]
-                transition-colors
+                text-xl md:text-2xl font-semibold mb-6
+                text-[var(--landing-muted-text)]
               "
             >
-              {data.cta.label}
-              <ArrowRight className="ml-1 h-5 w-5" />
-            </Button>
-          </div>
-        )}
+              {data.subtitle}
+            </p>
+          )}
+
+          {/* Description */}
+          {data.description && (
+            <p
+              className="
+                text-lg md:text-xl mx-auto mb-8 italic
+                text-[var(--landing-secondary)]
+              "
+              style={{
+                textShadow: `
+                  0 0 6px var(--landing-accent),
+                  0 0 12px var(--landing-accent)
+                `,
+              }}
+            >
+              {data.description}
+            </p>
+          )}
+
+          {/* CTA */}
+          {data.cta?.label && (
+            <div className="flex justify-center mt-4">
+              <Button
+                type="button"
+                onClick={next}
+                className="
+                  h-12 px-6 mt-4
+                  text-base font-semibold
+                  flex items-center justify-center gap-2
+                  rounded-xl
+                  bg-[var(--landing-cta-bg)]
+                  text-[var(--landing-cta-text)]
+                  hover:bg-[var(--landing-cta-hover-bg)]
+                  transition-colors
+                "
+              >
+                {data.cta.label}
+                <ArrowRight className="ml-1 h-5 w-5" />
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

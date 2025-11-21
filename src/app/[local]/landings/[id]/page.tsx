@@ -50,7 +50,7 @@ export default async function LandingPreviewPage({
       themes={themesPayload.data}
       themeId={landing.themeId ?? undefined}
     >
-      <div className="min-h-screen flex flex-col justify-center max-w-xl">
+      <div className="min-h-screen flex flex-col justify-start max-w-md">
         <div className="flex justify-end">
           <ThemeSelector/>
         </div>
