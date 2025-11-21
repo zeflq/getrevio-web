@@ -1,4 +1,5 @@
 import type { ThemePalette, ThemeTokens } from "@/types/domain";
+import type { LandingThemeData } from "@/features/landings/theme/types";
 
 export type ThemeType = {
   id: string;
@@ -200,3 +201,23 @@ export const landingThemeTokens: Record<string, ThemeTokens> = {
     slotGlowAccent: "rgba(255,208,138,0.75)",
   },
 };
+
+export function loadLandingThemeDefaults(): Record<string, LandingThemeData> {
+  const baseTokens = landingThemeTokens.neutral;
+
+  return Object.entries(landingThemes).reduce((acc, [key, theme]) => {
+    const tokens = landingThemeTokens[key] ?? baseTokens;
+
+    acc[key] = {
+      id: theme.id,
+      name: theme.name,
+      palette: theme.colors,
+      tokens,
+    };
+
+    return acc;
+  }, {} as Record<string, LandingThemeData>);
+}
+
+export const landingThemeDefaults = loadLandingThemeDefaults();
+export const DEFAULT_THEME_ID = 'neutral'

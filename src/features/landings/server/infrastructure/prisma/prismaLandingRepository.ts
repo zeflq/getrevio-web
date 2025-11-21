@@ -77,8 +77,8 @@ export class PrismaLandingRepository implements LandingRepository {
       patch.templateId = data.templateId ?? null;
     }
 
-    if (data.themeId !== undefined) {
-      patch.themeId = data.themeId ?? null;
+    if (data.themeId) {
+      patch.theme =  { connect: { id: data.themeId } };
     }
 
     if (data.merchantId !== undefined) {

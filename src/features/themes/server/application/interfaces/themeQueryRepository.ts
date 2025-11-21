@@ -1,4 +1,4 @@
-import type { ThemeFilters } from "../../model/themeSchema";
+import { ThemeFilters } from "@/features/themes/model/themeSchema";
 import type { ThemeListDTO } from "../../mappers";
 
 export type ThemeQueryOptions = {

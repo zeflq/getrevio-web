@@ -50,7 +50,7 @@ export type Theme = {
   id: string;
   merchantId: string;
   name: string;
-  meta?: ThemeMeta;
+  meta?: ThemeMeta | null;
   createdAt: string;
   updatedAt: string;
 };

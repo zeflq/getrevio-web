@@ -1,23 +1,25 @@
 "use client";
 
 import * as React from "react";
-import type { ThemeType } from "./themes";
-import { landingThemes, landingThemeTokens } from "./themes";
+import type { Theme } from "@/types/domain";
+import { landingThemeDefaults, DEFAULT_THEME_ID } from "@/features/landings/theme/themes";
+import type { LandingThemeData } from "@/features/landings/theme/types";
 
 export interface LandingThemeProviderProps {
-  themes: Record<string, ThemeType>;
+  themes: Theme[];
   themeId?: string;
   children: React.ReactNode;
 }
 
+type ThemeOption = { id: string; name: string };
+
 type ThemeContextType = {
-  theme: ThemeType;
+  currentThemeId: string;
+  options: ThemeOption[];
   setTheme: (themeId: string) => void;
 };
 
-const ThemeContext = React.createContext<ThemeContextType | undefined>(
-  undefined
-);
+const ThemeContext = React.createContext<ThemeContextType | undefined>(undefined);
 
 export function useLandingTheme() {
   const ctx = React.useContext(ThemeContext);
@@ -25,72 +27,90 @@ export function useLandingTheme() {
   return ctx;
 }
 
-export function LandingThemeProvider({
-  themes,
-  themeId,
-  children,
-}: LandingThemeProviderProps) {
-  const defaultThemeId = themeId || "neutral"; //neutral,luxury,cozy,boutique,mediterranean,night
-  const [currentThemeId, setCurrentThemeId] = React.useState(defaultThemeId);
-  const currentTheme = themes[currentThemeId];
-  const tokens = landingThemeTokens[currentTheme.id] ?? landingThemeTokens.luxury;
-
-  
-
-  React.useEffect(() => {
-    if (!defaultThemeId) {
-      return;
+export function LandingThemeProvider({ themes, themeId, children }: LandingThemeProviderProps) {
+  // build map once from defaults + dynamic themes
+  const themeMap: Record<string, LandingThemeData> = React.useMemo(() => {
+    const map: Record<string, LandingThemeData> = themes.length > 0 ? {}:{ ...landingThemeDefaults };
+    for (const theme of themes) {
+      if (theme.meta) {
+        map[theme.id] = {
+          id: theme.id,
+          name: theme.name,
+          palette: theme.meta.palette,
+          tokens: theme.meta.tokens,
+        };
+      }
     }
-    setCurrentThemeId(defaultThemeId);
-  }, [defaultThemeId]);
+    return map;
+  }, [themes]);
 
+  // single place to resolve the effective id with fallback
+  const resolveId = React.useCallback(
+    (id?: string) => (id && themeMap[id] ? id : (themeMap[DEFAULT_THEME_ID] ? DEFAULT_THEME_ID : Object.keys(themeMap)[0])),
+    [themeMap]
+  );
+
+  // controlled/uncontrolled: start from prop or default
+  const [currentThemeId, setCurrentThemeId] = React.useState(() => resolveId(themeId));
+
+  // update if the prop changes or if theme list changes
   React.useEffect(() => {
-    const root = document.documentElement;
+    setCurrentThemeId(prev => resolveId(themeId ?? prev));
+  }, [themeId, resolveId]);
 
-    // base palette
-    root.style.setProperty("--landing-primary", currentTheme.colors.primary);
-    root.style.setProperty("--landing-secondary", currentTheme.colors.secondary);
-    root.style.setProperty("--landing-accent", currentTheme.colors.accent);
-    root.style.setProperty("--landing-background", currentTheme.colors.background);
-    root.style.setProperty("--landing-text", currentTheme.colors.text);
+  const activeTheme = themeMap[currentThemeId];
+  const { palette, tokens } = activeTheme;
 
-    // derived tokens
-    root.style.setProperty("--landing-surface", tokens.surface);
-    root.style.setProperty("--landing-surface-soft", tokens.surfaceSoft);
-    root.style.setProperty("--landing-border", tokens.border);
-    root.style.setProperty("--landing-muted-text", tokens.mutedText);
+  const cssVars = React.useMemo(
+    () =>
+      ({
+        "--landing-primary": palette.primary,
+        "--landing-secondary": palette.secondary,
+        "--landing-accent": palette.accent,
+        "--landing-background": palette.background,
+        "--landing-text": palette.text,
 
-    root.style.setProperty("--landing-cta-bg", tokens.ctaBg);
-    root.style.setProperty("--landing-cta-text", tokens.ctaText);
-    root.style.setProperty("--landing-cta-hover-bg", tokens.ctaHoverBg);
+        "--landing-surface": tokens.surface,
+        "--landing-surface-soft": tokens.surfaceSoft,
+        "--landing-border": tokens.border,
+        "--landing-muted-text": tokens.mutedText,
 
-    root.style.setProperty("--landing-slot-bg", tokens.slotBackground);
-    root.style.setProperty("--landing-slot-tile-bg", tokens.slotTileBg);
-    root.style.setProperty("--landing-slot-tile-border", tokens.slotTileBorder);
-    root.style.setProperty("--landing-slot-icon", tokens.slotIcon);
-    root.style.setProperty("--landing-slot-center-bg", tokens.slotCenterBg);
-    root.style.setProperty("--landing-slot-center-text", tokens.slotCenterText);
-    root.style.setProperty("--landing-slot-glow-primary", tokens.slotGlowPrimary);
-    root.style.setProperty("--landing-slot-glow-accent", tokens.slotGlowAccent);
-  }, [currentTheme, tokens]);
+        "--landing-cta-bg": tokens.ctaBg,
+        "--landing-cta-text": tokens.ctaText,
+        "--landing-cta-hover-bg": tokens.ctaHoverBg,
 
+        "--landing-slot-bg": tokens.slotBackground,
+        "--landing-slot-tile-bg": tokens.slotTileBg,
+        "--landing-slot-tile-border": tokens.slotTileBorder,
+        "--landing-slot-icon": tokens.slotIcon,
+        "--landing-slot-center-bg": tokens.slotCenterBg,
+        "--landing-slot-center-text": tokens.slotCenterText,
+        "--landing-slot-glow-primary": tokens.slotGlowPrimary,
+        "--landing-slot-glow-accent": tokens.slotGlowAccent,
+      } as React.CSSProperties),
+    [palette, tokens]
+  );
+  const options = React.useMemo<ThemeOption[]>(
+    () => Object.values(themeMap).map(t => ({ id: t.id, name: t.name })),
+    [themeMap]
+  );
   const value = React.useMemo(
-    () => ({
-      theme: currentTheme,
-      setTheme: (id: string) => setCurrentThemeId(id),
+    () => ({ 
+      currentThemeId,
+      options,
+      setTheme: (id: string) => setCurrentThemeId(resolveId(id)) 
     }),
-    [currentTheme]
+    [currentThemeId, options, resolveId]
   );
 
   return (
     <ThemeContext.Provider value={value}>
-      <div
-        className="min-h-full"
+      <div className="min-h-full flex justify-center" 
         style={{
-          backgroundColor: currentTheme.colors.background,
-          color: currentTheme.colors.text,
-        }}
-      >
+          ...cssVars,
+          backgroundColor: palette.background,
+          color: palette.text 
+        }}>
         {children}
       </div>
     </ThemeContext.Provider>

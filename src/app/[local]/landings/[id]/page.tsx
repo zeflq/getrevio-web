@@ -1,35 +1,27 @@
-"use client";
+"use server";
 
-import * as React from "react";
-import { useLandingItem } from "@/features/landings/hooks/useLandingCrud";
+import { LandingThemeProvider } from "@/features/landings/theme/themeProvider";
 import { TemplateLinearRenderer } from "@/features/landings/preview/TemplateLinearRenderer";
-import { use } from "react";
-import {
-  LandingThemeProvider,
-} from "@/features/landings/theme/themeProvider";
-import { landingThemes } from "@/features/landings/theme/themes";
+import { getLandingServer } from "@/features/landings/server/interface/queries";
+import { listThemesServer } from "@/features/themes/server/queries";
+import { ThemeSelector } from "@/features/landings/theme/ThemeSelector";
 
 interface LandingPreviewPageProps {
-  params: Promise<{
+  params: {
     local: string;
     id: string;
-  }>;
+  };
+  searchParams: {
+    preview?: string; // "draft" | "live"
+  };
 }
 
-export default function LandingPreviewPage({ params }: LandingPreviewPageProps) {
-  const { id }= use(params);
-  const { data: landing, isLoading } = useLandingItem(id);
-  const blocks = landing?.contentDraft?.blocks ?? [];
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-slate-950 text-white">
-        <div className="mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center gap-4 px-4">
-          <p className="text-lg font-medium text-white/80">Loading landing preview...</p>
-        </div>
-      </div>
-    );
-  }
+export default async function LandingPreviewPage({
+  params,
+  searchParams,
+}: LandingPreviewPageProps) {
+  const { id } = await params;
+  const landing = await getLandingServer(id);
 
   if (!landing) {
     return (
@@ -41,9 +33,27 @@ export default function LandingPreviewPage({ params }: LandingPreviewPageProps) 
     );
   }
 
+  const themesPayload = landing.merchantId
+    ? await listThemesServer({ merchantId: landing.merchantId, _limit: 50 })
+    : { data: [] };
+
+  // décider du mode preview
+  const previewMode = (await searchParams).preview === "live" ? "live" : "draft";
+
+  const content =
+    previewMode === "live" ? landing.contentPublished : landing.contentDraft;
+
+  const blocks = content?.blocks ?? [];
+
   return (
-    <LandingThemeProvider themes={landingThemes}>
-      <div className="min-h-screen flex justify-center">
+    <LandingThemeProvider
+      themes={themesPayload.data}
+      themeId={landing.themeId ?? undefined}
+    >
+      <div className="min-h-screen flex flex-col justify-center max-w-xl">
+        <div className="flex justify-end">
+          <ThemeSelector/>
+        </div>
         <TemplateLinearRenderer blocks={blocks} />
       </div>
     </LandingThemeProvider>
