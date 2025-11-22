@@ -9,6 +9,7 @@ import type { LandingBlockField } from "./hooks/useBlocksFieldArray";
 import { BlockCard } from "./BlockCard";
 import type { LandingBelongsTo } from "../model/landingSchema";
 import type { LandingListItem } from "../server/mappers";
+import type { LandingTemplate } from "../templates/types";
 
 interface SortableBlockCardProps {
   field: LandingBlockField;
@@ -26,6 +27,7 @@ interface SortableBlockCardProps {
   disableDelete?: boolean;
   belongsTo?: LandingBelongsTo | null;
   landing?: LandingListItem | null;
+  template?: LandingTemplate | null;
 }
 
 export function SortableBlockCard({
@@ -43,7 +45,8 @@ export function SortableBlockCard({
   disableDuplicate,
   disableDelete,
   belongsTo,
-  landing
+  landing,
+  template,
 }: SortableBlockCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: field.id,
@@ -75,6 +78,7 @@ export function SortableBlockCard({
         disableDelete={disableDelete}
         belongsTo={belongsTo}
         landing={landing}
+        template={template}
       />
     </div>
   );

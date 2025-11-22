@@ -134,6 +134,27 @@
           "ctaUrl": "Button URL"
         }
       },
+      "addons": {
+        "sectionLabel": "Addons",
+        "add": "Add addon",
+        "empty": "No addons yet.",
+        "remove": "Remove",
+        "footerAddon": {
+          "text": "Footer text",
+          "placeholder": "Add footer copy",
+          "align": "Alignment",
+          "alignOptions": {
+            "left": "Left",
+            "center": "Center",
+            "right": "Right"
+          },
+          "tone": "Tone",
+          "toneOptions": {
+            "muted": "Muted",
+            "normal": "Normal"
+          }
+        }
+      },
       "actions": {
         "duplicate": "Duplicate block",
         "delete": "Delete block",

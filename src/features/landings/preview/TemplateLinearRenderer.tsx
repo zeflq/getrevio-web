@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { landingBlockPluginMap, type LandingBlock } from "@/features/landings/blocks";
+import { renderAddons } from "@/features/landings/addons";
 import { StepProvider, useStepController } from "./useStepController";
 
 export function TemplateLinearRenderer({ blocks }: { blocks: LandingBlock[] }) {
@@ -26,7 +27,12 @@ function TemplateSteps({ blocks }: { blocks: LandingBlock[] }) {
         if (!Renderer) {
           return null;
         }
-        return <Renderer key={block.id ?? index} data={block.data} />;
+        return (
+          <React.Fragment key={block.id ?? index}>
+            <Renderer data={block.data} />
+            {renderAddons(block.addons)}
+          </React.Fragment>
+        );
       })}
     </>
   );

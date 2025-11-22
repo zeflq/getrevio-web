@@ -84,6 +84,7 @@ export const landingTemplates: LandingTemplate[] = [
   //     },
   //   ],
   // },
+
   {
     id: "slot-game",
     name: "Slot game",
@@ -105,6 +106,18 @@ export const landingTemplates: LandingTemplate[] = [
             label: "Je tente ma chance",
           },
         },
+        addons: [
+          {
+            kind: "footerAddon",
+            mode: "optional",
+            maxInstances: 1,
+            defaultData: {
+              text: "© 2024 Casino Inc. Play responsibly. Terms apply.",
+              align: "center",
+              tone: "muted",
+            },
+          },
+        ],
       },
       {
         id: "slot-game-legal",

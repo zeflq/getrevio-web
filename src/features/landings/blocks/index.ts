@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+import {
+  LandingAddonSchema,
+  createAddonByKind,
+  LandingBlockAddonDefinition,
+} from "@/features/landings/addons";
 import type { LandingBlockPlugin } from "./plugin";
 import simpleHeroPlugin from "./simpleHero";
 import heroWithCtaPlugin from "./heroWithCta";
@@ -35,6 +40,7 @@ const buildBlockSchema = <P extends LandingBlockPlugin<any>>(plugin: P) =>
     data: plugin.schema,
     __templateFixed: z.boolean().optional(),
     __templateBlockId: z.string().optional(),
+    addons: z.array(LandingAddonSchema).default([]),
   });
 
   const schemas = [
@@ -73,7 +79,8 @@ const findPluginByKind = <K extends LandingBlockKind>(
 
 export const createBlockByKind = <K extends LandingBlockKind>(
   kind: K,
-  overrides?: Partial<PluginByKind<K>["defaultData"]>
+  overrides?: Partial<PluginByKind<K>["defaultData"]>,
+  addonOverrides?: LandingBlockAddonDefinition[]
 ): LandingBlock => {
   const plugin = findPluginByKind(kind);
   if (!plugin) {
@@ -87,6 +94,9 @@ export const createBlockByKind = <K extends LandingBlockKind>(
       ...clone(plugin.defaultData),
       ...(overrides ?? {}),
     },
+    addons: (addonOverrides ?? [])
+      .filter((slot) => slot.mode === "fixed")
+      .map((slot) => createAddonByKind(slot.kind, slot.defaultData)),
   } satisfies LandingBlock;
 };
 

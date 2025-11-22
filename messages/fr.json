@@ -132,6 +132,27 @@
           "ctaUrl": "URL du bouton"
         }
       },
+      "addons": {
+        "sectionLabel": "Addons",
+        "add": "Ajouter un addon",
+        "empty": "Aucun addon pour le moment.",
+        "remove": "Supprimer",
+        "footerAddon": {
+          "text": "Texte du pied de page",
+          "placeholder": "Ajoutez le texte du footer",
+          "align": "Alignement",
+          "alignOptions": {
+            "left": "Gauche",
+            "center": "Centre",
+            "right": "Droite"
+          },
+          "tone": "Ton",
+          "toneOptions": {
+            "muted": "Atténué",
+            "normal": "Normal"
+          }
+        }
+      },
       "actions": {
         "duplicate": "Dupliquer le bloc",
         "delete": "Supprimer le bloc",

@@ -11,6 +11,7 @@ import {
   type LandingContentInput,
 } from "../model/landingContentSchema";
 import { createBlockByKind } from "../blocks";
+import { createAddonByKind } from "@/features/landings/addons";
 import { getTemplateById } from "../templates";
 import type { LandingListItem } from "../server/mappers";
 
@@ -29,7 +30,8 @@ const buildTemplateContent = (
   const blocks = template.blocks.map((definition) => {
     const block = createBlockByKind(
       definition.blockType,
-      definition.defaultData as any
+      definition.defaultData as any,
+      definition.addons
     );
     block.__templateBlockId = definition.id;
     if (definition.mode === "fixed") {

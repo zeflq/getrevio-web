@@ -8,6 +8,7 @@ import { useFormContext } from "react-hook-form";
 import { landingBlockPluginMap, type LandingBlock } from "../blocks";
 import type { LandingBelongsTo, LandingFormValues } from "../model/landingSchema";
 import type { LandingListItem } from "../server/mappers";
+import type { LandingTemplate, TemplateBlockDefinition } from "../templates/types";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -22,6 +23,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+
+import { BlockAddonsSection } from "./BlockAddonsSection";
 
 interface BlockCardAccordionProps {
   id: string;
@@ -39,6 +42,7 @@ interface BlockCardAccordionProps {
   disableDelete?: boolean;
   belongsTo?: LandingBelongsTo | null;
   landing?: LandingListItem | null;
+  template?: LandingTemplate | null;
 }
 
 export function BlockCard({
@@ -57,6 +61,7 @@ export function BlockCard({
   disableDelete,
   belongsTo,
   landing,
+  template,
 }: BlockCardAccordionProps) {
   const t = useTranslations("landings.editor");
   const blocksTranslations = useTranslations("landings.editor.blocks");
@@ -66,6 +71,10 @@ export function BlockCard({
   const description = blocksTranslations(`${block.kind}.description` as const);
   const plugin = landingBlockPluginMap[block.kind];
   const InspectorComponent = plugin?.Inspector;
+  const templateBlock: TemplateBlockDefinition | null = React.useMemo(() => {
+    if (!template || !block.__templateBlockId) return null;
+    return template.blocks.find((entry) => entry.id === block.__templateBlockId) ?? null;
+  }, [template, block.__templateBlockId]);
 
   const isFixedBlock = block.__templateFixed ?? false;
   const { formState } = useFormContext<LandingFormValues>();
@@ -187,6 +196,7 @@ export function BlockCard({
             landing={landing}
           />
         )}
+        <BlockAddonsSection index={index} disabled={disabled} templateBlock={templateBlock} />
       </CollapsibleContent>
     </Collapsible>
   );

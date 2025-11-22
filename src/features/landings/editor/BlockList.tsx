@@ -212,7 +212,6 @@ export function BlockList({
                   onDuplicate={() => onDuplicate(index)}
                   onDelete={() => onDelete(index)}
                   disabled={disabled}
-                 // preview={renderPreview(block)}
                   disableDuplicate={
                     templateLimits.has(block.kind) &&
                     (counts[block.kind] ?? 0) >= templateLimits.get(block.kind)!
@@ -223,6 +222,7 @@ export function BlockList({
                   }
                   belongsTo={belongsTo}
                   landing={landing}
+                  template={template}
                 />
               );
             })}
