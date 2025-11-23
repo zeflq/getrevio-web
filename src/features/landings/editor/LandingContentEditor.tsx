@@ -12,7 +12,7 @@ import type { TemplateBlockDefinition } from "../templates/types";
 import { getTemplateFixedCountMap } from "../templates/utils";
 import { useBlocksFieldArray } from "./hooks/useBlocksFieldArray";
 import { useSelectedBlock } from "./hooks/useSelectedBlock";
-import { BlockList } from "./BlockList";
+import { BlockList } from "./block/BlockList";
 
 interface LandingContentEditorProps {
   landing?: LandingListItem | null;

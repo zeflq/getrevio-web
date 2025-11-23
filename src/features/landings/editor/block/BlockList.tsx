@@ -26,18 +26,19 @@ import {
   landingBlockPluginMap,
   landingBlockPlugins,
   type LandingBlockKind,
-} from "../blocks";
-import type { LandingBlock } from "../blocks";
-import type { TemplateBlockDefinition, LandingTemplate } from "../templates/types";
+} from "../../blocks";
+import type { LandingBlock } from "../../blocks";
+import type { TemplateBlockDefinition, LandingTemplate } from "../../templates/types";
 import {
   getTemplateFixedCountMap,
   getTemplateMaxInstanceMap,
-} from "../templates/utils";
-import { EmptyState } from "./ui/EmptyState";
-import type { LandingBlockField } from "./hooks/useBlocksFieldArray";
+} from "../../templates/utils";
+import { EmptyState } from "../ui/EmptyState";
+import type { LandingBlockField } from "../hooks/useBlocksFieldArray";
 import { SortableBlockCard } from "./SortableBlockCard";
-import type { LandingBelongsTo } from "../model/landingSchema";
-import type { LandingListItem } from "../server/mappers";
+import type { LandingBelongsTo } from "../../model/landingSchema";
+import type { LandingListItem } from "../../server/mappers";
+import { BlockActions } from "./BlockActions";
 
 interface BlockListProps {
   blocks: LandingBlock[];
@@ -58,21 +59,6 @@ type MenuOption = {
   kind: LandingBlockKind;
   label: string;
   template?: TemplateBlockDefinition;
-};
-
-const getMenuOptions = (
-  templateBlocks?: TemplateBlockDefinition[] | []
-): MenuOption[] => {
-  if (templateBlocks && templateBlocks.length > 0) {
-    return templateBlocks
-      .filter((block) => block.mode === "optional")
-      .map((block) => ({
-        kind: block.blockType,
-        label: block.label ?? block.blockType,
-        template: block,
-      }));
-  }
-  return [];
 };
 
 export function BlockList({
@@ -123,11 +109,6 @@ export function BlockList({
     [template]
   );
 
-  const menuOptions = React.useMemo(
-    () => getMenuOptions(template?.blocks),
-    [template]
-  );
-
   const addOptionDisabled = (option: { kind: LandingBlockKind; template?: TemplateBlockDefinition }) => {
     const maxInstances = option.template?.maxInstances;
     if (maxInstances !== undefined && counts[option.kind] >= maxInstances) {
@@ -139,27 +120,18 @@ export function BlockList({
   if (!fields.length) {
     return (
       <div className="space-y-4 rounded-lg border border-dashed p-6">
-        {menuOptions && menuOptions.length > 0 && (
+        {template?.blocks && template.blocks.length > 0 && (
           <div className="flex items-center justify-between gap-2">
             <span className="text-sm font-semibold">{t("addBlock")}</span>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button disabled={disabled}>{t("addBlock")}</Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {menuOptions.map((option) => (
-                  <DropdownMenuItem
-                    key={option.kind}
-                    disabled={addOptionDisabled(option)}
-                    onSelect={() => onAdd(option.kind, option.template)}
-                  >
-                    {option.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <BlockActions
+              disabled={disabled}
+              buttonLabel={t("addBlock")}
+              templateBlocks={template.blocks}
+              addOptionDisabled={addOptionDisabled}
+              onSelect={(kind, templateBlock) => onAdd(kind as LandingBlockKind, templateBlock)}
+            />
           </div>
-      )}
+        )}
         <EmptyState />
       </div>
     );
@@ -169,22 +141,13 @@ export function BlockList({
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-2">
         <span className="text-sm font-semibold">{t("addBlock")}</span>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button disabled={disabled}>{t("addBlock")}</Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {menuOptions.map((option) => (
-              <DropdownMenuItem
-                key={option.template?.id ?? option.kind}
-                disabled={addOptionDisabled(option)}
-                onSelect={() => onAdd(option.kind, option.template)}
-              >
-                {option.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <BlockActions
+          disabled={disabled}
+          buttonLabel={t("addBlock")}
+          templateBlocks={template?.blocks}
+          addOptionDisabled={addOptionDisabled}
+          onSelect={(kind, templateBlock) => onAdd(kind as LandingBlockKind, templateBlock)}
+        />
       </div>
 
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>

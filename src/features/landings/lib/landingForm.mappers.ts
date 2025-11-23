@@ -27,24 +27,26 @@ const buildTemplateContent = (
   const template = getTemplateById(templateId);
   if (!template) return null;
 
-  const blocks = template.blocks.map((definition) => {
-    const block = createBlockByKind(
-      definition.blockType,
-      definition.defaultData as any,
-      definition.addons
-    );
-    block.__templateBlockId = definition.id;
-    if (definition.mode === "fixed") {
+  // ✅ Only pick fixed blocks
+  const blocks = template.blocks
+    .filter((definition) => definition.mode === "fixed")
+    .map((definition) => {
+      const block = createBlockByKind(
+        definition.blockType,
+        definition.defaultData as any,
+        definition.addons
+      );
+      block.__templateBlockId = definition.id;
       block.__templateFixed = true;
-    }
-    return block;
-  });
+      return block;
+    });
 
   return {
     layout: "full",
     blocks,
   };
 };
+
 
 const toInternalBelongsTo = (
   src?: LandingBelongsTo | LandingBelongsToExternal | null

@@ -109,7 +109,7 @@ export const landingTemplates: LandingTemplate[] = [
         addons: [
           {
             kind: "footerAddon",
-            mode: "optional",
+            mode: "fixed",
             maxInstances: 1,
             defaultData: {
               text: "© 2024 Casino Inc. Play responsibly. Terms apply.",

@@ -5,10 +5,10 @@ import { ArrowUp, ArrowDown, MoreHorizontal, ChevronDown, LockIcon, Pin } from "
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 
-import { landingBlockPluginMap, type LandingBlock } from "../blocks";
-import type { LandingBelongsTo, LandingFormValues } from "../model/landingSchema";
-import type { LandingListItem } from "../server/mappers";
-import type { LandingTemplate, TemplateBlockDefinition } from "../templates/types";
+import { landingBlockPluginMap, type LandingBlock } from "../../blocks";
+import type { LandingBelongsTo, LandingFormValues } from "../../model/landingSchema";
+import type { LandingListItem } from "../../server/mappers";
+import type { LandingTemplate, TemplateBlockDefinition } from "../../templates/types";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -24,7 +24,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
-import { BlockAddonsSection } from "./BlockAddonsSection";
+import { BlockAddonsSection } from "../addons/BlockAddonsSection";
 
 interface BlockCardAccordionProps {
   id: string;

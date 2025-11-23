@@ -4,12 +4,12 @@ import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
 import * as React from "react";
 
-import type { LandingBlock } from "../blocks";
-import type { LandingBlockField } from "./hooks/useBlocksFieldArray";
+import type { LandingBlock } from "../../blocks";
+import type { LandingBlockField } from "../hooks/useBlocksFieldArray";
 import { BlockCard } from "./BlockCard";
-import type { LandingBelongsTo } from "../model/landingSchema";
-import type { LandingListItem } from "../server/mappers";
-import type { LandingTemplate } from "../templates/types";
+import type { LandingBelongsTo } from "../../model/landingSchema";
+import type { LandingListItem } from "../../server/mappers";
+import type { LandingTemplate } from "../../templates/types";
 
 interface SortableBlockCardProps {
   field: LandingBlockField;
