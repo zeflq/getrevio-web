@@ -11,6 +11,7 @@ import heroWithCtaPlugin from "./heroWithCta";
 import legalTextPlugin from "./legalText";
 import gamePlugin from "./game";
 import intentHeroPlugin from "./intentHero";
+import { clone, createId } from "../utils/serialization";
 
 //const landingBlockPlugins = [simpleHeroPlugin, heroWithCtaPlugin, legalTextPlugin, gamePlugin] as const;
 const landingBlockPlugins = [
@@ -56,20 +57,6 @@ export const LandingBlockSchema = z.discriminatedUnion("kind", schemas);
 export type LandingBlock = z.infer<typeof LandingBlockSchema>;
 export type LandingBlockKind = LandingBlockPluginKind;
 
-const createId = () => {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
-  return Math.random().toString(36).slice(2, 10);
-};
-
-const clone = <T>(value: T): T => {
-  if (typeof structuredClone === "function") {
-    return structuredClone(value);
-  }
-  return JSON.parse(JSON.stringify(value)) as T;
-};
-
 type PluginByKind<K extends LandingBlockKind> = Extract<LandingBlockPluginTuple[number], { kind: K }>;
 
 const findPluginByKind = <K extends LandingBlockKind>(
@@ -87,7 +74,7 @@ export const createBlockByKind = <K extends LandingBlockKind>(
     throw new Error(`Unknown block kind: ${kind}`);
   }
 
-  return {
+    return {
     id: createId(),
     kind,
     data: {
@@ -95,8 +82,16 @@ export const createBlockByKind = <K extends LandingBlockKind>(
       ...(overrides ?? {}),
     },
     addons: (addonOverrides ?? [])
-      .filter((slot) => slot.mode === "fixed")
-      .map((slot) => createAddonByKind(slot.kind, slot.defaultData)),
+      .map((slot) => {
+        const addon = createAddonByKind(slot.kind, slot.defaultData);
+
+        if (slot.mode === "fixed") {    
+          addon.__templateAddonId = slot.id;
+          addon.__templateFixed = true;
+        }
+
+        return addon;
+      }),
   } satisfies LandingBlock;
 };
 

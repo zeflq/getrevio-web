@@ -18,9 +18,9 @@ export const prisma =
     new PrismaClient({
         adapter,
         // Optional: enable query logging in dev
-        log: process.env.NODE_ENV === "development" ?
-            ["query", "error", "warn"] :
-            ["error"],
+        // log: process.env.NODE_ENV === "development" ?
+        //     ["query", "error", "warn"] :
+        //     ["error"],
     });
 
 if (process.env.NODE_ENV !== "production") {

@@ -78,8 +78,11 @@
       "addBlock": "Add block",
       "templates": {
         "label": "Template",
-        "placeholder": "Select template"
-      ,   "description": "One of our curated layouts for your landing."
+        "placeholder": "Select template",
+        "description": "One of our curated layouts for your landing.",
+        "descriptions": {
+          "slot-game": "A template optimized for game landings"
+        }
       },
       "warningsTitle": "Warnings",
       "warningsMultipleGames": "Multiple game blocks may confuse users.",
@@ -125,8 +128,8 @@
           "linkedPlace": "Linked place"
         },
         "intentHero": {
-          "label": "Intent Hero",
-          "description": "High-visibility CTA designed for slot-game launches.",
+          "label": "Hero",
+          "description": "A high-impact hero section tailored for slot-game landings.",
           "descriptionLabel": "Description",
           "title": "Title",
           "subtitle": "Subtitle",
@@ -135,10 +138,18 @@
         }
       },
       "addons": {
-        "sectionLabel": "Addons",
-        "add": "Add addon",
+        "sectionLabel": "Add-ons",
+        "add": "Add add-on",
+        "addonNumber": "#{index}",
         "empty": "No addons yet.",
         "remove": "Remove",
+        "items": {
+          "footerAddon": {
+            "label": "Footer",
+            "description":
+              "Display a footer section with logo, links, or legal information."
+          }
+        },
         "footerAddon": {
           "text": "Footer text",
           "placeholder": "Add footer copy",
@@ -197,6 +208,12 @@
         "campaign": "Campaign",
         "place": "Place",
         "none": "—"
+      }
+    },
+    "templates": {
+      "slot-game": {
+        "name": "Slot game",
+        "description": "A template optimized for game landings"
       }
     }
   },

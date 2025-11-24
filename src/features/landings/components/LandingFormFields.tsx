@@ -47,6 +47,7 @@ export function LandingFormFields({
   const belongsTo = watch("belongsTo");
   const attachmentType: "place" | "campaign" = belongsTo?.type ?? "place";
   const t = useTranslations("landings.form");
+  const t_tpl = useTranslations("landings.templates");
 
   const previousMerchantId = React.useRef<string | undefined>(selectedMerchantId);
 
@@ -122,7 +123,7 @@ export function LandingFormFields({
       <RHFCombobox<LiteListe>
         name="templateId"
         label={t("template")}
-        options={landingTemplates.map((tpl) => ({ value: tpl.id, label: tpl.name }))}
+        options={landingTemplates.map((tpl) => ({ value: tpl.id, label: t_tpl(`${tpl.id}.name`) }))}
         getOptionValue={(option) => option.value}
         getOptionLabel={(option) => option.label}
         placeholder={t("templatePlaceholder")}

@@ -11,7 +11,7 @@ export const landingTemplates: LandingTemplate[] = [
   //   blocks: [
   //     {
   //       id: "hero-cta-hero",
-  //       blockType: "heroWithCta",
+  //       kind: "heroWithCta",
   //       label: "Hero",
   //       mode: "fixed",
   //       maxInstances: 1,
@@ -29,14 +29,14 @@ export const landingTemplates: LandingTemplate[] = [
   //     },
   //     {
   //       id: "hero-cta-legal",
-  //       blockType: "legalText",
+  //       kind: "legalText",
   //       label: "Legal text",
   //       mode: "optional",
   //       maxInstances: 1,
   //     },
   //     {
   //       id: "hero-cta-simple",
-  //       blockType: "simpleHero",
+  //       kind: "simpleHero",
   //       label: "Secondary hero",
   //       mode: "optional",
   //       defaultData: {
@@ -56,7 +56,7 @@ export const landingTemplates: LandingTemplate[] = [
   //   blocks: [
   //     {
   //       id: "campaign-game-hero",
-  //       blockType: "simpleHero",
+  //       kind: "simpleHero",
   //       label: "Hero",
   //       mode: "fixed",
   //       maxInstances: 1,
@@ -67,7 +67,7 @@ export const landingTemplates: LandingTemplate[] = [
   //     },
   //     {
   //       id: "campaign-game-game",
-  //       blockType: "game",
+  //       kind: "game",
   //       label: "Game",
   //       mode: "fixed",
   //       maxInstances: 1,
@@ -77,7 +77,7 @@ export const landingTemplates: LandingTemplate[] = [
   //     },
   //     {
   //       id: "campaign-game-legal",
-  //       blockType: "legalText",
+  //       kind: "legalText",
   //       label: "Legal text",
   //       mode: "optional",
   //       maxInstances: 1,
@@ -87,16 +87,10 @@ export const landingTemplates: LandingTemplate[] = [
 
   {
     id: "slot-game",
-    name: "Slot game",
-    description: {
-      en: "A bold CTA hero to kick off your slot-game-specific landing.",
-      fr: "Un hero accrocheur pour lancer votre landing dédié au slot-game.",
-    },
     blocks: [
       {
         id: "slot-game-intent",
-        blockType: "intentHero",
-        label: "Intent hero",
+        kind: "intentHero",
         mode: "fixed",
         maxInstances: 1,
         defaultData: {
@@ -108,11 +102,12 @@ export const landingTemplates: LandingTemplate[] = [
         },
         addons: [
           {
+            id: "slot-game-footer",
             kind: "footerAddon",
             mode: "fixed",
             maxInstances: 1,
             defaultData: {
-              text: "© 2024 Casino Inc. Play responsibly. Terms apply.",
+              text: "© 2024 Casino Inc. Play responsibly. Terms apply.!",
               align: "center",
               tone: "muted",
             },
@@ -121,8 +116,7 @@ export const landingTemplates: LandingTemplate[] = [
       },
       {
         id: "slot-game-legal",
-        blockType: "legalText",
-        label: "Legal text",
+        kind: "legalText",
         mode: "optional",
         maxInstances: 1,
       },

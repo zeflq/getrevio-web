@@ -21,8 +21,8 @@ const getMenuOptions = (templateBlocks?: TemplateBlockDefinition[] | []) => {
     return templateBlocks
       .filter((block) => block.mode === "optional")
       .map((block) => ({
-        kind: block.blockType,
-        label: block.label ?? block.blockType,
+        kind: block.kind,
+        label: block.label ?? block.kind,
         template: block,
       }));
   }

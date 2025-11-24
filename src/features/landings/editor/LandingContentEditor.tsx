@@ -7,12 +7,13 @@ import { useLocale, useTranslations } from "next-intl";
 import { createBlockByKind, type LandingBlock, type LandingBlockKind } from "../blocks";
 import type { LandingBelongsTo, LandingFormValues } from "../model/landingSchema";
 import type { LandingListItem } from "../server/mappers";
-import { getTemplateById, landingTemplates } from "../templates";
+import { getTemplateById } from "../templates";
 import type { TemplateBlockDefinition } from "../templates/types";
 import { getTemplateFixedCountMap } from "../templates/utils";
 import { useBlocksFieldArray } from "./hooks/useBlocksFieldArray";
 import { useSelectedBlock } from "./hooks/useSelectedBlock";
 import { BlockList } from "./block/BlockList";
+import { clone, createId } from "../utils/serialization";
 
 interface LandingContentEditorProps {
   landing?: LandingListItem | null;
@@ -21,6 +22,7 @@ interface LandingContentEditorProps {
 
 export function LandingContentEditor({ landing, disabled }: LandingContentEditorProps) {
   const t = useTranslations("landings.editor");
+  const tpl = useTranslations("landings.templates");
   const form = useFormContext<LandingFormValues>();
 
   const blocks =
@@ -68,7 +70,7 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
 
   //   fixedSlots.forEach((definition) => {
   //     const block = createBlockByKind(
-  //       definition.blockType,
+  //       definition.kind,
   //       definition.defaultData as any
   //     );
   //     block.__templateBlockId = definition.id;
@@ -92,22 +94,23 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
     append(block);
   };
 
-  const handleDuplicate = (index: number) => {
-    const source = blocks[index];
-    if (!source) return;
+const handleDuplicate = (index: number) => {
+  const source = blocks[index];
+  if (!source) return;
 
-    const duplicate = createBlockByKind(
-      source.kind,
-      source.data as any,
-      source.addons?.map((addon) => ({
-        kind: addon.kind,
-        defaultData: addon.data,
-        mode: "optional",
-      }))
-    );
-    insert(index + 1, duplicate);
-    selectByIndex(index + 1);
+  const duplicate: LandingBlock = {
+    id: createId(),
+    kind: source.kind,
+    data: clone(source.data),
+    addons: clone(source.addons).map((addon) => ({
+      ...addon,
+      id: createId(),
+    })),
   };
+
+  insert(index + 1, duplicate);
+  selectByIndex(index + 1);
+};
 
   const handleDelete = (index: number) => {
     const block = blocks[index];
@@ -132,10 +135,8 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
     move(fromIndex, toIndex);
   };
 
-  const templateDescriptionLabel = t("templates.description");
-  const locale = useLocale();
-  const templateDescription =
-    template?.description?.[locale as "en" | "fr"] ?? template?.description?.en;
+  const templateDefaultDescription = t("templates.description");
+  const templateDescription = tpl(`${template?.id}.description`) || templateDefaultDescription;
 
   const belongsTo: LandingBelongsTo | undefined =
     landing?.belongsTo?.type === "place"
@@ -161,9 +162,8 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
       {templateDescription ? (
         <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
           <p className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
-            {templateDescriptionLabel}
+            {templateDescription}
           </p>
-          <p>{templateDescription}</p>
         </div>
       ) : null}
 

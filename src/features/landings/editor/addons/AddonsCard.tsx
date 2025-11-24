@@ -1,14 +1,18 @@
 "use client";
 
 import * as React from "react";
-import { ArrowUp, ArrowDown, MoreHorizontal, ChevronDown, LockIcon, Pin } from "lucide-react";
+import {
+  ArrowUp,
+  ArrowDown,
+  MoreHorizontal,
+  ChevronDown,
+  Pin,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 
-import { landingBlockPluginMap, type LandingBlock } from "../../blocks";
-import type { LandingBelongsTo, LandingFormValues } from "../../model/landingSchema";
-import type { LandingListItem } from "../../server/mappers";
-import type { LandingTemplate, TemplateBlockDefinition } from "../../templates/types";
+import type { LandingFormValues } from "../../model/landingSchema";
+import { cn } from "@/lib/utils";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -17,37 +21,39 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
-import { BlockAddonsSection } from "../addons/BlockAddonsSection";
+import { landingAddonPluginMap } from "../../addons";
+import type { LandingAddon } from "../../addons"; // if you want proper typing
 
-interface BlockCardAccordionProps {
+interface AddonsCardProps {
   id: string;
-  block: LandingBlock;
+  addon: LandingAddon; // was any
   index: number;
   total: number;
+
   selected?: boolean;
   onSelect: () => void;
+
   onMoveUp: () => void;
   onMoveDown: () => void;
   onDuplicate: () => void;
   onDelete: () => void;
+
   disabled?: boolean;
   disableDuplicate?: boolean;
   disableDelete?: boolean;
-  belongsTo?: LandingBelongsTo | null;
-  landing?: LandingListItem | null;
-  template?: LandingTemplate | null;
+
+  blockIndex: number;
 }
 
-export function BlockCard({
+export function AddonsCard({
   id,
-  block,
+  addon,
   index,
   total,
   selected = false,
@@ -59,51 +65,48 @@ export function BlockCard({
   disabled,
   disableDuplicate,
   disableDelete,
-  belongsTo,
-  landing,
-  template,
-}: BlockCardAccordionProps) {
-  const t = useTranslations("landings.editor");
-  const blocksTranslations = useTranslations("landings.editor.blocks");
+  blockIndex,
+}: AddonsCardProps) {
+  const t = useTranslations("landings.editor.addons");
+  const addonsTranslations = useTranslations("landings.editor.addons.items");
   const actions = useTranslations("landings.editor.actions");
 
-  const typeLabel = blocksTranslations(`${block.kind}.label` as const) ?? block.kind;
-  const description = blocksTranslations(`${block.kind}.description` as const);
-  const plugin = landingBlockPluginMap[block.kind];
+  const plugin = landingAddonPluginMap[addon.kind];
   const InspectorComponent = plugin?.Inspector;
-  const templateBlock: TemplateBlockDefinition | null = React.useMemo(() => {
-    if (!template || !block.__templateBlockId) return null;
-    return template.blocks.find((entry) => entry.id === block.__templateBlockId) ?? null;
-  }, [template, block.__templateBlockId]);
 
-  const isFixedBlock = block.__templateFixed ?? false;
+  const typeLabel =
+    addonsTranslations(`${addon.kind}.label` as const) ?? addon.kind;
+  const description = addonsTranslations(`${addon.kind}.description` as const);
+
+  const isFixedAddon = addon.__templateFixed ?? false;
+
   const { formState } = useFormContext<LandingFormValues>();
-  const blockErrors = formState.errors.content?.blocks?.[index];
-  const hasBlockErrors = Boolean(blockErrors);
+  const addonErrors =
+    (formState.errors.content?.blocks?.[blockIndex] as any)?.addons?.[index];
+  const hasAddonErrors = Boolean(addonErrors);
+
   const headerClasses = cn(
     "bg-background border border-border/60 rounded-lg flex items-center gap-4 px-4 py-3 text-left cursor-pointer hover:no-underline transition",
-    isFixedBlock && "border-l-4 border-primary/70",
-    hasBlockErrors && "border-destructive/70 bg-destructive/5 text-destructive",
+    isFixedAddon && "border-l-4 border-primary/40",
+    hasAddonErrors && "border-destructive/70 bg-destructive/5 text-destructive"
   );
+
+  // ✅ REQUIRED by LandingAddonInspectorProps
+  const fieldName = `content.blocks.${blockIndex}.addons.${index}.data`;
 
   return (
     <Collapsible
       open={selected}
-      onOpenChange={() => {
-        onSelect();
-      }}
+      onOpenChange={() => onSelect()}
       className="bg-background rounded-lg border"
     >
       <CollapsibleTrigger asChild>
-        <div
-          className={headerClasses}
-        >
+        <div className={headerClasses}>
           {/* Reorder buttons */}
-          <div className="flex flex-col gap-2 text-foreground"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            >
+          <div
+            className="flex flex-col gap-2 text-foreground"
+            onClick={(e) => e.stopPropagation()}
+          >
             <Button
               type="button"
               variant="ghost"
@@ -134,9 +137,8 @@ export function BlockCard({
 
           {/* Main label and metadata */}
           <div className="flex-1 flex items-center gap-2">
-            {/* {dragHandle} */}
             <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-              {t("blockNumber", { index: index + 1 })}
+              {t("addonNumber", { index: index + 1 })}
             </div>
             <div>
               <div className="font-semibold">{typeLabel}</div>
@@ -146,11 +148,8 @@ export function BlockCard({
             </div>
           </div>
 
-          {/* {isFixedBlock && (
-            <Pin className="size-4 text-muted-foreground" />
-          )} */}
+          {/* {isFixedAddon && <Pin className="size-4 text-muted-foreground" />} */}
 
-          {/* Actions dropdown */}
           {(!disableDuplicate || !disableDelete) && (
             <DropdownMenu>
               <DropdownMenuTrigger
@@ -160,6 +159,7 @@ export function BlockCard({
               >
                 <MoreHorizontal className="size-4" />
               </DropdownMenuTrigger>
+
               <DropdownMenuContent>
                 <DropdownMenuItem
                   onSelect={() => onDuplicate()}
@@ -177,7 +177,6 @@ export function BlockCard({
             </DropdownMenu>
           )}
 
-          {/* Chevron indicator */}
           <ChevronDown
             className={cn(
               "size-4 transition-transform",
@@ -188,15 +187,14 @@ export function BlockCard({
       </CollapsibleTrigger>
 
       <CollapsibleContent className="space-y-4 px-4 py-3">
-        {InspectorComponent && (
+        {InspectorComponent ? (
           <InspectorComponent
-            index={index}
+            blockIndex={blockIndex}
+            addonIndex={index}
+            fieldName={fieldName}   // ✅ FIX
             disabled={disabled}
-            belongsTo={belongsTo}
-            landing={landing}
           />
-        )}
-        <BlockAddonsSection blockIndex={index} disabled={disabled} templateBlock={templateBlock} />
+        ) : null}
       </CollapsibleContent>
     </Collapsible>
   );

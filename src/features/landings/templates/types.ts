@@ -3,8 +3,7 @@ import type { LandingBlockAddonDefinition } from "@/features/landings/addons";
 
 export type TemplateBlockDefinition = {
   id: string;
-  blockType: LandingBlockKind;
-  label: string;
+  kind: LandingBlockKind;
   mode: "fixed" | "optional";
   maxInstances?: number;
   defaultData?: Record<string, unknown>;
@@ -13,7 +12,5 @@ export type TemplateBlockDefinition = {
 
 export type LandingTemplate = {
   id: string;
-  name: string;
-  description?: Record<"en" | "fr", string>;
   blocks: TemplateBlockDefinition[];
 };

@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import type { LandingAddonPlugin } from "./plugin";
 import footerAddonPlugin from "./footerAddon";
+import { clone, createId } from "../utils/serialization";
 
 const landingAddonPlugins = [footerAddonPlugin] as const satisfies readonly LandingAddonPlugin<any>[];
 
@@ -18,6 +19,8 @@ function buildAddonSchema<P extends LandingAddonPlugin<any>>(plugin: P) {
     id: z.string().min(1).optional(),
     kind: z.literal(plugin.kind),
     data: plugin.schema,
+    __templateAddonId: z.string().optional(),
+    __templateFixed: z.boolean().optional(),
   });
 }
 
@@ -29,20 +32,6 @@ const addonSchemas =[
 export const LandingAddonSchema = z.discriminatedUnion("kind", addonSchemas);
 export type LandingAddon = z.infer<typeof LandingAddonSchema>;
 export type LandingAddonKind = LandingAddonPluginKind;
-
-const createId = () => {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
-  return Math.random().toString(36).slice(2, 10);
-};
-
-function clone<T>(value: T): T {
-  if (typeof structuredClone === "function") {
-    return structuredClone(value);
-  }
-  return JSON.parse(JSON.stringify(value)) as T;
-}
 
 type PluginByKind<K extends LandingAddonKind> = Extract<
   LandingAddonPluginTuple[number],
@@ -73,11 +62,11 @@ export function createAddonByKind<K extends LandingAddonKind>(
 }
 
 export type LandingBlockAddonDefinition = {
+  id: string;
   kind: LandingAddonKind;
   mode: "fixed" | "optional";
   maxInstances?: number;
   defaultData?: Partial<LandingAddon["data"]>;
-  label?: string;
 };
 
 export function renderAddons(addons?: LandingAddon[]) {

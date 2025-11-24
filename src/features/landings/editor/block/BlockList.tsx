@@ -1,44 +1,25 @@
 "use client";
 
 import * as React from "react";
-import {
-  DndContext,
-  DragEndEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
 import { useTranslations } from "next-intl";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import {
-  landingBlockPluginMap,
-  landingBlockPlugins,
-  type LandingBlockKind,
-} from "../../blocks";
-import type { LandingBlock } from "../../blocks";
-import type { TemplateBlockDefinition, LandingTemplate } from "../../templates/types";
+import type { LandingBlock, LandingBlockKind } from "../../blocks";
+import type {
+  TemplateBlockDefinition,
+  LandingTemplate,
+} from "../../templates/types";
 import {
   getTemplateFixedCountMap,
   getTemplateMaxInstanceMap,
 } from "../../templates/utils";
+
 import { EmptyState } from "../ui/EmptyState";
 import type { LandingBlockField } from "../hooks/useBlocksFieldArray";
-import { SortableBlockCard } from "./SortableBlockCard";
 import type { LandingBelongsTo } from "../../model/landingSchema";
 import type { LandingListItem } from "../../server/mappers";
+
 import { BlockActions } from "./BlockActions";
+import { BlockCard } from "./BlockCard";
 
 interface BlockListProps {
   blocks: LandingBlock[];
@@ -54,12 +35,6 @@ interface BlockListProps {
   belongsTo?: LandingBelongsTo | null;
   landing?: LandingListItem | null;
 }
-
-type MenuOption = {
-  kind: LandingBlockKind;
-  label: string;
-  template?: TemplateBlockDefinition;
-};
 
 export function BlockList({
   blocks,
@@ -77,24 +52,6 @@ export function BlockList({
 }: BlockListProps) {
   const t = useTranslations("landings.editor");
 
-  const sensors = useSensors(useSensor(PointerSensor));
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) {
-      return;
-    }
-
-    const fromIndex = fields.findIndex((field) => field.id === active.id);
-    const toIndex = fields.findIndex((field) => field.id === over.id);
-
-    if (fromIndex === -1 || toIndex === -1 || fromIndex === toIndex) {
-      return;
-    }
-
-    onMove(fromIndex, toIndex);
-  };
-
   const counts = React.useMemo(() => {
     return blocks.reduce<Record<string, number>>((acc, block) => {
       acc[block.kind] = (acc[block.kind] ?? 0) + 1;
@@ -102,21 +59,27 @@ export function BlockList({
     }, {});
   }, [blocks]);
 
-  const templateLimits = React.useMemo(() => getTemplateMaxInstanceMap(template), [template]);
+  const templateLimits = React.useMemo(
+    () => getTemplateMaxInstanceMap(template),
+    [template]
+  );
 
   const templateRequiredFixed = React.useMemo(
     () => getTemplateFixedCountMap(template),
     [template]
   );
 
-  const addOptionDisabled = (option: { kind: LandingBlockKind; template?: TemplateBlockDefinition }) => {
+  const addOptionDisabled = (option: {
+    kind: LandingBlockKind;
+    template?: TemplateBlockDefinition;
+  }) => {
     const maxInstances = option.template?.maxInstances;
     if (maxInstances !== undefined && counts[option.kind] >= maxInstances) {
       return true;
     }
     return disabled ?? false;
   };
-  
+
   if (!fields.length) {
     return (
       <div className="space-y-4 rounded-lg border border-dashed p-6">
@@ -128,7 +91,9 @@ export function BlockList({
               buttonLabel={t("addBlock")}
               templateBlocks={template.blocks}
               addOptionDisabled={addOptionDisabled}
-              onSelect={(kind, templateBlock) => onAdd(kind as LandingBlockKind, templateBlock)}
+              onSelect={(kind, templateBlock) =>
+                onAdd(kind as LandingBlockKind, templateBlock)
+              }
             />
           </div>
         )}
@@ -146,52 +111,49 @@ export function BlockList({
           buttonLabel={t("addBlock")}
           templateBlocks={template?.blocks}
           addOptionDisabled={addOptionDisabled}
-          onSelect={(kind, templateBlock) => onAdd(kind as LandingBlockKind, templateBlock)}
+          onSelect={(kind, templateBlock) =>
+            onAdd(kind as LandingBlockKind, templateBlock)
+          }
         />
       </div>
 
-      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-        <SortableContext
-          items={fields.map((field) => field.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          <div className="space-y-3">
-            {fields.map((field, index) => {
-              const block = blocks[index];
-              if (!block) {
-                return null;
+      <div className="space-y-3">
+        {fields.map((field, index) => {
+          const block = blocks[index];
+          if (!block) return null;
+
+          return (
+            <BlockCard
+              key={field.id}
+              id={field.id}
+              block={block}
+              index={index}
+              total={fields.length}
+              selected={field.id === selectedId}
+              onSelect={() => onSelect(field.id)}
+              onMoveUp={() => onMove(index, Math.max(0, index - 1))}
+              onMoveDown={() =>
+                onMove(index, Math.min(fields.length - 1, index + 1))
               }
-              return (
-                <SortableBlockCard
-                  key={field.id}
-                  field={field}
-                  block={block}
-                  index={index}
-                  total={fields.length}
-                  selected={field.id === selectedId}
-                  onSelect={() => onSelect(field.id)}
-                  onMoveUp={() => onMove(index, Math.max(0, index - 1))}
-                  onMoveDown={() => onMove(index, Math.min(fields.length - 1, index + 1))}
-                  onDuplicate={() => onDuplicate(index)}
-                  onDelete={() => onDelete(index)}
-                  disabled={disabled}
-                  disableDuplicate={
-                    templateLimits.has(block.kind) &&
-                    (counts[block.kind] ?? 0) >= templateLimits.get(block.kind)!
-                  }
-                  disableDelete={
-                    templateRequiredFixed.has(block.kind) &&
-                    (counts[block.kind] ?? 0) <= templateRequiredFixed.get(block.kind)!
-                  }
-                  belongsTo={belongsTo}
-                  landing={landing}
-                  template={template}
-                />
-              );
-            })}
-          </div>
-        </SortableContext>
-      </DndContext>
+              onDuplicate={() => onDuplicate(index)}
+              onDelete={() => onDelete(index)}
+              disabled={disabled}
+              disableDuplicate={
+                templateLimits.has(block.kind) &&
+                (counts[block.kind] ?? 0) >= templateLimits.get(block.kind)!
+              }
+              disableDelete={
+                templateRequiredFixed.has(block.kind) &&
+                (counts[block.kind] ?? 0) <=
+                  templateRequiredFixed.get(block.kind)!
+              }
+              belongsTo={belongsTo}
+              landing={landing}
+              template={template}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

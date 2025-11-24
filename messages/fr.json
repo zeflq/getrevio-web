@@ -123,8 +123,8 @@
           "linkedPlace": "Lieu lié"
         },
         "intentHero": {
-          "label": "Intent Hero",
-          "description": "CTA très visible taillé pour les landings slot-game.",
+          "label": "Hero",
+          "description": "Une section hero à fort impact, conçue pour les landings de slot-game.",
           "descriptionLabel": "Description",
           "title": "Titre",
           "subtitle": "Sous-titre",
@@ -133,10 +133,18 @@
         }
       },
       "addons": {
-        "sectionLabel": "Addons",
-        "add": "Ajouter un addon",
-        "empty": "Aucun addon pour le moment.",
+        "sectionLabel": "Add-ons",
+        "add": "Ajouter un add-on",
+        "addonNumber": "N°{index}",
+        "empty": "Aucun add-on pour le moment.",
         "remove": "Supprimer",
+        "items": {
+          "footerAddon": {
+            "label": "Pied de page",
+            "description":
+              "Affiche une section de bas de page avec liens ou mentions légales."
+          }
+        },
         "footerAddon": {
           "text": "Texte du pied de page",
           "placeholder": "Ajoutez le texte du footer",
@@ -195,6 +203,12 @@
         "campaign": "Campagne",
         "place": "Lieu",
         "none": "—"
+      }
+    },
+    "templates": {
+      "slot-game": {
+        "name": "Slot game",
+        "description": "Un modèle optimisé pour les landings de jeux"
       }
     }
   },

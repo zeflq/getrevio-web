@@ -32,9 +32,9 @@ const buildTemplateContent = (
     .filter((definition) => definition.mode === "fixed")
     .map((definition) => {
       const block = createBlockByKind(
-        definition.blockType,
+        definition.kind,
         definition.defaultData as any,
-        definition.addons
+        definition.addons?.filter((addonDef) => addonDef.mode === "fixed")
       );
       block.__templateBlockId = definition.id;
       block.__templateFixed = true;
