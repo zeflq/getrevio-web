@@ -6,19 +6,12 @@ import {
   LandingBlockAddonDefinition,
 } from "@/features/landings/addons";
 import type { LandingBlockPlugin } from "./plugin";
-import simpleHeroPlugin from "./simpleHero";
-import heroWithCtaPlugin from "./heroWithCta";
 import legalTextPlugin from "./legalText";
-import gamePlugin from "./game";
 import intentHeroPlugin from "./intentHero";
 import { clone, createId } from "../utils/serialization";
 
-//const landingBlockPlugins = [simpleHeroPlugin, heroWithCtaPlugin, legalTextPlugin, gamePlugin] as const;
 const landingBlockPlugins = [
-  simpleHeroPlugin,
-  heroWithCtaPlugin,
   legalTextPlugin,
-  gamePlugin,
   intentHeroPlugin,
 ] as const satisfies readonly LandingBlockPlugin<any>[];
 
@@ -45,10 +38,7 @@ const buildBlockSchema = <P extends LandingBlockPlugin<any>>(plugin: P) =>
   });
 
   const schemas = [
-  buildBlockSchema(simpleHeroPlugin),
-  buildBlockSchema(heroWithCtaPlugin),
   buildBlockSchema(legalTextPlugin),
-  buildBlockSchema(gamePlugin),
   buildBlockSchema(intentHeroPlugin),
 ] as const;
 

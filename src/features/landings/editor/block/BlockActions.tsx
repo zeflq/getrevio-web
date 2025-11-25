@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { TemplateBlockDefinition } from "@/features/landings/templates/types";
+import { useTranslations } from "next-intl";
 
 type MenuOption = {
   kind: string;
@@ -16,18 +17,21 @@ type MenuOption = {
   template?: TemplateBlockDefinition;
 };
 
-const getMenuOptions = (templateBlocks?: TemplateBlockDefinition[] | []) => {
+function getMenuOptions(
+  templateBlocks: TemplateBlockDefinition[] | [],
+  t: ReturnType<typeof useTranslations>
+) {
   if (templateBlocks && templateBlocks.length > 0) {
     return templateBlocks
       .filter((block) => block.mode === "optional")
       .map((block) => ({
         kind: block.kind,
-        label: block.label ?? block.kind,
+        label: t(`${block.kind}.name`) ?? block.kind,
         template: block,
       }));
   }
   return [];
-};
+}
 
 type BlockActionsProps = {
   disabled?: boolean;
@@ -44,15 +48,17 @@ export function BlockActions({
   addOptionDisabled,
   onSelect,
 }: BlockActionsProps) {
+  const t = useTranslations("landings.templates");
+
   const menuOptions = React.useMemo(
-    () => getMenuOptions(templateBlocks ?? []),
-    [templateBlocks]
+    () => getMenuOptions(templateBlocks ?? [], t),
+    [templateBlocks, t]
   );
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button disabled={disabled}>{buttonLabel}</Button>
+        <Button disabled={disabled} variant="primaryOutline">{buttonLabel}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {menuOptions.map((option) => (

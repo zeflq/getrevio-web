@@ -88,9 +88,11 @@ export function BlockCard({
 
       header={
         <>
-          <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-            {t("blockNumber", { index: index + 1 })}
-          </div>
+          {total> 1 && (
+            <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+              {t("blockNumber", { index: index + 1 })} 
+            </div>
+          )}
           <div>
             <div className="font-semibold">{typeLabel}</div>
             {description && (

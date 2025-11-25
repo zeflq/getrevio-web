@@ -214,6 +214,10 @@
       "slot-game": {
         "name": "Slot game",
         "description": "A template optimized for game landings"
+      },
+      "legalText": {
+        "name": "Legal Text",
+        "description": "A template for landings requiring legal disclaimers"
       }
     }
   },

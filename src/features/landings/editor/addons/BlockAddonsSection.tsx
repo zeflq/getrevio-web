@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 
 import type { LandingFormValues } from "../../model/landingSchema";
 import type { TemplateBlockDefinition } from "../../templates/types";
-import { EmptyState } from "../ui/EmptyState";
 
 import { AddonsActions } from "./AddonsActions";
 import {
@@ -160,7 +159,8 @@ export function BlockAddonsSection({
   return (
     <div className="space-y-3">
       <AddonsActions
-        label={t("sectionLabel")}
+        label=""
+        //label={t("sectionLabel")}
         addLabel={t("add")}
         empty={addonFields.length === 0}
         disabled={disabled}

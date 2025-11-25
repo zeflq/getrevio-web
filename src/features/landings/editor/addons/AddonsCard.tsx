@@ -89,9 +89,11 @@ export function AddonsCard({
 
       header={
         <>
-          <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-            {t("addonNumber", { index: index + 1 })}
-          </div>
+          {total > 1 && (
+            <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+              {t("addonNumber", { index: index + 1 })}
+            </div>
+          )}
           <div>
             <div className="font-semibold">{typeLabel}</div>
             {description && (
