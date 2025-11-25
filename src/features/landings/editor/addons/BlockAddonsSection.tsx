@@ -148,28 +148,14 @@ export function BlockAddonsSection({
     remove(index);
   };
 
-  // if (!addonFields.length) {
-  //   return (
-  //     <div className="space-y-4 rounded-lg border border-dashed p-4">
-  //       <div className="flex items-center justify-between">
-  //         <p className="text-sm font-semibold text-foreground">
-  //           {t("sectionLabel")}
-  //         </p>
-  //         {addonSlots.length > 0 && (
-  //           <AddonsActions
-  //             disabled={disabled}
-  //             buttonLabel={t("add")}
-  //             slots={addonSlots}
-  //             activeAddons={addons}
-  //             addOptionDisabled={addOptionDisabled}
-  //             onSelect={handleAddFromSlot}
-  //           />
-  //         )}
-  //       </div>
-  //       <EmptyState />
-  //     </div>
-  //   );
-  // }
+  const hasSlots = addonSlots.length > 0;
+  const hasAddons = addonFields.length > 0;
+
+  if (!hasSlots && !hasAddons) {
+    return (
+      <></>
+    );
+  }
 
   return (
     <div className="space-y-3">

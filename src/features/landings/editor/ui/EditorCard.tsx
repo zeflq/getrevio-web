@@ -1,0 +1,169 @@
+"use client";
+
+import * as React from "react";
+import { ArrowUp, ArrowDown, MoreHorizontal, ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "@/components/ui/dropdown-menu";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+
+export interface EditorCardProps {
+  /** Collapse state */
+  selected: boolean;
+  onSelect: () => void;
+
+  /** Reorder actions */
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+
+  /** Dropdown actions */
+  canDuplicate?: boolean;
+  canDelete?: boolean;
+  onDuplicate: () => void;
+  onDelete: () => void;
+
+  /** UI conditions */
+  isFixed?: boolean;
+  hasErrors?: boolean;
+  disabled?: boolean;
+
+  /** Header & content slots */
+  header: React.ReactNode;
+  content: React.ReactNode;
+}
+
+export function EditorCard({
+  selected,
+  onSelect,
+
+  canMoveUp,
+  canMoveDown,
+  onMoveUp,
+  onMoveDown,
+
+  canDuplicate = true,
+  canDelete = true,
+  onDuplicate,
+  onDelete,
+
+  isFixed,
+  hasErrors,
+  disabled,
+
+  header,
+  content,
+}: EditorCardProps) {
+  const baseClasses = cn(
+    "bg-background border rounded-lg cursor-pointer transition text-left",
+    "flex items-stretch",
+    disabled && "opacity-60",
+    isFixed && "border-l-4 border-primary/70",
+    hasErrors && "border-destructive/70 bg-destructive/5 text-destructive"
+  );
+
+  return (
+    <Collapsible open={selected} onOpenChange={onSelect} className="rounded-lg border bg-background">
+      <CollapsibleTrigger asChild>
+        <div className={baseClasses}>
+          {/* Left reorder rail */}
+          <div
+            className="flex flex-col justify-center gap-1 px-2 bg-muted/40 border-r border-border/50 rounded-l-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Button
+              type="button"
+              variant="ghost"
+              size="xs"
+              className="h-7 w-7"
+              disabled={!canMoveUp || disabled}
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveUp();
+              }}
+            >
+              <ArrowUp className="size-4" />
+            </Button>
+
+            <Button
+              type="button"
+              variant="ghost"
+              size="xs"
+              className="h-7 w-7"
+              disabled={!canMoveDown || disabled}
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveDown();
+              }}
+            >
+              <ArrowDown className="size-4" />
+            </Button>
+          </div>
+
+          {/* Header content */}
+          <div className="flex-1 flex items-center justify-between pl-2 px-4 py-3">
+            {/* LEFT SLOT */}
+            <div className="flex items-center gap-2">{header}</div>
+
+            {/* RIGHT ACTIONS */}
+            <div className="flex items-center gap-1">
+              {(canDuplicate || canDelete) && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    className={cn(buttonVariants({ variant: "ghost", size: "xs" }))}
+                    disabled={disabled}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <MoreHorizontal className="size-4" />
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent align="end">
+                    {canDuplicate && (
+                      <DropdownMenuItem
+                        disabled={disabled}
+                        onSelect={onDuplicate}
+                      >
+                        Duplicate
+                      </DropdownMenuItem>
+                    )}
+
+                    {canDelete && (
+                      <DropdownMenuItem
+                        disabled={disabled}
+                        onSelect={onDelete}
+                      >
+                        Delete
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+
+              <ChevronDown
+                className={cn(
+                  "size-4 transition-transform",
+                  selected ? "rotate-180" : "rotate-0"
+                )}
+              />
+            </div>
+          </div>
+        </div>
+      </CollapsibleTrigger>
+
+      {/* Expanded content */}
+      <CollapsibleContent className="space-y-4 px-4 py-3">
+        {content}
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}

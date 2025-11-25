@@ -1,5 +1,4 @@
 import type { Prisma } from "@prisma/client";
-import type { LandingCreateInput, LandingUpdateInput } from "@/features/landings/model/landingSchema";
 
 export type LandingCreateRecord = {
   merchantId: string;
@@ -16,6 +15,7 @@ export type LandingUpdateRecord = {
   id: string;
   merchantId?: string;
   name?: string;
+  status: "draft" | "published" | "archived";
   contentDraft?: Prisma.InputJsonValue;
   contentPublished?: Prisma.InputJsonValue | null;
   publishedAt?: string | Date | null;

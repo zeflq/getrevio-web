@@ -89,6 +89,10 @@ export class PrismaLandingRepository implements LandingRepository {
       patch.publishedAt = data.publishedAt ? new Date(data.publishedAt) : null;
     }
 
+    if(data.status !== undefined) {
+      patch.status = data.status;
+    }
+
     if (Object.keys(patch).length === 0) {
       const existing = await this.client.findUnique({
         where: { id: data.id },

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,17 +12,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { VariantProps } from "class-variance-authority";
 
-export interface iconAction {
+type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
+
+export interface IconAction {
   onClick: () => void;
   icon: React.ReactNode;
-  variant?: "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";
+  variant?: ButtonVariant;
   disabled?: boolean;
-  ariaLabel: string; // also used as the mobile label
+  ariaLabel: string; // required for a11y + default mobile label
+  /** Optional desktop text label (keeps icons-only when omitted) */
+  label?: string;
 }
 
-type iconActionGroupProps = {
-  actions: iconAction[];
+type IconActionGroupProps = {
+  actions: IconAction[];
   /** Extra classes for the desktop actions wrapper */
   className?: string;
   /** Label shown at top of the mobile menu */
@@ -32,39 +37,47 @@ type iconActionGroupProps = {
   /** Customize the trigger button on mobile (defaults to MoreHorizontal icon) */
   mobileTrigger?: React.ReactNode;
   /** Force display mode: 'auto' (default, responsive), 'desktop', or 'mobile' */
-  displayMode?: 'auto' | 'desktop' | 'mobile';
+  displayMode?: "auto" | "desktop" | "mobile";
 };
 
-export function iconActionGroup({
+export function IconActionGroup({
   actions,
   className,
   mobileMenuLabel,
   condensed,
   mobileTrigger,
-  displayMode = 'auto',
-}: iconActionGroupProps) {
+  displayMode = "auto",
+}: IconActionGroupProps) {
   if (!actions?.length) return null;
 
-  const btnClasses = condensed ? "h-8 w-8" : "h-9 w-9";
+  const iconBtnClasses = condensed ? "h-8 w-8" : "h-9 w-9";
+  const labeledBtnClasses = condensed ? "h-8 px-2 text-sm" : "h-9 px-3";
 
-  // Render a single icon button (desktop)
-  const renderButton = (action: iconAction, key: string) => (
-    <Button
-      key={key}
-      variant={action.variant ?? "ghost"}
-      disabled={action.disabled}
-      aria-label={action.ariaLabel}
-      title={action.ariaLabel}
-      size="icon"
-      className={btnClasses}
-      onClick={action.onClick}
-    >
-      <span className="inline-flex items-center">{action.icon}</span>
-    </Button>
-  );
+  // Render a single action as a button (desktop)
+  const renderButton = (action: IconAction, key: string) => {
+    const hasLabel = Boolean(action.label);
+
+    return (
+      <Button
+        key={key}
+        variant={action.variant ?? "ghost"}
+        disabled={action.disabled}
+        aria-label={action.ariaLabel}
+        title={action.ariaLabel}
+        size={hasLabel ? "default" : "icon"}
+        className={cn(hasLabel ? labeledBtnClasses : iconBtnClasses)}
+        onClick={action.onClick}
+      >
+        <span className="inline-flex items-center gap-2">
+          {action.icon}
+          {hasLabel && <span className="whitespace-nowrap">{action.label}</span>}
+        </span>
+      </Button>
+    );
+  };
 
   // Render a single dropdown menu item (mobile)
-  const renderMenuItem = (action: iconAction, key: string) => (
+  const renderMenuItem = (action: IconAction, key: string) => (
     <DropdownMenuItem
       key={key}
       disabled={action.disabled}
@@ -77,7 +90,8 @@ export function iconActionGroup({
       <span className="mr-2 inline-flex h-4 w-4 items-center justify-center">
         {action.icon}
       </span>
-      <span>{action.ariaLabel}</span>
+      {/* Prefer explicit label if provided, fallback to ariaLabel */}
+      <span>{action.label ?? action.ariaLabel}</span>
     </DropdownMenuItem>
   );
 
@@ -85,45 +99,55 @@ export function iconActionGroup({
   const renderMobileMenu = () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          aria-label="Open actions"
-          className={btnClasses}
-        >
+        <Button variant="ghost" aria-label="Open actions" className={iconBtnClasses}>
           {mobileTrigger ?? <MoreHorizontal className="h-4 w-4" />}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="">
+      <DropdownMenuContent align="end">
         {mobileMenuLabel && (
           <>
             <DropdownMenuLabel>{mobileMenuLabel}</DropdownMenuLabel>
             <DropdownMenuSeparator />
           </>
         )}
-        {actions.map((action, idx) => renderMenuItem(action, `${action.ariaLabel}-${idx}`))}
+        {actions.map((action, idx) =>
+          renderMenuItem(action, `${action.ariaLabel}-${idx}`)
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
 
-  if (displayMode === 'desktop') {
+  if (displayMode === "desktop") {
     return (
       <div className={cn("flex flex-wrap items-center gap-0", className)}>
-        {actions.map((action, idx) => renderButton(action, `${action.ariaLabel}-${idx}`))}
+        {actions.map((action, idx) =>
+          renderButton(action, `${action.ariaLabel}-${idx}`)
+        )}
       </div>
     );
   }
-  if (displayMode === 'mobile') {
+
+  if (displayMode === "mobile") {
     return renderMobileMenu();
   }
+
   // auto (responsive)
   return (
     <>
       <div className={cn("hidden md:flex flex-wrap items-center gap-0", className)}>
-        {actions.map((action, idx) => renderButton(action, `${action.ariaLabel}-${idx}`))}
+        {actions.map((action, idx) =>
+          renderButton(action, `${action.ariaLabel}-${idx}`)
+        )}
       </div>
-      <div className="md:hidden">
-        {renderMobileMenu()}
-      </div>
+      <div className="md:hidden">{renderMobileMenu()}</div>
     </>
   );
 }
+
+/**
+ * Backward-compatible exports (so you don't have to rename everywhere).
+ * You can remove these once you've migrated usages.
+ */
+export type iconAction = IconAction;
+export type iconActionGroupProps = IconActionGroupProps;
+export const iconActionGroup = IconActionGroup;

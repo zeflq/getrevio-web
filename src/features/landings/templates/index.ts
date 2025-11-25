@@ -108,8 +108,6 @@ export const landingTemplates: LandingTemplate[] = [
             maxInstances: 1,
             defaultData: {
               text: "© 2024 Casino Inc. Play responsibly. Terms apply.!",
-              align: "center",
-              tone: "muted",
             },
           },
         ],
