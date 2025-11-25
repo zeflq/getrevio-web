@@ -26,6 +26,10 @@ Each `kind` must match one of the `LandingBlockKind` values exported from the bl
 
 The `mode` flag controls whether the template enforces a required block count: "fixed" slots contribute to the template’s fixed count map (`getTemplateFixedCountMap` in `src/features/landings/templates/utils.ts`), which keeps the delete button disabled until the minimum number of fixed blocks or addons remain. Templates also export a `maxInstances` map (`getTemplateMaxInstanceMap`) so the UI can prevent dropping below caps when duplicates are added (the same logic is mirrored for addons in `src/features/landings/editor/addons/BlockAddonsSection.tsx`).
 
+### Localized defaults
+
+Blocks and addons keep their `defaultData` static, but the editor layers in translations when a field is intentionally left blank. `createBlockByKind` and `createAddonByKind` both call `applyTranslationDefaults` (`src/features/landings/utils/translationDefaults.ts`) before the data lands in the form, replacing empty strings with values sourced from `landings.editor.blocks.items.{kind}.defaults.{field}` or `landings.editor.addons.items.{kind}.defaults.{field}`. This keeps the schema pure (defaults remain in the plugin files) while still letting translators supply reasonable copy without editing TypeScript.
+
 ### Addons inside a block
 
 Each block definition can declare `addons`, which is an array of `LandingBlockAddonDefinition` objects from `src/features/landings/addons/index.tsx`. These addon slots behave like their own mini-templates:

@@ -66,7 +66,7 @@ export function AddonsCard({
     (formState.errors.content?.blocks?.[blockIndex] as any)?.addons?.[index];
   const hasAddonErrors = Boolean(addonErrors);
 
-  // Required by LandingAddonInspectorProps
+  // Full data path for this addon's data object
   const fieldName = `content.blocks.${blockIndex}.addons.${index}.data`;
 
   return (
@@ -76,17 +76,14 @@ export function AddonsCard({
       disabled={disabled}
       isFixed={isFixedAddon}
       hasErrors={hasAddonErrors}
-      
       canMoveUp={index > 0}
       canMoveDown={index < total - 1}
       onMoveUp={onMoveUp}
       onMoveDown={onMoveDown}
-
       canDuplicate={!disableDuplicate}
       canDelete={!disableDelete}
       onDuplicate={onDuplicate}
       onDelete={onDelete}
-
       header={
         <>
           {total > 1 && (
@@ -104,18 +101,15 @@ export function AddonsCard({
           </div>
         </>
       }
-
       content={
-        <>
-          {InspectorComponent && (
-            <InspectorComponent
-              blockIndex={blockIndex}
-              addonIndex={index}
-              fieldName={fieldName}
-              disabled={disabled}
-            />
-          )}
-        </>
+        InspectorComponent && (
+          <InspectorComponent
+            blockIndex={blockIndex}
+            addonIndex={index}
+            fieldName={fieldName}
+            disabled={disabled}
+          />
+        )
       }
     />
   );

@@ -1,10 +1,20 @@
 import { z } from "zod";
 
 import type { LandingAddonPlugin } from "./plugin";
+import { applyTranslationDefaults } from "../utils/translationDefaults";
+import type { TranslationFn } from "../utils/translationDefaults";
+import actionsdrawerAddonPlugin from "./ActionsdrawerAddon";
 import footerAddonPlugin from "./footerAddon";
+import googleReviewActionDrawerPlugin from "./googleReviewActionDrawer";
+import instagramActionDrawerPlugin from "./instagramActionDrawer";
 import { clone, createId } from "../utils/serialization";
 
-const landingAddonPlugins = [footerAddonPlugin] as const satisfies readonly LandingAddonPlugin<any>[];
+const landingAddonPlugins = [
+  footerAddonPlugin,
+  actionsdrawerAddonPlugin,
+  googleReviewActionDrawerPlugin,
+  instagramActionDrawerPlugin,
+] as const satisfies readonly LandingAddonPlugin<any>[];
 
 type LandingAddonPluginTuple = typeof landingAddonPlugins;
 type LandingAddonPluginKind = LandingAddonPluginTuple[number]["kind"];
@@ -26,7 +36,10 @@ function buildAddonSchema<P extends LandingAddonPlugin<any>>(plugin: P) {
 
 //const addonSchemas = landingAddonPlugins.map((plugin) => buildAddonSchema(plugin)) as const;
 const addonSchemas =[
-  buildAddonSchema(footerAddonPlugin)
+  buildAddonSchema(footerAddonPlugin),
+  buildAddonSchema(actionsdrawerAddonPlugin),
+  buildAddonSchema(googleReviewActionDrawerPlugin),
+  buildAddonSchema(instagramActionDrawerPlugin),
 ] as const;
 
 export const LandingAddonSchema = z.discriminatedUnion("kind", addonSchemas);
@@ -42,9 +55,14 @@ function findAddonPluginByKind<K extends LandingAddonKind>(kind: K): PluginByKin
   return landingAddonPlugins.find((plugin): plugin is PluginByKind<K> => plugin.kind === kind);
 }
 
+type PluginDefaultData<P extends LandingAddonPlugin<any>> = P extends LandingAddonPlugin<infer T>
+  ? T
+  : never;
+
 export function createAddonByKind<K extends LandingAddonKind>(
   kind: K,
-  overrides?: Partial<PluginByKind<K>["defaultData"]>
+  overrides?: Partial<PluginDefaultData<PluginByKind<K>>>,
+  translator?: TranslationFn
 ): LandingAddon {
   const plugin = findAddonPluginByKind(kind);
   if (!plugin) {
@@ -55,7 +73,9 @@ export function createAddonByKind<K extends LandingAddonKind>(
     id: createId(),
     kind,
     data: {
-      ...clone(plugin.defaultData),
+      ...clone(
+        applyTranslationDefaults(plugin.defaultData, translator, "addons.items", kind)
+      ),
       ...(overrides ?? {}),
     },
   };

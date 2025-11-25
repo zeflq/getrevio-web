@@ -79,11 +79,15 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
   //   });
   // }, [append, blocks.length, template]);
 
-  const handleAddBlock = (kind: LandingBlockKind, templateBlock?: TemplateBlockDefinition) => {
+  const handleAddBlock = (
+    kind: LandingBlockKind,
+    templateBlock?: TemplateBlockDefinition
+  ) => {
     const block = createBlockByKind(
       kind,
       templateBlock?.defaultData as any,
-      templateBlock?.addons
+      templateBlock?.addons,
+      t
     );
     if (templateBlock) {
       block.__templateBlockId = templateBlock.id;
@@ -94,23 +98,23 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
     append(block);
   };
 
-const handleDuplicate = (index: number) => {
-  const source = blocks[index];
-  if (!source) return;
+  const handleDuplicate = (index: number) => {
+    const source = blocks[index];
+    if (!source) return;
 
-  const duplicate: LandingBlock = {
-    id: createId(),
-    kind: source.kind,
-    data: clone(source.data),
-    addons: clone(source.addons).map((addon) => ({
-      ...addon,
+    const duplicate: LandingBlock = {
       id: createId(),
-    })),
-  };
+      kind: source.kind,
+      data: clone(source.data),
+      addons: clone(source.addons).map((addon) => ({
+        ...addon,
+        id: createId(),
+      })),
+    };
 
-  insert(index + 1, duplicate);
-  selectByIndex(index + 1);
-};
+    insert(index + 1, duplicate);
+    selectByIndex(index + 1);
+  };
 
   const handleDelete = (index: number) => {
     const block = blocks[index];

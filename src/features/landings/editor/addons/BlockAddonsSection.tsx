@@ -28,6 +28,7 @@ export function BlockAddonsSection({
   templateBlock,
 }: BlockAddonsSectionProps) {
   const t = useTranslations("landings.editor.addons");
+  const tEditor = useTranslations("landings.editor");
   const form = useFormContext<LandingFormValues>();
 
   const addons = (useWatch({
@@ -102,7 +103,7 @@ export function BlockAddonsSection({
     const max = slot.maxInstances;
     if (max != null && current >= max) return;
 
-    const addon = createAddonByKind(slot.kind, slot.defaultData);
+    const addon = createAddonByKind(slot.kind, slot.defaultData, tEditor);
 
     if (slot.id) addon.__templateAddonId = slot.id;
     if (slot.mode === "fixed") addon.__templateFixed = true;

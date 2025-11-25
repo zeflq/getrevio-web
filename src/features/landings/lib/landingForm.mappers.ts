@@ -14,6 +14,7 @@ import { createBlockByKind } from "../blocks";
 import { createAddonByKind } from "@/features/landings/addons";
 import { getTemplateById } from "../templates";
 import type { LandingListItem } from "../server/mappers";
+import { TranslationFn } from "../utils/translationDefaults";
 
 type LandingFormShape = LandingFormValues;
 
@@ -22,7 +23,8 @@ type BuildLandingPayloadOptions = {
 };
 
 const buildTemplateContent = (
-  templateId?: string | null
+  templateId?: string | null,
+  translator?: TranslationFn
 ): LandingContentInput | null => {
   const template = getTemplateById(templateId);
   if (!template) return null;
@@ -34,7 +36,8 @@ const buildTemplateContent = (
       const block = createBlockByKind(
         definition.kind,
         definition.defaultData as any,
-        definition.addons?.filter((addonDef) => addonDef.mode === "fixed")
+        definition.addons?.filter((addonDef) => addonDef.mode === "fixed"),
+        translator
       );
       block.__templateBlockId = definition.id;
       block.__templateFixed = true;
@@ -117,12 +120,13 @@ export const fillLandingFormFromEntity = (landing?: LandingListItem | null): Lan
 
 export const buildLandingPayload = (
   values: LandingFormShape,
-  options?: BuildLandingPayloadOptions
+  options?: BuildLandingPayloadOptions,
+  translator?: TranslationFn
 ): LandingUpdateInput => {
   const baseContent = ensureLandingContentShape(values.content);
   const seededTemplateContent =
     options?.seedTemplateContent && baseContent.blocks.length === 0
-      ? buildTemplateContent(values.templateId)
+      ? buildTemplateContent(values.templateId, translator)
       : null;
 
   const content = ensureLandingContentShape(

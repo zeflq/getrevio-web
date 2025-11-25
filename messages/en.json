@@ -135,6 +135,18 @@
           "subtitle": "Subtitle",
           "ctaLabel": "Button label",
           "ctaUrl": "Button URL"
+        },
+        "items":{
+          "intentHero":{
+            "defaults":{
+              "title": "Ready to play?",
+              "subtitle": "Give it a spin and try your luck",
+              "cta": {
+                "label": "Try your luck"
+              },
+              "description": "Spin the wheel and try to win incredible prizes!"
+            }
+          }
         }
       },
       "addons": {
@@ -147,22 +159,85 @@
           "footerAddon": {
             "label": "Footer",
             "description":
-              "Display a footer section with logo, links, or legal information."
+              "Display a footer section with logo, links, or legal information.",
+            "defaults": {
+              "text": "© 2024 GetRevio. All rights reserved."
+            }
+          },
+          "actionsdrawerAddon": {
+            "label": "Action drawer",
+            "description":
+              "Open a drawer that highlights Google reviews or your Instagram profile.",
+            "defaults": {
+              "triggerLabel": "Open drawer",
+              "title": "Get into action",
+              "description": "Discover our actions in one place.",
+              "incentiveText": "Tap to explore",
+              "primaryLabel": "Open drawer",
+              "footerText": "Thanks for checking us out."
+            }
+          },
+          "googleReviewActionDrawer": {
+            "label": "Google Review drawer",
+            "description": "Highlight Google review links",
+            "defaults": {
+              "triggerLabel": "Give your review",
+              "title": "Leave a Google review",
+              "description": "Your feedback helps us improve.",
+              "incentiveText": "A small review makes a big difference!",
+              "primaryLabel": "Write a review",
+              "footerText": "Thank you for supporting us."
+            }
+          },
+          "instagramActionDrawer": {
+            "label": "Instagram drawer",
+            "description": "Highlight your Instagram profile",
+            "defaults": {
+              "triggerLabel": "Follow on Instagram",
+              "title": "Follow us on Instagram",
+              "description": "See what we share daily.",
+              "incentiveText": "Share your story with us.",
+              "primaryLabel": "Open Instagram",
+              "footerText": "Thanks for being part of the community."
+            }
           }
         },
         "footerAddon": {
           "text": "Footer text",
-          "placeholder": "Add footer copy",
-          "align": "Alignment",
-          "alignOptions": {
-            "left": "Left",
-            "center": "Center",
-            "right": "Right"
+          "placeholder": "Add footer copy"
+        },
+        "actionsdrawerAddon": {
+          "label": "Social interactions",
+          "description": "Open a drawer for Google reviews or Instagram followers.",
+          "triggerLabel": "Trigger label",
+          "triggerLabelPlaceholder": "Text shown on the trigger",
+          "title": "Drawer title",
+          "titlePlaceholder": "Summarize the purpose of the drawer",
+          "descriptionPlaceholder": "Explain what users get by opening the drawer",
+          "primaryLabel": "Primary CTA label",
+          "primaryLabelPlaceholder": "e.g. Leave a review",
+          "incentiveText": "Incentive text",
+          "incentiveTextPlaceholder": "Optional short incentive message",
+          "footerText": "Footer text",
+          "footerTextPlaceholder": "Optional closing text",
+          "noKindSelected": "No action type selected.",
+          "drawerKindLabel": "Drawer type",
+          "drawerKindPlaceholder": "Select drawer type",
+          "drawerKindOptions": {
+            "googleReview": "Google Review",
+            "instagram": "Instagram"
           },
-          "tone": "Tone",
-          "toneOptions": {
-            "muted": "Muted",
-            "normal": "Normal"
+          "google": {
+            "googleUrl": "Google review URL",
+            "googleUrlPlaceholder": "https://search.google.com/local/writereview?placeid=...",
+            "placeLabel": "Place label",
+            "placeLabelPlaceholder": "Optional location name"
+          },
+          "instagram": {
+            "instagramUrl": "Instagram profile URL",
+            "instagramUrlPlaceholder": "https://instagram.com/your_place",
+            "handle": "Instagram handle",
+            "handlePlaceholder": "@your_place"
           }
         }
       },

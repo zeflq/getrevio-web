@@ -7,5 +7,5 @@ export const footerAddonSchema = z.object({
 export type FooterAddonData = z.infer<typeof footerAddonSchema>;
 
 export const footerAddonDefaultData: FooterAddonData = {
-  text: "Powered by Myli",
+  text: "",
 };

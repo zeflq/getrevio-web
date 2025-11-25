@@ -1,9 +1,9 @@
 import type { LandingAddonPlugin } from "../plugin";
 import { FooterAddonInspector } from "./Inspector";
 import { FooterAddonRenderer } from "./Renderer";
-import { footerAddonDefaultData, footerAddonSchema } from "./schema";
+import { footerAddonDefaultData, footerAddonSchema, type FooterAddonData } from "./schema";
 
-const footerAddonPlugin: LandingAddonPlugin<typeof footerAddonDefaultData> = {
+const footerAddonPlugin: LandingAddonPlugin<FooterAddonData> = {
   kind: "footerAddon",
   label: "Footer addon",
   schema: footerAddonSchema,

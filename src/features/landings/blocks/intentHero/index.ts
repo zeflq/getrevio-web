@@ -1,20 +1,13 @@
 import type { LandingBlockPlugin } from "../plugin";
 import { IntentHeroRenderer } from "./Renderer";
 import { IntentHeroInspector } from "./Inspector";
-import { intentHeroSchema, type IntentHeroData } from "./schema";
+import { intentHeroDefaultData, intentHeroSchema, type IntentHeroData } from "./schema";
 
 const intentHeroPlugin: LandingBlockPlugin<IntentHeroData> = {
   kind: "intentHero",
   label: "Intent Hero",
   schema: intentHeroSchema,
-  defaultData: {
-    title: "Ready to play?",
-    subtitle: "Give it a spin and try your luck",
-    cta: {
-      label: "Je tente ma chance",
-    },
-    description: "Lancer la machine et tenter de gagner des lots incroyables !",
-  },
+  defaultData: intentHeroDefaultData,
   Renderer: IntentHeroRenderer,
   Inspector: IntentHeroInspector,
 };

@@ -5,6 +5,10 @@ import {
   createAddonByKind,
   LandingBlockAddonDefinition,
 } from "@/features/landings/addons";
+import {
+  applyTranslationDefaults,
+  type TranslationFn,
+} from "../utils/translationDefaults";
 import type { LandingBlockPlugin } from "./plugin";
 import legalTextPlugin from "./legalText";
 import intentHeroPlugin from "./intentHero";
@@ -57,23 +61,32 @@ const findPluginByKind = <K extends LandingBlockKind>(
 export const createBlockByKind = <K extends LandingBlockKind>(
   kind: K,
   overrides?: Partial<PluginByKind<K>["defaultData"]>,
-  addonOverrides?: LandingBlockAddonDefinition[]
+  addonOverrides?: LandingBlockAddonDefinition[],
+  translator?: TranslationFn
 ): LandingBlock => {
   const plugin = findPluginByKind(kind);
   if (!plugin) {
     throw new Error(`Unknown block kind: ${kind}`);
   }
 
-    return {
+  const defaultData = clone(plugin.defaultData);
+  const withI18nDefaults = applyTranslationDefaults(
+    defaultData,
+    translator,
+    "blocks.items",
+    kind
+  );
+
+  return {
     id: createId(),
     kind,
     data: {
-      ...clone(plugin.defaultData),
+      ...withI18nDefaults,
       ...(overrides ?? {}),
     },
     addons: (addonOverrides ?? [])
       .map((slot) => {
-        const addon = createAddonByKind(slot.kind, slot.defaultData);
+        const addon = createAddonByKind(slot.kind, slot.defaultData, translator);
 
         if (slot.mode === "fixed") {    
           addon.__templateAddonId = slot.id;

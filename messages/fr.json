@@ -130,6 +130,18 @@
           "subtitle": "Sous-titre",
           "ctaLabel": "Libellé du bouton",
           "ctaUrl": "URL du bouton"
+        },
+        "items":{
+          "intentHero":{
+            "defaults":{
+              "title": "Prêt à jouer ?",
+              "subtitle": "Tentez votre chance et faites tourner la roue",
+              "cta": {
+                "label": "Je tente ma chance"
+              },
+              "description": "Lancer la machine et tenter de gagner des lots incroyables !!"
+            }
+          }
         }
       },
       "addons": {
@@ -142,22 +154,86 @@
           "footerAddon": {
             "label": "Pied de page",
             "description":
-              "Affiche une section de bas de page avec liens ou mentions légales."
+              "Affiche une section de bas de page avec liens ou mentions légales.",
+              "defaults": {
+                "text": "© 2026 GetRevio. Tous droits réservés."
+              }
+          },
+          "actionsdrawerAddon": {
+            "label": "Interactions sociales",
+            "description":
+              "Mettre en avant les avis Google ou Instagram.",
+            "defaults": {
+              "triggerLabel": "Ouvrir le tiroir",
+              "title": "Découvrez nos actions",
+              "description": "Explorez nos actions en un seul endroit.",
+              "incentiveText": "Tapez pour tout voir",
+              "primaryLabel": "Ouvrir le tiroir",
+              "footerText": "Merci pour votre intérêt."
+            }
+          },
+          "googleReviewActionDrawer": {
+            "label": "Tiroir avis Google",
+            "description": "Met en avant le lien vers les avis Google",
+            "defaults": {
+              "triggerLabel": "Donner mon avis",
+              "title": "Laisser un avis Google",
+              "description": "Votre avis nous permet de progresser.",
+              "incentiveText": "Un petit avis, un grand impact !",
+              "primaryLabel": "Écrire un avis",
+              "footerText": "Merci pour votre soutien."
+            }
+          },
+          "instagramActionDrawer": {
+            "label": "Tiroir Instagram",
+            "description": "Met en avant votre profil Instagram",
+            "defaults": {
+              "triggerLabel": "Nous suivre sur Instagram",
+              "title": "Suivez-nous sur Instagram",
+              "description": "Découvrez nos publications quotidiennes.",
+              "incentiveText": "Mentionnez-nous en story.",
+              "primaryLabel": "Ouvrir Instagram",
+              "footerText": "Merci de faire partie de la communauté."
+            }
           }
         },
         "footerAddon": {
           "text": "Texte du pied de page",
-          "placeholder": "Ajoutez le texte du footer",
-          "align": "Alignement",
-          "alignOptions": {
-            "left": "Gauche",
-            "center": "Centre",
-            "right": "Droite"
+          "placeholder": "Ajoutez le texte du footer"
+        },
+        "actionsdrawerAddon": {
+          "label": "Interactions sociales",
+          "description": "Affiche un tiroir pour les avis Google ou Instagram.",
+          "triggerLabel": "Libellé du déclencheur",
+          "triggerLabelPlaceholder": "Texte du bouton d'ouverture",
+          "title": "Titre du tiroir",
+          "titlePlaceholder": "Expliquez l'objectif du tiroir",
+          "descriptionPlaceholder": "Expliquez ce que l'utilisateur gagne",
+          "primaryLabel": "Libellé principal",
+          "primaryLabelPlaceholder": "ex. Laisser un avis",
+          "incentiveText": "Texte d'incitation",
+          "incentiveTextPlaceholder": "Optionnel",
+          "footerText": "Texte de pied de tiroir",
+          "footerTextPlaceholder": "Texte facultatif",
+          "noKindSelected": "Veuillez sélectionner un type d'action.",
+          "drawerKindLabel": "Type d'action",
+          "drawerKindPlaceholder": "Sélectionnez un type",
+          "drawerKindOptions": {
+            "googleReview": "Avis Google",
+            "instagram": "Instagram"
           },
-          "tone": "Ton",
-          "toneOptions": {
-            "muted": "Atténué",
-            "normal": "Normal"
+          "google": {
+            "googleUrl": "URL d'avis Google",
+            "googleUrlPlaceholder":
+              "https://search.google.com/local/writereview?placeid=...",
+            "placeLabel": "Label du lieu",
+            "placeLabelPlaceholder": "Nom du lieu (optionnel)"
+          },
+          "instagram": {
+            "instagramUrl": "URL du profil Instagram",
+            "instagramUrlPlaceholder": "https://instagram.com/votre_lieu",
+            "handle": "Handle Instagram",
+            "handlePlaceholder": "@votre_lieu"
           }
         }
       },

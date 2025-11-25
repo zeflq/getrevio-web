@@ -22,6 +22,7 @@ import {
 export function useLandingForm(id: string, isEdit: boolean) {
   const readableError = useReadableError();
   const t = useTranslations("landings.toasts");
+  const tEditor = useTranslations("landings.editor");
   const landingQuery = useLandingItem(id);
   const landing = landingQuery.data;
   const form = useForm<LandingFormValues>({
@@ -61,7 +62,7 @@ export function useLandingForm(id: string, isEdit: boolean) {
 
   const onSubmit = form.handleSubmit((values) => {
     try {
-      const payload = buildLandingPayload(values);
+      const payload = buildLandingPayload(values, {}, tEditor);
       lastPayloadRef.current = payload;
       execute({ id, ...payload });
     } catch (error) {

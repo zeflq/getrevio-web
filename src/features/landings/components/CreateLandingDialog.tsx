@@ -42,6 +42,7 @@ export function CreateLandingDialog({
   redirectBasePath = "/admin/landings",
 }: CreateLandingDialogProps) {
   const t = useTranslations("landings.createDialog");
+  const tEditor = useTranslations("landings.editor");
   const tForm = useTranslations("landings.form");
   const router = useRouter();
   const defaultValues = React.useMemo(
@@ -84,7 +85,7 @@ export function CreateLandingDialog({
     reset(createLandingFormDefaults({ merchantId, belongsTo: initialBelongsTo }));
 
   const onSubmit = (data: LandingFormValues) => {
-    const payload = buildLandingPayload(data, { seedTemplateContent: true });
+    const payload = buildLandingPayload(data, { seedTemplateContent: true }, tEditor);
     execute(payload);
   };
 

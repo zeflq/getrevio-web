@@ -10,3 +10,12 @@ export const intentHeroSchema = z.object({
 });
 
 export type IntentHeroData = z.infer<typeof intentHeroSchema>;
+
+export const intentHeroDefaultData: IntentHeroData = {
+  title: "Ready to playyyy?",
+  subtitle: "Give it a spin and try your luck",
+  cta: {
+    label: "Je tente ma chance",
+  },
+  description: "Lancer la machine et tenter de gagner des lots incroyables !!",
+};

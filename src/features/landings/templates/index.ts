@@ -93,22 +93,28 @@ export const landingTemplates: LandingTemplate[] = [
         kind: "intentHero",
         mode: "fixed",
         maxInstances: 1,
-        defaultData: {
-          title: "Play the slot—big fun awaits",
-          subtitle: "Spin the reels and grab a bonus",
-          cta: {
-            label: "Je tente ma chance",
-          },
-        },
+        // defaultData: {
+        //   title: "Play the slot—big fun awaits",
+        //   subtitle: "Spin the reels and grab a bonus",
+        //   cta: {
+        //     label: "Je tente ma chance",
+        //   },
+        // },
         addons: [
           {
             id: "slot-game-footer",
             kind: "footerAddon",
-            mode: "fixed",
+            mode: "optional",
             maxInstances: 1,
-            defaultData: {
-              text: "© 2024 Casino Inc. Play responsibly. Terms apply.!",
-            },
+            // defaultData: {
+            //   text: "© 2024 Casino Inc. Play responsibly. Terms apply.!!",
+            // },
+          },
+          {
+            id: "slot-game-action-drawer",
+            kind: "actionsdrawerAddon",
+            mode: "optional",
+            maxInstances: 1,
           },
         ],
       },
