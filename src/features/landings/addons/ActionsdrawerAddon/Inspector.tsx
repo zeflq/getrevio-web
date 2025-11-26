@@ -7,10 +7,12 @@ import { useTranslations } from "next-intl";
 import type { LandingFormValues } from "../../model/landingSchema";
 import type { LandingAddonInspectorProps } from "../plugin";
 import { RHFSelect } from "@/components/form/controls";
-import { GoogleReviewActionDrawerInspector } from "../googleReviewActionDrawer/Inspector";
-import { InstagramActionDrawerInspector } from "../instagramActionDrawer/Inspector";
+import { GoogleReviewActionDrawerAddonInspector } from "../googleReviewActionDrawerAddon/Inspector";
+import { InstagramActionDrawerAddonInspector } from "../instagramActionDrawerAddon/Inspector";
+import { DrawerAddonData } from "./schema";
 
-type DrawerKind = "google-review" | "instagram" | undefined;
+type DrawerKind = DrawerAddonData["drawer"]["kind"];
+
 
 export function ActionDrawerAddonInspector({
   blockIndex,
@@ -25,8 +27,7 @@ export function ActionDrawerAddonInspector({
     control,
     name: `${fieldName}.drawer.kind` as any,
   }) as DrawerKind;
-console.log("fieldNamefieldNamefieldName")
-console.log(fieldName)
+
   return (
     <div className="space-y-4">
       {/* Sélecteur de type de drawer */}
@@ -36,14 +37,14 @@ console.log(fieldName)
         placeholder={t("drawerKindPlaceholder")}
         disabled={disabled}
         options={[
-          { value: "google-review", label: t("drawerKindOptions.googleReview") },
-          { value: "instagram", label: t("drawerKindOptions.instagram") },
+          { value: "googleReviewActionDrawerAddon", label: t("drawerKindOptions.googleReview") },
+          { value: "instagramActionDrawerAddon", label: t("drawerKindOptions.instagram") },
         ]}
       />
 
       {/* Config spécifique Google Review */}
-      {drawerKind === "google-review" && (
-        <GoogleReviewActionDrawerInspector
+      {drawerKind === "googleReviewActionDrawerAddon" && (
+        <GoogleReviewActionDrawerAddonInspector
           blockIndex={blockIndex}
           addonIndex={addonIndex}
           fieldName={`${fieldName}.drawer`}
@@ -52,8 +53,8 @@ console.log(fieldName)
       )}
 
       {/* Config spécifique Instagram (à implémenter si tu veux la variante) */}
-      {drawerKind === "instagram" && (
-        <InstagramActionDrawerInspector
+      {drawerKind === "instagramActionDrawerAddon" && (
+        <InstagramActionDrawerAddonInspector
           blockIndex={blockIndex}
           addonIndex={addonIndex}
           fieldName={`${fieldName}.drawer`}

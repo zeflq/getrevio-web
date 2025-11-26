@@ -1,11 +1,11 @@
 "use client";
 
-import type { GoogleReviewActionDrawerData } from "./schema";
+import type { GoogleReviewActionDrawerAddonData } from "./schema";
 
-export function GoogleReviewActionDrawerRenderer({
+export function GoogleReviewActionDrawerAddonRenderer({
   data,
 }: {
-  data: GoogleReviewActionDrawerData;
+  data: GoogleReviewActionDrawerAddonData;
 }) {
   return (
     <div className="rounded-lg border border-border/60 p-3 text-sm text-muted-foreground">

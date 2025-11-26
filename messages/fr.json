@@ -172,7 +172,7 @@
               "footerText": "Merci pour votre intérêt."
             }
           },
-          "googleReviewActionDrawer": {
+          "googleReviewActionDrawerAddon": {
             "label": "Tiroir avis Google",
             "description": "Met en avant le lien vers les avis Google",
             "defaults": {
@@ -184,7 +184,7 @@
               "footerText": "Merci pour votre soutien."
             }
           },
-          "instagramActionDrawer": {
+          "instagramActionDrawerAddon": {
             "label": "Tiroir Instagram",
             "description": "Met en avant votre profil Instagram",
             "defaults": {

@@ -177,7 +177,7 @@
               "footerText": "Thanks for checking us out."
             }
           },
-          "googleReviewActionDrawer": {
+          "googleReviewActionDrawerAddon": {
             "label": "Google Review drawer",
             "description": "Highlight Google review links",
             "defaults": {
@@ -189,7 +189,7 @@
               "footerText": "Thank you for supporting us."
             }
           },
-          "instagramActionDrawer": {
+          "instagramActionDrawerAddon": {
             "label": "Instagram drawer",
             "description": "Highlight your Instagram profile",
             "defaults": {

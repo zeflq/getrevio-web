@@ -1,14 +1,13 @@
 import { z } from "zod";
 
-import { actionDrawerBaseSchema } from "../schemas/actionDrawerBase";
-import { googleReviewActionDrawerSchema } from "../googleReviewActionDrawer/schema";
-import { instagramActionDrawerSchema } from "../instagramActionDrawer/schema";
+import { googleReviewActionDrawerAddonSchema } from "../googleReviewActionDrawerAddon/schema";
+import { instagramActionDrawerAddonSchema } from "../instagramActionDrawerAddon/schema";
 
-export const drawerAddonSchema = actionDrawerBaseSchema.extend({
+export const drawerAddonSchema = z.object({
   kind: z.literal("drawer"),
   drawer: z.discriminatedUnion("kind", [
-    googleReviewActionDrawerSchema,
-    instagramActionDrawerSchema,
+    googleReviewActionDrawerAddonSchema,
+    instagramActionDrawerAddonSchema,
   ]),
 });
 

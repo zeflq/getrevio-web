@@ -1,11 +1,11 @@
 "use client";
 
-import type { InstagramActionDrawerData } from "./schema";
+import type { InstagramActionDrawerAddonData } from "./schema";
 
-export function InstagramActionDrawerRenderer({
+export function InstagramActionDrawerAddonRenderer({
   data,
 }: {
-  data: InstagramActionDrawerData;
+  data: InstagramActionDrawerAddonData;
 }) {
   return (
     <div className="rounded-lg border border-border/60 p-3 text-sm text-muted-foreground">

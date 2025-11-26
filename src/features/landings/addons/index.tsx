@@ -5,15 +5,15 @@ import { applyTranslationDefaults } from "../utils/translationDefaults";
 import type { TranslationFn } from "../utils/translationDefaults";
 import actionsdrawerAddonPlugin from "./ActionsdrawerAddon";
 import footerAddonPlugin from "./footerAddon";
-import googleReviewActionDrawerPlugin from "./googleReviewActionDrawer";
-import instagramActionDrawerPlugin from "./instagramActionDrawer";
+import googleReviewActionDrawerAddonPlugin from "./googleReviewActionDrawerAddon";
+import instagramActionDrawerAddonPlugin from "./instagramActionDrawerAddon";
 import { clone, createId } from "../utils/serialization";
 
 const landingAddonPlugins = [
   footerAddonPlugin,
   actionsdrawerAddonPlugin,
-  googleReviewActionDrawerPlugin,
-  instagramActionDrawerPlugin,
+  googleReviewActionDrawerAddonPlugin,
+  instagramActionDrawerAddonPlugin,
 ] as const satisfies readonly LandingAddonPlugin<any>[];
 
 type LandingAddonPluginTuple = typeof landingAddonPlugins;
@@ -38,8 +38,8 @@ function buildAddonSchema<P extends LandingAddonPlugin<any>>(plugin: P) {
 const addonSchemas =[
   buildAddonSchema(footerAddonPlugin),
   buildAddonSchema(actionsdrawerAddonPlugin),
-  buildAddonSchema(googleReviewActionDrawerPlugin),
-  buildAddonSchema(instagramActionDrawerPlugin),
+  buildAddonSchema(googleReviewActionDrawerAddonPlugin),
+  buildAddonSchema(instagramActionDrawerAddonPlugin),
 ] as const;
 
 export const LandingAddonSchema = z.discriminatedUnion("kind", addonSchemas);
