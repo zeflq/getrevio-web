@@ -6,17 +6,23 @@ export const applyTranslationDefaults = <T extends Record<string, unknown>>(
   namespace: string,
   kind: string
 ): T => {
-  if (!translator) {
-    return base;
-  }
+  if (!translator) return base;
 
   return Object.fromEntries(
     Object.entries(base).map(([key, value]) => {
       if (typeof value === "string") {
-        const i18nKey = `${namespace}.${kind}.defaults.${key}`;
-        const translated = translator(i18nKey);
+        const localKey = `${namespace}.${kind}.defaults.${key}`;
+        const translated = translator(localKey);
 
-        if (translated && translated !== i18nKey) {
+        const missingBecausePrefixed =
+          translated !== localKey &&
+          translated.includes(localKey);
+
+        const missingBecauseExact = translated === localKey;
+
+        const missing = missingBecausePrefixed || missingBecauseExact;
+
+        if (!missing) {
           return [key, translated];
         }
 
@@ -27,3 +33,4 @@ export const applyTranslationDefaults = <T extends Record<string, unknown>>(
     })
   ) as T;
 };
+

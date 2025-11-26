@@ -76,9 +76,9 @@ export function EditorCard({
     <Collapsible open={selected} onOpenChange={onSelect} className="rounded-lg border bg-background">
       <CollapsibleTrigger asChild>
         <div className={baseClasses}>
-          {/* Left reorder rail */}
+          {/* Left reorder rail – DESKTOP ONLY */}
           <div
-            className="flex flex-col justify-center gap-1 px-2 bg-muted/40 border-r border-border/50 rounded-l-md"
+            className="hidden sm:flex flex-col justify-center gap-1 px-2 bg-muted/40 border-r border-border/50 rounded-l-md"
             onClick={(e) => e.stopPropagation()}
           >
             <Button
@@ -111,13 +111,13 @@ export function EditorCard({
           </div>
 
           {/* Header content */}
-          <div className="flex-1 flex items-center justify-between pl-2 px-4 py-3">
+          <div className="flex-1 flex items-center justify-between px-2 py-3">
             {/* LEFT SLOT */}
             <div className="flex items-center gap-2">{header}</div>
 
             {/* RIGHT ACTIONS */}
-            <div className="flex items-center gap-1">
-              {(canDuplicate || canDelete) && (
+            <div className="flex items-center gap-2">
+              {(canDuplicate || canDelete || canMoveUp || canMoveDown) && (
                 <DropdownMenu>
                   <DropdownMenuTrigger
                     className={cn(buttonVariants({ variant: "ghost", size: "xs" }))}
@@ -128,21 +128,47 @@ export function EditorCard({
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent align="end">
+                    {/* Reorder entries (utile surtout en mobile) */}
+                    <DropdownMenuItem
+                      disabled={!canMoveUp || disabled}
+                      onSelect={(e) => {
+                        e.preventDefault();
+                        onMoveUp();
+                      }}
+                    >
+                      Monter
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      disabled={!canMoveDown || disabled}
+                      onSelect={(e) => {
+                        e.preventDefault();
+                        onMoveDown();
+                      }}
+                    >
+                      Descendre
+                    </DropdownMenuItem>
+
                     {canDuplicate && (
                       <DropdownMenuItem
                         disabled={disabled}
-                        onSelect={onDuplicate}
+                        onSelect={(e) => {
+                          e.preventDefault();
+                          onDuplicate();
+                        }}
                       >
-                        Duplicate
+                        Dupliquer
                       </DropdownMenuItem>
                     )}
 
                     {canDelete && (
                       <DropdownMenuItem
                         disabled={disabled}
-                        onSelect={onDelete}
+                        onSelect={(e) => {
+                          e.preventDefault();
+                          onDelete();
+                        }}
                       >
-                        Delete
+                        Supprimer
                       </DropdownMenuItem>
                     )}
                   </DropdownMenuContent>

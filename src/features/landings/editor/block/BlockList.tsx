@@ -85,7 +85,8 @@ export function BlockList({
       <div className="space-y-4 rounded-lg border border-dashed p-6">
         {template?.blocks && template.blocks.length > 0 && (
           <div className="flex items-center justify-between gap-2">
-            <span className="text-sm font-semibold">{t("addBlock")}</span>
+            <span className="text-sm font-semibold"></span>
+            {/* <span className="text-sm font-semibold">{t("addBlock")}</span> */}
             <BlockActions
               disabled={disabled}
               buttonLabel={t("addBlock")}

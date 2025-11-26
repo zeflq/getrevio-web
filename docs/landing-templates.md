@@ -57,5 +57,6 @@ Addons are rendered and managed inside `BlockAddonsSection`. That component watc
 - If you add a new block kind, update the block registry in `src/features/landings/blocks/index.ts` so `createBlockByKind` can build it.
 - If you add addons, register them in `src/features/landings/addons/index.tsx`, give them sensible `defaultData`, and reference their kind inside the block’s `addons` array.
 - Remember that `mode: "fixed"` makes the editor treat the slot as required, while `mode: "optional"` only adds a slot to the dropdown and lets merchants add it when needed.
+- When introducing a new addon, treat it like a block: register it, add default data, and provide `landings.editor.addons.items.{kind}.defaults.{field}` translations so `applyTranslationDefaults` can surface localized text the moment it is opened in the editor.
 
 Following this flow keeps the landing editor aware of the template shape, ensures UI limits match the template intent, and keeps blocks/addons consistent across different landing types.

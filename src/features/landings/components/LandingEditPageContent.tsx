@@ -167,9 +167,9 @@ export function LandingEditPageContent({
   }
 
   return (
-    <div className="flex flex-col gap-6 p-4 w-full">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex items-center gap-2">
+    <div className="flex flex-col gap-6 p-2 w-full">
+      <div className="flex gap-2 lg:flex-row items-center lg:justify-between">
+        <div className="flex flex-1 items-center gap-2">
           <Button variant="ghost" size="sm" className="py-5" onClick={() => router.back()}>
             <ArrowLeft className="h-4 w-4 mr-1" />
           </Button>

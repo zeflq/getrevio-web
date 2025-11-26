@@ -92,9 +92,9 @@ export function AddonsCard({
             </div>
           )}
           <div>
-            <div className="font-semibold">{typeLabel}</div>
+            <div className="font-semibold text-sm sm:text-base">{typeLabel}</div>
             {description && (
-              <p className="text-xs text-muted-foreground">
+              <p className="mt-0.5 text-xs text-muted-foreground line-clamp-2 sm:line-clamp-none">
                 {description}
               </p>
             )}
