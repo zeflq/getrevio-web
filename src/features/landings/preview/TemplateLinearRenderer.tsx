@@ -5,6 +5,7 @@ import * as React from "react";
 import { landingBlockPluginMap, type LandingBlock } from "@/features/landings/blocks";
 import { renderAddons } from "@/features/landings/addons";
 import { StepProvider, useStepController } from "./useStepController";
+import { BlockChannelProvider } from "./BlockChannelContext";
 
 export function TemplateLinearRenderer({ blocks }: { blocks: LandingBlock[] }) {
   return (
@@ -28,10 +29,10 @@ function TemplateSteps({ blocks }: { blocks: LandingBlock[] }) {
           return null;
         }
         return (
-          <React.Fragment key={block.id ?? index}>
+          <BlockChannelProvider key={block.id ?? index}>
             <Renderer data={block.data} />
             {renderAddons(block.addons)}
-          </React.Fragment>
+          </BlockChannelProvider>
         );
       })}
     </>

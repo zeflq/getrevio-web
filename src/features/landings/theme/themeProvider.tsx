@@ -90,6 +90,22 @@ export function LandingThemeProvider({ themes, themeId, children }: LandingTheme
       } as React.CSSProperties),
     [palette, tokens]
   );
+  // 2) Push these vars on :root so the Drawer portal can see them
+  React.useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+
+    Object.entries(cssVars).forEach(([key, value]) => {
+      root.style.setProperty(key, String(value));
+    });
+
+    return () => {
+      Object.keys(cssVars).forEach((key) => {
+        root.style.removeProperty(key);
+      });
+    };
+  }, [cssVars]);
+
   const options = React.useMemo<ThemeOption[]>(
     () => Object.values(themeMap).map(t => ({ id: t.id, name: t.name })),
     [themeMap]

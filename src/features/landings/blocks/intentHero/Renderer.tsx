@@ -4,18 +4,21 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useStepController } from "@/features/landings/preview/useStepController";
+import { useBlockChannel } from "@/features/landings/preview/BlockChannelContext";
 
 import type { IntentHeroData } from "./schema";
 import { ArrowRight } from "lucide-react";
 import { SlotBanner } from "../slotGame/SlotBanner";
+import { cn } from "@/lib/utils";
 
 export function IntentHeroRenderer({ data }: { data: IntentHeroData }) {
   const { next } = useStepController();
+  const { emit } = useBlockChannel();
 
   return (
     <section
       className="
-        flex flex-col items-center
+        flex flex-1 flex-col items-center
         min-h-[80vh]
         pt-10 pb-16 px-4
         bg-[var(--landing-background)]
@@ -75,17 +78,15 @@ export function IntentHeroRenderer({ data }: { data: IntentHeroData }) {
             <div className="flex justify-center mt-4">
               <Button
                 type="button"
-                onClick={next}
-                className="
-                  h-12 px-6 mt-4
-                  text-base font-semibold
-                  flex items-center justify-center gap-2
-                  rounded-xl
-                  bg-[var(--landing-cta-bg)]
-                  text-[var(--landing-cta-text)]
-                  hover:bg-[var(--landing-cta-hover-bg)]
-                  transition-colors
-                "
+                onClick={() => {
+                  emit("cta:primary-click", { source: "intentHero" });
+                  next();
+                }}
+                className={cn(
+                  "w-full h-12 px-6 mt-4 sm:mt-8 py-5 sm:py-5 text-base sm:text-lg font-semibold rounded-full",
+                  "flex items-center justify-center gap-2 shadow-lg border-0",
+                  "bg-[var(--landing-cta-bg)] text-[var(--landing-cta-text)] hover:bg-[var(--landing-cta-hover-bg)]"
+                )}
               >
                 {data.cta.label}
                 <ArrowRight className="ml-1 h-5 w-5" />

@@ -164,36 +164,36 @@
             "description":
               "Mettre en avant les avis Google ou Instagram.",
             "defaults": {
-              "triggerLabel": "Ouvrir le tiroir",
-              "title": "Découvrez nos actions",
-              "description": "Explorez nos actions en un seul endroit.",
-              "incentiveText": "Tapez pour tout voir",
-              "primaryLabel": "Ouvrir le tiroir",
-              "footerText": "Merci pour votre intérêt."
             }
           },
           "googleReviewActionDrawerAddon": {
             "label": "Tiroir avis Google",
             "description": "Met en avant le lien vers les avis Google",
-            "defaults": {
-              "triggerLabel": "Donner mon avis",
-              "title": "Laisser un avis Google",
-              "description": "Votre avis nous permet de progresser.",
-              "incentiveText": "Un petit avis, un grand impact !",
-              "primaryLabel": "Écrire un avis",
-              "footerText": "Merci pour votre soutien."
-            }
+            "defaults": {},
+            "tabHint": "Utilisez l'aperçu d'onglets pour revenir rapidement.",
+            "step1": {
+              "text": "Pour participer, visitez notre page ",
+              "highlight": "Google"
+            },
+            "step2": {
+              "text": "Revenez pour jouer en cliquant sur l'",
+              "highlight": "icône 📋"
+            },
+            "step3": {
+              "text": "Tentez votre chance en cliquant sur ",
+              "highlight": "Jouer"
+            },
+            "note": "Votre note n'a aucune influence sur les gains",
+            "primaryLabel": "J'ouvre Google",
+            "heroTitle": "N'oubliez pas de revenir en",
+            "heroHighlight": "cliquant sur l'icône",
+            "heroText": "Cette icône vous permet de sélectionner l'onglet du jeu.",
+            "buttonPrimary": "J'ai compris"
           },
           "instagramActionDrawerAddon": {
             "label": "Tiroir Instagram",
             "description": "Met en avant votre profil Instagram",
             "defaults": {
-              "triggerLabel": "Nous suivre sur Instagram",
-              "title": "Suivez-nous sur Instagram",
-              "description": "Découvrez nos publications quotidiennes.",
-              "incentiveText": "Mentionnez-nous en story.",
-              "primaryLabel": "Ouvrir Instagram",
-              "footerText": "Merci de faire partie de la communauté."
             }
           }
         },
@@ -289,6 +289,90 @@
       "legalText": {
         "name": "Texte légal",
         "description": "Un modèle pour les landings nécessitant des mentions légales"
+      }
+    },
+    "preview": {
+      "social": {
+        "google": {
+          "a11y": {
+            "title": "Instructions pour laisser un avis Google",
+            "description": "Suivez ces étapes pour publier un avis puis revenir jouer."
+          },
+          "stepIndicator": "Étape {current} / {total}",
+          "steps": {
+            "badge": "Comment ça marche ?",
+            "title": "Laissez un avis et revenez jouer",
+            "subtitle": "Suivez ces étapes, ça prend moins d’une minute.",
+            "items": {
+              "0": {
+                "text": "Cliquez sur le bouton ci-dessous pour ouvrir notre page ",
+                "highlight": "Google"
+              },
+              "1": {
+                "text": "Laissez un avis honnête sur votre expérience chez nous.",
+                "highlight": ""
+              },
+              "2": {
+                "text": "Revenez ensuite sur cette page pour lancer la machine à gains.",
+                "highlight": ""
+              }
+            },
+            "note": "Votre note n’a aucune influence sur les chances de gain.",
+            "buttonText": "Suivant"
+          },
+          "info": {
+            "badge": "Astuce",
+            "title": "Pensez à revenir en",
+            "highlight": "cliquant sur l’onglet du jeu",
+            "description": "Une fois votre avis publié, revenez sur l’onglet du jeu pour tenter votre chance.",
+            "buttonText": "J’ouvre la page Google"
+          },
+          "footer": {
+            "rules": "Règlement",
+            "poweredBy": "Powered by",
+            "brand": "GetRevio"
+          }
+        },
+        "instagram": {
+          "a11y": {
+            "title": "Instructions pour suivre sur Instagram",
+            "description": "Suivez ces étapes pour nous suivre puis revenir jouer."
+          },
+          "stepIndicator": "Étape {current} / {total}",
+          "steps": {
+            "badge": "Comment ça marche ?",
+            "title": "Suivez-nous et revenez jouer",
+            "subtitle": "Un petit follow pour un grand coup de pouce ✨",
+            "items": {
+              "0": {
+                "text": "Cliquez sur le bouton ci-dessous pour ouvrir notre profil ",
+                "highlight": "Instagram"
+              },
+              "1": {
+                "text": "Appuyez sur ",
+                "highlight": "Suivre"
+              },
+              "2": {
+                "text": "Revenez ensuite sur cette page pour tenter votre chance.",
+                "highlight": ""
+              }
+            },
+            "note": "",
+            "buttonText": "Suivant"
+          },
+          "info": {
+            "badge": "Astuce",
+            "title": "Pensez à revenir en",
+            "highlight": "cliquant sur l’icône d’onglet",
+            "description": "Après votre follow, revenez sur l’onglet du jeu pour lancer la machine.",
+            "buttonText": "J’ouvre Instagram"
+          },
+          "footer": {
+            "rules": "Règlement",
+            "poweredBy": "Powered by",
+            "brand": "GetRevio"
+          }
+        }
       }
     }
   },

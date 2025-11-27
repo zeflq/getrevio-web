@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { ArrowUp, ArrowDown, MoreHorizontal, ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -186,9 +187,20 @@ export function EditorCard({
         </div>
       </CollapsibleTrigger>
 
-      {/* Expanded content */}
-      <CollapsibleContent className="space-y-4 px-4 py-3">
-        {content}
+      {/* Animated expanded content */}
+      <CollapsibleContent forceMount>
+        <motion.div
+          initial={false}
+          animate={selected ? "open" : "collapsed"}
+          variants={{
+            open: { opacity: 1, height: "auto" },
+            collapsed: { opacity: 0, height: 0 },
+          }}
+          transition={{ duration: 0.22, ease: [0.22, 0.61, 0.36, 1] }}
+          className="overflow-hidden"
+        >
+          <div className="space-y-4 px-4 py-3">{content}</div>
+        </motion.div>
       </CollapsibleContent>
     </Collapsible>
   );

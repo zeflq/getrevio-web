@@ -1,6 +1,7 @@
 "use client";
 
 import type { InstagramActionDrawerAddonData } from "./schema";
+import { SocialActionDrawerRenderer } from "../ui/socialActionDrawer/SocialActionDrawerRenderer";
 
 export function InstagramActionDrawerAddonRenderer({
   data,
@@ -8,8 +9,10 @@ export function InstagramActionDrawerAddonRenderer({
   data: InstagramActionDrawerAddonData;
 }) {
   return (
-    <div className="rounded-lg border border-border/60 p-3 text-sm text-muted-foreground">
-      Hello from Instagram drawer ({data.instagramUrl})
-    </div>
+    <SocialActionDrawerRenderer
+      variant="instagram"
+      url={data.instagramUrl}
+      i18nNamespace="landings.preview.social.instagram"
+    />
   );
 }

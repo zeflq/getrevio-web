@@ -1,6 +1,7 @@
 "use client";
 
 import type { GoogleReviewActionDrawerAddonData } from "./schema";
+import { SocialActionDrawerRenderer } from "../ui/socialActionDrawer/SocialActionDrawerRenderer";
 
 export function GoogleReviewActionDrawerAddonRenderer({
   data,
@@ -8,8 +9,10 @@ export function GoogleReviewActionDrawerAddonRenderer({
   data: GoogleReviewActionDrawerAddonData;
 }) {
   return (
-    <div className="rounded-lg border border-border/60 p-3 text-sm text-muted-foreground">
-      Hello from Google Review drawer ({data.googleUrl})
-    </div>
+    <SocialActionDrawerRenderer
+      variant="google"
+      url={data.googleUrl}
+      i18nNamespace="landings.preview.social.google"
+    />
   );
 }

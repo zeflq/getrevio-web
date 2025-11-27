@@ -93,7 +93,6 @@ export function renderAddons(addons?: LandingAddon[]) {
   if (!addons?.length) {
     return null;
   }
-
   return addons.map((addon, index) => {
     const plugin = landingAddonPluginMap[addon.kind];
     if (!plugin) {
