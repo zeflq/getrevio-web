@@ -76,8 +76,8 @@ export function BlockCard({
       isFixed={isFixedBlock}
       hasErrors={hasBlockErrors}
       
-      canMoveUp={index > 0}
-      canMoveDown={index < total - 1}
+      canMoveUp={index > 0 && !isFixedBlock}
+      canMoveDown={index < total - 1  && !isFixedBlock}
       onMoveUp={onMoveUp}
       onMoveDown={onMoveDown}
 

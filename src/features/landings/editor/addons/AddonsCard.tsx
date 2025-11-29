@@ -76,8 +76,8 @@ export function AddonsCard({
       disabled={disabled}
       isFixed={isFixedAddon}
       hasErrors={hasAddonErrors}
-      canMoveUp={index > 0}
-      canMoveDown={index < total - 1}
+      canMoveUp={index > 0 && !isFixedAddon}
+      canMoveDown={index < total - 1  && !isFixedAddon}
       onMoveUp={onMoveUp}
       onMoveDown={onMoveDown}
       canDuplicate={!disableDuplicate}

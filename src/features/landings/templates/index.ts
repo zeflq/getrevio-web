@@ -104,7 +104,7 @@ export const landingTemplates: LandingTemplate[] = [
           {
             id: "slot-game-footer",
             kind: "footerAddon",
-            mode: "optional",
+            mode: "fixed",
             maxInstances: 1,
             // defaultData: {
             //   text: "© 2024 Casino Inc. Play responsibly. Terms apply.!!",
@@ -113,7 +113,7 @@ export const landingTemplates: LandingTemplate[] = [
           {
             id: "slot-game-action-drawer",
             kind: "actionsdrawerAddon",
-            mode: "optional",
+            mode: "fixed",
             maxInstances: 1,
           },
         ],

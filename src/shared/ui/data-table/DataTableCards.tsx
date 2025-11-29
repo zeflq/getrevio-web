@@ -1,20 +1,24 @@
 "use client";
 
 import * as React from "react";
-import { flexRender, type Row, type Table } from "@tanstack/react-table";
+import { type Row, type Table } from "@tanstack/react-table";
+
 import { Card } from "@/components/ui/card";
-import { DataTablePagination } from "./DataTablePagination";
-import { DataTableToolbarBase } from "./DataTableToolbarBase";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Keep synced with your controller or import the type.
-type DataTableColumnMeta = {
+import { DataTablePagination } from "./DataTablePagination";
+import { DataTableToolbarBase } from "./DataTableToolbarBase";
+import { DataTableCardRow } from "./DataTableCardRow";
+
+// Meta used on columnDef.meta
+export type DataTableColumnMeta = {
   forTable?: boolean;
   forCard?: boolean;
   headerText?: string;
 };
 
-type ControllerShape<TData> = {
+// Keep synced with your controller or import the type.
+export type ControllerShape<TData> = {
   table: Table<TData>;
   mode: "client" | "server";
   thPad: string;
@@ -30,7 +34,7 @@ export type DataTableClasses = {
 type Props<TData> = {
   controller: ControllerShape<TData>;
   /** Toolbar override */
-  toolbar?: React.ReactNode;
+  toolbar?: React.ReactNode | null;
   searchKey?: string;
   searchPlaceholder?: string;
   leftExtras?: React.ReactNode;
@@ -69,47 +73,10 @@ export function DataTableCards<TData>({
 }: Props<TData>) {
   const { table, mode } = controller;
 
-  // Only render columns that are NOT table-only
-  const isForCard = React.useCallback(
-    (colId: string) => {
-      const col = table.getAllLeafColumns().find((c) => c.id === colId);
-      const meta = col?.columnDef.meta as DataTableColumnMeta | undefined;
-      return !meta?.forTable;
-    },
-    [table]
-  );
-
-  // Trouve la colonne d'action par id (par défaut: actions)
-  const actionsCardCol = React.useMemo(
-    () => table.getAllLeafColumns().find((c) => c.id === actionsColumnId) ?? null,
-    [table, actionsColumnId]
-  );
-
-  // Resolve a human label for a column id (uses header render → text fallback)
-  const headerLabel = React.useCallback(
-    (colId: string): string => {
-      const col = table.getAllLeafColumns().find((c) => c.id === colId);
-      if (!col) return colId;
-
-      try {
-        // Try to find a matching header context for this column
-        const hg = table.getHeaderGroups()?.[0];
-        const header = hg?.headers.find((h) => h.column.id === colId);
-        const rendered = header ? flexRender(col.columnDef.header, header.getContext()) : null;
-        if (typeof rendered === "string") return rendered;
-      } catch {
-        // ignore and fall back below
-      }
-
-      const meta = col.columnDef.meta as DataTableColumnMeta | undefined;
-      return meta?.headerText || colId;
-    },
-    [table]
-  );
-
   const renderToolbar = () => {
     if (toolbar === null) return null;
     if (toolbar !== undefined) return toolbar;
+
     return (
       <DataTableToolbarBase
         table={table}
@@ -122,112 +89,77 @@ export function DataTableCards<TData>({
     );
   };
 
+  const pageSize = table.getState().pagination.pageSize || 6;
+  const rows = table.getRowModel().rows ?? [];
+
   return (
-    <div className={["space-y-4", classes?.container].filter(Boolean).join(" ")}>
+    <div
+      className={[
+        "space-y-4", // base spacing for toolbar + list + pagination
+        classes?.container,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {renderToolbar()}
 
       <div className="space-y-3">
         {isLoading ? (
           <div className="grid gap-3 sm:grid-cols-1">
-            {Array.from({ length: table.getState().pagination.pageSize || 6 }).map((_, i) => (
-              <Card key={i} className="p-4">
-                <div className="flex items-start justify-between">
-                  <Skeleton className="h-5 w-1/2 rounded font-medium" />
-                  <Skeleton className="w-8 h-8 rounded-full" />
+            {Array.from({ length: pageSize }).map((_, i) => (
+              <Card
+                key={i}
+                className="border border-border/60 bg-card/60 backdrop-blur-sm shadow-sm p-3 sm:p-4 rounded-2xl"
+              >
+                {/* header skeleton */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 sm:h-5 w-2/3 rounded" />
+                    <Skeleton className="h-3 w-1/3 rounded" />
+                  </div>
+                  <Skeleton className="h-8 w-8 rounded-full" />
                 </div>
-                <div className="mt-3 grid gap-3 grid-cols-2">
+
+                {/* divider */}
+                <div className="mt-3 border-t border-border/40" />
+
+                {/* meta skeleton grid */}
+                <div
+                  className={[
+                    "mt-3 grid gap-3",
+                    metaColsPerRow === 1
+                      ? "grid-cols-1"
+                      : "grid-cols-1 sm:grid-cols-2",
+                  ].join(" ")}
+                >
                   {Array.from({ length: metaColsPerRow * 2 }).map((_, j) => (
-                    <div key={j} className="min-w-0 text-sm">
-                      <div className="text-xs font-medium text-muted-foreground">
-                        <Skeleton className="h-3 w-1/2" />
-                      </div>
-                      <div className="mt-1">
-                        <Skeleton className="h-4 w-1/2" />
-                      </div>
+                    <div key={j} className="min-w-0 space-y-1 text-sm">
+                      <Skeleton className="h-3 w-1/2 rounded" />
+                      <Skeleton className="h-4 w-2/3 rounded" />
                     </div>
                   ))}
                 </div>
               </Card>
             ))}
           </div>
-        ) : table.getRowModel().rows?.length ? (
-          table.getRowModel().rows.map((row) => {
-            const visible = row.getVisibleCells().filter((c) => isForCard(c.column.id));
-
-            // Choose primary/title cell
-            const primary =
-              (primaryColumnId && visible.find((c) => c.column.id === primaryColumnId)) ||
-              visible[0];
-
-            // The row’s actions menu content
-            const actionsCell = actionsCardCol
-              ? row.getAllCells().find((c) => c.column.id === actionsCardCol.id)
-              : undefined;
-
-            // Meta cells (exclude title + actions)
-            const metaCells = visible.filter(
-              (c) =>
-                c.id !== primary?.id &&
-                (!actionsCell || c.id !== actionsCell.id)
-            );
-
-            // Ajout du calcul de la classe personnalisée pour la card
-            const extraClass = rowClassName ? rowClassName(row) : "";
-
-            return (
-              <Card
-                key={row.id}
-                className={["p-2", extraClass].filter(Boolean).join(" ")}
-                role={onRowClick ? "button" : undefined}
-                onClick={() => {
-                  if (!onRowClick) return;
-                  const id = (row.original as { id?: string }).id;
-                  if (id) onRowClick(id, row.original);
-                }}
-              >
-                {/* Header: title + actions */}
-                <div className="flex items-start justify-between">
-                  <div className={["text-base font-medium", classes?.headerCell].filter(Boolean).join(" ")}>
-                    {primary &&
-                      flexRender(primary.column.columnDef.cell, primary.getContext())}
-                  </div>
-
-                  {actionsCell && (
-                    <div onClick={(e) => e.stopPropagation()}>
-                      {
-                        flexRender(actionsCell.column.columnDef.cell,actionsCell.getContext())
-                      }
-                    </div>)
-                  }
-                </div>
-                
-                {/* Meta grid with LABEL + VALUE */}
-                {metaCells.length > 0 && (
-                  <div
-                    className={`mt-3 grid gap-3 ${
-                      metaColsPerRow === 1 ? "grid-cols-1" : "grid-cols-2"
-                    }`}
-                  >
-                    {metaCells.map((cell) => (
-                      <div
-                        key={cell.id}
-                        className={["min-w-0 text-sm", classes?.bodyCell].filter(Boolean).join(" ")}
-                      >
-                        <div className="text-xs font-medium text-muted-foreground">
-                          {headerLabel(cell.column.id)}
-                        </div>
-                        <div className="mt-1 truncate">
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </Card>
-            );
-          })
+        ) : rows.length ? (
+          rows.map((row) => (
+            <DataTableCardRow
+              key={row.id}
+              controller={controller}
+              row={row}
+              metaColsPerRow={metaColsPerRow}
+              primaryColumnId={primaryColumnId}
+              classes={classes}
+              actionsColumnId={actionsColumnId}
+              onRowClick={onRowClick}
+              rowClassName={rowClassName}
+            />
+          ))
         ) : (
-          <Card className="p-6 text-center text-sm text-muted-foreground">{emptyText}</Card>
+          <Card className="p-6 text-center text-sm text-muted-foreground">
+            {emptyText}
+          </Card>
         )}
       </div>
 
