@@ -1,34 +1,76 @@
-const BASE_URL = '';
+const BASE_URL = "";
+
+class HttpError extends Error {
+  status: number;
+  body?: unknown;
+
+  constructor(status: number, message: string, body?: unknown) {
+    super(message);
+    this.status = status;
+    this.body = body;
+  }
+}
 
 class HttpClient {
   private getCurrentLang(): string {
-    if (typeof window !== 'undefined') {
-      // ✅ On the client, next-intl sets NEXT_LOCALE cookie automatically.
+    if (typeof window !== "undefined") {
       const match = document.cookie.match(/NEXT_LOCALE=([^;]+)/);
-      return match ? decodeURIComponent(match[1]) : 'en';
+      return match ? decodeURIComponent(match[1]) : "en";
     } else {
-      // ✅ On the server, fallback or set default.
-      // (If you want to support SSR calls, you can pass lang manually in options.)
-      return 'en';
+      return "en";
     }
   }
-  private async request<T>(
-    endpoint: string,
-    options?: RequestInit
-  ): Promise<T> {
+
+  private redirectToLogin(lang: string) {
+    if (typeof window === "undefined") return;
+
+    const currentPath = window.location.pathname + window.location.search;
+    const loginPath = `/${lang}/login?from=${encodeURIComponent(currentPath)}`;
+
+    // Use assign so it appears in history (user can go back if needed)
+    window.location.assign(loginPath);
+  }
+
+  private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const url = `${BASE_URL}${endpoint}`;
     const lang = this.getCurrentLang();
+
     const response = await fetch(url, {
       ...options,
       headers: {
-        'Content-Type': 'application/json',
-        'Accept-Language': lang,
+        "Content-Type": "application/json",
+        "Accept-Language": lang,
         ...options?.headers,
       },
+      credentials: options?.credentials ?? "include",
     });
 
+    // Handle UNAUTHORIZED globally
+    if (response.status === 401) {
+      this.redirectToLogin(lang);
+      throw new HttpError(401, "UNAUTHORIZED");
+    }
+
+    // Try to parse JSON for error details (if any)
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      let body: unknown;
+      try {
+        body = await response.json();
+      } catch {
+        // ignore JSON parsing errors
+      }
+
+      const message =
+        (body as any)?.error ||
+        (body as any)?.message ||
+        `HTTP error! status: ${response.status}`;
+
+      throw new HttpError(response.status, message, body);
+    }
+
+    // No content
+    if (response.status === 204) {
+      return undefined as T;
     }
 
     return response.json();
@@ -37,26 +79,31 @@ class HttpClient {
   async get<T>(endpoint: string, options?: RequestInit): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
-      method: options?.method ?? 'GET',
+      method: options?.method ?? "GET",
     });
   }
 
-  async post<T>(endpoint: string, data: unknown): Promise<T> {
+  async post<T>(endpoint: string, data: unknown, options?: RequestInit): Promise<T> {
     return this.request<T>(endpoint, {
-      method: 'POST',
+      ...options,
+      method: "POST",
       body: JSON.stringify(data),
     });
   }
 
-  async patch<T>(endpoint: string, data: unknown): Promise<T> {
+  async patch<T>(endpoint: string, data: unknown, options?: RequestInit): Promise<T> {
     return this.request<T>(endpoint, {
-      method: 'PATCH',
+      ...options,
+      method: "PATCH",
       body: JSON.stringify(data),
     });
   }
 
-  async delete<T>(endpoint: string): Promise<T> {
-    return this.request<T>(endpoint, { method: 'DELETE' });
+  async delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: "DELETE",
+    });
   }
 }
 

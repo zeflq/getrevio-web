@@ -29,7 +29,8 @@
       "previewDraft": "Preview draft",
       "generateShortlink": "Generate Shortlink",
       "changesSavedOnSubmit": "Changes are saved when you click “Save changes”.",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "formHasErrors": "Some fields have errors."
     },
     "tabs": {
       "settings": "Settings",

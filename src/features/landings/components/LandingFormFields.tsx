@@ -77,7 +77,7 @@ export function LandingFormFields({
   const themesLite = themesLiteQuery.data ?? [];
   const themesLoading = themesLiteQuery.isLoading;
 
-  const settingsSection = (
+  return (
     <div className="space-y-4">
       {!merchantId ? (
         <RHFCombobox<LiteListe>
@@ -216,6 +216,4 @@ export function LandingFormFields({
       </div>
     </div>
   );
-
-  return <div className="space-y-6">{settingsSection}</div>;
 }

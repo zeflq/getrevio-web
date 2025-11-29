@@ -29,7 +29,8 @@
       "previewDraft": "Prévoir le brouillon",
       "generateShortlink": "Générer un shortlink",
       "changesSavedOnSubmit": "Les modifications sont enregistrées lorsque vous cliquez sur « Enregistrer ».",
-      "loading": "Chargement..."
+      "loading": "Chargement...",
+      "formHasErrors": "Certains champs contiennent des erreurs."
     },
     "tabs": {
       "settings": "Paramètres",

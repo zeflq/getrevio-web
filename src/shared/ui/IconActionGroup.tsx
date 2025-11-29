@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { VariantProps } from "class-variance-authority";
 
@@ -24,6 +24,10 @@ export interface IconAction {
   ariaLabel: string; // required for a11y + default mobile label
   /** Optional desktop text label (keeps icons-only when omitted) */
   label?: string;
+  /** Optional tooltip text (falls back to ariaLabel if not provided) */
+  tooltip?: string;
+  /** Show a loading state (spinner + disabled) */
+  loading?: boolean;
 }
 
 type IconActionGroupProps = {
@@ -53,23 +57,30 @@ export function IconActionGroup({
   const iconBtnClasses = condensed ? "h-8 w-8" : "h-9 w-9";
   const labeledBtnClasses = condensed ? "h-8 px-2 text-sm" : "h-9 px-3";
 
+  // small inline spinner for loading state
+  const Spinner = () => (
+    <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+  );
+
   // Render a single action as a button (desktop)
   const renderButton = (action: IconAction, key: string) => {
     const hasLabel = Boolean(action.label);
+    const isLoading = Boolean(action.loading);
+    const title = action.tooltip ?? action.ariaLabel;
 
     return (
       <Button
         key={key}
         variant={action.variant ?? "ghost"}
-        disabled={action.disabled}
-        aria-label={action.ariaLabel}
-        title={action.ariaLabel}
+        disabled={action.disabled || isLoading}
+        aria-label={action.ariaLabel ?? action.label ?? action.tooltip ?? "Action"}
+        title={title}
         size={hasLabel ? "default" : "icon"}
         className={cn(hasLabel ? labeledBtnClasses : iconBtnClasses)}
         onClick={action.onClick}
       >
         <span className="inline-flex items-center gap-2">
-          {action.icon}
+          {isLoading ? <Spinner /> : action.icon}
           {hasLabel && <span className="whitespace-nowrap">{action.label}</span>}
         </span>
       </Button>
@@ -77,30 +88,38 @@ export function IconActionGroup({
   };
 
   // Render a single dropdown menu item (mobile)
-  const renderMenuItem = (action: IconAction, key: string) => (
-    <DropdownMenuItem
-      key={key}
-      disabled={action.disabled}
-      onSelect={(e) => {
-        e.preventDefault();
-        if (!action.disabled) action.onClick();
-      }}
-      className="cursor-pointer"
-    >
-      <span className="mr-2 inline-flex h-4 w-4 items-center justify-center">
-        {action.icon}
-      </span>
-      {/* Prefer explicit label if provided, fallback to ariaLabel */}
-      <span>{action.label ?? action.ariaLabel}</span>
-    </DropdownMenuItem>
-  );
+  const renderMenuItem = (action: IconAction, key: string) => {
+    const isLoading = Boolean(action.loading);
+
+    return (
+      <DropdownMenuItem
+        key={key}
+        disabled={action.disabled || isLoading}
+        onSelect={(e) => {
+          e.preventDefault();
+          if (!action.disabled && !isLoading) action.onClick();
+        }}
+        className="cursor-pointer"
+      >
+        <span className="mr-2 inline-flex h-4 w-4 items-center justify-center">
+          {isLoading ? <Spinner /> : action.icon}
+        </span>
+        {/* Prefer explicit label, then tooltip, then ariaLabel */}
+        <span>{action.label ?? action.tooltip ?? action.ariaLabel}</span>
+      </DropdownMenuItem>
+    );
+  };
 
   // Factorized mobile menu rendering
   const renderMobileMenu = () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" aria-label="Open actions" className={iconBtnClasses}>
-          {mobileTrigger ?? <MoreHorizontal className="h-4 w-4" />}
+        <Button
+          variant="ghost"
+          aria-label="Open actions"
+          className={iconBtnClasses}
+        >
+          {mobileTrigger ?? <MoreVertical className="h-4 w-4" />}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -119,7 +138,7 @@ export function IconActionGroup({
 
   if (displayMode === "desktop") {
     return (
-      <div className={cn("flex flex-wrap items-center gap-0", className)}>
+      <div className={cn("flex flex-wrap items-center gap-2", className)}>
         {actions.map((action, idx) =>
           renderButton(action, `${action.ariaLabel}-${idx}`)
         )}
@@ -134,7 +153,7 @@ export function IconActionGroup({
   // auto (responsive)
   return (
     <>
-      <div className={cn("hidden md:flex flex-wrap items-center gap-0", className)}>
+      <div className={cn("hidden md:flex flex-wrap items-center gap-2", className)}>
         {actions.map((action, idx) =>
           renderButton(action, `${action.ariaLabel}-${idx}`)
         )}

@@ -25,7 +25,7 @@ export function SinglePageHeader({
   // Skeleton state (mobile-first)
   if (isLoading) {
     return (
-      <div className={`flex flex-col gap-3 sm:flex-row sm:items-center ${justify} ${className ?? ""}`}>
+      <div className={`flex flex-col gap-0 sm:flex-row sm:items-center ${justify} ${className ?? ""}`}>
         <div className="space-y-1">
           <Skeleton className="h-8 w-56" />
           <Skeleton className="h-4 w-72" />
@@ -38,7 +38,7 @@ export function SinglePageHeader({
   }
 
   return (
-    <div className={`flex gap-3 justify-between ${justify} ${className ?? ""}`}>
+    <div className={`flex gap-0 justify-between ${justify} ${className ?? ""}`}>
       {/* Title and description */}
       <div className="space-y-1 flex-1">
         <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
