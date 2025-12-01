@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const instagramActionDrawerAddonSchema = z.object({
-  kind: z.literal("instagramActionDrawerAddon"),
   instagramUrl: z
     .string()
     .url("Instagram URL must be a valid URL")
@@ -14,7 +13,6 @@ export type InstagramActionDrawerAddonData = z.infer<
 >;
 
 export const instagramActionDrawerAddonDefault: InstagramActionDrawerAddonData = {
-  kind: "instagramActionDrawerAddon",
   instagramUrl: "",
   handle: "",
 };

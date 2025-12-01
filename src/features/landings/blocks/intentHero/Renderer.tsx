@@ -21,7 +21,6 @@ export function IntentHeroRenderer({ data }: { data: IntentHeroData }) {
         flex flex-1 flex-col items-center
         min-h-[80vh]
         pt-10 pb-16 px-4
-        bg-[var(--landing-background)]
         text-[var(--landing-text)]
       "
     >

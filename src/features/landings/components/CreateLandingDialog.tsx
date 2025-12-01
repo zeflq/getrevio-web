@@ -57,6 +57,10 @@ export function CreateLandingDialog({
       onSuccess?.();
       router.push(`${redirectBasePath}/${data.id}/edit`);
     },
+    onError:(e)=>{
+      console.log("eeeeee")
+      console.log(e)
+    }
   });
 
   const methods = useForm<LandingFormValues>({

@@ -126,6 +126,43 @@ export const landingTemplates: LandingTemplate[] = [
       },
     ],
   },
+  {
+    id: "slotHeroTemplate",
+    blocks: [
+      {
+        id: "slotHero",
+        kind: "slotHero",
+        mode: "fixed",
+        maxInstances: 1,
+        addons: [
+          {
+            id: "action-section",
+            kind: "actionSectionAddon",
+            mode: "fixed",
+            maxInstances: 1,
+          },
+          {
+            id: "slot-game-footer",
+            kind: "footerAddon",
+            mode: "fixed",
+            maxInstances: 1,
+          },
+          {
+            id: "slot-game-action-drawer",
+            kind: "actionsdrawerAddon",
+            mode: "fixed",
+            maxInstances: 1,
+          },
+        ],
+      },
+      {
+        id: "slot-game-legal",
+        kind: "legalText",
+        mode: "optional",
+        maxInstances: 1,
+      },
+    ],
+  }
 ];
 
 export const getTemplateById = (id?: string | null) =>

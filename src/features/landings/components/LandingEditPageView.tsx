@@ -67,8 +67,6 @@ export function LandingEditPageView(props: LandingEditPageViewProps) {
     previewHref,
     toggleButtonLabel,
     publishButtonVariant,
-    hasSettingsErrors,
-    hasContentErrors,
     hasFormErrors,
     tabs,
   } = useLandingPageDerivedState({ t, form, landing });

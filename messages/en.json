@@ -91,43 +91,6 @@
       "blockNumber": "#{index}",
       "selectPrompt": "Select a block to edit its content.",
       "blocks": {
-        "simpleHero": {
-          "label": "Simple Hero",
-          "description": "Heading with optional subtitle",
-          "title": "Title",
-          "subtitle": "Subtitle",
-          "convert": "Convert to Hero with CTA",
-          "previewTitle": "{title}",
-          "previewSubtitle": "{subtitle}"
-        },
-        "heroWithCta": {
-          "label": "Hero with CTA",
-          "description": "Hero plus call-to-action buttons",
-          "title": "Title",
-          "subtitle": "Subtitle",
-          "ctaLabel": "Label",
-          "ctaUrl": "URL",
-          "ctaStyle": "Style",
-          "ctas": "CTAs",
-          "addCta": "Add CTA",
-          "primary": "Primary",
-          "secondary": "Secondary",
-          "ctaCount": "{count} CTA(s)",
-          "removeCta": "Remove CTA"
-        },
-        "legalText": {
-          "label": "Legal Text",
-          "description": "Body copy for compliance",
-          "text": "Legal text",
-          "placeholder": "Add legal or compliance language"
-        },
-        "game": {
-          "label": "Game",
-          "description": "Interactive block for places or campaigns",
-          "ctaLabel": "CTA label (optional)",
-          "linkedCampaign": "Linked campaign",
-          "linkedPlace": "Linked place"
-        },
         "intentHero": {
           "label": "Hero",
           "description": "A high-impact hero section tailored for slot-game landings.",
@@ -136,6 +99,10 @@
           "subtitle": "Subtitle",
           "ctaLabel": "Button label",
           "ctaUrl": "Button URL"
+        },
+        "slotHero":{
+          "label": "Slot game hero",
+          "description": "Main hero section used for slot games."
         },
         "items":{
           "intentHero":{
@@ -146,6 +113,13 @@
                 "label": "Try your luck"
               },
               "description": "Spin the wheel and try to win incredible prizes!"
+            }
+          },
+          "slotHero":{
+            "defaults":{
+              "title":"",
+              "subtitle":"",
+              "description":""
             }
           }
         }
@@ -166,16 +140,10 @@
             }
           },
           "actionsdrawerAddon": {
-            "label": "Action drawer",
-            "description":
-              "Open a drawer that highlights Google reviews or your Instagram profile.",
+            "label": "Social interactions",
+            "description": "Highlight Google or Instagram reviews.",
             "defaults": {
-              "triggerLabel": "Open drawer",
-              "title": "Get into action",
-              "description": "Discover our actions in one place.",
-              "incentiveText": "Tap to explore",
-              "primaryLabel": "Open drawer",
-              "footerText": "Thanks for checking us out."
+              "provider": "googleReviewActionDrawerAddon"
             }
           },
           "googleReviewActionDrawerAddon": {
@@ -212,6 +180,17 @@
               "incentiveText": "Share your story with us.",
               "primaryLabel": "Open Instagram",
               "footerText": "Thanks for being part of the community."
+            }
+          }
+          ,
+          "actionSectionAddon": {
+            "label": "Action section",
+            "description": "Highlight a CTA block with text and button",
+            "defaults": {
+              "title": "Dive into the world of slots",
+              "subtitle": "Spin the reels and unlock exclusive bonuses",
+              "description": "One spin can change everything. Will you be the next winner?",
+              "buttonLabel": "Play now"
             }
           }
         },
@@ -252,6 +231,12 @@
             "handle": "Instagram handle",
             "handlePlaceholder": "@your_place"
           }
+        },
+        "actionSectionAddon":{
+          "title": "Title",
+          "subtitle": "Subtitle",
+          "description": "Description",
+          "buttonLabel": "Button label"
         }
       },
       "actions": {
@@ -306,6 +291,10 @@
       "legalText": {
         "name": "Legal Text",
         "description": "A template for landings requiring legal disclaimers"
+      },
+      "slotHeroTemplate":{
+        "name" :"Slot game Reloaded",
+        "description": "A template optimized for game landings"
       }
     },
     "preview": {
@@ -382,17 +371,17 @@
             "title": "Pensez à revenir en",
             "highlight": "cliquant sur l’icône d’onglet",
             "description": "Après votre follow, revenez sur l’onglet du jeu pour lancer la machine.",
-            "buttonText": "J’ouvre Instagram"
-          },
-          "footer": {
-            "rules": "Règlement",
-            "poweredBy": "Powered by",
-            "brand": "GetRevio"
+              "buttonText": "J’ouvre Instagram"
+            },
+            "footer": {
+              "rules": "Règlement",
+              "poweredBy": "Powered by",
+              "brand": "GetRevio"
+            }
           }
         }
       }
-    }
-  },
+    },
   "merchantSettings": {
     "theme": {
       "title": "Reset theme",

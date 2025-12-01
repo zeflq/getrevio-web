@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const googleReviewActionDrawerAddonSchema = z.object({
-  kind: z.literal("googleReviewActionDrawerAddon"),
   googleUrl: z
     .string()
     .url("Google review URL must be a valid URL")
@@ -14,7 +13,6 @@ export type GoogleReviewActionDrawerAddonData = z.infer<
 >;
 
 export const googleReviewActionDrawerAddonDefault: GoogleReviewActionDrawerAddonData = {
-  kind: "googleReviewActionDrawerAddon",
-  googleUrl: "",
+  googleUrl: "https://search.google.com/local/writereview?placeid=xxx",
   placeLabel: "",
 };

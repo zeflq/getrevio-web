@@ -88,41 +88,6 @@
       "blockNumber": "N°{index}",
       "selectPrompt": "Sélectionnez un bloc pour modifier son contenu.",
       "blocks": {
-        "simpleHero": {
-          "label": "Hero simple",
-          "description": "Titre avec sous-titre optionnel",
-          "title": "Titre",
-          "subtitle": "Sous-titre",
-          "convert": "Convertir en Hero avec CTA"
-        },
-        "heroWithCta": {
-          "label": "Hero avec CTA",
-          "description": "Hero avec boutons d’appel à l’action",
-          "title": "Titre",
-          "subtitle": "Sous-titre",
-          "ctaLabel": "Libellé",
-          "ctaUrl": "URL",
-          "ctaStyle": "Style",
-          "ctas": "CTA",
-          "addCta": "Ajouter un CTA",
-          "primary": "Principal",
-          "secondary": "Secondaire",
-          "ctaCount": "{count} CTA",
-          "removeCta": "Supprimer le CTA"
-        },
-        "legalText": {
-          "label": "Texte légal",
-          "description": "Bloc pour mentions légales ou conformité",
-          "text": "Texte légal",
-          "placeholder": "Ajoutez vos mentions légales"
-        },
-        "game": {
-          "label": "Jeu",
-          "description": "Bloc interactif pour campagnes ou lieux",
-          "ctaLabel": "Libellé du CTA (optionnel)",
-          "linkedCampaign": "Campagne liée",
-          "linkedPlace": "Lieu lié"
-        },
         "intentHero": {
           "label": "Hero",
           "description": "Une section hero à fort impact, conçue pour les landings de slot-game.",
@@ -131,6 +96,10 @@
           "subtitle": "Sous-titre",
           "ctaLabel": "Libellé du bouton",
           "ctaUrl": "URL du bouton"
+        },
+        "slotHero":{
+          "label": "Héros Slot Game",
+          "description": "Section héro pour les pages de jeux de machine à sous."
         },
         "items":{
           "intentHero":{
@@ -165,6 +134,7 @@
             "description":
               "Mettre en avant les avis Google ou Instagram.",
             "defaults": {
+              "provider": "googleReviewActionDrawerAddon"
             }
           },
           "googleReviewActionDrawerAddon": {
@@ -195,6 +165,17 @@
             "label": "Tiroir Instagram",
             "description": "Met en avant votre profil Instagram",
             "defaults": {
+            }
+          }
+          ,
+          "actionSectionAddon": {
+            "label": "Section d’action",
+            "description": "Mets en avant un CTA avec texte et bouton",
+            "defaults":{
+              "title": "Plongez dans l’univers des slots",
+              "subtitle": "Faites tourner les rouleaux et débloquez des bonus exclusifs",
+              "description": "Un tour peut tout changer. Serez-vous le prochain gagnant ?",
+              "buttonLabel": "Je tente ma chance"
             }
           }
         },
@@ -236,6 +217,12 @@
             "handle": "Handle Instagram",
             "handlePlaceholder": "@votre_lieu"
           }
+        },
+        "actionSectionAddon":{
+          "title": "Titre",
+          "subtitle": "Sous-titre",
+          "description": "Description",
+          "buttonLabel": "Label du bouton"
         }
       },
       "actions": {
@@ -290,6 +277,10 @@
       "legalText": {
         "name": "Texte légal",
         "description": "Un modèle pour les landings nécessitant des mentions légales"
+      },
+      "slotHeroTemplate":{
+        "name" :"Slot game Reloaded",
+        "description": "Un modèle optimisé pour les landings de jeux"
       }
     },
     "preview": {

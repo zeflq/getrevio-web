@@ -1,3 +1,4 @@
+// actionsdrawerAddon/Inspector.tsx
 "use client";
 
 import * as React from "react";
@@ -9,10 +10,7 @@ import type { LandingAddonInspectorProps } from "../plugin";
 import { RHFSelect } from "@/components/form/controls";
 import { GoogleReviewActionDrawerAddonInspector } from "../googleReviewActionDrawerAddon/Inspector";
 import { InstagramActionDrawerAddonInspector } from "../instagramActionDrawerAddon/Inspector";
-import { DrawerAddonData } from "./schema";
-
-type DrawerKind = DrawerAddonData["drawer"]["kind"];
-
+import type { DrawerAddonData, DrawerProvider } from "./schema";
 
 export function ActionDrawerAddonInspector({
   blockIndex,
@@ -23,46 +21,53 @@ export function ActionDrawerAddonInspector({
   const t = useTranslations("landings.editor.addons.actionsdrawerAddon");
   const { control } = useFormContext<LandingFormValues>();
 
-  const drawerKind = useWatch({
+  // On regarde le provider actuel: "googleReviewActionDrawerAddon" | "instagramActionDrawerAddon"
+  const provider = useWatch({
     control,
-    name: `${fieldName}.drawer.kind` as any,
-  }) as DrawerKind;
+    name: `${fieldName}.provider` as any,
+  }) as DrawerProvider | undefined;
 
   return (
     <div className="space-y-4">
       {/* Sélecteur de type de drawer */}
       <RHFSelect
-        name={`${fieldName}.drawer.kind`}
+        name={`${fieldName}.provider`}
         label={t("drawerKindLabel")}
         placeholder={t("drawerKindPlaceholder")}
         disabled={disabled}
         options={[
-          { value: "googleReviewActionDrawerAddon", label: t("drawerKindOptions.googleReview") },
-          { value: "instagramActionDrawerAddon", label: t("drawerKindOptions.instagram") },
+          {
+            value: "googleReviewActionDrawerAddon",
+            label: t("drawerKindOptions.googleReview"),
+          },
+          {
+            value: "instagramActionDrawerAddon",
+            label: t("drawerKindOptions.instagram"),
+          },
         ]}
       />
 
       {/* Config spécifique Google Review */}
-      {drawerKind === "googleReviewActionDrawerAddon" && (
+      {provider === "googleReviewActionDrawerAddon" && (
         <GoogleReviewActionDrawerAddonInspector
           blockIndex={blockIndex}
           addonIndex={addonIndex}
-          fieldName={`${fieldName}.drawer`}
+          fieldName={`${fieldName}.config`}
           disabled={disabled}
         />
       )}
 
-      {/* Config spécifique Instagram (à implémenter si tu veux la variante) */}
-      {drawerKind === "instagramActionDrawerAddon" && (
+      {/* Config spécifique Instagram */}
+      {provider === "instagramActionDrawerAddon" && (
         <InstagramActionDrawerAddonInspector
           blockIndex={blockIndex}
           addonIndex={addonIndex}
-          fieldName={`${fieldName}.drawer`}
+          fieldName={`${fieldName}.config`}
           disabled={disabled}
         />
       )}
 
-      {!drawerKind && (
+      {!provider && (
         <p className="text-xs text-muted-foreground">
           {t("noKindSelected")}
         </p>

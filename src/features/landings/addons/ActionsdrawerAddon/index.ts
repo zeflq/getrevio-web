@@ -1,13 +1,13 @@
+// actionsdrawerAddon/index.ts
 import type { LandingAddonPlugin } from "../plugin";
 import { ActionsdrawerAddonRenderer } from "./Renderer";
 import { ActionDrawerAddonInspector } from "./Inspector";
 import { drawerAddonSchema, type DrawerAddonData } from "./schema";
 import { googleReviewActionDrawerAddonDefault } from "../googleReviewActionDrawerAddon/schema";
-//import { instagramActionDrawerAddonDefault } from "../instagramActionDrawerAddon/schema";
 
 const actionsdrawerAddonDefault: DrawerAddonData = {
-  kind: "drawer",
-  drawer: googleReviewActionDrawerAddonDefault,
+  provider: "googleReviewActionDrawerAddon",
+  config: googleReviewActionDrawerAddonDefault,
 };
 
 const actionsdrawerAddonPlugin: LandingAddonPlugin<DrawerAddonData> = {
@@ -20,5 +20,4 @@ const actionsdrawerAddonPlugin: LandingAddonPlugin<DrawerAddonData> = {
 };
 
 export default actionsdrawerAddonPlugin;
-export { drawerAddonSchema };
 export type { DrawerAddonData };

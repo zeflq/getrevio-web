@@ -4,13 +4,14 @@ import type { UseFormReturn } from "react-hook-form";
 import type { LandingFormValues } from "../model/landingSchema";
 import { buttonVariants } from "@/components/ui/button";
 import type { VariantProps } from "class-variance-authority";
+import type { LandingListItem } from "../server/mappers";
 
 type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
 
 type DerivedStateArgs = {
   t: ReturnType<typeof import("next-intl").useTranslations>;
   form: UseFormReturn<LandingFormValues>;
-  landing: ReturnType<typeof import("../server/mappers").landingListItem> | null;
+  landing: LandingListItem | null;
 };
 
 export function useLandingPageDerivedState({ t, form, landing }: DerivedStateArgs) {
@@ -62,7 +63,7 @@ export function useLandingPageDerivedState({ t, form, landing }: DerivedStateArg
   const tabs = [
     { id: "settings", label: t("tabs.settings"), hasError: hasSettingsErrors },
     { id: "content", label: t("tabs.content"), hasError: hasContentErrors },
-  ] as const;
+  ];
 
   return {
     isPublished,

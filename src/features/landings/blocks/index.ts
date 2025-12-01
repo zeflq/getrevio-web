@@ -12,11 +12,13 @@ import {
 import type { LandingBlockPlugin } from "./plugin";
 import legalTextPlugin from "./legalText";
 import intentHeroPlugin from "./intentHero";
+import slotHeroPlugin from "./slotHero";
 import { clone, createId } from "../utils/serialization";
 
 const landingBlockPlugins = [
   legalTextPlugin,
   intentHeroPlugin,
+  slotHeroPlugin,
 ] as const satisfies readonly LandingBlockPlugin<any>[];
 
 type LandingBlockPluginTuple = typeof landingBlockPlugins;
@@ -44,6 +46,7 @@ const buildBlockSchema = <P extends LandingBlockPlugin<any>>(plugin: P) =>
   const schemas = [
   buildBlockSchema(legalTextPlugin),
   buildBlockSchema(intentHeroPlugin),
+  buildBlockSchema(slotHeroPlugin),
 ] as const;
 
 export const LandingBlockSchema = z.discriminatedUnion("kind", schemas);

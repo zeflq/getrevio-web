@@ -3,7 +3,8 @@ import { z } from "zod";
 import type { LandingAddonPlugin } from "./plugin";
 import { applyTranslationDefaults } from "../utils/translationDefaults";
 import type { TranslationFn } from "../utils/translationDefaults";
-import actionsdrawerAddonPlugin from "./ActionsdrawerAddon";
+import actionsdrawerAddonPlugin from "./actionsdrawerAddon";
+import actionSectionAddonPlugin from "./actionSectionAddon";
 import footerAddonPlugin from "./footerAddon";
 import googleReviewActionDrawerAddonPlugin from "./googleReviewActionDrawerAddon";
 import instagramActionDrawerAddonPlugin from "./instagramActionDrawerAddon";
@@ -12,6 +13,7 @@ import { clone, createId } from "../utils/serialization";
 const landingAddonPlugins = [
   footerAddonPlugin,
   actionsdrawerAddonPlugin,
+  actionSectionAddonPlugin,
   googleReviewActionDrawerAddonPlugin,
   instagramActionDrawerAddonPlugin,
 ] as const satisfies readonly LandingAddonPlugin<any>[];
@@ -38,6 +40,7 @@ function buildAddonSchema<P extends LandingAddonPlugin<any>>(plugin: P) {
 const addonSchemas =[
   buildAddonSchema(footerAddonPlugin),
   buildAddonSchema(actionsdrawerAddonPlugin),
+  buildAddonSchema(actionSectionAddonPlugin),
   buildAddonSchema(googleReviewActionDrawerAddonPlugin),
   buildAddonSchema(instagramActionDrawerAddonPlugin),
 ] as const;
