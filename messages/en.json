@@ -92,41 +92,11 @@
       "blockNumber": "#{index}",
       "selectPrompt": "Select a block to edit its content.",
       "blocks": {
-        "intentHero": {
-          "label": "Hero",
-          "description": "A high-impact hero section tailored for slot-game landings.",
-          "descriptionLabel": "Description",
-          "title": "Title",
-          "subtitle": "Subtitle",
-          "ctaLabel": "Button label",
-          "ctaUrl": "Button URL"
-        },
-        "slotHero":{
-          "label": "Slot game hero",
-          "description": "Main hero section used for slot games."
-        },
         "empty":{
           "label": "Page",
           "description": ""
         },
         "items":{
-          "intentHero":{
-            "defaults":{
-              "title": "Ready to play?",
-              "subtitle": "Give it a spin and try your luck",
-              "cta": {
-                "label": "Try your luck"
-              },
-              "description": "Spin the wheel and try to win incredible prizes!"
-            }
-          },
-          "slotHero":{
-            "defaults":{
-              "title":"",
-              "subtitle":"",
-              "description":""
-            }
-          }
         }
       },
       "addons": {
@@ -296,19 +266,7 @@
       }
     },
     "templates": {
-      "empty":{
-        "name": "Page",
-        "description": ""
-      },
-      "slot-game": {
-        "name": "Slot game",
-        "description": "A template optimized for game landings"
-      },
-      "legalText": {
-        "name": "Legal Text",
-        "description": "A template for landings requiring legal disclaimers"
-      },
-      "slotHeroTemplate":{
+      "slotTemplate":{
         "name" :"Slot game Reloaded",
         "description": "A template optimized for game landings"
       }

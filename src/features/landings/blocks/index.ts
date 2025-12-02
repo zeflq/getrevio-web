@@ -10,16 +10,10 @@ import {
   type TranslationFn,
 } from "../utils/translationDefaults";
 import type { LandingBlockPlugin } from "./plugin";
-import legalTextPlugin from "./legalText";
-import intentHeroPlugin from "./intentHero";
-import slotHeroPlugin from "./slotHero";
 import emptyPlugin from "./emptyBlock";
 import { clone, createId } from "../utils/serialization";
 
 const landingBlockPlugins = [
-  legalTextPlugin,
-  intentHeroPlugin,
-  slotHeroPlugin,
   emptyPlugin,
 ] as const satisfies readonly LandingBlockPlugin<any>[];
 
@@ -46,9 +40,6 @@ const buildBlockSchema = <P extends LandingBlockPlugin<any>>(plugin: P) =>
   });
 
   const schemas = [
-  buildBlockSchema(legalTextPlugin),
-  buildBlockSchema(intentHeroPlugin),
-  buildBlockSchema(slotHeroPlugin),
   buildBlockSchema(emptyPlugin),
 ] as const;
 

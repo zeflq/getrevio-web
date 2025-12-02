@@ -89,34 +89,11 @@
       "blockNumber": "N°{index}",
       "selectPrompt": "Sélectionnez un bloc pour modifier son contenu.",
       "blocks": {
-        "intentHero": {
-          "label": "Hero",
-          "description": "Une section hero à fort impact, conçue pour les landings de slot-game.",
-          "descriptionLabel": "Description",
-          "title": "Titre",
-          "subtitle": "Sous-titre",
-          "ctaLabel": "Libellé du bouton",
-          "ctaUrl": "URL du bouton"
-        },
-        "slotHero":{
-          "label": "Héros Slot Game",
-          "description": "Section héro pour les pages de jeux de machine à sous."
-        },
         "empty":{
           "label": "Page",
           "description": ""
         },
         "items":{
-          "intentHero":{
-            "defaults":{
-              "title": "Prêt à jouer ?",
-              "subtitle": "Tentez votre chance et faites tourner la roue",
-              "cta": {
-                "label": "Je tente ma chance"
-              },
-              "description": "Lancer la machine et tenter de gagner des lots incroyables !!"
-            }
-          }
         }
       },
       "addons": {
@@ -282,19 +259,7 @@
       }
     },
     "templates": {
-        "empty":{
-        "name": "Page",
-        "description": ""
-      },
-      "slot-game": {
-        "name": "Slot game",
-        "description": "Un modèle optimisé pour les landings de jeux"
-      },
-      "legalText": {
-        "name": "Texte légal",
-        "description": "Un modèle pour les landings nécessitant des mentions légales"
-      },
-      "slotHeroTemplate":{
+      "slotTemplate":{
         "name" :"Slot game Reloaded",
         "description": "Un modèle optimisé pour les landings de jeux"
       }
