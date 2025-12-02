@@ -9,6 +9,7 @@ import type { LandingAddon } from "../../addons";
 import { landingAddonPluginMap } from "../../addons";
 
 import { EditorCard } from "../ui/EditorCard";
+import { EditorSheetCard } from "../ui/EditorSheetCard";
 
 interface AddonsCardProps {
   id: string;
@@ -70,9 +71,10 @@ export function AddonsCard({
   const fieldName = `content.blocks.${blockIndex}.addons.${index}.data`;
 
   return (
-    <EditorCard
-      selected={selected}
-      onSelect={onSelect}
+    <EditorSheetCard
+      // Header du SHEET
+      sheetTitle={typeLabel}
+      sheetDescription={description}
       disabled={disabled}
       isFixed={isFixedAddon}
       hasErrors={hasAddonErrors}

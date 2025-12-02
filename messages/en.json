@@ -30,7 +30,8 @@
       "generateShortlink": "Generate Shortlink",
       "changesSavedOnSubmit": "Changes are saved when you click “Save changes”.",
       "loading": "Loading...",
-      "formHasErrors": "Some fields have errors."
+      "formHasErrors": "Some fields have errors.",
+      "backToList": "Back To Landing"
     },
     "tabs": {
       "settings": "Settings",
@@ -238,6 +239,9 @@
           "description": "Description",
           "buttonLabel": "Button label"
         }
+      },
+      "sheetCard":{
+        "close": "Close"
       },
       "actions": {
         "duplicate": "Duplicate block",

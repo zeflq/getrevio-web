@@ -30,7 +30,8 @@
       "generateShortlink": "Générer un shortlink",
       "changesSavedOnSubmit": "Les modifications sont enregistrées lorsque vous cliquez sur « Enregistrer ».",
       "loading": "Chargement...",
-      "formHasErrors": "Certains champs contiennent des erreurs."
+      "formHasErrors": "Certains champs contiennent des erreurs.",
+      "backToList": "Retour au Landing"
     },
     "tabs": {
       "settings": "Paramètres",
@@ -224,6 +225,9 @@
           "description": "Description",
           "buttonLabel": "Label du bouton"
         }
+      },
+      "sheetCard":{
+        "close": "Terminer"
       },
       "actions": {
         "duplicate": "Dupliquer le bloc",

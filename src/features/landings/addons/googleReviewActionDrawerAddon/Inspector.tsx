@@ -12,7 +12,7 @@ export function GoogleReviewActionDrawerAddonInspector({
   const t = useTranslations("landings.editor.addons.actionsdrawerAddon.google");
 
   return (
-    <div className="space-y-4 border-l border-muted-foreground/50 pl-3">
+    <div className="space-y-4">
       <RHFInput
         name={`${fieldName}.googleUrl`}
         label={t("googleUrl")}

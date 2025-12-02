@@ -12,7 +12,7 @@ export function InstagramActionDrawerAddonInspector({
   const t = useTranslations("landings.editor.addons.actionsdrawerAddon.instagram");
 
   return (
-    <div className="space-y-4 border-l border-muted-foreground/50 pl-3">
+    <div className="space-y-4">
       <RHFInput
         name={`${fieldName}.instagramUrl`}
         label={t("instagramUrl")}
