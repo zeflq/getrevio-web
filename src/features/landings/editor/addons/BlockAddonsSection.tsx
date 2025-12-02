@@ -56,6 +56,18 @@ export function BlockAddonsSection({
     [templateBlock]
   );
 
+  const visibleAddonEntries = React.useMemo(
+    () =>
+      addonFields
+        .map((field, index) => ({
+          field,
+          index,
+          addon: addons[index],
+        }))
+        .filter(({ addon }) => Boolean(addon) && !addon.__inspectorHidden),
+    [addonFields, addons]
+  );
+
   /** counts per addon kind */
   const counts = React.useMemo(() => {
     return addons.reduce<Record<string, number>>((acc, a) => {
@@ -107,6 +119,7 @@ export function BlockAddonsSection({
 
     if (slot.id) addon.__templateAddonId = slot.id;
     if (slot.mode === "fixed") addon.__templateFixed = true;
+    if (slot.hideInspector) addon.__inspectorHidden = true;
 
     append(addon);
   };
@@ -149,9 +162,9 @@ export function BlockAddonsSection({
   };
 
   const hasSlots = addonSlots.length > 0;
-  const hasAddons = addonFields.length > 0;
+  const hasVisibleAddons = visibleAddonEntries.length > 0;
 
-  if (!hasSlots && !hasAddons) {
+  if (!hasSlots && !hasVisibleAddons) {
     return (
       <></>
     );
@@ -163,7 +176,7 @@ export function BlockAddonsSection({
         label=""
         //label={t("sectionLabel")}
         addLabel={t("add")}
-        empty={addonFields.length === 0}
+        empty={visibleAddonEntries.length === 0}
         disabled={disabled}
         slots={addonSlots}
         activeAddons={addons}
@@ -172,10 +185,7 @@ export function BlockAddonsSection({
       />
 
       <div className="space-y-2">
-        {addonFields.map((field, index) => {
-          const addon = addons[index];
-          if (!addon) return null;
-
+        {visibleAddonEntries.map(({ field, index, addon }) => {
           const max = addonMaxByKind.get(addon.kind);
           const requiredFixed = addonRequiredFixedByKind.get(addon.kind);
           const currentCount = counts[addon.kind] ?? 0;
@@ -186,7 +196,7 @@ export function BlockAddonsSection({
               id={field.id}
               addon={addon}
               index={index}
-              total={addonFields.length}
+              total={visibleAddonEntries.length}
               blockIndex={blockIndex}
               selected={field.id === selectedAddonId}
               onSelect={() =>

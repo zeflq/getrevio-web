@@ -9,8 +9,10 @@ import footerAddonPlugin from "./footerAddon";
 import googleReviewActionDrawerAddonPlugin from "./googleReviewActionDrawerAddon";
 import instagramActionDrawerAddonPlugin from "./instagramActionDrawerAddon";
 import { clone, createId } from "../utils/serialization";
+import sloteBannerPlugin from "./sloteBanner";
 
 const landingAddonPlugins = [
+  sloteBannerPlugin,
   footerAddonPlugin,
   actionsdrawerAddonPlugin,
   actionSectionAddonPlugin,
@@ -33,11 +35,13 @@ function buildAddonSchema<P extends LandingAddonPlugin<any>>(plugin: P) {
     data: plugin.schema,
     __templateAddonId: z.string().optional(),
     __templateFixed: z.boolean().optional(),
+    __inspectorHidden: z.boolean().optional(),
   });
 }
 
 //const addonSchemas = landingAddonPlugins.map((plugin) => buildAddonSchema(plugin)) as const;
 const addonSchemas =[
+  buildAddonSchema(sloteBannerPlugin),
   buildAddonSchema(footerAddonPlugin),
   buildAddonSchema(actionsdrawerAddonPlugin),
   buildAddonSchema(actionSectionAddonPlugin),
@@ -89,6 +93,7 @@ export type LandingBlockAddonDefinition = {
   kind: LandingAddonKind;
   mode: "fixed" | "optional";
   maxInstances?: number;
+  hideInspector?: boolean;
   defaultData?: Partial<LandingAddon["data"]>;
 };
 

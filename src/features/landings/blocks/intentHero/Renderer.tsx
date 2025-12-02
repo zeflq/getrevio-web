@@ -8,8 +8,8 @@ import { useBlockChannel } from "@/features/landings/preview/BlockChannelContext
 
 import type { IntentHeroData } from "./schema";
 import { ArrowRight } from "lucide-react";
-import { SlotBanner } from "../slotGame/SlotBanner";
 import { cn } from "@/lib/utils";
+import { SlotBanner } from "../../components/SlotBanner";
 
 export function IntentHeroRenderer({ data }: { data: IntentHeroData }) {
   const { next } = useStepController();

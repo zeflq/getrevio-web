@@ -13,12 +13,14 @@ import type { LandingBlockPlugin } from "./plugin";
 import legalTextPlugin from "./legalText";
 import intentHeroPlugin from "./intentHero";
 import slotHeroPlugin from "./slotHero";
+import emptyPlugin from "./emptyBlock";
 import { clone, createId } from "../utils/serialization";
 
 const landingBlockPlugins = [
   legalTextPlugin,
   intentHeroPlugin,
   slotHeroPlugin,
+  emptyPlugin,
 ] as const satisfies readonly LandingBlockPlugin<any>[];
 
 type LandingBlockPluginTuple = typeof landingBlockPlugins;
@@ -47,6 +49,7 @@ const buildBlockSchema = <P extends LandingBlockPlugin<any>>(plugin: P) =>
   buildBlockSchema(legalTextPlugin),
   buildBlockSchema(intentHeroPlugin),
   buildBlockSchema(slotHeroPlugin),
+  buildBlockSchema(emptyPlugin),
 ] as const;
 
 export const LandingBlockSchema = z.discriminatedUnion("kind", schemas);
@@ -94,6 +97,10 @@ export const createBlockByKind = <K extends LandingBlockKind>(
         if (slot.mode === "fixed") {    
           addon.__templateAddonId = slot.id;
           addon.__templateFixed = true;
+        }
+
+        if (slot.hideInspector) {
+          addon.__inspectorHidden = true;
         }
 
         return addon;

@@ -102,6 +102,10 @@
           "label": "Héros Slot Game",
           "description": "Section héro pour les pages de jeux de machine à sous."
         },
+        "empty":{
+          "label": "Page",
+          "description": ""
+        },
         "items":{
           "intentHero":{
             "defaults":{
@@ -122,6 +126,10 @@
         "empty": "Aucun add-on pour le moment.",
         "remove": "Supprimer",
         "items": {
+          "sloteBanner":{
+            "label": "Slote Banner",
+            "description":""
+          },
           "footerAddon": {
             "label": "Pied de page",
             "description":
@@ -274,6 +282,10 @@
       }
     },
     "templates": {
+        "empty":{
+        "name": "Page",
+        "description": ""
+      },
       "slot-game": {
         "name": "Slot game",
         "description": "Un modèle optimisé pour les landings de jeux"

@@ -129,12 +129,46 @@ export const landingTemplates: LandingTemplate[] = [
   {
     id: "slotHeroTemplate",
     blocks: [
+      // {
+      //   id: "slotHero",
+      //   kind: "slotHero",
+      //   mode: "fixed",
+      //   maxInstances: 1,
+      //   addons: [
+      //     {
+      //       id: "action-section",
+      //       kind: "actionSectionAddon",
+      //       mode: "fixed",
+      //       maxInstances: 1,
+      //     },
+      //     {
+      //       id: "slot-game-footer",
+      //       kind: "footerAddon",
+      //       mode: "fixed",
+      //       maxInstances: 1,
+      //       hideInspector: true
+      //     },
+      //     {
+      //       id: "slot-game-action-drawer",
+      //       kind: "actionsdrawerAddon",
+      //       mode: "fixed",
+      //       maxInstances: 1,
+      //     },
+      //   ],
+      // },
       {
-        id: "slotHero",
-        kind: "slotHero",
+        id: "empty1",
+        kind: "empty",
         mode: "fixed",
         maxInstances: 1,
         addons: [
+          {
+            id: "slote-banner-section",
+            kind: "sloteBanner",
+            mode: "fixed",
+            maxInstances: 1,
+            hideInspector: true
+          },
           {
             id: "action-section",
             kind: "actionSectionAddon",
@@ -146,6 +180,7 @@ export const landingTemplates: LandingTemplate[] = [
             kind: "footerAddon",
             mode: "fixed",
             maxInstances: 1,
+            hideInspector: true
           },
           {
             id: "slot-game-action-drawer",

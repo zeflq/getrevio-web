@@ -105,6 +105,10 @@
           "label": "Slot game hero",
           "description": "Main hero section used for slot games."
         },
+        "empty":{
+          "label": "Page",
+          "description": ""
+        },
         "items":{
           "intentHero":{
             "defaults":{
@@ -132,6 +136,10 @@
         "empty": "No addons yet.",
         "remove": "Remove",
         "items": {
+          "sloteBanner":{
+            "label": "Slote Banner",
+            "description":""
+          },
           "footerAddon": {
             "label": "Footer",
             "description":
@@ -288,6 +296,10 @@
       }
     },
     "templates": {
+      "empty":{
+        "name": "Page",
+        "description": ""
+      },
       "slot-game": {
         "name": "Slot game",
         "description": "A template optimized for game landings"
