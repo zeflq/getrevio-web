@@ -185,17 +185,17 @@ export function BlockAddonsSection({
       />
 
       <div className="space-y-2">
-        {visibleAddonEntries.map(({ field, index, addon }) => {
+        {visibleAddonEntries.map(({ field, index, addon }, cardIndex) => {
           const max = addonMaxByKind.get(addon.kind);
           const requiredFixed = addonRequiredFixedByKind.get(addon.kind);
           const currentCount = counts[addon.kind] ?? 0;
-
           return (
             <AddonsCard
               key={field.id}
               id={field.id}
               addon={addon}
-              index={index}
+              addonIndex={index}
+              cardIndex={cardIndex}
               total={visibleAddonEntries.length}
               blockIndex={blockIndex}
               selected={field.id === selectedAddonId}

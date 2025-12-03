@@ -14,7 +14,8 @@ import { EditorSheetCard } from "../ui/EditorSheetCard";
 interface AddonsCardProps {
   id: string;
   addon: LandingAddon;
-  index: number;
+  addonIndex: number;
+  cardIndex: number;
   total: number;
 
   selected?: boolean;
@@ -35,7 +36,8 @@ interface AddonsCardProps {
 export function AddonsCard({
   id,
   addon,
-  index,
+  addonIndex,
+  cardIndex,
   total,
   selected = false,
   onSelect,
@@ -64,11 +66,11 @@ export function AddonsCard({
 
   const { formState } = useFormContext<LandingFormValues>();
   const addonErrors =
-    (formState.errors.content?.blocks?.[blockIndex] as any)?.addons?.[index];
+    (formState.errors.content?.blocks?.[blockIndex] as any)?.addons?.[addonIndex];
   const hasAddonErrors = Boolean(addonErrors);
 
   // Full data path for this addon's data object
-  const fieldName = `content.blocks.${blockIndex}.addons.${index}.data`;
+  const fieldName = `content.blocks.${blockIndex}.addons.${addonIndex}.data`;
 
   return (
     <EditorSheetCard
@@ -78,8 +80,8 @@ export function AddonsCard({
       disabled={disabled}
       isFixed={isFixedAddon}
       hasErrors={hasAddonErrors}
-      canMoveUp={index > 0 && !isFixedAddon}
-      canMoveDown={index < total - 1  && !isFixedAddon}
+      canMoveUp={cardIndex > 0 && !isFixedAddon}
+      canMoveDown={cardIndex < total - 1  && !isFixedAddon}
       onMoveUp={onMoveUp}
       onMoveDown={onMoveDown}
       canDuplicate={!disableDuplicate}
@@ -90,7 +92,7 @@ export function AddonsCard({
         <>
           {total > 1 && (
             <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-              {t("addonNumber", { index: index + 1 })}
+              {t("addonNumber", { index: cardIndex + 1 })}
             </div>
           )}
           <div>
@@ -107,7 +109,7 @@ export function AddonsCard({
         InspectorComponent && (
           <InspectorComponent
             blockIndex={blockIndex}
-            addonIndex={index}
+            addonIndex={addonIndex}
             fieldName={fieldName}
             disabled={disabled}
           />
