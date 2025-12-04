@@ -13,6 +13,7 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { useBlockChannel } from "@/features/landings/preview/BlockChannelContext";
 import { TabPreview } from "../../ui/TabPreview";
+import { useStepController } from "@/features/landings/preview/useStepController";
 
 type StepItem = {
   text: string;
@@ -55,6 +56,7 @@ export function SocialActionDrawerRenderer({
   url,
   i18nNamespace,
 }: SocialActionDrawerRendererProps) {
+  const { next } = useStepController();
   const { useListener } = useBlockChannel();
   const t = useTranslations(i18nNamespace);
   const [currentSlide, setCurrentSlide] = React.useState(0);
@@ -120,6 +122,7 @@ export function SocialActionDrawerRenderer({
       window.open(url, "_blank", "noopener,noreferrer");
     }
     closeDrawer();
+    next("2s");
   };
 
   return (

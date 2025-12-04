@@ -38,6 +38,24 @@ export const landingTemplates: LandingTemplate[] = [
           },
         ],
       },
+      {
+        id: "empty2",
+        kind: "empty",
+        mode: "fixed",
+        maxInstances: 1,
+        addons: [
+          {
+            id: "slote-banner-section",
+            kind: "sloteBanner",
+            mode: "fixed",
+            maxInstances: 1,
+            hideInspector: true,
+            defaultData:{
+              showPlayButton: true
+            }
+          },
+        ],
+      }
     ],
   }
 ];

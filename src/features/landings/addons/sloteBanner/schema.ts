@@ -1,9 +1,11 @@
 import { z } from "zod";
 
-// Block with no data
-export const sloteBannerSchema = z.object({});
+export const sloteBannerSchema = z.object({
+  showPlayButton: z.boolean().default(false),
+});
 
 export type SloteBannerData = z.infer<typeof sloteBannerSchema>;
 
-// No defaults needed — sloteBanner is enough
-export const sloteBannerDefaultData: SloteBannerData = {};
+export const sloteBannerDefaultData: SloteBannerData = {
+  showPlayButton: false,
+};

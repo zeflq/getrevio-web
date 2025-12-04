@@ -16,7 +16,7 @@ export function TemplateLinearRenderer({ blocks }: { blocks: LandingBlock[] }) {
 }
 
 function TemplateSteps({ blocks }: { blocks: LandingBlock[] }) {
-  const { isActive } = useStepController();
+  const { isActive, isTransitioning } = useStepController();
 
   return (
     <>
@@ -35,6 +35,14 @@ function TemplateSteps({ blocks }: { blocks: LandingBlock[] }) {
           </BlockChannelProvider>
         );
       })}
+      {isTransitioning && (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center backdrop-blur">
+          <div className="flex items-center gap-2">
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            <span>Chargement…</span>
+          </div>
+        </div>
+      )}
     </>
   );
 }

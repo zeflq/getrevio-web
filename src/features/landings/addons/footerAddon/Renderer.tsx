@@ -11,7 +11,7 @@ export function FooterAddonRenderer({ data }: FooterAddonRendererProps) {
   return (
     <footer
       className={cn(
-        "w-full mt-10",
+        "mt-auto w-full mt-10",
         "border-t border-border/10",
         "px-4 py-6",
         "text-center text-sm",
