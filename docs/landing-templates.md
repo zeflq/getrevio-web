@@ -30,6 +30,10 @@ The `mode` flag controls whether the template enforces a required block count: "
 
 Blocks and addons keep their `defaultData` static, but the editor layers in translations when a field is intentionally left blank. `createBlockByKind` and `createAddonByKind` both call `applyTranslationDefaults` (`src/features/landings/utils/translationDefaults.ts`) before the data lands in the form, replacing empty strings with values sourced from `landings.editor.blocks.items.{kind}.defaults.{field}` or `landings.editor.addons.items.{kind}.defaults.{field}`. This keeps the schema pure (defaults remain in the plugin files) while still letting translators supply reasonable copy without editing TypeScript.
 
+### Template override defaults
+
+In addition to plugin defaults and translations, templates can provide `defaultData` overrides for block/addon slots. These overrides run through `applyOverrideTranslations` before being merged so they can either be literal fallback copy or special `i18n:{key}` markers that point directly at any translation string (for example `i18n:landings.editor.templates.slotTemplate.empty2.addons.slot-simple-title.title`). This makes it easy to seed a template with locale-aware copy without touching the addon's schema — simply point the template override at the translation key you want and the landing editor will resolve it at runtime.
+
 ### Addons inside a block
 
 Each block definition can declare `addons`, which is an array of `LandingBlockAddonDefinition` objects from `src/features/landings/addons/index.tsx`. These addon slots behave like their own mini-templates:

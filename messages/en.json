@@ -77,15 +77,21 @@
       "submitLabel": "Create Landing"
     },
     "editor": {
-      "addBlock": "Add block",
       "templates": {
-        "label": "Template",
-        "placeholder": "Select template",
-        "description": "One of our curated layouts for your landing.",
-        "descriptions": {
-          "slot-game": "A template optimized for game landings"
+        "slotTemplate": {
+          "defaultValues":{
+            "empty2":{
+              "addons":{
+                "slot-simple-title":{
+                  "title": "Spin to Reveal Your Gift",
+                  "subtitle": "Get 3 matching symbols to win."
+                }
+              }
+            }
+          }
         }
       },
+      "addBlock": "Add block",
       "warningsTitle": "Warnings",
       "warningsMultipleGames": "Multiple game blocks may confuse users.",
       "emptyState": "No blocks yet. Use the “Add block” button to get started.",
@@ -171,6 +177,14 @@
               "description": "One spin can change everything. Will you be the next winner?",
               "buttonLabel": "Play now"
             }
+          },
+          "simpleTitle": {
+            "label": "Simple title",
+            "description": "Show a bold heading with optional supporting copy.",
+            "defaults": {
+              "title": "Ready to spin?",
+              "subtitle": ""
+            }
           }
         },
         "footerAddon": {
@@ -216,6 +230,10 @@
           "subtitle": "Subtitle",
           "description": "Description",
           "buttonLabel": "Button label"
+        },
+        "simpleTitle": {
+          "title": "Title",
+          "subtitle": "Subtitle"
         }
       },
       "sheetCard":{

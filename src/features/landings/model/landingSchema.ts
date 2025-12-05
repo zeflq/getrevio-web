@@ -56,7 +56,7 @@ export const createLandingFormSchema = (isEdit: boolean) =>
   landingFormCoreSchema
     .extend({
       content: isEdit ? LandingContentSchema : LandingContentCreateSchema,
-      templateId: z.string().nullable().optional(),
+      templateId: z.string().min(1, "template is required"),
       themeId: z.string().nullable().optional(),
     })
 ;

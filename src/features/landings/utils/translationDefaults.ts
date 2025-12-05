@@ -34,3 +34,27 @@ export const applyTranslationDefaults = <T extends Record<string, unknown>>(
   ) as T;
 };
 
+const I18N_PREFIX = "i18n:";
+
+export const applyOverrideTranslations = <T extends Record<string, unknown>>(
+  overrides: T,
+  translator?: TranslationFn
+): T => {
+  if (!translator) return overrides;
+
+  return Object.fromEntries(
+    Object.entries(overrides).map(([key, value]) => {
+      if (typeof value === "string" && value.startsWith(I18N_PREFIX)) {
+        const i18nKey = value.slice(I18N_PREFIX.length);
+        const translated = translator(i18nKey);
+
+        const missing =
+          translated === i18nKey || translated.includes(i18nKey);
+
+        return [key, missing ? value : translated];
+      }
+
+      return [key, value];
+    })
+  ) as T;
+};

@@ -77,12 +77,21 @@
       "submitLabel": "Créer le landing"
     },
     "editor": {
-      "addBlock": "Ajouter un bloc",
       "templates": {
-        "label": "Modèle",
-        "placeholder": "Choisir un modèle",
-        "description": "Une disposition prête à l’emploi pour inspirer votre landing."
+        "slotTemplate":{
+          "defaultValues":{
+            "empty2":{
+              "addons":{
+                "slot-simple-title":{
+                  "title": "A vous de jouer !",
+                  "subtitle": "Obtenez 3 symboles identiques pour gagner."
+                }
+              }
+            }
+          }
+        }
       },
+      "addBlock": "Ajouter un bloc",
       "warningsTitle": "Avertissements",
       "warningsMultipleGames": "Plusieurs blocs \"jeu\" peuvent perturber les utilisateurs.",
       "emptyState": "Aucun bloc pour le moment. Utilisez le bouton « Ajouter un bloc » pour commencer.",
@@ -163,6 +172,14 @@
               "description": "Un tour peut tout changer. Serez-vous le prochain gagnant ?",
               "buttonLabel": "Je tente ma chance"
             }
+          },
+          "simpleTitle": {
+            "label": "Titre simple",
+            "description": "Affiche un titre centré avec un texte d’accompagnement optionnel.",
+            "defaults": {
+              "title": "",
+              "subtitle": ""
+            }
           }
         },
         "footerAddon": {
@@ -209,6 +226,10 @@
           "subtitle": "Sous-titre",
           "description": "Description",
           "buttonLabel": "Label du bouton"
+        },
+        "simpleTitle": {
+          "title": "Titre",
+          "subtitle": "Sous-titre"
         }
       },
       "sheetCard":{

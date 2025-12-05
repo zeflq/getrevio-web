@@ -1,13 +1,17 @@
 import { z } from "zod";
 
 import type { LandingAddonPlugin } from "./plugin";
-import { applyTranslationDefaults } from "../utils/translationDefaults";
+import {
+  applyOverrideTranslations,
+  applyTranslationDefaults,
+} from "../utils/translationDefaults";
 import type { TranslationFn } from "../utils/translationDefaults";
 import actionsdrawerAddonPlugin from "./actionsdrawerAddon";
 import actionSectionAddonPlugin from "./actionSectionAddon";
 import footerAddonPlugin from "./footerAddon";
 import googleReviewActionDrawerAddonPlugin from "./googleReviewActionDrawerAddon";
 import instagramActionDrawerAddonPlugin from "./instagramActionDrawerAddon";
+import simpleTitleAddonPlugin from "./simpleTitle";
 import { clone, createId } from "../utils/serialization";
 import sloteBannerPlugin from "./sloteBanner";
 
@@ -16,6 +20,7 @@ const landingAddonPlugins = [
   footerAddonPlugin,
   actionsdrawerAddonPlugin,
   actionSectionAddonPlugin,
+  simpleTitleAddonPlugin,
   googleReviewActionDrawerAddonPlugin,
   instagramActionDrawerAddonPlugin,
 ] as const satisfies readonly LandingAddonPlugin<any>[];
@@ -45,6 +50,7 @@ const addonSchemas =[
   buildAddonSchema(footerAddonPlugin),
   buildAddonSchema(actionsdrawerAddonPlugin),
   buildAddonSchema(actionSectionAddonPlugin),
+  buildAddonSchema(simpleTitleAddonPlugin),
   buildAddonSchema(googleReviewActionDrawerAddonPlugin),
   buildAddonSchema(instagramActionDrawerAddonPlugin),
 ] as const;
@@ -76,6 +82,10 @@ export function createAddonByKind<K extends LandingAddonKind>(
     throw new Error(`Unknown addon kind: ${kind}`);
   }
 
+  const translatedOverrides = overrides
+    ? applyOverrideTranslations(overrides, translator)
+    : undefined;
+
   return {
     id: createId(),
     kind,
@@ -83,7 +93,7 @@ export function createAddonByKind<K extends LandingAddonKind>(
       ...clone(
         applyTranslationDefaults(plugin.defaultData, translator, "addons.items", kind)
       ),
-      ...(overrides ?? {}),
+      ...(translatedOverrides ?? {}),
     },
   };
 }

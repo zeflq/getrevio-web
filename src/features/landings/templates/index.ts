@@ -1,4 +1,5 @@
 import type { LandingTemplate } from "./types";
+const I18N_PREFIX = "i18n:templates.";
 
 export const landingTemplates: LandingTemplate[] = [
   {
@@ -44,6 +45,16 @@ export const landingTemplates: LandingTemplate[] = [
         mode: "fixed",
         maxInstances: 1,
         addons: [
+          {
+            id: "slot-simple-title",
+            kind: "simpleTitle",
+            mode: "fixed",
+            maxInstances: 1,
+            defaultData:{
+              title: `${I18N_PREFIX}slotTemplate.defaultValues.empty2.addons.slot-simple-title.title`,
+              subtitle: `${I18N_PREFIX}slotTemplate.defaultValues.empty2.addons.slot-simple-title.subtitle`
+            }
+          },
           {
             id: "slote-banner-section",
             kind: "sloteBanner",

@@ -139,8 +139,7 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
     move(fromIndex, toIndex);
   };
 
-  const templateDefaultDescription = t("templates.description");
-  const templateDescription = tpl(`${template?.id}.description`) || templateDefaultDescription;
+  const templateDescription = tpl(`${template?.id}.description`);
 
   const belongsTo: LandingBelongsTo | undefined =
     landing?.belongsTo?.type === "place"
