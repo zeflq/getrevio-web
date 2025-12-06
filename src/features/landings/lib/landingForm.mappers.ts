@@ -83,7 +83,7 @@ export const createLandingFormDefaults = (args?: {
   },
   belongsTo: ensureBelongsToForForm(args?.belongsTo),
   content: createLandingContentDefaults(),
-  templateId: undefined,
+  templateId: "",
   themeId: undefined,
 });
 
@@ -101,7 +101,7 @@ export const fillLandingFormFromEntity = (landing?: LandingListItem | null): Lan
     },
     belongsTo: ensureBelongsToForForm(landing.belongsTo ?? undefined),
     content: ensureLandingContentShape(landing.contentDraft),
-    templateId: landing.templateId ?? undefined,
+    templateId: landing.templateId ?? "",
     themeId: landing.themeId ?? undefined,
   };
 };

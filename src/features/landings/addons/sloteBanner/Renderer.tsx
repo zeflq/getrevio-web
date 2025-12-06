@@ -1,7 +1,9 @@
 "use client";
 
+import { useRef } from "react";
+
 import { Button } from "@/components/ui/button";
-import { SlotBanner } from "../../components/SlotBanner";
+import { SlotBanner, SlotBannerHandle } from "../../components/SlotBanner";
 import type { SloteBannerData } from "./schema";
 
 type SloteBannerRendererProps = {
@@ -10,13 +12,19 @@ type SloteBannerRendererProps = {
 
 export function SloteBannerRenderer({ data }: SloteBannerRendererProps) {
 
+  const slotRef = useRef<SlotBannerHandle | null>(null);
+
   const handlePlay = () => {
-    console.log('play')
+    slotRef.current?.startSpin();
+    const handle = setTimeout(() => {
+      slotRef.current?.stopWithWin();
+    }, 4000);
+    return () => clearTimeout(handle);
   };
 
   return (
     <div className="flex flex-col items-center">
-      <SlotBanner name="" />
+      <SlotBanner ref={slotRef} name={"NameX"} />
 
       {data.showPlayButton  && (
         <Button
@@ -37,6 +45,21 @@ export function SloteBannerRenderer({ data }: SloteBannerRendererProps) {
         Play
         </Button>
       )}
+      {/* <Button onClick={()=>{
+        slotRef.current?.startSpin();
+      }}>
+        plat
+      </Button>
+      <Button onClick={()=>{
+        slotRef.current?.stopWithWin();
+      }}>
+        win
+      </Button>
+      <Button onClick={()=>{
+        slotRef.current?.stopWithLose();
+      }}>
+        lost
+      </Button> */}
     </div>
   );
 }
