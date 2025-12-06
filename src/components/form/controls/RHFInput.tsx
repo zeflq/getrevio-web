@@ -3,32 +3,43 @@
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  FormDescription,
+} from "@/components/ui/form";
 
-type RHFInputProps = {
-  name: string;                 // required
-  label: string;                // required
-  placeholder?: string;
+type BaseProps = {
+  name: string; // required
+  label: string; // required
   description?: string;
   disabled?: boolean;
   requiredStar?: boolean;
-  type?: React.HTMLInputTypeAttribute;
   className?: string;
-  inputProps?: Omit<React.ComponentProps<typeof Input>, "name" | "disabled" | "placeholder" | "type">;
-  suffix?: React.ReactNode;     // optional: right-side adornment (icon, etc.)
+  suffix?: React.ReactNode;
 };
+
+// All other input props (min, max, step, placeholder, type, etc.)
+type InputExtraProps = Omit<
+  React.ComponentProps<typeof Input>,
+  "name" | "disabled" // we'll control those
+>;
+
+type RHFInputProps = BaseProps & InputExtraProps;
 
 export function RHFInput({
   name,
   label,
-  placeholder,
   description,
   disabled,
   requiredStar,
-  type = "text",
   className,
-  inputProps,
   suffix,
+  type = "text",
+  ...inputProps
 }: RHFInputProps) {
   const { control } = useFormContext();
 
@@ -45,10 +56,11 @@ export function RHFInput({
             <div className="relative">
               <Input
                 type={type}
-                placeholder={placeholder}
                 disabled={disabled}
-                {...field}
+                // native props (min, max, step, placeholder, etc.)
                 {...inputProps}
+                // RHF wiring last so it keeps control of value/onChange
+                {...field}
               />
               {suffix ? (
                 <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2">

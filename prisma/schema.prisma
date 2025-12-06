@@ -14,24 +14,27 @@ datasource db {
 }
 
 model Merchant {
-  id             String       @id @default(cuid()) // UUID type in TS
+  id             String          @id @default(cuid()) // UUID type in TS
   name           String
-  email          String?      @unique
+  email          String?         @unique
   locale         String?
-  plan           Plan         @default(free)
-  status         Status       @default(active)
-  createdAt      DateTime     @default(now())
-  onboardingStep Int          @default(0)
+  plan           Plan            @default(free)
+  status         Status          @default(active)
+  createdAt      DateTime        @default(now())
+  onboardingStep Int             @default(0)
   places         Place[]
   themes         Theme[]
   campaigns      Campaign[]
   shortlinks     Shortlink[]
   landings       Landing[]
-  slug           String       @default(cuid())
+  slug           String          @default(cuid())
   logo           String?
   metadata       String?
   members        Member[]
   invitations    Invitation[]
+  lotteryConfigs LotteryConfig[]
+  lotteryPlays   LotteryPlay[]
+  lotteryWins    LotteryWin[]
 
   @@unique([slug])
   @@map("Merchant")
@@ -161,9 +164,11 @@ model Landing {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
-  places     Place[]
-  campaigns  Campaign[]
-  shortlinks Shortlink[]
+  places         Place[]
+  campaigns      Campaign[]
+  shortlinks     Shortlink[]
+  lotteryConfigs LotteryConfig[]
+  lotteryPlays   LotteryPlay[]
 
   @@unique([merchantId, slug], map: "landing_merchant_slug_unique")
   @@index([merchantId, status])
@@ -268,4 +273,163 @@ model Jwks {
   createdAt  DateTime
 
   @@map("jwks")
+}
+
+enum LotteryConfigStatus {
+  draft
+  active
+  archived
+}
+
+enum LotteryPlayResult {
+  win
+  nowin
+  ineligible
+  error
+}
+
+enum RedemptionMethod {
+  admin
+  qr
+  api
+}
+
+enum LotteryWinStatus {
+  pending_contact // win créé, user n’a pas encore donné email/téléphone
+  contact_collected // prénom + email/phone remplis
+  email_sent // email ou SMS envoyé
+  redeemed // lot validé
+  expired // lot arrivé à expiration
+}
+
+enum LotteryContactMethod {
+  email
+  phone
+}
+
+enum LotteryDeliveryChannel {
+  email
+  sms
+}
+
+// --- Lottery ---
+
+model LotteryConfig {
+  id         String   @id @default(cuid())
+  merchantId String
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  // link to the landing where the slot is used
+  landingId String
+  landing   Landing @relation(fields: [landingId], references: [id], onDelete: Cascade)
+
+  name    String
+  status  LotteryConfigStatus @default(draft)
+  enabled Boolean             @default(false)
+
+  // game rules
+  playLimitPerUser        Int
+  minDelayBetweenPlaysSec Int
+
+  startsAt DateTime?
+  endsAt   DateTime?
+
+  noWinWeight             Int     @default(0)
+  guaranteeWinOnFirstPlay Boolean @default(false)
+
+  // gifts definition (JSON array)
+  gifts Json
+
+  // NEW: which WinningDrawer to display (email or phone)
+  contactMethod LotteryContactMethod @default(email)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  plays LotteryPlay[]
+  wins  LotteryWin[]
+
+  @@index([merchantId])
+  @@index([landingId])
+}
+
+model LotteryPlay {
+  id         String   @id @default(cuid())
+  merchantId String
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  configId String
+  config   LotteryConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  landingId String
+  landing   Landing @relation(fields: [landingId], references: [id], onDelete: Cascade)
+
+  // for limits and uniqueness (email/phone/device hash)
+  participantKey String
+
+  ipAddress String?
+  userAgent String?
+
+  result    LotteryPlayResult @default(nowin)
+  createdAt DateTime          @default(now())
+
+  // one win or null
+  win LotteryWin?
+
+  @@index([merchantId])
+  @@index([configId])
+  @@index([landingId])
+  @@index([participantKey])
+}
+
+model LotteryWin {
+  id     String      @id @default(cuid())
+  playId String      @unique
+  play   LotteryPlay @relation(fields: [playId], references: [id], onDelete: Cascade)
+
+  merchantId String
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  configId String
+  config   LotteryConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  // gift info at win time (snapshot)
+  giftId       String
+  giftSnapshot Json
+
+  // participant contact (to send the lot)
+  firstName          String?
+  lastName           String?
+  email              String?
+  phone              String?
+  marketingOptIn     Boolean   @default(false)
+  contactCompletedAt DateTime?
+
+  // NEW: delivery method used (email or SMS)
+  deliveryChannel LotteryDeliveryChannel?
+
+  // validity window for this specific win
+  validFrom DateTime?
+  expiresAt DateTime?
+
+  // tracking: email / SMS sending state
+  deliveryEmailSentAt DateTime?
+  deliveryEmailStatus String? // "queued", "sent", "bounced", "failed"
+
+  // lifecycle status
+  status LotteryWinStatus @default(pending_contact)
+
+  // redemption tracking (in restaurant / admin / QR / API)
+  redeemed           Boolean           @default(false)
+  redeemedAt         DateTime?
+  redemptionMethod   RedemptionMethod?
+  redemptionMetadata Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([merchantId])
+  @@index([configId])
+  @@index([giftId])
+  @@index([email])
+  @@index([phone])
 }

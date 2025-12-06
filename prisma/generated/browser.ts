@@ -82,3 +82,18 @@ export type Invitation = Prisma.InvitationModel
  * 
  */
 export type Jwks = Prisma.JwksModel
+/**
+ * Model LotteryConfig
+ * 
+ */
+export type LotteryConfig = Prisma.LotteryConfigModel
+/**
+ * Model LotteryPlay
+ * 
+ */
+export type LotteryPlay = Prisma.LotteryPlayModel
+/**
+ * Model LotteryWin
+ * 
+ */
+export type LotteryWin = Prisma.LotteryWinModel

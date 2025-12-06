@@ -42,3 +42,58 @@ export const LandingStatus = {
 } as const
 
 export type LandingStatus = (typeof LandingStatus)[keyof typeof LandingStatus]
+
+
+export const LotteryConfigStatus = {
+  draft: 'draft',
+  active: 'active',
+  archived: 'archived'
+} as const
+
+export type LotteryConfigStatus = (typeof LotteryConfigStatus)[keyof typeof LotteryConfigStatus]
+
+
+export const LotteryPlayResult = {
+  win: 'win',
+  nowin: 'nowin',
+  ineligible: 'ineligible',
+  error: 'error'
+} as const
+
+export type LotteryPlayResult = (typeof LotteryPlayResult)[keyof typeof LotteryPlayResult]
+
+
+export const RedemptionMethod = {
+  admin: 'admin',
+  qr: 'qr',
+  api: 'api'
+} as const
+
+export type RedemptionMethod = (typeof RedemptionMethod)[keyof typeof RedemptionMethod]
+
+
+export const LotteryWinStatus = {
+  pending_contact: 'pending_contact',
+  contact_collected: 'contact_collected',
+  email_sent: 'email_sent',
+  redeemed: 'redeemed',
+  expired: 'expired'
+} as const
+
+export type LotteryWinStatus = (typeof LotteryWinStatus)[keyof typeof LotteryWinStatus]
+
+
+export const LotteryContactMethod = {
+  email: 'email',
+  phone: 'phone'
+} as const
+
+export type LotteryContactMethod = (typeof LotteryContactMethod)[keyof typeof LotteryContactMethod]
+
+
+export const LotteryDeliveryChannel = {
+  email: 'email',
+  sms: 'sms'
+} as const
+
+export type LotteryDeliveryChannel = (typeof LotteryDeliveryChannel)[keyof typeof LotteryDeliveryChannel]

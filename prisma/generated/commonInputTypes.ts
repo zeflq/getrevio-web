@@ -345,6 +345,108 @@ export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
   _max?: Prisma.NestedJsonFilter<$PrismaModel>
 }
 
+export type EnumLotteryConfigStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryConfigStatus | Prisma.EnumLotteryConfigStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryConfigStatus[] | Prisma.ListEnumLotteryConfigStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryConfigStatus[] | Prisma.ListEnumLotteryConfigStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryConfigStatusFilter<$PrismaModel> | $Enums.LotteryConfigStatus
+}
+
+export type EnumLotteryContactMethodFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryContactMethod | Prisma.EnumLotteryContactMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryContactMethodFilter<$PrismaModel> | $Enums.LotteryContactMethod
+}
+
+export type EnumLotteryConfigStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryConfigStatus | Prisma.EnumLotteryConfigStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryConfigStatus[] | Prisma.ListEnumLotteryConfigStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryConfigStatus[] | Prisma.ListEnumLotteryConfigStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryConfigStatusWithAggregatesFilter<$PrismaModel> | $Enums.LotteryConfigStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLotteryConfigStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLotteryConfigStatusFilter<$PrismaModel>
+}
+
+export type EnumLotteryContactMethodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryContactMethod | Prisma.EnumLotteryContactMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryContactMethodWithAggregatesFilter<$PrismaModel> | $Enums.LotteryContactMethod
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLotteryContactMethodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLotteryContactMethodFilter<$PrismaModel>
+}
+
+export type EnumLotteryPlayResultFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryPlayResult | Prisma.EnumLotteryPlayResultFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryPlayResult[] | Prisma.ListEnumLotteryPlayResultFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryPlayResult[] | Prisma.ListEnumLotteryPlayResultFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryPlayResultFilter<$PrismaModel> | $Enums.LotteryPlayResult
+}
+
+export type EnumLotteryPlayResultWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryPlayResult | Prisma.EnumLotteryPlayResultFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryPlayResult[] | Prisma.ListEnumLotteryPlayResultFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryPlayResult[] | Prisma.ListEnumLotteryPlayResultFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryPlayResultWithAggregatesFilter<$PrismaModel> | $Enums.LotteryPlayResult
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLotteryPlayResultFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLotteryPlayResultFilter<$PrismaModel>
+}
+
+export type EnumLotteryDeliveryChannelNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryDeliveryChannel | Prisma.EnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.LotteryDeliveryChannel[] | Prisma.ListEnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.LotteryDeliveryChannel[] | Prisma.ListEnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumLotteryDeliveryChannelNullableFilter<$PrismaModel> | $Enums.LotteryDeliveryChannel | null
+}
+
+export type EnumLotteryWinStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryWinStatus | Prisma.EnumLotteryWinStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryWinStatus[] | Prisma.ListEnumLotteryWinStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryWinStatus[] | Prisma.ListEnumLotteryWinStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryWinStatusFilter<$PrismaModel> | $Enums.LotteryWinStatus
+}
+
+export type EnumRedemptionMethodNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.RedemptionMethod | Prisma.EnumRedemptionMethodFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RedemptionMethod[] | Prisma.ListEnumRedemptionMethodFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RedemptionMethod[] | Prisma.ListEnumRedemptionMethodFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRedemptionMethodNullableFilter<$PrismaModel> | $Enums.RedemptionMethod | null
+}
+
+export type EnumLotteryDeliveryChannelNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryDeliveryChannel | Prisma.EnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.LotteryDeliveryChannel[] | Prisma.ListEnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.LotteryDeliveryChannel[] | Prisma.ListEnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumLotteryDeliveryChannelNullableWithAggregatesFilter<$PrismaModel> | $Enums.LotteryDeliveryChannel | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLotteryDeliveryChannelNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLotteryDeliveryChannelNullableFilter<$PrismaModel>
+}
+
+export type EnumLotteryWinStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryWinStatus | Prisma.EnumLotteryWinStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryWinStatus[] | Prisma.ListEnumLotteryWinStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryWinStatus[] | Prisma.ListEnumLotteryWinStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryWinStatusWithAggregatesFilter<$PrismaModel> | $Enums.LotteryWinStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLotteryWinStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLotteryWinStatusFilter<$PrismaModel>
+}
+
+export type EnumRedemptionMethodNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RedemptionMethod | Prisma.EnumRedemptionMethodFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RedemptionMethod[] | Prisma.ListEnumRedemptionMethodFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RedemptionMethod[] | Prisma.ListEnumRedemptionMethodFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRedemptionMethodNullableWithAggregatesFilter<$PrismaModel> | $Enums.RedemptionMethod | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRedemptionMethodNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRedemptionMethodNullableFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -633,6 +735,108 @@ export type NestedJsonFilterBase<$PrismaModel = never> = {
   gt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   gte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
+}
+
+export type NestedEnumLotteryConfigStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryConfigStatus | Prisma.EnumLotteryConfigStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryConfigStatus[] | Prisma.ListEnumLotteryConfigStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryConfigStatus[] | Prisma.ListEnumLotteryConfigStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryConfigStatusFilter<$PrismaModel> | $Enums.LotteryConfigStatus
+}
+
+export type NestedEnumLotteryContactMethodFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryContactMethod | Prisma.EnumLotteryContactMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryContactMethodFilter<$PrismaModel> | $Enums.LotteryContactMethod
+}
+
+export type NestedEnumLotteryConfigStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryConfigStatus | Prisma.EnumLotteryConfigStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryConfigStatus[] | Prisma.ListEnumLotteryConfigStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryConfigStatus[] | Prisma.ListEnumLotteryConfigStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryConfigStatusWithAggregatesFilter<$PrismaModel> | $Enums.LotteryConfigStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLotteryConfigStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLotteryConfigStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumLotteryContactMethodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryContactMethod | Prisma.EnumLotteryContactMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryContactMethodWithAggregatesFilter<$PrismaModel> | $Enums.LotteryContactMethod
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLotteryContactMethodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLotteryContactMethodFilter<$PrismaModel>
+}
+
+export type NestedEnumLotteryPlayResultFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryPlayResult | Prisma.EnumLotteryPlayResultFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryPlayResult[] | Prisma.ListEnumLotteryPlayResultFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryPlayResult[] | Prisma.ListEnumLotteryPlayResultFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryPlayResultFilter<$PrismaModel> | $Enums.LotteryPlayResult
+}
+
+export type NestedEnumLotteryPlayResultWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryPlayResult | Prisma.EnumLotteryPlayResultFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryPlayResult[] | Prisma.ListEnumLotteryPlayResultFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryPlayResult[] | Prisma.ListEnumLotteryPlayResultFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryPlayResultWithAggregatesFilter<$PrismaModel> | $Enums.LotteryPlayResult
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLotteryPlayResultFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLotteryPlayResultFilter<$PrismaModel>
+}
+
+export type NestedEnumLotteryDeliveryChannelNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryDeliveryChannel | Prisma.EnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.LotteryDeliveryChannel[] | Prisma.ListEnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.LotteryDeliveryChannel[] | Prisma.ListEnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumLotteryDeliveryChannelNullableFilter<$PrismaModel> | $Enums.LotteryDeliveryChannel | null
+}
+
+export type NestedEnumLotteryWinStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryWinStatus | Prisma.EnumLotteryWinStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryWinStatus[] | Prisma.ListEnumLotteryWinStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryWinStatus[] | Prisma.ListEnumLotteryWinStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryWinStatusFilter<$PrismaModel> | $Enums.LotteryWinStatus
+}
+
+export type NestedEnumRedemptionMethodNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.RedemptionMethod | Prisma.EnumRedemptionMethodFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RedemptionMethod[] | Prisma.ListEnumRedemptionMethodFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RedemptionMethod[] | Prisma.ListEnumRedemptionMethodFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRedemptionMethodNullableFilter<$PrismaModel> | $Enums.RedemptionMethod | null
+}
+
+export type NestedEnumLotteryDeliveryChannelNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryDeliveryChannel | Prisma.EnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.LotteryDeliveryChannel[] | Prisma.ListEnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.LotteryDeliveryChannel[] | Prisma.ListEnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumLotteryDeliveryChannelNullableWithAggregatesFilter<$PrismaModel> | $Enums.LotteryDeliveryChannel | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLotteryDeliveryChannelNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLotteryDeliveryChannelNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumLotteryWinStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LotteryWinStatus | Prisma.EnumLotteryWinStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LotteryWinStatus[] | Prisma.ListEnumLotteryWinStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LotteryWinStatus[] | Prisma.ListEnumLotteryWinStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLotteryWinStatusWithAggregatesFilter<$PrismaModel> | $Enums.LotteryWinStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLotteryWinStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLotteryWinStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumRedemptionMethodNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RedemptionMethod | Prisma.EnumRedemptionMethodFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RedemptionMethod[] | Prisma.ListEnumRedemptionMethodFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RedemptionMethod[] | Prisma.ListEnumRedemptionMethodFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRedemptionMethodNullableWithAggregatesFilter<$PrismaModel> | $Enums.RedemptionMethod | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRedemptionMethodNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRedemptionMethodNullableFilter<$PrismaModel>
 }
 
 

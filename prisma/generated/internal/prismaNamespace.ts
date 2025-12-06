@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.0.0
- * Query Engine version: 0c19ccc313cf9911a90d99d2ac2eb0280c76c513
+ * Prisma Client JS version: 7.1.0
+ * Query Engine version: ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.0.0",
-  engine: "0c19ccc313cf9911a90d99d2ac2eb0280c76c513"
+  client: "7.1.0",
+  engine: "ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba"
 }
 
 /**
@@ -396,7 +396,10 @@ export const ModelName = {
   Verification: 'Verification',
   Member: 'Member',
   Invitation: 'Invitation',
-  Jwks: 'Jwks'
+  Jwks: 'Jwks',
+  LotteryConfig: 'LotteryConfig',
+  LotteryPlay: 'LotteryPlay',
+  LotteryWin: 'LotteryWin'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -412,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "merchant" | "place" | "theme" | "campaign" | "shortlink" | "landing" | "user" | "session" | "account" | "verification" | "member" | "invitation" | "jwks"
+    modelProps: "merchant" | "place" | "theme" | "campaign" | "shortlink" | "landing" | "user" | "session" | "account" | "verification" | "member" | "invitation" | "jwks" | "lotteryConfig" | "lotteryPlay" | "lotteryWin"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1378,6 +1381,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LotteryConfig: {
+      payload: Prisma.$LotteryConfigPayload<ExtArgs>
+      fields: Prisma.LotteryConfigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LotteryConfigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryConfigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LotteryConfigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryConfigPayload>
+        }
+        findFirst: {
+          args: Prisma.LotteryConfigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryConfigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LotteryConfigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryConfigPayload>
+        }
+        findMany: {
+          args: Prisma.LotteryConfigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryConfigPayload>[]
+        }
+        create: {
+          args: Prisma.LotteryConfigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryConfigPayload>
+        }
+        createMany: {
+          args: Prisma.LotteryConfigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LotteryConfigCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryConfigPayload>[]
+        }
+        delete: {
+          args: Prisma.LotteryConfigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryConfigPayload>
+        }
+        update: {
+          args: Prisma.LotteryConfigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryConfigPayload>
+        }
+        deleteMany: {
+          args: Prisma.LotteryConfigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LotteryConfigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LotteryConfigUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryConfigPayload>[]
+        }
+        upsert: {
+          args: Prisma.LotteryConfigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryConfigPayload>
+        }
+        aggregate: {
+          args: Prisma.LotteryConfigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLotteryConfig>
+        }
+        groupBy: {
+          args: Prisma.LotteryConfigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LotteryConfigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LotteryConfigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LotteryConfigCountAggregateOutputType> | number
+        }
+      }
+    }
+    LotteryPlay: {
+      payload: Prisma.$LotteryPlayPayload<ExtArgs>
+      fields: Prisma.LotteryPlayFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LotteryPlayFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryPlayPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LotteryPlayFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryPlayPayload>
+        }
+        findFirst: {
+          args: Prisma.LotteryPlayFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryPlayPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LotteryPlayFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryPlayPayload>
+        }
+        findMany: {
+          args: Prisma.LotteryPlayFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryPlayPayload>[]
+        }
+        create: {
+          args: Prisma.LotteryPlayCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryPlayPayload>
+        }
+        createMany: {
+          args: Prisma.LotteryPlayCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LotteryPlayCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryPlayPayload>[]
+        }
+        delete: {
+          args: Prisma.LotteryPlayDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryPlayPayload>
+        }
+        update: {
+          args: Prisma.LotteryPlayUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryPlayPayload>
+        }
+        deleteMany: {
+          args: Prisma.LotteryPlayDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LotteryPlayUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LotteryPlayUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryPlayPayload>[]
+        }
+        upsert: {
+          args: Prisma.LotteryPlayUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryPlayPayload>
+        }
+        aggregate: {
+          args: Prisma.LotteryPlayAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLotteryPlay>
+        }
+        groupBy: {
+          args: Prisma.LotteryPlayGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LotteryPlayGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LotteryPlayCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LotteryPlayCountAggregateOutputType> | number
+        }
+      }
+    }
+    LotteryWin: {
+      payload: Prisma.$LotteryWinPayload<ExtArgs>
+      fields: Prisma.LotteryWinFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LotteryWinFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryWinPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LotteryWinFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryWinPayload>
+        }
+        findFirst: {
+          args: Prisma.LotteryWinFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryWinPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LotteryWinFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryWinPayload>
+        }
+        findMany: {
+          args: Prisma.LotteryWinFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryWinPayload>[]
+        }
+        create: {
+          args: Prisma.LotteryWinCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryWinPayload>
+        }
+        createMany: {
+          args: Prisma.LotteryWinCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LotteryWinCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryWinPayload>[]
+        }
+        delete: {
+          args: Prisma.LotteryWinDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryWinPayload>
+        }
+        update: {
+          args: Prisma.LotteryWinUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryWinPayload>
+        }
+        deleteMany: {
+          args: Prisma.LotteryWinDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LotteryWinUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LotteryWinUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryWinPayload>[]
+        }
+        upsert: {
+          args: Prisma.LotteryWinUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LotteryWinPayload>
+        }
+        aggregate: {
+          args: Prisma.LotteryWinAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLotteryWin>
+        }
+        groupBy: {
+          args: Prisma.LotteryWinGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LotteryWinGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LotteryWinCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LotteryWinCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1610,6 +1835,72 @@ export const JwksScalarFieldEnum = {
 export type JwksScalarFieldEnum = (typeof JwksScalarFieldEnum)[keyof typeof JwksScalarFieldEnum]
 
 
+export const LotteryConfigScalarFieldEnum = {
+  id: 'id',
+  merchantId: 'merchantId',
+  landingId: 'landingId',
+  name: 'name',
+  status: 'status',
+  enabled: 'enabled',
+  playLimitPerUser: 'playLimitPerUser',
+  minDelayBetweenPlaysSec: 'minDelayBetweenPlaysSec',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  noWinWeight: 'noWinWeight',
+  guaranteeWinOnFirstPlay: 'guaranteeWinOnFirstPlay',
+  gifts: 'gifts',
+  contactMethod: 'contactMethod',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LotteryConfigScalarFieldEnum = (typeof LotteryConfigScalarFieldEnum)[keyof typeof LotteryConfigScalarFieldEnum]
+
+
+export const LotteryPlayScalarFieldEnum = {
+  id: 'id',
+  merchantId: 'merchantId',
+  configId: 'configId',
+  landingId: 'landingId',
+  participantKey: 'participantKey',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  result: 'result',
+  createdAt: 'createdAt'
+} as const
+
+export type LotteryPlayScalarFieldEnum = (typeof LotteryPlayScalarFieldEnum)[keyof typeof LotteryPlayScalarFieldEnum]
+
+
+export const LotteryWinScalarFieldEnum = {
+  id: 'id',
+  playId: 'playId',
+  merchantId: 'merchantId',
+  configId: 'configId',
+  giftId: 'giftId',
+  giftSnapshot: 'giftSnapshot',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  marketingOptIn: 'marketingOptIn',
+  contactCompletedAt: 'contactCompletedAt',
+  deliveryChannel: 'deliveryChannel',
+  validFrom: 'validFrom',
+  expiresAt: 'expiresAt',
+  deliveryEmailSentAt: 'deliveryEmailSentAt',
+  deliveryEmailStatus: 'deliveryEmailStatus',
+  status: 'status',
+  redeemed: 'redeemed',
+  redeemedAt: 'redeemedAt',
+  redemptionMethod: 'redemptionMethod',
+  redemptionMetadata: 'redemptionMetadata',
+  createdAt: 'createdAt'
+} as const
+
+export type LotteryWinScalarFieldEnum = (typeof LotteryWinScalarFieldEnum)[keyof typeof LotteryWinScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1784,6 +2075,90 @@ export type ListEnumLandingStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'LotteryConfigStatus'
+ */
+export type EnumLotteryConfigStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LotteryConfigStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'LotteryConfigStatus[]'
+ */
+export type ListEnumLotteryConfigStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LotteryConfigStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'LotteryContactMethod'
+ */
+export type EnumLotteryContactMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LotteryContactMethod'>
+    
+
+
+/**
+ * Reference to a field of type 'LotteryContactMethod[]'
+ */
+export type ListEnumLotteryContactMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LotteryContactMethod[]'>
+    
+
+
+/**
+ * Reference to a field of type 'LotteryPlayResult'
+ */
+export type EnumLotteryPlayResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LotteryPlayResult'>
+    
+
+
+/**
+ * Reference to a field of type 'LotteryPlayResult[]'
+ */
+export type ListEnumLotteryPlayResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LotteryPlayResult[]'>
+    
+
+
+/**
+ * Reference to a field of type 'LotteryDeliveryChannel'
+ */
+export type EnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LotteryDeliveryChannel'>
+    
+
+
+/**
+ * Reference to a field of type 'LotteryDeliveryChannel[]'
+ */
+export type ListEnumLotteryDeliveryChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LotteryDeliveryChannel[]'>
+    
+
+
+/**
+ * Reference to a field of type 'LotteryWinStatus'
+ */
+export type EnumLotteryWinStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LotteryWinStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'LotteryWinStatus[]'
+ */
+export type ListEnumLotteryWinStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LotteryWinStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'RedemptionMethod'
+ */
+export type EnumRedemptionMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RedemptionMethod'>
+    
+
+
+/**
+ * Reference to a field of type 'RedemptionMethod[]'
+ */
+export type ListEnumRedemptionMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RedemptionMethod[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1845,7 +2220,7 @@ export type PrismaClientOptions = ({
    *  { emit: 'stdout', level: 'error' }
    * 
    * ```
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
+   * Read more in our [docs](https://pris.ly/d/logging).
    */
   log?: (LogLevel | LogDefinition)[]
   /**
@@ -1873,6 +2248,22 @@ export type PrismaClientOptions = ({
    * ```
    */
   omit?: GlobalOmitConfig
+  /**
+   * SQL commenter plugins that add metadata to SQL queries as comments.
+   * Comments follow the sqlcommenter format: https://google.github.io/sqlcommenter/
+   * 
+   * @example
+   * ```
+   * const prisma = new PrismaClient({
+   *   adapter,
+   *   comments: [
+   *     traceContext(),
+   *     queryInsights(),
+   *   ],
+   * })
+   * ```
+   */
+  comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
   merchant?: Prisma.MerchantOmit
@@ -1888,6 +2279,9 @@ export type GlobalOmitConfig = {
   member?: Prisma.MemberOmit
   invitation?: Prisma.InvitationOmit
   jwks?: Prisma.JwksOmit
+  lotteryConfig?: Prisma.LotteryConfigOmit
+  lotteryPlay?: Prisma.LotteryPlayOmit
+  lotteryWin?: Prisma.LotteryWinOmit
 }
 
 /* Types for Logging */

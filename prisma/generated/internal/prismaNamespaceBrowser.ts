@@ -63,7 +63,10 @@ export const ModelName = {
   Verification: 'Verification',
   Member: 'Member',
   Invitation: 'Invitation',
-  Jwks: 'Jwks'
+  Jwks: 'Jwks',
+  LotteryConfig: 'LotteryConfig',
+  LotteryPlay: 'LotteryPlay',
+  LotteryWin: 'LotteryWin'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -273,6 +276,72 @@ export const JwksScalarFieldEnum = {
 } as const
 
 export type JwksScalarFieldEnum = (typeof JwksScalarFieldEnum)[keyof typeof JwksScalarFieldEnum]
+
+
+export const LotteryConfigScalarFieldEnum = {
+  id: 'id',
+  merchantId: 'merchantId',
+  landingId: 'landingId',
+  name: 'name',
+  status: 'status',
+  enabled: 'enabled',
+  playLimitPerUser: 'playLimitPerUser',
+  minDelayBetweenPlaysSec: 'minDelayBetweenPlaysSec',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  noWinWeight: 'noWinWeight',
+  guaranteeWinOnFirstPlay: 'guaranteeWinOnFirstPlay',
+  gifts: 'gifts',
+  contactMethod: 'contactMethod',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LotteryConfigScalarFieldEnum = (typeof LotteryConfigScalarFieldEnum)[keyof typeof LotteryConfigScalarFieldEnum]
+
+
+export const LotteryPlayScalarFieldEnum = {
+  id: 'id',
+  merchantId: 'merchantId',
+  configId: 'configId',
+  landingId: 'landingId',
+  participantKey: 'participantKey',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  result: 'result',
+  createdAt: 'createdAt'
+} as const
+
+export type LotteryPlayScalarFieldEnum = (typeof LotteryPlayScalarFieldEnum)[keyof typeof LotteryPlayScalarFieldEnum]
+
+
+export const LotteryWinScalarFieldEnum = {
+  id: 'id',
+  playId: 'playId',
+  merchantId: 'merchantId',
+  configId: 'configId',
+  giftId: 'giftId',
+  giftSnapshot: 'giftSnapshot',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  marketingOptIn: 'marketingOptIn',
+  contactCompletedAt: 'contactCompletedAt',
+  deliveryChannel: 'deliveryChannel',
+  validFrom: 'validFrom',
+  expiresAt: 'expiresAt',
+  deliveryEmailSentAt: 'deliveryEmailSentAt',
+  deliveryEmailStatus: 'deliveryEmailStatus',
+  status: 'status',
+  redeemed: 'redeemed',
+  redeemedAt: 'redeemedAt',
+  redemptionMethod: 'redemptionMethod',
+  redemptionMetadata: 'redemptionMetadata',
+  createdAt: 'createdAt'
+} as const
+
+export type LotteryWinScalarFieldEnum = (typeof LotteryWinScalarFieldEnum)[keyof typeof LotteryWinScalarFieldEnum]
 
 
 export const SortOrder = {

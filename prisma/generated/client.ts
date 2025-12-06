@@ -33,7 +33,7 @@ export * from "./enums"
  * const merchants = await prisma.merchant.findMany()
  * ```
  * 
- * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
+ * Read more in our [docs](https://pris.ly/d/client).
  */
 export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
@@ -104,3 +104,18 @@ export type Invitation = Prisma.InvitationModel
  * 
  */
 export type Jwks = Prisma.JwksModel
+/**
+ * Model LotteryConfig
+ * 
+ */
+export type LotteryConfig = Prisma.LotteryConfigModel
+/**
+ * Model LotteryPlay
+ * 
+ */
+export type LotteryPlay = Prisma.LotteryPlayModel
+/**
+ * Model LotteryWin
+ * 
+ */
+export type LotteryWin = Prisma.LotteryWinModel

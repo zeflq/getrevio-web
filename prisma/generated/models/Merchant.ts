@@ -271,6 +271,9 @@ export type MerchantWhereInput = {
   landings?: Prisma.LandingListRelationFilter
   members?: Prisma.MemberListRelationFilter
   invitations?: Prisma.InvitationListRelationFilter
+  lotteryConfigs?: Prisma.LotteryConfigListRelationFilter
+  lotteryPlays?: Prisma.LotteryPlayListRelationFilter
+  lotteryWins?: Prisma.LotteryWinListRelationFilter
 }
 
 export type MerchantOrderByWithRelationInput = {
@@ -292,6 +295,9 @@ export type MerchantOrderByWithRelationInput = {
   landings?: Prisma.LandingOrderByRelationAggregateInput
   members?: Prisma.MemberOrderByRelationAggregateInput
   invitations?: Prisma.InvitationOrderByRelationAggregateInput
+  lotteryConfigs?: Prisma.LotteryConfigOrderByRelationAggregateInput
+  lotteryPlays?: Prisma.LotteryPlayOrderByRelationAggregateInput
+  lotteryWins?: Prisma.LotteryWinOrderByRelationAggregateInput
 }
 
 export type MerchantWhereUniqueInput = Prisma.AtLeast<{
@@ -316,6 +322,9 @@ export type MerchantWhereUniqueInput = Prisma.AtLeast<{
   landings?: Prisma.LandingListRelationFilter
   members?: Prisma.MemberListRelationFilter
   invitations?: Prisma.InvitationListRelationFilter
+  lotteryConfigs?: Prisma.LotteryConfigListRelationFilter
+  lotteryPlays?: Prisma.LotteryPlayListRelationFilter
+  lotteryWins?: Prisma.LotteryWinListRelationFilter
 }, "id" | "email" | "slug">
 
 export type MerchantOrderByWithAggregationInput = {
@@ -373,6 +382,9 @@ export type MerchantCreateInput = {
   landings?: Prisma.LandingCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantUncheckedCreateInput = {
@@ -394,6 +406,9 @@ export type MerchantUncheckedCreateInput = {
   landings?: Prisma.LandingUncheckedCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantUpdateInput = {
@@ -415,6 +430,9 @@ export type MerchantUpdateInput = {
   landings?: Prisma.LandingUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantUncheckedUpdateInput = {
@@ -436,6 +454,9 @@ export type MerchantUncheckedUpdateInput = {
   landings?: Prisma.LandingUncheckedUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUncheckedUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUncheckedUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantCreateManyInput = {
@@ -661,6 +682,48 @@ export type MerchantUpdateOneRequiredWithoutInvitationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MerchantUpdateToOneWithWhereWithoutInvitationsInput, Prisma.MerchantUpdateWithoutInvitationsInput>, Prisma.MerchantUncheckedUpdateWithoutInvitationsInput>
 }
 
+export type MerchantCreateNestedOneWithoutLotteryConfigsInput = {
+  create?: Prisma.XOR<Prisma.MerchantCreateWithoutLotteryConfigsInput, Prisma.MerchantUncheckedCreateWithoutLotteryConfigsInput>
+  connectOrCreate?: Prisma.MerchantCreateOrConnectWithoutLotteryConfigsInput
+  connect?: Prisma.MerchantWhereUniqueInput
+}
+
+export type MerchantUpdateOneRequiredWithoutLotteryConfigsNestedInput = {
+  create?: Prisma.XOR<Prisma.MerchantCreateWithoutLotteryConfigsInput, Prisma.MerchantUncheckedCreateWithoutLotteryConfigsInput>
+  connectOrCreate?: Prisma.MerchantCreateOrConnectWithoutLotteryConfigsInput
+  upsert?: Prisma.MerchantUpsertWithoutLotteryConfigsInput
+  connect?: Prisma.MerchantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MerchantUpdateToOneWithWhereWithoutLotteryConfigsInput, Prisma.MerchantUpdateWithoutLotteryConfigsInput>, Prisma.MerchantUncheckedUpdateWithoutLotteryConfigsInput>
+}
+
+export type MerchantCreateNestedOneWithoutLotteryPlaysInput = {
+  create?: Prisma.XOR<Prisma.MerchantCreateWithoutLotteryPlaysInput, Prisma.MerchantUncheckedCreateWithoutLotteryPlaysInput>
+  connectOrCreate?: Prisma.MerchantCreateOrConnectWithoutLotteryPlaysInput
+  connect?: Prisma.MerchantWhereUniqueInput
+}
+
+export type MerchantUpdateOneRequiredWithoutLotteryPlaysNestedInput = {
+  create?: Prisma.XOR<Prisma.MerchantCreateWithoutLotteryPlaysInput, Prisma.MerchantUncheckedCreateWithoutLotteryPlaysInput>
+  connectOrCreate?: Prisma.MerchantCreateOrConnectWithoutLotteryPlaysInput
+  upsert?: Prisma.MerchantUpsertWithoutLotteryPlaysInput
+  connect?: Prisma.MerchantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MerchantUpdateToOneWithWhereWithoutLotteryPlaysInput, Prisma.MerchantUpdateWithoutLotteryPlaysInput>, Prisma.MerchantUncheckedUpdateWithoutLotteryPlaysInput>
+}
+
+export type MerchantCreateNestedOneWithoutLotteryWinsInput = {
+  create?: Prisma.XOR<Prisma.MerchantCreateWithoutLotteryWinsInput, Prisma.MerchantUncheckedCreateWithoutLotteryWinsInput>
+  connectOrCreate?: Prisma.MerchantCreateOrConnectWithoutLotteryWinsInput
+  connect?: Prisma.MerchantWhereUniqueInput
+}
+
+export type MerchantUpdateOneRequiredWithoutLotteryWinsNestedInput = {
+  create?: Prisma.XOR<Prisma.MerchantCreateWithoutLotteryWinsInput, Prisma.MerchantUncheckedCreateWithoutLotteryWinsInput>
+  connectOrCreate?: Prisma.MerchantCreateOrConnectWithoutLotteryWinsInput
+  upsert?: Prisma.MerchantUpsertWithoutLotteryWinsInput
+  connect?: Prisma.MerchantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MerchantUpdateToOneWithWhereWithoutLotteryWinsInput, Prisma.MerchantUpdateWithoutLotteryWinsInput>, Prisma.MerchantUncheckedUpdateWithoutLotteryWinsInput>
+}
+
 export type MerchantCreateWithoutPlacesInput = {
   id?: string
   name: string
@@ -679,6 +742,9 @@ export type MerchantCreateWithoutPlacesInput = {
   landings?: Prisma.LandingCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantUncheckedCreateWithoutPlacesInput = {
@@ -699,6 +765,9 @@ export type MerchantUncheckedCreateWithoutPlacesInput = {
   landings?: Prisma.LandingUncheckedCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantCreateOrConnectWithoutPlacesInput = {
@@ -735,6 +804,9 @@ export type MerchantUpdateWithoutPlacesInput = {
   landings?: Prisma.LandingUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantUncheckedUpdateWithoutPlacesInput = {
@@ -755,6 +827,9 @@ export type MerchantUncheckedUpdateWithoutPlacesInput = {
   landings?: Prisma.LandingUncheckedUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUncheckedUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUncheckedUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantCreateWithoutThemesInput = {
@@ -775,6 +850,9 @@ export type MerchantCreateWithoutThemesInput = {
   landings?: Prisma.LandingCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantUncheckedCreateWithoutThemesInput = {
@@ -795,6 +873,9 @@ export type MerchantUncheckedCreateWithoutThemesInput = {
   landings?: Prisma.LandingUncheckedCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantCreateOrConnectWithoutThemesInput = {
@@ -831,6 +912,9 @@ export type MerchantUpdateWithoutThemesInput = {
   landings?: Prisma.LandingUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantUncheckedUpdateWithoutThemesInput = {
@@ -851,6 +935,9 @@ export type MerchantUncheckedUpdateWithoutThemesInput = {
   landings?: Prisma.LandingUncheckedUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUncheckedUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUncheckedUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantCreateWithoutCampaignsInput = {
@@ -871,6 +958,9 @@ export type MerchantCreateWithoutCampaignsInput = {
   landings?: Prisma.LandingCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantUncheckedCreateWithoutCampaignsInput = {
@@ -891,6 +981,9 @@ export type MerchantUncheckedCreateWithoutCampaignsInput = {
   landings?: Prisma.LandingUncheckedCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantCreateOrConnectWithoutCampaignsInput = {
@@ -927,6 +1020,9 @@ export type MerchantUpdateWithoutCampaignsInput = {
   landings?: Prisma.LandingUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantUncheckedUpdateWithoutCampaignsInput = {
@@ -947,6 +1043,9 @@ export type MerchantUncheckedUpdateWithoutCampaignsInput = {
   landings?: Prisma.LandingUncheckedUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUncheckedUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUncheckedUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantCreateWithoutShortlinksInput = {
@@ -967,6 +1066,9 @@ export type MerchantCreateWithoutShortlinksInput = {
   landings?: Prisma.LandingCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantUncheckedCreateWithoutShortlinksInput = {
@@ -987,6 +1089,9 @@ export type MerchantUncheckedCreateWithoutShortlinksInput = {
   landings?: Prisma.LandingUncheckedCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantCreateOrConnectWithoutShortlinksInput = {
@@ -1023,6 +1128,9 @@ export type MerchantUpdateWithoutShortlinksInput = {
   landings?: Prisma.LandingUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantUncheckedUpdateWithoutShortlinksInput = {
@@ -1043,6 +1151,9 @@ export type MerchantUncheckedUpdateWithoutShortlinksInput = {
   landings?: Prisma.LandingUncheckedUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUncheckedUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUncheckedUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantCreateWithoutLandingsInput = {
@@ -1063,6 +1174,9 @@ export type MerchantCreateWithoutLandingsInput = {
   shortlinks?: Prisma.ShortlinkCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantUncheckedCreateWithoutLandingsInput = {
@@ -1083,6 +1197,9 @@ export type MerchantUncheckedCreateWithoutLandingsInput = {
   shortlinks?: Prisma.ShortlinkUncheckedCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantCreateOrConnectWithoutLandingsInput = {
@@ -1119,6 +1236,9 @@ export type MerchantUpdateWithoutLandingsInput = {
   shortlinks?: Prisma.ShortlinkUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantUncheckedUpdateWithoutLandingsInput = {
@@ -1139,6 +1259,9 @@ export type MerchantUncheckedUpdateWithoutLandingsInput = {
   shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUncheckedUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUncheckedUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantCreateWithoutMembersInput = {
@@ -1159,6 +1282,9 @@ export type MerchantCreateWithoutMembersInput = {
   shortlinks?: Prisma.ShortlinkCreateNestedManyWithoutMerchantInput
   landings?: Prisma.LandingCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantUncheckedCreateWithoutMembersInput = {
@@ -1179,6 +1305,9 @@ export type MerchantUncheckedCreateWithoutMembersInput = {
   shortlinks?: Prisma.ShortlinkUncheckedCreateNestedManyWithoutMerchantInput
   landings?: Prisma.LandingUncheckedCreateNestedManyWithoutMerchantInput
   invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantCreateOrConnectWithoutMembersInput = {
@@ -1215,6 +1344,9 @@ export type MerchantUpdateWithoutMembersInput = {
   shortlinks?: Prisma.ShortlinkUpdateManyWithoutMerchantNestedInput
   landings?: Prisma.LandingUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantUncheckedUpdateWithoutMembersInput = {
@@ -1235,6 +1367,9 @@ export type MerchantUncheckedUpdateWithoutMembersInput = {
   shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutMerchantNestedInput
   landings?: Prisma.LandingUncheckedUpdateManyWithoutMerchantNestedInput
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUncheckedUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantCreateWithoutInvitationsInput = {
@@ -1255,6 +1390,9 @@ export type MerchantCreateWithoutInvitationsInput = {
   shortlinks?: Prisma.ShortlinkCreateNestedManyWithoutMerchantInput
   landings?: Prisma.LandingCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantUncheckedCreateWithoutInvitationsInput = {
@@ -1275,6 +1413,9 @@ export type MerchantUncheckedCreateWithoutInvitationsInput = {
   shortlinks?: Prisma.ShortlinkUncheckedCreateNestedManyWithoutMerchantInput
   landings?: Prisma.LandingUncheckedCreateNestedManyWithoutMerchantInput
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutMerchantInput
 }
 
 export type MerchantCreateOrConnectWithoutInvitationsInput = {
@@ -1311,6 +1452,9 @@ export type MerchantUpdateWithoutInvitationsInput = {
   shortlinks?: Prisma.ShortlinkUpdateManyWithoutMerchantNestedInput
   landings?: Prisma.LandingUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUpdateManyWithoutMerchantNestedInput
 }
 
 export type MerchantUncheckedUpdateWithoutInvitationsInput = {
@@ -1331,6 +1475,333 @@ export type MerchantUncheckedUpdateWithoutInvitationsInput = {
   shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutMerchantNestedInput
   landings?: Prisma.LandingUncheckedUpdateManyWithoutMerchantNestedInput
   members?: Prisma.MemberUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUncheckedUpdateManyWithoutMerchantNestedInput
+}
+
+export type MerchantCreateWithoutLotteryConfigsInput = {
+  id?: string
+  name: string
+  email?: string | null
+  locale?: string | null
+  plan?: $Enums.Plan
+  status?: $Enums.Status
+  createdAt?: Date | string
+  onboardingStep?: number
+  slug?: string
+  logo?: string | null
+  metadata?: string | null
+  places?: Prisma.PlaceCreateNestedManyWithoutMerchantInput
+  themes?: Prisma.ThemeCreateNestedManyWithoutMerchantInput
+  campaigns?: Prisma.CampaignCreateNestedManyWithoutMerchantInput
+  shortlinks?: Prisma.ShortlinkCreateNestedManyWithoutMerchantInput
+  landings?: Prisma.LandingCreateNestedManyWithoutMerchantInput
+  members?: Prisma.MemberCreateNestedManyWithoutMerchantInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinCreateNestedManyWithoutMerchantInput
+}
+
+export type MerchantUncheckedCreateWithoutLotteryConfigsInput = {
+  id?: string
+  name: string
+  email?: string | null
+  locale?: string | null
+  plan?: $Enums.Plan
+  status?: $Enums.Status
+  createdAt?: Date | string
+  onboardingStep?: number
+  slug?: string
+  logo?: string | null
+  metadata?: string | null
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutMerchantInput
+  themes?: Prisma.ThemeUncheckedCreateNestedManyWithoutMerchantInput
+  campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutMerchantInput
+  shortlinks?: Prisma.ShortlinkUncheckedCreateNestedManyWithoutMerchantInput
+  landings?: Prisma.LandingUncheckedCreateNestedManyWithoutMerchantInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutMerchantInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutMerchantInput
+}
+
+export type MerchantCreateOrConnectWithoutLotteryConfigsInput = {
+  where: Prisma.MerchantWhereUniqueInput
+  create: Prisma.XOR<Prisma.MerchantCreateWithoutLotteryConfigsInput, Prisma.MerchantUncheckedCreateWithoutLotteryConfigsInput>
+}
+
+export type MerchantUpsertWithoutLotteryConfigsInput = {
+  update: Prisma.XOR<Prisma.MerchantUpdateWithoutLotteryConfigsInput, Prisma.MerchantUncheckedUpdateWithoutLotteryConfigsInput>
+  create: Prisma.XOR<Prisma.MerchantCreateWithoutLotteryConfigsInput, Prisma.MerchantUncheckedCreateWithoutLotteryConfigsInput>
+  where?: Prisma.MerchantWhereInput
+}
+
+export type MerchantUpdateToOneWithWhereWithoutLotteryConfigsInput = {
+  where?: Prisma.MerchantWhereInput
+  data: Prisma.XOR<Prisma.MerchantUpdateWithoutLotteryConfigsInput, Prisma.MerchantUncheckedUpdateWithoutLotteryConfigsInput>
+}
+
+export type MerchantUpdateWithoutLotteryConfigsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  places?: Prisma.PlaceUpdateManyWithoutMerchantNestedInput
+  themes?: Prisma.ThemeUpdateManyWithoutMerchantNestedInput
+  campaigns?: Prisma.CampaignUpdateManyWithoutMerchantNestedInput
+  shortlinks?: Prisma.ShortlinkUpdateManyWithoutMerchantNestedInput
+  landings?: Prisma.LandingUpdateManyWithoutMerchantNestedInput
+  members?: Prisma.MemberUpdateManyWithoutMerchantNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUpdateManyWithoutMerchantNestedInput
+}
+
+export type MerchantUncheckedUpdateWithoutLotteryConfigsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutMerchantNestedInput
+  themes?: Prisma.ThemeUncheckedUpdateManyWithoutMerchantNestedInput
+  campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutMerchantNestedInput
+  shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutMerchantNestedInput
+  landings?: Prisma.LandingUncheckedUpdateManyWithoutMerchantNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutMerchantNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUncheckedUpdateManyWithoutMerchantNestedInput
+}
+
+export type MerchantCreateWithoutLotteryPlaysInput = {
+  id?: string
+  name: string
+  email?: string | null
+  locale?: string | null
+  plan?: $Enums.Plan
+  status?: $Enums.Status
+  createdAt?: Date | string
+  onboardingStep?: number
+  slug?: string
+  logo?: string | null
+  metadata?: string | null
+  places?: Prisma.PlaceCreateNestedManyWithoutMerchantInput
+  themes?: Prisma.ThemeCreateNestedManyWithoutMerchantInput
+  campaigns?: Prisma.CampaignCreateNestedManyWithoutMerchantInput
+  shortlinks?: Prisma.ShortlinkCreateNestedManyWithoutMerchantInput
+  landings?: Prisma.LandingCreateNestedManyWithoutMerchantInput
+  members?: Prisma.MemberCreateNestedManyWithoutMerchantInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinCreateNestedManyWithoutMerchantInput
+}
+
+export type MerchantUncheckedCreateWithoutLotteryPlaysInput = {
+  id?: string
+  name: string
+  email?: string | null
+  locale?: string | null
+  plan?: $Enums.Plan
+  status?: $Enums.Status
+  createdAt?: Date | string
+  onboardingStep?: number
+  slug?: string
+  logo?: string | null
+  metadata?: string | null
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutMerchantInput
+  themes?: Prisma.ThemeUncheckedCreateNestedManyWithoutMerchantInput
+  campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutMerchantInput
+  shortlinks?: Prisma.ShortlinkUncheckedCreateNestedManyWithoutMerchantInput
+  landings?: Prisma.LandingUncheckedCreateNestedManyWithoutMerchantInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutMerchantInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryWins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutMerchantInput
+}
+
+export type MerchantCreateOrConnectWithoutLotteryPlaysInput = {
+  where: Prisma.MerchantWhereUniqueInput
+  create: Prisma.XOR<Prisma.MerchantCreateWithoutLotteryPlaysInput, Prisma.MerchantUncheckedCreateWithoutLotteryPlaysInput>
+}
+
+export type MerchantUpsertWithoutLotteryPlaysInput = {
+  update: Prisma.XOR<Prisma.MerchantUpdateWithoutLotteryPlaysInput, Prisma.MerchantUncheckedUpdateWithoutLotteryPlaysInput>
+  create: Prisma.XOR<Prisma.MerchantCreateWithoutLotteryPlaysInput, Prisma.MerchantUncheckedCreateWithoutLotteryPlaysInput>
+  where?: Prisma.MerchantWhereInput
+}
+
+export type MerchantUpdateToOneWithWhereWithoutLotteryPlaysInput = {
+  where?: Prisma.MerchantWhereInput
+  data: Prisma.XOR<Prisma.MerchantUpdateWithoutLotteryPlaysInput, Prisma.MerchantUncheckedUpdateWithoutLotteryPlaysInput>
+}
+
+export type MerchantUpdateWithoutLotteryPlaysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  places?: Prisma.PlaceUpdateManyWithoutMerchantNestedInput
+  themes?: Prisma.ThemeUpdateManyWithoutMerchantNestedInput
+  campaigns?: Prisma.CampaignUpdateManyWithoutMerchantNestedInput
+  shortlinks?: Prisma.ShortlinkUpdateManyWithoutMerchantNestedInput
+  landings?: Prisma.LandingUpdateManyWithoutMerchantNestedInput
+  members?: Prisma.MemberUpdateManyWithoutMerchantNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUpdateManyWithoutMerchantNestedInput
+}
+
+export type MerchantUncheckedUpdateWithoutLotteryPlaysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutMerchantNestedInput
+  themes?: Prisma.ThemeUncheckedUpdateManyWithoutMerchantNestedInput
+  campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutMerchantNestedInput
+  shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutMerchantNestedInput
+  landings?: Prisma.LandingUncheckedUpdateManyWithoutMerchantNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutMerchantNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryWins?: Prisma.LotteryWinUncheckedUpdateManyWithoutMerchantNestedInput
+}
+
+export type MerchantCreateWithoutLotteryWinsInput = {
+  id?: string
+  name: string
+  email?: string | null
+  locale?: string | null
+  plan?: $Enums.Plan
+  status?: $Enums.Status
+  createdAt?: Date | string
+  onboardingStep?: number
+  slug?: string
+  logo?: string | null
+  metadata?: string | null
+  places?: Prisma.PlaceCreateNestedManyWithoutMerchantInput
+  themes?: Prisma.ThemeCreateNestedManyWithoutMerchantInput
+  campaigns?: Prisma.CampaignCreateNestedManyWithoutMerchantInput
+  shortlinks?: Prisma.ShortlinkCreateNestedManyWithoutMerchantInput
+  landings?: Prisma.LandingCreateNestedManyWithoutMerchantInput
+  members?: Prisma.MemberCreateNestedManyWithoutMerchantInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutMerchantInput
+}
+
+export type MerchantUncheckedCreateWithoutLotteryWinsInput = {
+  id?: string
+  name: string
+  email?: string | null
+  locale?: string | null
+  plan?: $Enums.Plan
+  status?: $Enums.Status
+  createdAt?: Date | string
+  onboardingStep?: number
+  slug?: string
+  logo?: string | null
+  metadata?: string | null
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutMerchantInput
+  themes?: Prisma.ThemeUncheckedCreateNestedManyWithoutMerchantInput
+  campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutMerchantInput
+  shortlinks?: Prisma.ShortlinkUncheckedCreateNestedManyWithoutMerchantInput
+  landings?: Prisma.LandingUncheckedCreateNestedManyWithoutMerchantInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutMerchantInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutMerchantInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutMerchantInput
+}
+
+export type MerchantCreateOrConnectWithoutLotteryWinsInput = {
+  where: Prisma.MerchantWhereUniqueInput
+  create: Prisma.XOR<Prisma.MerchantCreateWithoutLotteryWinsInput, Prisma.MerchantUncheckedCreateWithoutLotteryWinsInput>
+}
+
+export type MerchantUpsertWithoutLotteryWinsInput = {
+  update: Prisma.XOR<Prisma.MerchantUpdateWithoutLotteryWinsInput, Prisma.MerchantUncheckedUpdateWithoutLotteryWinsInput>
+  create: Prisma.XOR<Prisma.MerchantCreateWithoutLotteryWinsInput, Prisma.MerchantUncheckedCreateWithoutLotteryWinsInput>
+  where?: Prisma.MerchantWhereInput
+}
+
+export type MerchantUpdateToOneWithWhereWithoutLotteryWinsInput = {
+  where?: Prisma.MerchantWhereInput
+  data: Prisma.XOR<Prisma.MerchantUpdateWithoutLotteryWinsInput, Prisma.MerchantUncheckedUpdateWithoutLotteryWinsInput>
+}
+
+export type MerchantUpdateWithoutLotteryWinsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  places?: Prisma.PlaceUpdateManyWithoutMerchantNestedInput
+  themes?: Prisma.ThemeUpdateManyWithoutMerchantNestedInput
+  campaigns?: Prisma.CampaignUpdateManyWithoutMerchantNestedInput
+  shortlinks?: Prisma.ShortlinkUpdateManyWithoutMerchantNestedInput
+  landings?: Prisma.LandingUpdateManyWithoutMerchantNestedInput
+  members?: Prisma.MemberUpdateManyWithoutMerchantNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutMerchantNestedInput
+}
+
+export type MerchantUncheckedUpdateWithoutLotteryWinsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutMerchantNestedInput
+  themes?: Prisma.ThemeUncheckedUpdateManyWithoutMerchantNestedInput
+  campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutMerchantNestedInput
+  shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutMerchantNestedInput
+  landings?: Prisma.LandingUncheckedUpdateManyWithoutMerchantNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutMerchantNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutMerchantNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutMerchantNestedInput
 }
 
 
@@ -1346,6 +1817,9 @@ export type MerchantCountOutputType = {
   landings: number
   members: number
   invitations: number
+  lotteryConfigs: number
+  lotteryPlays: number
+  lotteryWins: number
 }
 
 export type MerchantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1356,6 +1830,9 @@ export type MerchantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   landings?: boolean | MerchantCountOutputTypeCountLandingsArgs
   members?: boolean | MerchantCountOutputTypeCountMembersArgs
   invitations?: boolean | MerchantCountOutputTypeCountInvitationsArgs
+  lotteryConfigs?: boolean | MerchantCountOutputTypeCountLotteryConfigsArgs
+  lotteryPlays?: boolean | MerchantCountOutputTypeCountLotteryPlaysArgs
+  lotteryWins?: boolean | MerchantCountOutputTypeCountLotteryWinsArgs
 }
 
 /**
@@ -1417,6 +1894,27 @@ export type MerchantCountOutputTypeCountInvitationsArgs<ExtArgs extends runtime.
   where?: Prisma.InvitationWhereInput
 }
 
+/**
+ * MerchantCountOutputType without action
+ */
+export type MerchantCountOutputTypeCountLotteryConfigsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LotteryConfigWhereInput
+}
+
+/**
+ * MerchantCountOutputType without action
+ */
+export type MerchantCountOutputTypeCountLotteryPlaysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LotteryPlayWhereInput
+}
+
+/**
+ * MerchantCountOutputType without action
+ */
+export type MerchantCountOutputTypeCountLotteryWinsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LotteryWinWhereInput
+}
+
 
 export type MerchantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1437,6 +1935,9 @@ export type MerchantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   landings?: boolean | Prisma.Merchant$landingsArgs<ExtArgs>
   members?: boolean | Prisma.Merchant$membersArgs<ExtArgs>
   invitations?: boolean | Prisma.Merchant$invitationsArgs<ExtArgs>
+  lotteryConfigs?: boolean | Prisma.Merchant$lotteryConfigsArgs<ExtArgs>
+  lotteryPlays?: boolean | Prisma.Merchant$lotteryPlaysArgs<ExtArgs>
+  lotteryWins?: boolean | Prisma.Merchant$lotteryWinsArgs<ExtArgs>
   _count?: boolean | Prisma.MerchantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["merchant"]>
 
@@ -1491,6 +1992,9 @@ export type MerchantInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   landings?: boolean | Prisma.Merchant$landingsArgs<ExtArgs>
   members?: boolean | Prisma.Merchant$membersArgs<ExtArgs>
   invitations?: boolean | Prisma.Merchant$invitationsArgs<ExtArgs>
+  lotteryConfigs?: boolean | Prisma.Merchant$lotteryConfigsArgs<ExtArgs>
+  lotteryPlays?: boolean | Prisma.Merchant$lotteryPlaysArgs<ExtArgs>
+  lotteryWins?: boolean | Prisma.Merchant$lotteryWinsArgs<ExtArgs>
   _count?: boolean | Prisma.MerchantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MerchantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1506,6 +2010,9 @@ export type $MerchantPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     landings: Prisma.$LandingPayload<ExtArgs>[]
     members: Prisma.$MemberPayload<ExtArgs>[]
     invitations: Prisma.$InvitationPayload<ExtArgs>[]
+    lotteryConfigs: Prisma.$LotteryConfigPayload<ExtArgs>[]
+    lotteryPlays: Prisma.$LotteryPlayPayload<ExtArgs>[]
+    lotteryWins: Prisma.$LotteryWinPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1920,6 +2427,9 @@ export interface Prisma__MerchantClient<T, Null = never, ExtArgs extends runtime
   landings<T extends Prisma.Merchant$landingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Merchant$landingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LandingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   members<T extends Prisma.Merchant$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Merchant$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invitations<T extends Prisma.Merchant$invitationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Merchant$invitationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  lotteryConfigs<T extends Prisma.Merchant$lotteryConfigsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Merchant$lotteryConfigsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LotteryConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  lotteryPlays<T extends Prisma.Merchant$lotteryPlaysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Merchant$lotteryPlaysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LotteryPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  lotteryWins<T extends Prisma.Merchant$lotteryWinsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Merchant$lotteryWinsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LotteryWinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2513,6 +3023,78 @@ export type Merchant$invitationsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.InvitationScalarFieldEnum | Prisma.InvitationScalarFieldEnum[]
+}
+
+/**
+ * Merchant.lotteryConfigs
+ */
+export type Merchant$lotteryConfigsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LotteryConfig
+   */
+  select?: Prisma.LotteryConfigSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LotteryConfig
+   */
+  omit?: Prisma.LotteryConfigOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LotteryConfigInclude<ExtArgs> | null
+  where?: Prisma.LotteryConfigWhereInput
+  orderBy?: Prisma.LotteryConfigOrderByWithRelationInput | Prisma.LotteryConfigOrderByWithRelationInput[]
+  cursor?: Prisma.LotteryConfigWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LotteryConfigScalarFieldEnum | Prisma.LotteryConfigScalarFieldEnum[]
+}
+
+/**
+ * Merchant.lotteryPlays
+ */
+export type Merchant$lotteryPlaysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LotteryPlay
+   */
+  select?: Prisma.LotteryPlaySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LotteryPlay
+   */
+  omit?: Prisma.LotteryPlayOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LotteryPlayInclude<ExtArgs> | null
+  where?: Prisma.LotteryPlayWhereInput
+  orderBy?: Prisma.LotteryPlayOrderByWithRelationInput | Prisma.LotteryPlayOrderByWithRelationInput[]
+  cursor?: Prisma.LotteryPlayWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LotteryPlayScalarFieldEnum | Prisma.LotteryPlayScalarFieldEnum[]
+}
+
+/**
+ * Merchant.lotteryWins
+ */
+export type Merchant$lotteryWinsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LotteryWin
+   */
+  select?: Prisma.LotteryWinSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LotteryWin
+   */
+  omit?: Prisma.LotteryWinOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LotteryWinInclude<ExtArgs> | null
+  where?: Prisma.LotteryWinWhereInput
+  orderBy?: Prisma.LotteryWinOrderByWithRelationInput | Prisma.LotteryWinOrderByWithRelationInput[]
+  cursor?: Prisma.LotteryWinWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LotteryWinScalarFieldEnum | Prisma.LotteryWinScalarFieldEnum[]
 }
 
 /**
