@@ -28,27 +28,21 @@ export type AggregateLotteryConfig = {
 
 export type LotteryConfigAvgAggregateOutputType = {
   playLimitPerUser: number | null
-  minDelayBetweenPlaysSec: number | null
   noWinWeight: number | null
 }
 
 export type LotteryConfigSumAggregateOutputType = {
   playLimitPerUser: number | null
-  minDelayBetweenPlaysSec: number | null
   noWinWeight: number | null
 }
 
 export type LotteryConfigMinAggregateOutputType = {
   id: string | null
   merchantId: string | null
-  landingId: string | null
   name: string | null
-  status: $Enums.LotteryConfigStatus | null
   enabled: boolean | null
   playLimitPerUser: number | null
-  minDelayBetweenPlaysSec: number | null
-  startsAt: Date | null
-  endsAt: Date | null
+  cooldown: $Enums.LotteryCooldown | null
   noWinWeight: number | null
   guaranteeWinOnFirstPlay: boolean | null
   contactMethod: $Enums.LotteryContactMethod | null
@@ -59,14 +53,10 @@ export type LotteryConfigMinAggregateOutputType = {
 export type LotteryConfigMaxAggregateOutputType = {
   id: string | null
   merchantId: string | null
-  landingId: string | null
   name: string | null
-  status: $Enums.LotteryConfigStatus | null
   enabled: boolean | null
   playLimitPerUser: number | null
-  minDelayBetweenPlaysSec: number | null
-  startsAt: Date | null
-  endsAt: Date | null
+  cooldown: $Enums.LotteryCooldown | null
   noWinWeight: number | null
   guaranteeWinOnFirstPlay: boolean | null
   contactMethod: $Enums.LotteryContactMethod | null
@@ -77,14 +67,10 @@ export type LotteryConfigMaxAggregateOutputType = {
 export type LotteryConfigCountAggregateOutputType = {
   id: number
   merchantId: number
-  landingId: number
   name: number
-  status: number
   enabled: number
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt: number
-  endsAt: number
+  cooldown: number
   noWinWeight: number
   guaranteeWinOnFirstPlay: number
   gifts: number
@@ -97,27 +83,21 @@ export type LotteryConfigCountAggregateOutputType = {
 
 export type LotteryConfigAvgAggregateInputType = {
   playLimitPerUser?: true
-  minDelayBetweenPlaysSec?: true
   noWinWeight?: true
 }
 
 export type LotteryConfigSumAggregateInputType = {
   playLimitPerUser?: true
-  minDelayBetweenPlaysSec?: true
   noWinWeight?: true
 }
 
 export type LotteryConfigMinAggregateInputType = {
   id?: true
   merchantId?: true
-  landingId?: true
   name?: true
-  status?: true
   enabled?: true
   playLimitPerUser?: true
-  minDelayBetweenPlaysSec?: true
-  startsAt?: true
-  endsAt?: true
+  cooldown?: true
   noWinWeight?: true
   guaranteeWinOnFirstPlay?: true
   contactMethod?: true
@@ -128,14 +108,10 @@ export type LotteryConfigMinAggregateInputType = {
 export type LotteryConfigMaxAggregateInputType = {
   id?: true
   merchantId?: true
-  landingId?: true
   name?: true
-  status?: true
   enabled?: true
   playLimitPerUser?: true
-  minDelayBetweenPlaysSec?: true
-  startsAt?: true
-  endsAt?: true
+  cooldown?: true
   noWinWeight?: true
   guaranteeWinOnFirstPlay?: true
   contactMethod?: true
@@ -146,14 +122,10 @@ export type LotteryConfigMaxAggregateInputType = {
 export type LotteryConfigCountAggregateInputType = {
   id?: true
   merchantId?: true
-  landingId?: true
   name?: true
-  status?: true
   enabled?: true
   playLimitPerUser?: true
-  minDelayBetweenPlaysSec?: true
-  startsAt?: true
-  endsAt?: true
+  cooldown?: true
   noWinWeight?: true
   guaranteeWinOnFirstPlay?: true
   gifts?: true
@@ -252,14 +224,10 @@ export type LotteryConfigGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 export type LotteryConfigGroupByOutputType = {
   id: string
   merchantId: string
-  landingId: string
   name: string
-  status: $Enums.LotteryConfigStatus
   enabled: boolean
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt: Date | null
-  endsAt: Date | null
+  cooldown: $Enums.LotteryCooldown
   noWinWeight: number
   guaranteeWinOnFirstPlay: boolean
   gifts: runtime.JsonValue
@@ -294,14 +262,10 @@ export type LotteryConfigWhereInput = {
   NOT?: Prisma.LotteryConfigWhereInput | Prisma.LotteryConfigWhereInput[]
   id?: Prisma.StringFilter<"LotteryConfig"> | string
   merchantId?: Prisma.StringFilter<"LotteryConfig"> | string
-  landingId?: Prisma.StringFilter<"LotteryConfig"> | string
   name?: Prisma.StringFilter<"LotteryConfig"> | string
-  status?: Prisma.EnumLotteryConfigStatusFilter<"LotteryConfig"> | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFilter<"LotteryConfig"> | boolean
   playLimitPerUser?: Prisma.IntFilter<"LotteryConfig"> | number
-  minDelayBetweenPlaysSec?: Prisma.IntFilter<"LotteryConfig"> | number
-  startsAt?: Prisma.DateTimeNullableFilter<"LotteryConfig"> | Date | string | null
-  endsAt?: Prisma.DateTimeNullableFilter<"LotteryConfig"> | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFilter<"LotteryConfig"> | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFilter<"LotteryConfig"> | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFilter<"LotteryConfig"> | boolean
   gifts?: Prisma.JsonFilter<"LotteryConfig">
@@ -309,22 +273,18 @@ export type LotteryConfigWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"LotteryConfig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LotteryConfig"> | Date | string
   merchant?: Prisma.XOR<Prisma.MerchantScalarRelationFilter, Prisma.MerchantWhereInput>
-  landing?: Prisma.XOR<Prisma.LandingScalarRelationFilter, Prisma.LandingWhereInput>
   plays?: Prisma.LotteryPlayListRelationFilter
   wins?: Prisma.LotteryWinListRelationFilter
+  landings?: Prisma.LandingListRelationFilter
 }
 
 export type LotteryConfigOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   merchantId?: Prisma.SortOrder
-  landingId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   playLimitPerUser?: Prisma.SortOrder
-  minDelayBetweenPlaysSec?: Prisma.SortOrder
-  startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  cooldown?: Prisma.SortOrder
   noWinWeight?: Prisma.SortOrder
   guaranteeWinOnFirstPlay?: Prisma.SortOrder
   gifts?: Prisma.SortOrder
@@ -332,9 +292,9 @@ export type LotteryConfigOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   merchant?: Prisma.MerchantOrderByWithRelationInput
-  landing?: Prisma.LandingOrderByWithRelationInput
   plays?: Prisma.LotteryPlayOrderByRelationAggregateInput
   wins?: Prisma.LotteryWinOrderByRelationAggregateInput
+  landings?: Prisma.LandingOrderByRelationAggregateInput
 }
 
 export type LotteryConfigWhereUniqueInput = Prisma.AtLeast<{
@@ -343,14 +303,10 @@ export type LotteryConfigWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.LotteryConfigWhereInput[]
   NOT?: Prisma.LotteryConfigWhereInput | Prisma.LotteryConfigWhereInput[]
   merchantId?: Prisma.StringFilter<"LotteryConfig"> | string
-  landingId?: Prisma.StringFilter<"LotteryConfig"> | string
   name?: Prisma.StringFilter<"LotteryConfig"> | string
-  status?: Prisma.EnumLotteryConfigStatusFilter<"LotteryConfig"> | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFilter<"LotteryConfig"> | boolean
   playLimitPerUser?: Prisma.IntFilter<"LotteryConfig"> | number
-  minDelayBetweenPlaysSec?: Prisma.IntFilter<"LotteryConfig"> | number
-  startsAt?: Prisma.DateTimeNullableFilter<"LotteryConfig"> | Date | string | null
-  endsAt?: Prisma.DateTimeNullableFilter<"LotteryConfig"> | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFilter<"LotteryConfig"> | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFilter<"LotteryConfig"> | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFilter<"LotteryConfig"> | boolean
   gifts?: Prisma.JsonFilter<"LotteryConfig">
@@ -358,22 +314,18 @@ export type LotteryConfigWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"LotteryConfig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LotteryConfig"> | Date | string
   merchant?: Prisma.XOR<Prisma.MerchantScalarRelationFilter, Prisma.MerchantWhereInput>
-  landing?: Prisma.XOR<Prisma.LandingScalarRelationFilter, Prisma.LandingWhereInput>
   plays?: Prisma.LotteryPlayListRelationFilter
   wins?: Prisma.LotteryWinListRelationFilter
+  landings?: Prisma.LandingListRelationFilter
 }, "id">
 
 export type LotteryConfigOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   merchantId?: Prisma.SortOrder
-  landingId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   playLimitPerUser?: Prisma.SortOrder
-  minDelayBetweenPlaysSec?: Prisma.SortOrder
-  startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  cooldown?: Prisma.SortOrder
   noWinWeight?: Prisma.SortOrder
   guaranteeWinOnFirstPlay?: Prisma.SortOrder
   gifts?: Prisma.SortOrder
@@ -393,14 +345,10 @@ export type LotteryConfigScalarWhereWithAggregatesInput = {
   NOT?: Prisma.LotteryConfigScalarWhereWithAggregatesInput | Prisma.LotteryConfigScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"LotteryConfig"> | string
   merchantId?: Prisma.StringWithAggregatesFilter<"LotteryConfig"> | string
-  landingId?: Prisma.StringWithAggregatesFilter<"LotteryConfig"> | string
   name?: Prisma.StringWithAggregatesFilter<"LotteryConfig"> | string
-  status?: Prisma.EnumLotteryConfigStatusWithAggregatesFilter<"LotteryConfig"> | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolWithAggregatesFilter<"LotteryConfig"> | boolean
   playLimitPerUser?: Prisma.IntWithAggregatesFilter<"LotteryConfig"> | number
-  minDelayBetweenPlaysSec?: Prisma.IntWithAggregatesFilter<"LotteryConfig"> | number
-  startsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"LotteryConfig"> | Date | string | null
-  endsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"LotteryConfig"> | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownWithAggregatesFilter<"LotteryConfig"> | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntWithAggregatesFilter<"LotteryConfig"> | number
   guaranteeWinOnFirstPlay?: Prisma.BoolWithAggregatesFilter<"LotteryConfig"> | boolean
   gifts?: Prisma.JsonWithAggregatesFilter<"LotteryConfig">
@@ -412,12 +360,9 @@ export type LotteryConfigScalarWhereWithAggregatesInput = {
 export type LotteryConfigCreateInput = {
   id?: string
   name: string
-  status?: $Enums.LotteryConfigStatus
   enabled?: boolean
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  cooldown?: $Enums.LotteryCooldown
   noWinWeight?: number
   guaranteeWinOnFirstPlay?: boolean
   gifts: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -425,22 +370,18 @@ export type LotteryConfigCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   merchant: Prisma.MerchantCreateNestedOneWithoutLotteryConfigsInput
-  landing: Prisma.LandingCreateNestedOneWithoutLotteryConfigsInput
   plays?: Prisma.LotteryPlayCreateNestedManyWithoutConfigInput
   wins?: Prisma.LotteryWinCreateNestedManyWithoutConfigInput
+  landings?: Prisma.LandingCreateNestedManyWithoutLotteryConfigInput
 }
 
 export type LotteryConfigUncheckedCreateInput = {
   id?: string
   merchantId: string
-  landingId: string
   name: string
-  status?: $Enums.LotteryConfigStatus
   enabled?: boolean
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  cooldown?: $Enums.LotteryCooldown
   noWinWeight?: number
   guaranteeWinOnFirstPlay?: boolean
   gifts: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -449,17 +390,15 @@ export type LotteryConfigUncheckedCreateInput = {
   updatedAt?: Date | string
   plays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutConfigInput
   wins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutConfigInput
+  landings?: Prisma.LandingUncheckedCreateNestedManyWithoutLotteryConfigInput
 }
 
 export type LotteryConfigUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFieldUpdateOperationsInput | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -467,22 +406,18 @@ export type LotteryConfigUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   merchant?: Prisma.MerchantUpdateOneRequiredWithoutLotteryConfigsNestedInput
-  landing?: Prisma.LandingUpdateOneRequiredWithoutLotteryConfigsNestedInput
   plays?: Prisma.LotteryPlayUpdateManyWithoutConfigNestedInput
   wins?: Prisma.LotteryWinUpdateManyWithoutConfigNestedInput
+  landings?: Prisma.LandingUpdateManyWithoutLotteryConfigNestedInput
 }
 
 export type LotteryConfigUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
-  landingId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFieldUpdateOperationsInput | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -491,19 +426,16 @@ export type LotteryConfigUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   plays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutConfigNestedInput
   wins?: Prisma.LotteryWinUncheckedUpdateManyWithoutConfigNestedInput
+  landings?: Prisma.LandingUncheckedUpdateManyWithoutLotteryConfigNestedInput
 }
 
 export type LotteryConfigCreateManyInput = {
   id?: string
   merchantId: string
-  landingId: string
   name: string
-  status?: $Enums.LotteryConfigStatus
   enabled?: boolean
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  cooldown?: $Enums.LotteryCooldown
   noWinWeight?: number
   guaranteeWinOnFirstPlay?: boolean
   gifts: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -515,12 +447,9 @@ export type LotteryConfigCreateManyInput = {
 export type LotteryConfigUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFieldUpdateOperationsInput | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -532,14 +461,10 @@ export type LotteryConfigUpdateManyMutationInput = {
 export type LotteryConfigUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
-  landingId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFieldUpdateOperationsInput | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -558,17 +483,18 @@ export type LotteryConfigOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type LotteryConfigNullableScalarRelationFilter = {
+  is?: Prisma.LotteryConfigWhereInput | null
+  isNot?: Prisma.LotteryConfigWhereInput | null
+}
+
 export type LotteryConfigCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   merchantId?: Prisma.SortOrder
-  landingId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   playLimitPerUser?: Prisma.SortOrder
-  minDelayBetweenPlaysSec?: Prisma.SortOrder
-  startsAt?: Prisma.SortOrder
-  endsAt?: Prisma.SortOrder
+  cooldown?: Prisma.SortOrder
   noWinWeight?: Prisma.SortOrder
   guaranteeWinOnFirstPlay?: Prisma.SortOrder
   gifts?: Prisma.SortOrder
@@ -579,21 +505,16 @@ export type LotteryConfigCountOrderByAggregateInput = {
 
 export type LotteryConfigAvgOrderByAggregateInput = {
   playLimitPerUser?: Prisma.SortOrder
-  minDelayBetweenPlaysSec?: Prisma.SortOrder
   noWinWeight?: Prisma.SortOrder
 }
 
 export type LotteryConfigMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   merchantId?: Prisma.SortOrder
-  landingId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   playLimitPerUser?: Prisma.SortOrder
-  minDelayBetweenPlaysSec?: Prisma.SortOrder
-  startsAt?: Prisma.SortOrder
-  endsAt?: Prisma.SortOrder
+  cooldown?: Prisma.SortOrder
   noWinWeight?: Prisma.SortOrder
   guaranteeWinOnFirstPlay?: Prisma.SortOrder
   contactMethod?: Prisma.SortOrder
@@ -604,14 +525,10 @@ export type LotteryConfigMaxOrderByAggregateInput = {
 export type LotteryConfigMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   merchantId?: Prisma.SortOrder
-  landingId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   playLimitPerUser?: Prisma.SortOrder
-  minDelayBetweenPlaysSec?: Prisma.SortOrder
-  startsAt?: Prisma.SortOrder
-  endsAt?: Prisma.SortOrder
+  cooldown?: Prisma.SortOrder
   noWinWeight?: Prisma.SortOrder
   guaranteeWinOnFirstPlay?: Prisma.SortOrder
   contactMethod?: Prisma.SortOrder
@@ -621,7 +538,6 @@ export type LotteryConfigMinOrderByAggregateInput = {
 
 export type LotteryConfigSumOrderByAggregateInput = {
   playLimitPerUser?: Prisma.SortOrder
-  minDelayBetweenPlaysSec?: Prisma.SortOrder
   noWinWeight?: Prisma.SortOrder
 }
 
@@ -672,50 +588,24 @@ export type LotteryConfigUncheckedUpdateManyWithoutMerchantNestedInput = {
   deleteMany?: Prisma.LotteryConfigScalarWhereInput | Prisma.LotteryConfigScalarWhereInput[]
 }
 
-export type LotteryConfigCreateNestedManyWithoutLandingInput = {
-  create?: Prisma.XOR<Prisma.LotteryConfigCreateWithoutLandingInput, Prisma.LotteryConfigUncheckedCreateWithoutLandingInput> | Prisma.LotteryConfigCreateWithoutLandingInput[] | Prisma.LotteryConfigUncheckedCreateWithoutLandingInput[]
-  connectOrCreate?: Prisma.LotteryConfigCreateOrConnectWithoutLandingInput | Prisma.LotteryConfigCreateOrConnectWithoutLandingInput[]
-  createMany?: Prisma.LotteryConfigCreateManyLandingInputEnvelope
-  connect?: Prisma.LotteryConfigWhereUniqueInput | Prisma.LotteryConfigWhereUniqueInput[]
+export type LotteryConfigCreateNestedOneWithoutLandingsInput = {
+  create?: Prisma.XOR<Prisma.LotteryConfigCreateWithoutLandingsInput, Prisma.LotteryConfigUncheckedCreateWithoutLandingsInput>
+  connectOrCreate?: Prisma.LotteryConfigCreateOrConnectWithoutLandingsInput
+  connect?: Prisma.LotteryConfigWhereUniqueInput
 }
 
-export type LotteryConfigUncheckedCreateNestedManyWithoutLandingInput = {
-  create?: Prisma.XOR<Prisma.LotteryConfigCreateWithoutLandingInput, Prisma.LotteryConfigUncheckedCreateWithoutLandingInput> | Prisma.LotteryConfigCreateWithoutLandingInput[] | Prisma.LotteryConfigUncheckedCreateWithoutLandingInput[]
-  connectOrCreate?: Prisma.LotteryConfigCreateOrConnectWithoutLandingInput | Prisma.LotteryConfigCreateOrConnectWithoutLandingInput[]
-  createMany?: Prisma.LotteryConfigCreateManyLandingInputEnvelope
-  connect?: Prisma.LotteryConfigWhereUniqueInput | Prisma.LotteryConfigWhereUniqueInput[]
+export type LotteryConfigUpdateOneWithoutLandingsNestedInput = {
+  create?: Prisma.XOR<Prisma.LotteryConfigCreateWithoutLandingsInput, Prisma.LotteryConfigUncheckedCreateWithoutLandingsInput>
+  connectOrCreate?: Prisma.LotteryConfigCreateOrConnectWithoutLandingsInput
+  upsert?: Prisma.LotteryConfigUpsertWithoutLandingsInput
+  disconnect?: Prisma.LotteryConfigWhereInput | boolean
+  delete?: Prisma.LotteryConfigWhereInput | boolean
+  connect?: Prisma.LotteryConfigWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LotteryConfigUpdateToOneWithWhereWithoutLandingsInput, Prisma.LotteryConfigUpdateWithoutLandingsInput>, Prisma.LotteryConfigUncheckedUpdateWithoutLandingsInput>
 }
 
-export type LotteryConfigUpdateManyWithoutLandingNestedInput = {
-  create?: Prisma.XOR<Prisma.LotteryConfigCreateWithoutLandingInput, Prisma.LotteryConfigUncheckedCreateWithoutLandingInput> | Prisma.LotteryConfigCreateWithoutLandingInput[] | Prisma.LotteryConfigUncheckedCreateWithoutLandingInput[]
-  connectOrCreate?: Prisma.LotteryConfigCreateOrConnectWithoutLandingInput | Prisma.LotteryConfigCreateOrConnectWithoutLandingInput[]
-  upsert?: Prisma.LotteryConfigUpsertWithWhereUniqueWithoutLandingInput | Prisma.LotteryConfigUpsertWithWhereUniqueWithoutLandingInput[]
-  createMany?: Prisma.LotteryConfigCreateManyLandingInputEnvelope
-  set?: Prisma.LotteryConfigWhereUniqueInput | Prisma.LotteryConfigWhereUniqueInput[]
-  disconnect?: Prisma.LotteryConfigWhereUniqueInput | Prisma.LotteryConfigWhereUniqueInput[]
-  delete?: Prisma.LotteryConfigWhereUniqueInput | Prisma.LotteryConfigWhereUniqueInput[]
-  connect?: Prisma.LotteryConfigWhereUniqueInput | Prisma.LotteryConfigWhereUniqueInput[]
-  update?: Prisma.LotteryConfigUpdateWithWhereUniqueWithoutLandingInput | Prisma.LotteryConfigUpdateWithWhereUniqueWithoutLandingInput[]
-  updateMany?: Prisma.LotteryConfigUpdateManyWithWhereWithoutLandingInput | Prisma.LotteryConfigUpdateManyWithWhereWithoutLandingInput[]
-  deleteMany?: Prisma.LotteryConfigScalarWhereInput | Prisma.LotteryConfigScalarWhereInput[]
-}
-
-export type LotteryConfigUncheckedUpdateManyWithoutLandingNestedInput = {
-  create?: Prisma.XOR<Prisma.LotteryConfigCreateWithoutLandingInput, Prisma.LotteryConfigUncheckedCreateWithoutLandingInput> | Prisma.LotteryConfigCreateWithoutLandingInput[] | Prisma.LotteryConfigUncheckedCreateWithoutLandingInput[]
-  connectOrCreate?: Prisma.LotteryConfigCreateOrConnectWithoutLandingInput | Prisma.LotteryConfigCreateOrConnectWithoutLandingInput[]
-  upsert?: Prisma.LotteryConfigUpsertWithWhereUniqueWithoutLandingInput | Prisma.LotteryConfigUpsertWithWhereUniqueWithoutLandingInput[]
-  createMany?: Prisma.LotteryConfigCreateManyLandingInputEnvelope
-  set?: Prisma.LotteryConfigWhereUniqueInput | Prisma.LotteryConfigWhereUniqueInput[]
-  disconnect?: Prisma.LotteryConfigWhereUniqueInput | Prisma.LotteryConfigWhereUniqueInput[]
-  delete?: Prisma.LotteryConfigWhereUniqueInput | Prisma.LotteryConfigWhereUniqueInput[]
-  connect?: Prisma.LotteryConfigWhereUniqueInput | Prisma.LotteryConfigWhereUniqueInput[]
-  update?: Prisma.LotteryConfigUpdateWithWhereUniqueWithoutLandingInput | Prisma.LotteryConfigUpdateWithWhereUniqueWithoutLandingInput[]
-  updateMany?: Prisma.LotteryConfigUpdateManyWithWhereWithoutLandingInput | Prisma.LotteryConfigUpdateManyWithWhereWithoutLandingInput[]
-  deleteMany?: Prisma.LotteryConfigScalarWhereInput | Prisma.LotteryConfigScalarWhereInput[]
-}
-
-export type EnumLotteryConfigStatusFieldUpdateOperationsInput = {
-  set?: $Enums.LotteryConfigStatus
+export type EnumLotteryCooldownFieldUpdateOperationsInput = {
+  set?: $Enums.LotteryCooldown
 }
 
 export type EnumLotteryContactMethodFieldUpdateOperationsInput = {
@@ -753,33 +643,26 @@ export type LotteryConfigUpdateOneRequiredWithoutWinsNestedInput = {
 export type LotteryConfigCreateWithoutMerchantInput = {
   id?: string
   name: string
-  status?: $Enums.LotteryConfigStatus
   enabled?: boolean
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  cooldown?: $Enums.LotteryCooldown
   noWinWeight?: number
   guaranteeWinOnFirstPlay?: boolean
   gifts: Prisma.JsonNullValueInput | runtime.InputJsonValue
   contactMethod?: $Enums.LotteryContactMethod
   createdAt?: Date | string
   updatedAt?: Date | string
-  landing: Prisma.LandingCreateNestedOneWithoutLotteryConfigsInput
   plays?: Prisma.LotteryPlayCreateNestedManyWithoutConfigInput
   wins?: Prisma.LotteryWinCreateNestedManyWithoutConfigInput
+  landings?: Prisma.LandingCreateNestedManyWithoutLotteryConfigInput
 }
 
 export type LotteryConfigUncheckedCreateWithoutMerchantInput = {
   id?: string
-  landingId: string
   name: string
-  status?: $Enums.LotteryConfigStatus
   enabled?: boolean
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  cooldown?: $Enums.LotteryCooldown
   noWinWeight?: number
   guaranteeWinOnFirstPlay?: boolean
   gifts: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -788,6 +671,7 @@ export type LotteryConfigUncheckedCreateWithoutMerchantInput = {
   updatedAt?: Date | string
   plays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutConfigInput
   wins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutConfigInput
+  landings?: Prisma.LandingUncheckedCreateNestedManyWithoutLotteryConfigInput
 }
 
 export type LotteryConfigCreateOrConnectWithoutMerchantInput = {
@@ -822,14 +706,10 @@ export type LotteryConfigScalarWhereInput = {
   NOT?: Prisma.LotteryConfigScalarWhereInput | Prisma.LotteryConfigScalarWhereInput[]
   id?: Prisma.StringFilter<"LotteryConfig"> | string
   merchantId?: Prisma.StringFilter<"LotteryConfig"> | string
-  landingId?: Prisma.StringFilter<"LotteryConfig"> | string
   name?: Prisma.StringFilter<"LotteryConfig"> | string
-  status?: Prisma.EnumLotteryConfigStatusFilter<"LotteryConfig"> | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFilter<"LotteryConfig"> | boolean
   playLimitPerUser?: Prisma.IntFilter<"LotteryConfig"> | number
-  minDelayBetweenPlaysSec?: Prisma.IntFilter<"LotteryConfig"> | number
-  startsAt?: Prisma.DateTimeNullableFilter<"LotteryConfig"> | Date | string | null
-  endsAt?: Prisma.DateTimeNullableFilter<"LotteryConfig"> | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFilter<"LotteryConfig"> | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFilter<"LotteryConfig"> | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFilter<"LotteryConfig"> | boolean
   gifts?: Prisma.JsonFilter<"LotteryConfig">
@@ -838,15 +718,12 @@ export type LotteryConfigScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"LotteryConfig"> | Date | string
 }
 
-export type LotteryConfigCreateWithoutLandingInput = {
+export type LotteryConfigCreateWithoutLandingsInput = {
   id?: string
   name: string
-  status?: $Enums.LotteryConfigStatus
   enabled?: boolean
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  cooldown?: $Enums.LotteryCooldown
   noWinWeight?: number
   guaranteeWinOnFirstPlay?: boolean
   gifts: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -858,16 +735,13 @@ export type LotteryConfigCreateWithoutLandingInput = {
   wins?: Prisma.LotteryWinCreateNestedManyWithoutConfigInput
 }
 
-export type LotteryConfigUncheckedCreateWithoutLandingInput = {
+export type LotteryConfigUncheckedCreateWithoutLandingsInput = {
   id?: string
   merchantId: string
   name: string
-  status?: $Enums.LotteryConfigStatus
   enabled?: boolean
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  cooldown?: $Enums.LotteryCooldown
   noWinWeight?: number
   guaranteeWinOnFirstPlay?: boolean
   gifts: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -878,41 +752,62 @@ export type LotteryConfigUncheckedCreateWithoutLandingInput = {
   wins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutConfigInput
 }
 
-export type LotteryConfigCreateOrConnectWithoutLandingInput = {
+export type LotteryConfigCreateOrConnectWithoutLandingsInput = {
   where: Prisma.LotteryConfigWhereUniqueInput
-  create: Prisma.XOR<Prisma.LotteryConfigCreateWithoutLandingInput, Prisma.LotteryConfigUncheckedCreateWithoutLandingInput>
+  create: Prisma.XOR<Prisma.LotteryConfigCreateWithoutLandingsInput, Prisma.LotteryConfigUncheckedCreateWithoutLandingsInput>
 }
 
-export type LotteryConfigCreateManyLandingInputEnvelope = {
-  data: Prisma.LotteryConfigCreateManyLandingInput | Prisma.LotteryConfigCreateManyLandingInput[]
-  skipDuplicates?: boolean
+export type LotteryConfigUpsertWithoutLandingsInput = {
+  update: Prisma.XOR<Prisma.LotteryConfigUpdateWithoutLandingsInput, Prisma.LotteryConfigUncheckedUpdateWithoutLandingsInput>
+  create: Prisma.XOR<Prisma.LotteryConfigCreateWithoutLandingsInput, Prisma.LotteryConfigUncheckedCreateWithoutLandingsInput>
+  where?: Prisma.LotteryConfigWhereInput
 }
 
-export type LotteryConfigUpsertWithWhereUniqueWithoutLandingInput = {
-  where: Prisma.LotteryConfigWhereUniqueInput
-  update: Prisma.XOR<Prisma.LotteryConfigUpdateWithoutLandingInput, Prisma.LotteryConfigUncheckedUpdateWithoutLandingInput>
-  create: Prisma.XOR<Prisma.LotteryConfigCreateWithoutLandingInput, Prisma.LotteryConfigUncheckedCreateWithoutLandingInput>
+export type LotteryConfigUpdateToOneWithWhereWithoutLandingsInput = {
+  where?: Prisma.LotteryConfigWhereInput
+  data: Prisma.XOR<Prisma.LotteryConfigUpdateWithoutLandingsInput, Prisma.LotteryConfigUncheckedUpdateWithoutLandingsInput>
 }
 
-export type LotteryConfigUpdateWithWhereUniqueWithoutLandingInput = {
-  where: Prisma.LotteryConfigWhereUniqueInput
-  data: Prisma.XOR<Prisma.LotteryConfigUpdateWithoutLandingInput, Prisma.LotteryConfigUncheckedUpdateWithoutLandingInput>
+export type LotteryConfigUpdateWithoutLandingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
+  cooldown?: Prisma.EnumLotteryCooldownFieldUpdateOperationsInput | $Enums.LotteryCooldown
+  noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
+  guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  contactMethod?: Prisma.EnumLotteryContactMethodFieldUpdateOperationsInput | $Enums.LotteryContactMethod
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  merchant?: Prisma.MerchantUpdateOneRequiredWithoutLotteryConfigsNestedInput
+  plays?: Prisma.LotteryPlayUpdateManyWithoutConfigNestedInput
+  wins?: Prisma.LotteryWinUpdateManyWithoutConfigNestedInput
 }
 
-export type LotteryConfigUpdateManyWithWhereWithoutLandingInput = {
-  where: Prisma.LotteryConfigScalarWhereInput
-  data: Prisma.XOR<Prisma.LotteryConfigUpdateManyMutationInput, Prisma.LotteryConfigUncheckedUpdateManyWithoutLandingInput>
+export type LotteryConfigUncheckedUpdateWithoutLandingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
+  cooldown?: Prisma.EnumLotteryCooldownFieldUpdateOperationsInput | $Enums.LotteryCooldown
+  noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
+  guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  contactMethod?: Prisma.EnumLotteryContactMethodFieldUpdateOperationsInput | $Enums.LotteryContactMethod
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutConfigNestedInput
+  wins?: Prisma.LotteryWinUncheckedUpdateManyWithoutConfigNestedInput
 }
 
 export type LotteryConfigCreateWithoutPlaysInput = {
   id?: string
   name: string
-  status?: $Enums.LotteryConfigStatus
   enabled?: boolean
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  cooldown?: $Enums.LotteryCooldown
   noWinWeight?: number
   guaranteeWinOnFirstPlay?: boolean
   gifts: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -920,21 +815,17 @@ export type LotteryConfigCreateWithoutPlaysInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   merchant: Prisma.MerchantCreateNestedOneWithoutLotteryConfigsInput
-  landing: Prisma.LandingCreateNestedOneWithoutLotteryConfigsInput
   wins?: Prisma.LotteryWinCreateNestedManyWithoutConfigInput
+  landings?: Prisma.LandingCreateNestedManyWithoutLotteryConfigInput
 }
 
 export type LotteryConfigUncheckedCreateWithoutPlaysInput = {
   id?: string
   merchantId: string
-  landingId: string
   name: string
-  status?: $Enums.LotteryConfigStatus
   enabled?: boolean
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  cooldown?: $Enums.LotteryCooldown
   noWinWeight?: number
   guaranteeWinOnFirstPlay?: boolean
   gifts: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -942,6 +833,7 @@ export type LotteryConfigUncheckedCreateWithoutPlaysInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   wins?: Prisma.LotteryWinUncheckedCreateNestedManyWithoutConfigInput
+  landings?: Prisma.LandingUncheckedCreateNestedManyWithoutLotteryConfigInput
 }
 
 export type LotteryConfigCreateOrConnectWithoutPlaysInput = {
@@ -963,12 +855,9 @@ export type LotteryConfigUpdateToOneWithWhereWithoutPlaysInput = {
 export type LotteryConfigUpdateWithoutPlaysInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFieldUpdateOperationsInput | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -976,21 +865,17 @@ export type LotteryConfigUpdateWithoutPlaysInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   merchant?: Prisma.MerchantUpdateOneRequiredWithoutLotteryConfigsNestedInput
-  landing?: Prisma.LandingUpdateOneRequiredWithoutLotteryConfigsNestedInput
   wins?: Prisma.LotteryWinUpdateManyWithoutConfigNestedInput
+  landings?: Prisma.LandingUpdateManyWithoutLotteryConfigNestedInput
 }
 
 export type LotteryConfigUncheckedUpdateWithoutPlaysInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
-  landingId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFieldUpdateOperationsInput | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -998,17 +883,15 @@ export type LotteryConfigUncheckedUpdateWithoutPlaysInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wins?: Prisma.LotteryWinUncheckedUpdateManyWithoutConfigNestedInput
+  landings?: Prisma.LandingUncheckedUpdateManyWithoutLotteryConfigNestedInput
 }
 
 export type LotteryConfigCreateWithoutWinsInput = {
   id?: string
   name: string
-  status?: $Enums.LotteryConfigStatus
   enabled?: boolean
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  cooldown?: $Enums.LotteryCooldown
   noWinWeight?: number
   guaranteeWinOnFirstPlay?: boolean
   gifts: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1016,21 +899,17 @@ export type LotteryConfigCreateWithoutWinsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   merchant: Prisma.MerchantCreateNestedOneWithoutLotteryConfigsInput
-  landing: Prisma.LandingCreateNestedOneWithoutLotteryConfigsInput
   plays?: Prisma.LotteryPlayCreateNestedManyWithoutConfigInput
+  landings?: Prisma.LandingCreateNestedManyWithoutLotteryConfigInput
 }
 
 export type LotteryConfigUncheckedCreateWithoutWinsInput = {
   id?: string
   merchantId: string
-  landingId: string
   name: string
-  status?: $Enums.LotteryConfigStatus
   enabled?: boolean
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  cooldown?: $Enums.LotteryCooldown
   noWinWeight?: number
   guaranteeWinOnFirstPlay?: boolean
   gifts: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1038,6 +917,7 @@ export type LotteryConfigUncheckedCreateWithoutWinsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   plays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutConfigInput
+  landings?: Prisma.LandingUncheckedCreateNestedManyWithoutLotteryConfigInput
 }
 
 export type LotteryConfigCreateOrConnectWithoutWinsInput = {
@@ -1059,12 +939,9 @@ export type LotteryConfigUpdateToOneWithWhereWithoutWinsInput = {
 export type LotteryConfigUpdateWithoutWinsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFieldUpdateOperationsInput | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1072,21 +949,17 @@ export type LotteryConfigUpdateWithoutWinsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   merchant?: Prisma.MerchantUpdateOneRequiredWithoutLotteryConfigsNestedInput
-  landing?: Prisma.LandingUpdateOneRequiredWithoutLotteryConfigsNestedInput
   plays?: Prisma.LotteryPlayUpdateManyWithoutConfigNestedInput
+  landings?: Prisma.LandingUpdateManyWithoutLotteryConfigNestedInput
 }
 
 export type LotteryConfigUncheckedUpdateWithoutWinsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
-  landingId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFieldUpdateOperationsInput | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1094,18 +967,15 @@ export type LotteryConfigUncheckedUpdateWithoutWinsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   plays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutConfigNestedInput
+  landings?: Prisma.LandingUncheckedUpdateManyWithoutLotteryConfigNestedInput
 }
 
 export type LotteryConfigCreateManyMerchantInput = {
   id?: string
-  landingId: string
   name: string
-  status?: $Enums.LotteryConfigStatus
   enabled?: boolean
   playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
+  cooldown?: $Enums.LotteryCooldown
   noWinWeight?: number
   guaranteeWinOnFirstPlay?: boolean
   gifts: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1117,33 +987,26 @@ export type LotteryConfigCreateManyMerchantInput = {
 export type LotteryConfigUpdateWithoutMerchantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFieldUpdateOperationsInput | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   contactMethod?: Prisma.EnumLotteryContactMethodFieldUpdateOperationsInput | $Enums.LotteryContactMethod
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  landing?: Prisma.LandingUpdateOneRequiredWithoutLotteryConfigsNestedInput
   plays?: Prisma.LotteryPlayUpdateManyWithoutConfigNestedInput
   wins?: Prisma.LotteryWinUpdateManyWithoutConfigNestedInput
+  landings?: Prisma.LandingUpdateManyWithoutLotteryConfigNestedInput
 }
 
 export type LotteryConfigUncheckedUpdateWithoutMerchantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  landingId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFieldUpdateOperationsInput | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1152,94 +1015,15 @@ export type LotteryConfigUncheckedUpdateWithoutMerchantInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   plays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutConfigNestedInput
   wins?: Prisma.LotteryWinUncheckedUpdateManyWithoutConfigNestedInput
+  landings?: Prisma.LandingUncheckedUpdateManyWithoutLotteryConfigNestedInput
 }
 
 export type LotteryConfigUncheckedUpdateManyWithoutMerchantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  landingId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
-  guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  contactMethod?: Prisma.EnumLotteryContactMethodFieldUpdateOperationsInput | $Enums.LotteryContactMethod
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type LotteryConfigCreateManyLandingInput = {
-  id?: string
-  merchantId: string
-  name: string
-  status?: $Enums.LotteryConfigStatus
-  enabled?: boolean
-  playLimitPerUser: number
-  minDelayBetweenPlaysSec: number
-  startsAt?: Date | string | null
-  endsAt?: Date | string | null
-  noWinWeight?: number
-  guaranteeWinOnFirstPlay?: boolean
-  gifts: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  contactMethod?: $Enums.LotteryContactMethod
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type LotteryConfigUpdateWithoutLandingInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
-  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
-  guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  contactMethod?: Prisma.EnumLotteryContactMethodFieldUpdateOperationsInput | $Enums.LotteryContactMethod
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  merchant?: Prisma.MerchantUpdateOneRequiredWithoutLotteryConfigsNestedInput
-  plays?: Prisma.LotteryPlayUpdateManyWithoutConfigNestedInput
-  wins?: Prisma.LotteryWinUpdateManyWithoutConfigNestedInput
-}
-
-export type LotteryConfigUncheckedUpdateWithoutLandingInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  merchantId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
-  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
-  guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  contactMethod?: Prisma.EnumLotteryContactMethodFieldUpdateOperationsInput | $Enums.LotteryContactMethod
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  plays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutConfigNestedInput
-  wins?: Prisma.LotteryWinUncheckedUpdateManyWithoutConfigNestedInput
-}
-
-export type LotteryConfigUncheckedUpdateManyWithoutLandingInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  merchantId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLotteryConfigStatusFieldUpdateOperationsInput | $Enums.LotteryConfigStatus
-  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  playLimitPerUser?: Prisma.IntFieldUpdateOperationsInput | number
-  minDelayBetweenPlaysSec?: Prisma.IntFieldUpdateOperationsInput | number
-  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cooldown?: Prisma.EnumLotteryCooldownFieldUpdateOperationsInput | $Enums.LotteryCooldown
   noWinWeight?: Prisma.IntFieldUpdateOperationsInput | number
   guaranteeWinOnFirstPlay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gifts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1256,11 +1040,13 @@ export type LotteryConfigUncheckedUpdateManyWithoutLandingInput = {
 export type LotteryConfigCountOutputType = {
   plays: number
   wins: number
+  landings: number
 }
 
 export type LotteryConfigCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   plays?: boolean | LotteryConfigCountOutputTypeCountPlaysArgs
   wins?: boolean | LotteryConfigCountOutputTypeCountWinsArgs
+  landings?: boolean | LotteryConfigCountOutputTypeCountLandingsArgs
 }
 
 /**
@@ -1287,18 +1073,21 @@ export type LotteryConfigCountOutputTypeCountWinsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.LotteryWinWhereInput
 }
 
+/**
+ * LotteryConfigCountOutputType without action
+ */
+export type LotteryConfigCountOutputTypeCountLandingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LandingWhereInput
+}
+
 
 export type LotteryConfigSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   merchantId?: boolean
-  landingId?: boolean
   name?: boolean
-  status?: boolean
   enabled?: boolean
   playLimitPerUser?: boolean
-  minDelayBetweenPlaysSec?: boolean
-  startsAt?: boolean
-  endsAt?: boolean
+  cooldown?: boolean
   noWinWeight?: boolean
   guaranteeWinOnFirstPlay?: boolean
   gifts?: boolean
@@ -1306,23 +1095,19 @@ export type LotteryConfigSelect<ExtArgs extends runtime.Types.Extensions.Interna
   createdAt?: boolean
   updatedAt?: boolean
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
-  landing?: boolean | Prisma.LandingDefaultArgs<ExtArgs>
   plays?: boolean | Prisma.LotteryConfig$playsArgs<ExtArgs>
   wins?: boolean | Prisma.LotteryConfig$winsArgs<ExtArgs>
+  landings?: boolean | Prisma.LotteryConfig$landingsArgs<ExtArgs>
   _count?: boolean | Prisma.LotteryConfigCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lotteryConfig"]>
 
 export type LotteryConfigSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   merchantId?: boolean
-  landingId?: boolean
   name?: boolean
-  status?: boolean
   enabled?: boolean
   playLimitPerUser?: boolean
-  minDelayBetweenPlaysSec?: boolean
-  startsAt?: boolean
-  endsAt?: boolean
+  cooldown?: boolean
   noWinWeight?: boolean
   guaranteeWinOnFirstPlay?: boolean
   gifts?: boolean
@@ -1330,20 +1115,15 @@ export type LotteryConfigSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   createdAt?: boolean
   updatedAt?: boolean
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
-  landing?: boolean | Prisma.LandingDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lotteryConfig"]>
 
 export type LotteryConfigSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   merchantId?: boolean
-  landingId?: boolean
   name?: boolean
-  status?: boolean
   enabled?: boolean
   playLimitPerUser?: boolean
-  minDelayBetweenPlaysSec?: boolean
-  startsAt?: boolean
-  endsAt?: boolean
+  cooldown?: boolean
   noWinWeight?: boolean
   guaranteeWinOnFirstPlay?: boolean
   gifts?: boolean
@@ -1351,20 +1131,15 @@ export type LotteryConfigSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   createdAt?: boolean
   updatedAt?: boolean
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
-  landing?: boolean | Prisma.LandingDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lotteryConfig"]>
 
 export type LotteryConfigSelectScalar = {
   id?: boolean
   merchantId?: boolean
-  landingId?: boolean
   name?: boolean
-  status?: boolean
   enabled?: boolean
   playLimitPerUser?: boolean
-  minDelayBetweenPlaysSec?: boolean
-  startsAt?: boolean
-  endsAt?: boolean
+  cooldown?: boolean
   noWinWeight?: boolean
   guaranteeWinOnFirstPlay?: boolean
   gifts?: boolean
@@ -1373,42 +1148,36 @@ export type LotteryConfigSelectScalar = {
   updatedAt?: boolean
 }
 
-export type LotteryConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "merchantId" | "landingId" | "name" | "status" | "enabled" | "playLimitPerUser" | "minDelayBetweenPlaysSec" | "startsAt" | "endsAt" | "noWinWeight" | "guaranteeWinOnFirstPlay" | "gifts" | "contactMethod" | "createdAt" | "updatedAt", ExtArgs["result"]["lotteryConfig"]>
+export type LotteryConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "merchantId" | "name" | "enabled" | "playLimitPerUser" | "cooldown" | "noWinWeight" | "guaranteeWinOnFirstPlay" | "gifts" | "contactMethod" | "createdAt" | "updatedAt", ExtArgs["result"]["lotteryConfig"]>
 export type LotteryConfigInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
-  landing?: boolean | Prisma.LandingDefaultArgs<ExtArgs>
   plays?: boolean | Prisma.LotteryConfig$playsArgs<ExtArgs>
   wins?: boolean | Prisma.LotteryConfig$winsArgs<ExtArgs>
+  landings?: boolean | Prisma.LotteryConfig$landingsArgs<ExtArgs>
   _count?: boolean | Prisma.LotteryConfigCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LotteryConfigIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
-  landing?: boolean | Prisma.LandingDefaultArgs<ExtArgs>
 }
 export type LotteryConfigIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
-  landing?: boolean | Prisma.LandingDefaultArgs<ExtArgs>
 }
 
 export type $LotteryConfigPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "LotteryConfig"
   objects: {
     merchant: Prisma.$MerchantPayload<ExtArgs>
-    landing: Prisma.$LandingPayload<ExtArgs>
     plays: Prisma.$LotteryPlayPayload<ExtArgs>[]
     wins: Prisma.$LotteryWinPayload<ExtArgs>[]
+    landings: Prisma.$LandingPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     merchantId: string
-    landingId: string
     name: string
-    status: $Enums.LotteryConfigStatus
     enabled: boolean
     playLimitPerUser: number
-    minDelayBetweenPlaysSec: number
-    startsAt: Date | null
-    endsAt: Date | null
+    cooldown: $Enums.LotteryCooldown
     noWinWeight: number
     guaranteeWinOnFirstPlay: boolean
     gifts: runtime.JsonValue
@@ -1810,9 +1579,9 @@ readonly fields: LotteryConfigFieldRefs;
 export interface Prisma__LotteryConfigClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   merchant<T extends Prisma.MerchantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MerchantDefaultArgs<ExtArgs>>): Prisma.Prisma__MerchantClient<runtime.Types.Result.GetResult<Prisma.$MerchantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  landing<T extends Prisma.LandingDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LandingDefaultArgs<ExtArgs>>): Prisma.Prisma__LandingClient<runtime.Types.Result.GetResult<Prisma.$LandingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   plays<T extends Prisma.LotteryConfig$playsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LotteryConfig$playsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LotteryPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   wins<T extends Prisma.LotteryConfig$winsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LotteryConfig$winsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LotteryWinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  landings<T extends Prisma.LotteryConfig$landingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LotteryConfig$landingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LandingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1844,14 +1613,10 @@ export interface Prisma__LotteryConfigClient<T, Null = never, ExtArgs extends ru
 export interface LotteryConfigFieldRefs {
   readonly id: Prisma.FieldRef<"LotteryConfig", 'String'>
   readonly merchantId: Prisma.FieldRef<"LotteryConfig", 'String'>
-  readonly landingId: Prisma.FieldRef<"LotteryConfig", 'String'>
   readonly name: Prisma.FieldRef<"LotteryConfig", 'String'>
-  readonly status: Prisma.FieldRef<"LotteryConfig", 'LotteryConfigStatus'>
   readonly enabled: Prisma.FieldRef<"LotteryConfig", 'Boolean'>
   readonly playLimitPerUser: Prisma.FieldRef<"LotteryConfig", 'Int'>
-  readonly minDelayBetweenPlaysSec: Prisma.FieldRef<"LotteryConfig", 'Int'>
-  readonly startsAt: Prisma.FieldRef<"LotteryConfig", 'DateTime'>
-  readonly endsAt: Prisma.FieldRef<"LotteryConfig", 'DateTime'>
+  readonly cooldown: Prisma.FieldRef<"LotteryConfig", 'LotteryCooldown'>
   readonly noWinWeight: Prisma.FieldRef<"LotteryConfig", 'Int'>
   readonly guaranteeWinOnFirstPlay: Prisma.FieldRef<"LotteryConfig", 'Boolean'>
   readonly gifts: Prisma.FieldRef<"LotteryConfig", 'Json'>
@@ -2299,6 +2064,30 @@ export type LotteryConfig$winsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.LotteryWinScalarFieldEnum | Prisma.LotteryWinScalarFieldEnum[]
+}
+
+/**
+ * LotteryConfig.landings
+ */
+export type LotteryConfig$landingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Landing
+   */
+  select?: Prisma.LandingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Landing
+   */
+  omit?: Prisma.LandingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LandingInclude<ExtArgs> | null
+  where?: Prisma.LandingWhereInput
+  orderBy?: Prisma.LandingOrderByWithRelationInput | Prisma.LandingOrderByWithRelationInput[]
+  cursor?: Prisma.LandingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LandingScalarFieldEnum | Prisma.LandingScalarFieldEnum[]
 }
 
 /**

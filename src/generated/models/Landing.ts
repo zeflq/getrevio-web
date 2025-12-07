@@ -35,6 +35,7 @@ export type LandingMinAggregateOutputType = {
   publishedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  lotteryConfigId: string | null
 }
 
 export type LandingMaxAggregateOutputType = {
@@ -48,6 +49,7 @@ export type LandingMaxAggregateOutputType = {
   publishedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  lotteryConfigId: string | null
 }
 
 export type LandingCountAggregateOutputType = {
@@ -63,6 +65,7 @@ export type LandingCountAggregateOutputType = {
   publishedAt: number
   createdAt: number
   updatedAt: number
+  lotteryConfigId: number
   _all: number
 }
 
@@ -78,6 +81,7 @@ export type LandingMinAggregateInputType = {
   publishedAt?: true
   createdAt?: true
   updatedAt?: true
+  lotteryConfigId?: true
 }
 
 export type LandingMaxAggregateInputType = {
@@ -91,6 +95,7 @@ export type LandingMaxAggregateInputType = {
   publishedAt?: true
   createdAt?: true
   updatedAt?: true
+  lotteryConfigId?: true
 }
 
 export type LandingCountAggregateInputType = {
@@ -106,6 +111,7 @@ export type LandingCountAggregateInputType = {
   publishedAt?: true
   createdAt?: true
   updatedAt?: true
+  lotteryConfigId?: true
   _all?: true
 }
 
@@ -194,6 +200,7 @@ export type LandingGroupByOutputType = {
   publishedAt: Date | null
   createdAt: Date
   updatedAt: Date
+  lotteryConfigId: string | null
   _count: LandingCountAggregateOutputType | null
   _min: LandingMinAggregateOutputType | null
   _max: LandingMaxAggregateOutputType | null
@@ -230,12 +237,13 @@ export type LandingWhereInput = {
   publishedAt?: Prisma.DateTimeNullableFilter<"Landing"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Landing"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Landing"> | Date | string
+  lotteryConfigId?: Prisma.StringNullableFilter<"Landing"> | string | null
   merchant?: Prisma.XOR<Prisma.MerchantScalarRelationFilter, Prisma.MerchantWhereInput>
   theme?: Prisma.XOR<Prisma.ThemeNullableScalarRelationFilter, Prisma.ThemeWhereInput> | null
+  lotteryConfig?: Prisma.XOR<Prisma.LotteryConfigNullableScalarRelationFilter, Prisma.LotteryConfigWhereInput> | null
   places?: Prisma.PlaceListRelationFilter
   campaigns?: Prisma.CampaignListRelationFilter
   shortlinks?: Prisma.ShortlinkListRelationFilter
-  lotteryConfigs?: Prisma.LotteryConfigListRelationFilter
   lotteryPlays?: Prisma.LotteryPlayListRelationFilter
 }
 
@@ -252,12 +260,13 @@ export type LandingOrderByWithRelationInput = {
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lotteryConfigId?: Prisma.SortOrderInput | Prisma.SortOrder
   merchant?: Prisma.MerchantOrderByWithRelationInput
   theme?: Prisma.ThemeOrderByWithRelationInput
+  lotteryConfig?: Prisma.LotteryConfigOrderByWithRelationInput
   places?: Prisma.PlaceOrderByRelationAggregateInput
   campaigns?: Prisma.CampaignOrderByRelationAggregateInput
   shortlinks?: Prisma.ShortlinkOrderByRelationAggregateInput
-  lotteryConfigs?: Prisma.LotteryConfigOrderByRelationAggregateInput
   lotteryPlays?: Prisma.LotteryPlayOrderByRelationAggregateInput
 }
 
@@ -278,12 +287,13 @@ export type LandingWhereUniqueInput = Prisma.AtLeast<{
   publishedAt?: Prisma.DateTimeNullableFilter<"Landing"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Landing"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Landing"> | Date | string
+  lotteryConfigId?: Prisma.StringNullableFilter<"Landing"> | string | null
   merchant?: Prisma.XOR<Prisma.MerchantScalarRelationFilter, Prisma.MerchantWhereInput>
   theme?: Prisma.XOR<Prisma.ThemeNullableScalarRelationFilter, Prisma.ThemeWhereInput> | null
+  lotteryConfig?: Prisma.XOR<Prisma.LotteryConfigNullableScalarRelationFilter, Prisma.LotteryConfigWhereInput> | null
   places?: Prisma.PlaceListRelationFilter
   campaigns?: Prisma.CampaignListRelationFilter
   shortlinks?: Prisma.ShortlinkListRelationFilter
-  lotteryConfigs?: Prisma.LotteryConfigListRelationFilter
   lotteryPlays?: Prisma.LotteryPlayListRelationFilter
 }, "id" | "merchantId_slug">
 
@@ -300,6 +310,7 @@ export type LandingOrderByWithAggregationInput = {
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lotteryConfigId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.LandingCountOrderByAggregateInput
   _max?: Prisma.LandingMaxOrderByAggregateInput
   _min?: Prisma.LandingMinOrderByAggregateInput
@@ -321,6 +332,7 @@ export type LandingScalarWhereWithAggregatesInput = {
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Landing"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Landing"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Landing"> | Date | string
+  lotteryConfigId?: Prisma.StringNullableWithAggregatesFilter<"Landing"> | string | null
 }
 
 export type LandingCreateInput = {
@@ -336,10 +348,10 @@ export type LandingCreateInput = {
   updatedAt?: Date | string
   merchant: Prisma.MerchantCreateNestedOneWithoutLandingsInput
   theme?: Prisma.ThemeCreateNestedOneWithoutLandingsInput
+  lotteryConfig?: Prisma.LotteryConfigCreateNestedOneWithoutLandingsInput
   places?: Prisma.PlaceCreateNestedManyWithoutLandingInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutLandingInput
   shortlinks?: Prisma.ShortlinkCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutLandingInput
   lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutLandingInput
 }
 
@@ -356,10 +368,10 @@ export type LandingUncheckedCreateInput = {
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lotteryConfigId?: string | null
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutLandingInput
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutLandingInput
   shortlinks?: Prisma.ShortlinkUncheckedCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutLandingInput
   lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutLandingInput
 }
 
@@ -376,10 +388,10 @@ export type LandingUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   merchant?: Prisma.MerchantUpdateOneRequiredWithoutLandingsNestedInput
   theme?: Prisma.ThemeUpdateOneWithoutLandingsNestedInput
+  lotteryConfig?: Prisma.LotteryConfigUpdateOneWithoutLandingsNestedInput
   places?: Prisma.PlaceUpdateManyWithoutLandingNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutLandingNestedInput
   shortlinks?: Prisma.ShortlinkUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutLandingNestedInput
   lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutLandingNestedInput
 }
 
@@ -396,10 +408,10 @@ export type LandingUncheckedUpdateInput = {
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lotteryConfigId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   places?: Prisma.PlaceUncheckedUpdateManyWithoutLandingNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutLandingNestedInput
   shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutLandingNestedInput
   lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutLandingNestedInput
 }
 
@@ -416,6 +428,7 @@ export type LandingCreateManyInput = {
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lotteryConfigId?: string | null
 }
 
 export type LandingUpdateManyMutationInput = {
@@ -444,6 +457,7 @@ export type LandingUncheckedUpdateManyInput = {
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lotteryConfigId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LandingListRelationFilter = {
@@ -479,6 +493,7 @@ export type LandingCountOrderByAggregateInput = {
   publishedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lotteryConfigId?: Prisma.SortOrder
 }
 
 export type LandingMaxOrderByAggregateInput = {
@@ -492,6 +507,7 @@ export type LandingMaxOrderByAggregateInput = {
   publishedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lotteryConfigId?: Prisma.SortOrder
 }
 
 export type LandingMinOrderByAggregateInput = {
@@ -505,6 +521,7 @@ export type LandingMinOrderByAggregateInput = {
   publishedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lotteryConfigId?: Prisma.SortOrder
 }
 
 export type LandingScalarRelationFilter = {
@@ -648,18 +665,46 @@ export type EnumLandingStatusFieldUpdateOperationsInput = {
   set?: $Enums.LandingStatus
 }
 
-export type LandingCreateNestedOneWithoutLotteryConfigsInput = {
-  create?: Prisma.XOR<Prisma.LandingCreateWithoutLotteryConfigsInput, Prisma.LandingUncheckedCreateWithoutLotteryConfigsInput>
-  connectOrCreate?: Prisma.LandingCreateOrConnectWithoutLotteryConfigsInput
-  connect?: Prisma.LandingWhereUniqueInput
+export type LandingCreateNestedManyWithoutLotteryConfigInput = {
+  create?: Prisma.XOR<Prisma.LandingCreateWithoutLotteryConfigInput, Prisma.LandingUncheckedCreateWithoutLotteryConfigInput> | Prisma.LandingCreateWithoutLotteryConfigInput[] | Prisma.LandingUncheckedCreateWithoutLotteryConfigInput[]
+  connectOrCreate?: Prisma.LandingCreateOrConnectWithoutLotteryConfigInput | Prisma.LandingCreateOrConnectWithoutLotteryConfigInput[]
+  createMany?: Prisma.LandingCreateManyLotteryConfigInputEnvelope
+  connect?: Prisma.LandingWhereUniqueInput | Prisma.LandingWhereUniqueInput[]
 }
 
-export type LandingUpdateOneRequiredWithoutLotteryConfigsNestedInput = {
-  create?: Prisma.XOR<Prisma.LandingCreateWithoutLotteryConfigsInput, Prisma.LandingUncheckedCreateWithoutLotteryConfigsInput>
-  connectOrCreate?: Prisma.LandingCreateOrConnectWithoutLotteryConfigsInput
-  upsert?: Prisma.LandingUpsertWithoutLotteryConfigsInput
-  connect?: Prisma.LandingWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.LandingUpdateToOneWithWhereWithoutLotteryConfigsInput, Prisma.LandingUpdateWithoutLotteryConfigsInput>, Prisma.LandingUncheckedUpdateWithoutLotteryConfigsInput>
+export type LandingUncheckedCreateNestedManyWithoutLotteryConfigInput = {
+  create?: Prisma.XOR<Prisma.LandingCreateWithoutLotteryConfigInput, Prisma.LandingUncheckedCreateWithoutLotteryConfigInput> | Prisma.LandingCreateWithoutLotteryConfigInput[] | Prisma.LandingUncheckedCreateWithoutLotteryConfigInput[]
+  connectOrCreate?: Prisma.LandingCreateOrConnectWithoutLotteryConfigInput | Prisma.LandingCreateOrConnectWithoutLotteryConfigInput[]
+  createMany?: Prisma.LandingCreateManyLotteryConfigInputEnvelope
+  connect?: Prisma.LandingWhereUniqueInput | Prisma.LandingWhereUniqueInput[]
+}
+
+export type LandingUpdateManyWithoutLotteryConfigNestedInput = {
+  create?: Prisma.XOR<Prisma.LandingCreateWithoutLotteryConfigInput, Prisma.LandingUncheckedCreateWithoutLotteryConfigInput> | Prisma.LandingCreateWithoutLotteryConfigInput[] | Prisma.LandingUncheckedCreateWithoutLotteryConfigInput[]
+  connectOrCreate?: Prisma.LandingCreateOrConnectWithoutLotteryConfigInput | Prisma.LandingCreateOrConnectWithoutLotteryConfigInput[]
+  upsert?: Prisma.LandingUpsertWithWhereUniqueWithoutLotteryConfigInput | Prisma.LandingUpsertWithWhereUniqueWithoutLotteryConfigInput[]
+  createMany?: Prisma.LandingCreateManyLotteryConfigInputEnvelope
+  set?: Prisma.LandingWhereUniqueInput | Prisma.LandingWhereUniqueInput[]
+  disconnect?: Prisma.LandingWhereUniqueInput | Prisma.LandingWhereUniqueInput[]
+  delete?: Prisma.LandingWhereUniqueInput | Prisma.LandingWhereUniqueInput[]
+  connect?: Prisma.LandingWhereUniqueInput | Prisma.LandingWhereUniqueInput[]
+  update?: Prisma.LandingUpdateWithWhereUniqueWithoutLotteryConfigInput | Prisma.LandingUpdateWithWhereUniqueWithoutLotteryConfigInput[]
+  updateMany?: Prisma.LandingUpdateManyWithWhereWithoutLotteryConfigInput | Prisma.LandingUpdateManyWithWhereWithoutLotteryConfigInput[]
+  deleteMany?: Prisma.LandingScalarWhereInput | Prisma.LandingScalarWhereInput[]
+}
+
+export type LandingUncheckedUpdateManyWithoutLotteryConfigNestedInput = {
+  create?: Prisma.XOR<Prisma.LandingCreateWithoutLotteryConfigInput, Prisma.LandingUncheckedCreateWithoutLotteryConfigInput> | Prisma.LandingCreateWithoutLotteryConfigInput[] | Prisma.LandingUncheckedCreateWithoutLotteryConfigInput[]
+  connectOrCreate?: Prisma.LandingCreateOrConnectWithoutLotteryConfigInput | Prisma.LandingCreateOrConnectWithoutLotteryConfigInput[]
+  upsert?: Prisma.LandingUpsertWithWhereUniqueWithoutLotteryConfigInput | Prisma.LandingUpsertWithWhereUniqueWithoutLotteryConfigInput[]
+  createMany?: Prisma.LandingCreateManyLotteryConfigInputEnvelope
+  set?: Prisma.LandingWhereUniqueInput | Prisma.LandingWhereUniqueInput[]
+  disconnect?: Prisma.LandingWhereUniqueInput | Prisma.LandingWhereUniqueInput[]
+  delete?: Prisma.LandingWhereUniqueInput | Prisma.LandingWhereUniqueInput[]
+  connect?: Prisma.LandingWhereUniqueInput | Prisma.LandingWhereUniqueInput[]
+  update?: Prisma.LandingUpdateWithWhereUniqueWithoutLotteryConfigInput | Prisma.LandingUpdateWithWhereUniqueWithoutLotteryConfigInput[]
+  updateMany?: Prisma.LandingUpdateManyWithWhereWithoutLotteryConfigInput | Prisma.LandingUpdateManyWithWhereWithoutLotteryConfigInput[]
+  deleteMany?: Prisma.LandingScalarWhereInput | Prisma.LandingScalarWhereInput[]
 }
 
 export type LandingCreateNestedOneWithoutLotteryPlaysInput = {
@@ -688,10 +733,10 @@ export type LandingCreateWithoutMerchantInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   theme?: Prisma.ThemeCreateNestedOneWithoutLandingsInput
+  lotteryConfig?: Prisma.LotteryConfigCreateNestedOneWithoutLandingsInput
   places?: Prisma.PlaceCreateNestedManyWithoutLandingInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutLandingInput
   shortlinks?: Prisma.ShortlinkCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutLandingInput
   lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutLandingInput
 }
 
@@ -707,10 +752,10 @@ export type LandingUncheckedCreateWithoutMerchantInput = {
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lotteryConfigId?: string | null
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutLandingInput
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutLandingInput
   shortlinks?: Prisma.ShortlinkUncheckedCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutLandingInput
   lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutLandingInput
 }
 
@@ -756,6 +801,7 @@ export type LandingScalarWhereInput = {
   publishedAt?: Prisma.DateTimeNullableFilter<"Landing"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Landing"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Landing"> | Date | string
+  lotteryConfigId?: Prisma.StringNullableFilter<"Landing"> | string | null
 }
 
 export type LandingCreateWithoutPlacesInput = {
@@ -771,9 +817,9 @@ export type LandingCreateWithoutPlacesInput = {
   updatedAt?: Date | string
   merchant: Prisma.MerchantCreateNestedOneWithoutLandingsInput
   theme?: Prisma.ThemeCreateNestedOneWithoutLandingsInput
+  lotteryConfig?: Prisma.LotteryConfigCreateNestedOneWithoutLandingsInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutLandingInput
   shortlinks?: Prisma.ShortlinkCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutLandingInput
   lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutLandingInput
 }
 
@@ -790,9 +836,9 @@ export type LandingUncheckedCreateWithoutPlacesInput = {
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lotteryConfigId?: string | null
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutLandingInput
   shortlinks?: Prisma.ShortlinkUncheckedCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutLandingInput
   lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutLandingInput
 }
 
@@ -825,9 +871,9 @@ export type LandingUpdateWithoutPlacesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   merchant?: Prisma.MerchantUpdateOneRequiredWithoutLandingsNestedInput
   theme?: Prisma.ThemeUpdateOneWithoutLandingsNestedInput
+  lotteryConfig?: Prisma.LotteryConfigUpdateOneWithoutLandingsNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutLandingNestedInput
   shortlinks?: Prisma.ShortlinkUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutLandingNestedInput
   lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutLandingNestedInput
 }
 
@@ -844,9 +890,9 @@ export type LandingUncheckedUpdateWithoutPlacesInput = {
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lotteryConfigId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutLandingNestedInput
   shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutLandingNestedInput
   lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutLandingNestedInput
 }
 
@@ -862,10 +908,10 @@ export type LandingCreateWithoutThemeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   merchant: Prisma.MerchantCreateNestedOneWithoutLandingsInput
+  lotteryConfig?: Prisma.LotteryConfigCreateNestedOneWithoutLandingsInput
   places?: Prisma.PlaceCreateNestedManyWithoutLandingInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutLandingInput
   shortlinks?: Prisma.ShortlinkCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutLandingInput
   lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutLandingInput
 }
 
@@ -881,10 +927,10 @@ export type LandingUncheckedCreateWithoutThemeInput = {
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lotteryConfigId?: string | null
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutLandingInput
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutLandingInput
   shortlinks?: Prisma.ShortlinkUncheckedCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutLandingInput
   lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutLandingInput
 }
 
@@ -927,9 +973,9 @@ export type LandingCreateWithoutCampaignsInput = {
   updatedAt?: Date | string
   merchant: Prisma.MerchantCreateNestedOneWithoutLandingsInput
   theme?: Prisma.ThemeCreateNestedOneWithoutLandingsInput
+  lotteryConfig?: Prisma.LotteryConfigCreateNestedOneWithoutLandingsInput
   places?: Prisma.PlaceCreateNestedManyWithoutLandingInput
   shortlinks?: Prisma.ShortlinkCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutLandingInput
   lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutLandingInput
 }
 
@@ -946,9 +992,9 @@ export type LandingUncheckedCreateWithoutCampaignsInput = {
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lotteryConfigId?: string | null
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutLandingInput
   shortlinks?: Prisma.ShortlinkUncheckedCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutLandingInput
   lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutLandingInput
 }
 
@@ -981,9 +1027,9 @@ export type LandingUpdateWithoutCampaignsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   merchant?: Prisma.MerchantUpdateOneRequiredWithoutLandingsNestedInput
   theme?: Prisma.ThemeUpdateOneWithoutLandingsNestedInput
+  lotteryConfig?: Prisma.LotteryConfigUpdateOneWithoutLandingsNestedInput
   places?: Prisma.PlaceUpdateManyWithoutLandingNestedInput
   shortlinks?: Prisma.ShortlinkUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutLandingNestedInput
   lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutLandingNestedInput
 }
 
@@ -1000,9 +1046,9 @@ export type LandingUncheckedUpdateWithoutCampaignsInput = {
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lotteryConfigId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   places?: Prisma.PlaceUncheckedUpdateManyWithoutLandingNestedInput
   shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutLandingNestedInput
   lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutLandingNestedInput
 }
 
@@ -1019,9 +1065,9 @@ export type LandingCreateWithoutShortlinksInput = {
   updatedAt?: Date | string
   merchant: Prisma.MerchantCreateNestedOneWithoutLandingsInput
   theme?: Prisma.ThemeCreateNestedOneWithoutLandingsInput
+  lotteryConfig?: Prisma.LotteryConfigCreateNestedOneWithoutLandingsInput
   places?: Prisma.PlaceCreateNestedManyWithoutLandingInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutLandingInput
   lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutLandingInput
 }
 
@@ -1038,9 +1084,9 @@ export type LandingUncheckedCreateWithoutShortlinksInput = {
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lotteryConfigId?: string | null
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutLandingInput
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutLandingInput
   lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutLandingInput
 }
 
@@ -1073,9 +1119,9 @@ export type LandingUpdateWithoutShortlinksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   merchant?: Prisma.MerchantUpdateOneRequiredWithoutLandingsNestedInput
   theme?: Prisma.ThemeUpdateOneWithoutLandingsNestedInput
+  lotteryConfig?: Prisma.LotteryConfigUpdateOneWithoutLandingsNestedInput
   places?: Prisma.PlaceUpdateManyWithoutLandingNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutLandingNestedInput
   lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutLandingNestedInput
 }
 
@@ -1092,13 +1138,13 @@ export type LandingUncheckedUpdateWithoutShortlinksInput = {
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lotteryConfigId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   places?: Prisma.PlaceUncheckedUpdateManyWithoutLandingNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutLandingNestedInput
   lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutLandingNestedInput
 }
 
-export type LandingCreateWithoutLotteryConfigsInput = {
+export type LandingCreateWithoutLotteryConfigInput = {
   id?: string
   name: string
   slug: string
@@ -1117,7 +1163,7 @@ export type LandingCreateWithoutLotteryConfigsInput = {
   lotteryPlays?: Prisma.LotteryPlayCreateNestedManyWithoutLandingInput
 }
 
-export type LandingUncheckedCreateWithoutLotteryConfigsInput = {
+export type LandingUncheckedCreateWithoutLotteryConfigInput = {
   id?: string
   merchantId: string
   name: string
@@ -1136,58 +1182,30 @@ export type LandingUncheckedCreateWithoutLotteryConfigsInput = {
   lotteryPlays?: Prisma.LotteryPlayUncheckedCreateNestedManyWithoutLandingInput
 }
 
-export type LandingCreateOrConnectWithoutLotteryConfigsInput = {
+export type LandingCreateOrConnectWithoutLotteryConfigInput = {
   where: Prisma.LandingWhereUniqueInput
-  create: Prisma.XOR<Prisma.LandingCreateWithoutLotteryConfigsInput, Prisma.LandingUncheckedCreateWithoutLotteryConfigsInput>
+  create: Prisma.XOR<Prisma.LandingCreateWithoutLotteryConfigInput, Prisma.LandingUncheckedCreateWithoutLotteryConfigInput>
 }
 
-export type LandingUpsertWithoutLotteryConfigsInput = {
-  update: Prisma.XOR<Prisma.LandingUpdateWithoutLotteryConfigsInput, Prisma.LandingUncheckedUpdateWithoutLotteryConfigsInput>
-  create: Prisma.XOR<Prisma.LandingCreateWithoutLotteryConfigsInput, Prisma.LandingUncheckedCreateWithoutLotteryConfigsInput>
-  where?: Prisma.LandingWhereInput
+export type LandingCreateManyLotteryConfigInputEnvelope = {
+  data: Prisma.LandingCreateManyLotteryConfigInput | Prisma.LandingCreateManyLotteryConfigInput[]
+  skipDuplicates?: boolean
 }
 
-export type LandingUpdateToOneWithWhereWithoutLotteryConfigsInput = {
-  where?: Prisma.LandingWhereInput
-  data: Prisma.XOR<Prisma.LandingUpdateWithoutLotteryConfigsInput, Prisma.LandingUncheckedUpdateWithoutLotteryConfigsInput>
+export type LandingUpsertWithWhereUniqueWithoutLotteryConfigInput = {
+  where: Prisma.LandingWhereUniqueInput
+  update: Prisma.XOR<Prisma.LandingUpdateWithoutLotteryConfigInput, Prisma.LandingUncheckedUpdateWithoutLotteryConfigInput>
+  create: Prisma.XOR<Prisma.LandingCreateWithoutLotteryConfigInput, Prisma.LandingUncheckedCreateWithoutLotteryConfigInput>
 }
 
-export type LandingUpdateWithoutLotteryConfigsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumLandingStatusFieldUpdateOperationsInput | $Enums.LandingStatus
-  contentDraft?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  contentPublished?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  merchant?: Prisma.MerchantUpdateOneRequiredWithoutLandingsNestedInput
-  theme?: Prisma.ThemeUpdateOneWithoutLandingsNestedInput
-  places?: Prisma.PlaceUpdateManyWithoutLandingNestedInput
-  campaigns?: Prisma.CampaignUpdateManyWithoutLandingNestedInput
-  shortlinks?: Prisma.ShortlinkUpdateManyWithoutLandingNestedInput
-  lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutLandingNestedInput
+export type LandingUpdateWithWhereUniqueWithoutLotteryConfigInput = {
+  where: Prisma.LandingWhereUniqueInput
+  data: Prisma.XOR<Prisma.LandingUpdateWithoutLotteryConfigInput, Prisma.LandingUncheckedUpdateWithoutLotteryConfigInput>
 }
 
-export type LandingUncheckedUpdateWithoutLotteryConfigsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  merchantId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  themeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumLandingStatusFieldUpdateOperationsInput | $Enums.LandingStatus
-  contentDraft?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  contentPublished?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  places?: Prisma.PlaceUncheckedUpdateManyWithoutLandingNestedInput
-  campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutLandingNestedInput
-  shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutLandingNestedInput
-  lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutLandingNestedInput
+export type LandingUpdateManyWithWhereWithoutLotteryConfigInput = {
+  where: Prisma.LandingScalarWhereInput
+  data: Prisma.XOR<Prisma.LandingUpdateManyMutationInput, Prisma.LandingUncheckedUpdateManyWithoutLotteryConfigInput>
 }
 
 export type LandingCreateWithoutLotteryPlaysInput = {
@@ -1203,10 +1221,10 @@ export type LandingCreateWithoutLotteryPlaysInput = {
   updatedAt?: Date | string
   merchant: Prisma.MerchantCreateNestedOneWithoutLandingsInput
   theme?: Prisma.ThemeCreateNestedOneWithoutLandingsInput
+  lotteryConfig?: Prisma.LotteryConfigCreateNestedOneWithoutLandingsInput
   places?: Prisma.PlaceCreateNestedManyWithoutLandingInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutLandingInput
   shortlinks?: Prisma.ShortlinkCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigCreateNestedManyWithoutLandingInput
 }
 
 export type LandingUncheckedCreateWithoutLotteryPlaysInput = {
@@ -1222,10 +1240,10 @@ export type LandingUncheckedCreateWithoutLotteryPlaysInput = {
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lotteryConfigId?: string | null
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutLandingInput
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutLandingInput
   shortlinks?: Prisma.ShortlinkUncheckedCreateNestedManyWithoutLandingInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedCreateNestedManyWithoutLandingInput
 }
 
 export type LandingCreateOrConnectWithoutLotteryPlaysInput = {
@@ -1257,10 +1275,10 @@ export type LandingUpdateWithoutLotteryPlaysInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   merchant?: Prisma.MerchantUpdateOneRequiredWithoutLandingsNestedInput
   theme?: Prisma.ThemeUpdateOneWithoutLandingsNestedInput
+  lotteryConfig?: Prisma.LotteryConfigUpdateOneWithoutLandingsNestedInput
   places?: Prisma.PlaceUpdateManyWithoutLandingNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutLandingNestedInput
   shortlinks?: Prisma.ShortlinkUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutLandingNestedInput
 }
 
 export type LandingUncheckedUpdateWithoutLotteryPlaysInput = {
@@ -1276,10 +1294,10 @@ export type LandingUncheckedUpdateWithoutLotteryPlaysInput = {
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lotteryConfigId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   places?: Prisma.PlaceUncheckedUpdateManyWithoutLandingNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutLandingNestedInput
   shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutLandingNestedInput
 }
 
 export type LandingCreateManyMerchantInput = {
@@ -1294,6 +1312,7 @@ export type LandingCreateManyMerchantInput = {
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lotteryConfigId?: string | null
 }
 
 export type LandingUpdateWithoutMerchantInput = {
@@ -1308,10 +1327,10 @@ export type LandingUpdateWithoutMerchantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   theme?: Prisma.ThemeUpdateOneWithoutLandingsNestedInput
+  lotteryConfig?: Prisma.LotteryConfigUpdateOneWithoutLandingsNestedInput
   places?: Prisma.PlaceUpdateManyWithoutLandingNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutLandingNestedInput
   shortlinks?: Prisma.ShortlinkUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutLandingNestedInput
   lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutLandingNestedInput
 }
 
@@ -1327,10 +1346,10 @@ export type LandingUncheckedUpdateWithoutMerchantInput = {
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lotteryConfigId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   places?: Prisma.PlaceUncheckedUpdateManyWithoutLandingNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutLandingNestedInput
   shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutLandingNestedInput
   lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutLandingNestedInput
 }
 
@@ -1346,6 +1365,7 @@ export type LandingUncheckedUpdateManyWithoutMerchantInput = {
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lotteryConfigId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LandingCreateManyThemeInput = {
@@ -1360,6 +1380,7 @@ export type LandingCreateManyThemeInput = {
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lotteryConfigId?: string | null
 }
 
 export type LandingUpdateWithoutThemeInput = {
@@ -1374,10 +1395,10 @@ export type LandingUpdateWithoutThemeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   merchant?: Prisma.MerchantUpdateOneRequiredWithoutLandingsNestedInput
+  lotteryConfig?: Prisma.LotteryConfigUpdateOneWithoutLandingsNestedInput
   places?: Prisma.PlaceUpdateManyWithoutLandingNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutLandingNestedInput
   shortlinks?: Prisma.ShortlinkUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUpdateManyWithoutLandingNestedInput
   lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutLandingNestedInput
 }
 
@@ -1393,10 +1414,10 @@ export type LandingUncheckedUpdateWithoutThemeInput = {
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lotteryConfigId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   places?: Prisma.PlaceUncheckedUpdateManyWithoutLandingNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutLandingNestedInput
   shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutLandingNestedInput
-  lotteryConfigs?: Prisma.LotteryConfigUncheckedUpdateManyWithoutLandingNestedInput
   lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutLandingNestedInput
 }
 
@@ -1406,6 +1427,75 @@ export type LandingUncheckedUpdateManyWithoutThemeInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLandingStatusFieldUpdateOperationsInput | $Enums.LandingStatus
+  contentDraft?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  contentPublished?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lotteryConfigId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type LandingCreateManyLotteryConfigInput = {
+  id?: string
+  merchantId: string
+  name: string
+  slug: string
+  templateId?: string | null
+  themeId?: string | null
+  status?: $Enums.LandingStatus
+  contentDraft: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  contentPublished?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  publishedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type LandingUpdateWithoutLotteryConfigInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLandingStatusFieldUpdateOperationsInput | $Enums.LandingStatus
+  contentDraft?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  contentPublished?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  merchant?: Prisma.MerchantUpdateOneRequiredWithoutLandingsNestedInput
+  theme?: Prisma.ThemeUpdateOneWithoutLandingsNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutLandingNestedInput
+  campaigns?: Prisma.CampaignUpdateManyWithoutLandingNestedInput
+  shortlinks?: Prisma.ShortlinkUpdateManyWithoutLandingNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUpdateManyWithoutLandingNestedInput
+}
+
+export type LandingUncheckedUpdateWithoutLotteryConfigInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  themeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLandingStatusFieldUpdateOperationsInput | $Enums.LandingStatus
+  contentDraft?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  contentPublished?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutLandingNestedInput
+  campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutLandingNestedInput
+  shortlinks?: Prisma.ShortlinkUncheckedUpdateManyWithoutLandingNestedInput
+  lotteryPlays?: Prisma.LotteryPlayUncheckedUpdateManyWithoutLandingNestedInput
+}
+
+export type LandingUncheckedUpdateManyWithoutLotteryConfigInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  themeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLandingStatusFieldUpdateOperationsInput | $Enums.LandingStatus
   contentDraft?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   contentPublished?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1423,7 +1513,6 @@ export type LandingCountOutputType = {
   places: number
   campaigns: number
   shortlinks: number
-  lotteryConfigs: number
   lotteryPlays: number
 }
 
@@ -1431,7 +1520,6 @@ export type LandingCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   places?: boolean | LandingCountOutputTypeCountPlacesArgs
   campaigns?: boolean | LandingCountOutputTypeCountCampaignsArgs
   shortlinks?: boolean | LandingCountOutputTypeCountShortlinksArgs
-  lotteryConfigs?: boolean | LandingCountOutputTypeCountLotteryConfigsArgs
   lotteryPlays?: boolean | LandingCountOutputTypeCountLotteryPlaysArgs
 }
 
@@ -1469,13 +1557,6 @@ export type LandingCountOutputTypeCountShortlinksArgs<ExtArgs extends runtime.Ty
 /**
  * LandingCountOutputType without action
  */
-export type LandingCountOutputTypeCountLotteryConfigsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.LotteryConfigWhereInput
-}
-
-/**
- * LandingCountOutputType without action
- */
 export type LandingCountOutputTypeCountLotteryPlaysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.LotteryPlayWhereInput
 }
@@ -1494,12 +1575,13 @@ export type LandingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   publishedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lotteryConfigId?: boolean
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
   theme?: boolean | Prisma.Landing$themeArgs<ExtArgs>
+  lotteryConfig?: boolean | Prisma.Landing$lotteryConfigArgs<ExtArgs>
   places?: boolean | Prisma.Landing$placesArgs<ExtArgs>
   campaigns?: boolean | Prisma.Landing$campaignsArgs<ExtArgs>
   shortlinks?: boolean | Prisma.Landing$shortlinksArgs<ExtArgs>
-  lotteryConfigs?: boolean | Prisma.Landing$lotteryConfigsArgs<ExtArgs>
   lotteryPlays?: boolean | Prisma.Landing$lotteryPlaysArgs<ExtArgs>
   _count?: boolean | Prisma.LandingCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["landing"]>
@@ -1517,8 +1599,10 @@ export type LandingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   publishedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lotteryConfigId?: boolean
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
   theme?: boolean | Prisma.Landing$themeArgs<ExtArgs>
+  lotteryConfig?: boolean | Prisma.Landing$lotteryConfigArgs<ExtArgs>
 }, ExtArgs["result"]["landing"]>
 
 export type LandingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1534,8 +1618,10 @@ export type LandingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   publishedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lotteryConfigId?: boolean
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
   theme?: boolean | Prisma.Landing$themeArgs<ExtArgs>
+  lotteryConfig?: boolean | Prisma.Landing$lotteryConfigArgs<ExtArgs>
 }, ExtArgs["result"]["landing"]>
 
 export type LandingSelectScalar = {
@@ -1551,26 +1637,29 @@ export type LandingSelectScalar = {
   publishedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lotteryConfigId?: boolean
 }
 
-export type LandingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "merchantId" | "name" | "slug" | "templateId" | "themeId" | "status" | "contentDraft" | "contentPublished" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["landing"]>
+export type LandingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "merchantId" | "name" | "slug" | "templateId" | "themeId" | "status" | "contentDraft" | "contentPublished" | "publishedAt" | "createdAt" | "updatedAt" | "lotteryConfigId", ExtArgs["result"]["landing"]>
 export type LandingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
   theme?: boolean | Prisma.Landing$themeArgs<ExtArgs>
+  lotteryConfig?: boolean | Prisma.Landing$lotteryConfigArgs<ExtArgs>
   places?: boolean | Prisma.Landing$placesArgs<ExtArgs>
   campaigns?: boolean | Prisma.Landing$campaignsArgs<ExtArgs>
   shortlinks?: boolean | Prisma.Landing$shortlinksArgs<ExtArgs>
-  lotteryConfigs?: boolean | Prisma.Landing$lotteryConfigsArgs<ExtArgs>
   lotteryPlays?: boolean | Prisma.Landing$lotteryPlaysArgs<ExtArgs>
   _count?: boolean | Prisma.LandingCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LandingIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
   theme?: boolean | Prisma.Landing$themeArgs<ExtArgs>
+  lotteryConfig?: boolean | Prisma.Landing$lotteryConfigArgs<ExtArgs>
 }
 export type LandingIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
   theme?: boolean | Prisma.Landing$themeArgs<ExtArgs>
+  lotteryConfig?: boolean | Prisma.Landing$lotteryConfigArgs<ExtArgs>
 }
 
 export type $LandingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1578,10 +1667,10 @@ export type $LandingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     merchant: Prisma.$MerchantPayload<ExtArgs>
     theme: Prisma.$ThemePayload<ExtArgs> | null
+    lotteryConfig: Prisma.$LotteryConfigPayload<ExtArgs> | null
     places: Prisma.$PlacePayload<ExtArgs>[]
     campaigns: Prisma.$CampaignPayload<ExtArgs>[]
     shortlinks: Prisma.$ShortlinkPayload<ExtArgs>[]
-    lotteryConfigs: Prisma.$LotteryConfigPayload<ExtArgs>[]
     lotteryPlays: Prisma.$LotteryPlayPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1597,6 +1686,7 @@ export type $LandingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     publishedAt: Date | null
     createdAt: Date
     updatedAt: Date
+    lotteryConfigId: string | null
   }, ExtArgs["result"]["landing"]>
   composites: {}
 }
@@ -1993,10 +2083,10 @@ export interface Prisma__LandingClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   merchant<T extends Prisma.MerchantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MerchantDefaultArgs<ExtArgs>>): Prisma.Prisma__MerchantClient<runtime.Types.Result.GetResult<Prisma.$MerchantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   theme<T extends Prisma.Landing$themeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Landing$themeArgs<ExtArgs>>): Prisma.Prisma__ThemeClient<runtime.Types.Result.GetResult<Prisma.$ThemePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  lotteryConfig<T extends Prisma.Landing$lotteryConfigArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Landing$lotteryConfigArgs<ExtArgs>>): Prisma.Prisma__LotteryConfigClient<runtime.Types.Result.GetResult<Prisma.$LotteryConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   places<T extends Prisma.Landing$placesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Landing$placesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   campaigns<T extends Prisma.Landing$campaignsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Landing$campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   shortlinks<T extends Prisma.Landing$shortlinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Landing$shortlinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShortlinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  lotteryConfigs<T extends Prisma.Landing$lotteryConfigsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Landing$lotteryConfigsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LotteryConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   lotteryPlays<T extends Prisma.Landing$lotteryPlaysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Landing$lotteryPlaysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LotteryPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2039,6 +2129,7 @@ export interface LandingFieldRefs {
   readonly publishedAt: Prisma.FieldRef<"Landing", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Landing", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Landing", 'DateTime'>
+  readonly lotteryConfigId: Prisma.FieldRef<"Landing", 'String'>
 }
     
 
@@ -2454,6 +2545,25 @@ export type Landing$themeArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
+ * Landing.lotteryConfig
+ */
+export type Landing$lotteryConfigArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LotteryConfig
+   */
+  select?: Prisma.LotteryConfigSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LotteryConfig
+   */
+  omit?: Prisma.LotteryConfigOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LotteryConfigInclude<ExtArgs> | null
+  where?: Prisma.LotteryConfigWhereInput
+}
+
+/**
  * Landing.places
  */
 export type Landing$placesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2523,30 +2633,6 @@ export type Landing$shortlinksArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.ShortlinkScalarFieldEnum | Prisma.ShortlinkScalarFieldEnum[]
-}
-
-/**
- * Landing.lotteryConfigs
- */
-export type Landing$lotteryConfigsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the LotteryConfig
-   */
-  select?: Prisma.LotteryConfigSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the LotteryConfig
-   */
-  omit?: Prisma.LotteryConfigOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.LotteryConfigInclude<ExtArgs> | null
-  where?: Prisma.LotteryConfigWhereInput
-  orderBy?: Prisma.LotteryConfigOrderByWithRelationInput | Prisma.LotteryConfigOrderByWithRelationInput[]
-  cursor?: Prisma.LotteryConfigWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.LotteryConfigScalarFieldEnum | Prisma.LotteryConfigScalarFieldEnum[]
 }
 
 /**

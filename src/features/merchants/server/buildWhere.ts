@@ -1,5 +1,4 @@
-import type { Prisma } from "@prisma/client";
-
+import { Prisma } from "@/generated/client";
 import type { MerchantFilters } from "../model/merchantSchema";
 
 export const buildMerchantWhere = (

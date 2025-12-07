@@ -83,6 +83,14 @@ export const LotteryWinStatus = {
 export type LotteryWinStatus = (typeof LotteryWinStatus)[keyof typeof LotteryWinStatus]
 
 
+export const LotteryDeliveryChannel = {
+  email: 'email',
+  sms: 'sms'
+} as const
+
+export type LotteryDeliveryChannel = (typeof LotteryDeliveryChannel)[keyof typeof LotteryDeliveryChannel]
+
+
 export const LotteryContactMethod = {
   email: 'email',
   phone: 'phone'
@@ -91,9 +99,10 @@ export const LotteryContactMethod = {
 export type LotteryContactMethod = (typeof LotteryContactMethod)[keyof typeof LotteryContactMethod]
 
 
-export const LotteryDeliveryChannel = {
-  email: 'email',
-  sms: 'sms'
+export const LotteryCooldown = {
+  one_hour: 'one_hour',
+  one_day: 'one_day',
+  one_week: 'one_week'
 } as const
 
-export type LotteryDeliveryChannel = (typeof LotteryDeliveryChannel)[keyof typeof LotteryDeliveryChannel]
+export type LotteryCooldown = (typeof LotteryCooldown)[keyof typeof LotteryCooldown]

@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from "@/generated/client";
 
 import { landingSelect, landingLiteSelect } from "./infrastructure/prisma/landingSelects";
 import { ensureLandingContentShape, LandingContent } from "../model/landingContentSchema";

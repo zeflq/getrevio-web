@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from "@/generated/client";
 
 import { themeLiteSelect, themeSelect } from "./infrastructure/prisma/themeSelects";
 import type { ThemeMeta } from "@/types/domain";

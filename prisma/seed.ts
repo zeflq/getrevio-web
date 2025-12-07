@@ -1,4 +1,4 @@
-import { PrismaClient, Plan, Status } from "@prisma/client";
+import { Plan, PrismaClient, Status } from "@/generated/client";
 import { buildThemeMeta } from "../src/features/themes/lib/themeMeta";
 import { PrismaPg } from '@prisma/adapter-pg';
 

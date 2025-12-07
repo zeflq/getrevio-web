@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "./generated"
+  output   = "../src/generated"
 }
 
 datasource db {
@@ -164,11 +164,13 @@ model Landing {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
-  places         Place[]
-  campaigns      Campaign[]
-  shortlinks     Shortlink[]
-  lotteryConfigs LotteryConfig[]
-  lotteryPlays   LotteryPlay[]
+  lotteryConfigId String?
+  lotteryConfig   LotteryConfig? @relation(fields: [lotteryConfigId], references: [id], onDelete: SetNull)
+
+  places       Place[]
+  campaigns    Campaign[]
+  shortlinks   Shortlink[]
+  lotteryPlays LotteryPlay[]
 
   @@unique([merchantId, slug], map: "landing_merchant_slug_unique")
   @@index([merchantId, status])
@@ -275,6 +277,8 @@ model Jwks {
   @@map("jwks")
 }
 
+// --- Lottery ---
+
 enum LotteryConfigStatus {
   draft
   active
@@ -302,37 +306,33 @@ enum LotteryWinStatus {
   expired // lot arrivé à expiration
 }
 
-enum LotteryContactMethod {
-  email
-  phone
-}
-
 enum LotteryDeliveryChannel {
   email
   sms
 }
 
-// --- Lottery ---
+enum LotteryContactMethod {
+  email
+  phone
+}
+
+enum LotteryCooldown {
+  one_hour
+  one_day
+  one_week
+}
 
 model LotteryConfig {
   id         String   @id @default(cuid())
   merchantId String
   merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
-  // link to the landing where the slot is used
-  landingId String
-  landing   Landing @relation(fields: [landingId], references: [id], onDelete: Cascade)
-
   name    String
-  status  LotteryConfigStatus @default(draft)
   enabled Boolean             @default(false)
 
   // game rules
   playLimitPerUser        Int
-  minDelayBetweenPlaysSec Int
-
-  startsAt DateTime?
-  endsAt   DateTime?
+  cooldown                LotteryCooldown @default(one_day)
 
   noWinWeight             Int     @default(0)
   guaranteeWinOnFirstPlay Boolean @default(false)
@@ -340,17 +340,18 @@ model LotteryConfig {
   // gifts definition (JSON array)
   gifts Json
 
-  // NEW: which WinningDrawer to display (email or phone)
+  // WinningDrawer: email ou phone
   contactMethod LotteryContactMethod @default(email)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  plays LotteryPlay[]
-  wins  LotteryWin[]
+  // relations
+  plays    LotteryPlay[]
+  wins     LotteryWin[]
+  landings Landing[]
 
   @@index([merchantId])
-  @@index([landingId])
 }
 
 model LotteryPlay {

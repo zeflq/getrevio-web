@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from "@/generated/client";
 
 import { createQueryPolicy } from "@/server/core/policies/queryPolicy";
 

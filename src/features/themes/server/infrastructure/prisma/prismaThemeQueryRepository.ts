@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/generated/client";
 
 import prisma from "@/lib/prisma";
 import { makeSortPolicy } from "@/server/core/policies/sortPolicy";
@@ -7,11 +7,11 @@ import type {
   ThemeQueryRepository,
   ThemeQueryOptions,
 } from "../../application/interfaces/themeQueryRepository";
-import type { ThemeFilters } from "../../model/themeSchema";
 import { buildThemeWhere } from "../../buildWhere";
 import { themeQueryPolicy } from "../../policy";
 import { mapThemeRow, type ThemeListDTO } from "../../mappers";
 import { themeLiteSelect, themeSelect } from "./themeSelects";
+import { ThemeFilters } from "@/features/themes/model/themeSchema";
 
 const themeSortPolicy = makeSortPolicy<ThemeFilters>({
   allowed: ["name", "createdAt"],

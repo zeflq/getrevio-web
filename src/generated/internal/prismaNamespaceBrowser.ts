@@ -178,7 +178,8 @@ export const LandingScalarFieldEnum = {
   contentPublished: 'contentPublished',
   publishedAt: 'publishedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  lotteryConfigId: 'lotteryConfigId'
 } as const
 
 export type LandingScalarFieldEnum = (typeof LandingScalarFieldEnum)[keyof typeof LandingScalarFieldEnum]
@@ -281,14 +282,10 @@ export type JwksScalarFieldEnum = (typeof JwksScalarFieldEnum)[keyof typeof Jwks
 export const LotteryConfigScalarFieldEnum = {
   id: 'id',
   merchantId: 'merchantId',
-  landingId: 'landingId',
   name: 'name',
-  status: 'status',
   enabled: 'enabled',
   playLimitPerUser: 'playLimitPerUser',
-  minDelayBetweenPlaysSec: 'minDelayBetweenPlaysSec',
-  startsAt: 'startsAt',
-  endsAt: 'endsAt',
+  cooldown: 'cooldown',
   noWinWeight: 'noWinWeight',
   guaranteeWinOnFirstPlay: 'guaranteeWinOnFirstPlay',
   gifts: 'gifts',
