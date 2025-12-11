@@ -4,7 +4,6 @@ import { RHFCombobox, RHFInput, RHFSelect } from "@/components/form/controls";
 import type { LiteListe } from "@/types/lists";
 import {
   booleanOptions,
-  lotteryContactMethodOptions,
   lotteryCooldownOptions,
 } from "@/features/lotteries/model/lotterySchema";
 import { LotteryGiftsBuilder } from "./LotteryGiftsBuilder";
@@ -13,9 +12,15 @@ type Props = {
   disabled?: boolean;
   merchantId?: string;
   merchantsLite?: LiteListe[];
+  showGifts?: boolean;
 };
 
-export function LotteryFormFields({ disabled, merchantId, merchantsLite = [] }: Props) {
+export function LotteryFormFields({
+  disabled,
+  merchantId,
+  merchantsLite = [],
+  showGifts = true,
+}: Props) {
   const { register } = useFormContext();
 
   return (
@@ -45,7 +50,7 @@ export function LotteryFormFields({ disabled, merchantId, merchantsLite = [] }: 
           disabled={disabled}
         />
 
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           <RHFSelect
             name="enabled"
             label="Enabled"
@@ -61,13 +66,6 @@ export function LotteryFormFields({ disabled, merchantId, merchantsLite = [] }: 
             placeholder="Guarantee win?"
             disabled={disabled}
             requiredStar
-          />
-          <RHFSelect
-            name="contactMethod"
-            label="Contact method"
-            options={lotteryContactMethodOptions}
-            placeholder="Select a method"
-            disabled={disabled}
           />
         </div>
 
@@ -103,7 +101,7 @@ export function LotteryFormFields({ disabled, merchantId, merchantsLite = [] }: 
         </div>
       </div>
 
-      <LotteryGiftsBuilder name="gifts" disabled={disabled} />
+      {showGifts && <LotteryGiftsBuilder name="gifts" disabled={disabled} />}
     </div>
   );
 }

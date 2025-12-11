@@ -51,7 +51,7 @@ export const lotteryCooldownSchema = z.enum(["one_hour", "one_day", "one_week"])
 
 export type LotteryCooldownFormValue = z.infer<typeof lotteryCooldownSchema>;
 
-export const lotteryConfigBaseSchema = z.object({
+const lotteryConfigBaseSchema = z.object({
   merchantId: z.string().min(1, "Merchant is required"),
   name: z.string().min(1, "Name is required"),
   enabled: booleanString,
@@ -59,26 +59,30 @@ export const lotteryConfigBaseSchema = z.object({
   cooldown: lotteryCooldownSchema,
   noWinWeight: z.coerce.number().int().min(0, "Weight must be non-negative"),
   guaranteeWinOnFirstPlay: booleanString,
-  contactMethod: z.enum(["email", "phone"]),
-  gifts: z.array(lotteryGiftSchema).min(1, "Add at least one gift"),
 });
 
-export const lotteryConfigCreateSchema = lotteryConfigBaseSchema;
-export const lotteryConfigUpdateSchema = lotteryConfigBaseSchema.extend({
+const lotteryGiftsSchema = z.array(lotteryGiftSchema);
+const lotteryGiftsRequiredSchema = lotteryGiftsSchema.min(1, "Add at least one gift");
+
+export const lotteryConfigCreateSchema = lotteryConfigBaseSchema.extend({
+  gifts: lotteryGiftsSchema.default([]),
+});
+
+const lotteryConfigFormSchema = lotteryConfigBaseSchema.extend({
+  gifts: lotteryGiftsRequiredSchema,
+});
+
+export const lotteryConfigUpdateSchema = lotteryConfigFormSchema.extend({
   id: z.string().min(1, "ID is required"),
 });
 
 export type LotteryGiftFormValue = z.infer<typeof lotteryGiftSchema>;
-export type LotteryConfigFormValues = z.infer<typeof lotteryConfigBaseSchema>;
+export type LotteryConfigCreateFormValues = z.infer<typeof lotteryConfigCreateSchema>;
+export type LotteryConfigFormValues = z.infer<typeof lotteryConfigFormSchema>;
 
 export const booleanOptions = [
   { value: "true", label: "Yes" },
   { value: "false", label: "No" },
-];
-
-export const lotteryContactMethodOptions = [
-  { value: "email", label: "Email" },
-  { value: "phone", label: "Phone" },
 ];
 
 export const lotteryCooldownOptions = [

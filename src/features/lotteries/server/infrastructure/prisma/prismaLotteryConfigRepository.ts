@@ -20,7 +20,6 @@ export class PrismaLotteryConfigRepository implements LotteryConfigRepository {
         cooldown: record.cooldown,
         noWinWeight: record.noWinWeight,
         guaranteeWinOnFirstPlay: record.guaranteeWinOnFirstPlay,
-        contactMethod: record.contactMethod,
         gifts: record.gifts,
       },
     });
@@ -41,7 +40,6 @@ export class PrismaLotteryConfigRepository implements LotteryConfigRepository {
         cooldown: record.cooldown,
         noWinWeight: record.noWinWeight,
         guaranteeWinOnFirstPlay: record.guaranteeWinOnFirstPlay,
-        contactMethod: record.contactMethod,
         gifts: record.gifts,
       },
     });

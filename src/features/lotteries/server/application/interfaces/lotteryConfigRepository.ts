@@ -1,4 +1,4 @@
-import type { LotteryContactMethod, LotteryCooldown } from "@/generated/client";
+import type { LotteryCooldown } from "@/generated/client";
 
 import type { LotteryGiftFormValue } from "@/features/lotteries/model/lotterySchema";
 
@@ -10,7 +10,6 @@ export type LotteryConfigCreateRecord = {
   cooldown: LotteryCooldown;
   noWinWeight: number;
   guaranteeWinOnFirstPlay: boolean;
-  contactMethod: LotteryContactMethod;
   gifts: LotteryGiftFormValue[];
 };
 

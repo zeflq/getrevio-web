@@ -1,8 +1,8 @@
 import type { LotteryConfigCreateRecord, LotteryConfigRepository } from "../interfaces/lotteryConfigRepository";
 import { SUPER_ADMIN } from "@/lib/utils";
-import type { LotteryConfigFormValues } from "@/features/lotteries/model/lotterySchema";
+import type { LotteryConfigCreateFormValues } from "@/features/lotteries/model/lotterySchema";
 
-type CreateLotteryConfigCommand = LotteryConfigFormValues & {
+type CreateLotteryConfigCommand = LotteryConfigCreateFormValues & {
   tenantId?: string | null;
   userRole?: string | null;
 };
@@ -23,7 +23,6 @@ export class CreateLotteryConfigUseCase {
       cooldown: command.cooldown,
       noWinWeight: command.noWinWeight,
       guaranteeWinOnFirstPlay: toBoolean(command.guaranteeWinOnFirstPlay),
-      contactMethod: command.contactMethod,
       gifts: command.gifts,
     };
 

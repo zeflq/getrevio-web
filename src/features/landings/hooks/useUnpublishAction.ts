@@ -42,3 +42,5 @@ export function useUnpublishAction(options?: ActionHookOptions) {
     },
   });
 }
+
+export type LandingUnpublishAction = ReturnType<typeof useUnpublishAction>;

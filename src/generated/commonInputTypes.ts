@@ -352,13 +352,6 @@ export type EnumLotteryCooldownFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumLotteryCooldownFilter<$PrismaModel> | $Enums.LotteryCooldown
 }
 
-export type EnumLotteryContactMethodFilter<$PrismaModel = never> = {
-  equals?: $Enums.LotteryContactMethod | Prisma.EnumLotteryContactMethodFieldRefInput<$PrismaModel>
-  in?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
-  notIn?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumLotteryContactMethodFilter<$PrismaModel> | $Enums.LotteryContactMethod
-}
-
 export type EnumLotteryCooldownWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.LotteryCooldown | Prisma.EnumLotteryCooldownFieldRefInput<$PrismaModel>
   in?: $Enums.LotteryCooldown[] | Prisma.ListEnumLotteryCooldownFieldRefInput<$PrismaModel>
@@ -367,16 +360,6 @@ export type EnumLotteryCooldownWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumLotteryCooldownFilter<$PrismaModel>
   _max?: Prisma.NestedEnumLotteryCooldownFilter<$PrismaModel>
-}
-
-export type EnumLotteryContactMethodWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.LotteryContactMethod | Prisma.EnumLotteryContactMethodFieldRefInput<$PrismaModel>
-  in?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
-  notIn?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumLotteryContactMethodWithAggregatesFilter<$PrismaModel> | $Enums.LotteryContactMethod
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumLotteryContactMethodFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumLotteryContactMethodFilter<$PrismaModel>
 }
 
 export type EnumLotteryPlayResultFilter<$PrismaModel = never> = {
@@ -744,13 +727,6 @@ export type NestedEnumLotteryCooldownFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumLotteryCooldownFilter<$PrismaModel> | $Enums.LotteryCooldown
 }
 
-export type NestedEnumLotteryContactMethodFilter<$PrismaModel = never> = {
-  equals?: $Enums.LotteryContactMethod | Prisma.EnumLotteryContactMethodFieldRefInput<$PrismaModel>
-  in?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
-  notIn?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumLotteryContactMethodFilter<$PrismaModel> | $Enums.LotteryContactMethod
-}
-
 export type NestedEnumLotteryCooldownWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.LotteryCooldown | Prisma.EnumLotteryCooldownFieldRefInput<$PrismaModel>
   in?: $Enums.LotteryCooldown[] | Prisma.ListEnumLotteryCooldownFieldRefInput<$PrismaModel>
@@ -759,16 +735,6 @@ export type NestedEnumLotteryCooldownWithAggregatesFilter<$PrismaModel = never> 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumLotteryCooldownFilter<$PrismaModel>
   _max?: Prisma.NestedEnumLotteryCooldownFilter<$PrismaModel>
-}
-
-export type NestedEnumLotteryContactMethodWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.LotteryContactMethod | Prisma.EnumLotteryContactMethodFieldRefInput<$PrismaModel>
-  in?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
-  notIn?: $Enums.LotteryContactMethod[] | Prisma.ListEnumLotteryContactMethodFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumLotteryContactMethodWithAggregatesFilter<$PrismaModel> | $Enums.LotteryContactMethod
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumLotteryContactMethodFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumLotteryContactMethodFilter<$PrismaModel>
 }
 
 export type NestedEnumLotteryPlayResultFilter<$PrismaModel = never> = {

@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogForm } from "@/components/form/DialogForm";
 import {
   lotteryConfigCreateSchema,
-  type LotteryConfigFormValues,
+  type LotteryConfigCreateFormValues,
 } from "@/features/lotteries/model/lotterySchema";
 import { useCreateLottery } from "@/features/lotteries/hooks/useLotteryCrud";
 import type { LiteListe } from "@/types/lists";
@@ -27,7 +27,7 @@ export function CreateLotteryDialog({
   merchantsLite = [],
   onSuccess,
 }: CreateLotteryDialogProps) {
-  const { execute, isExecuting } = useCreateLottery<LotteryConfigFormValues, { ok?: true }>({
+  const { execute, isExecuting } = useCreateLottery<LotteryConfigCreateFormValues, { ok?: true }>({
     onSuccess: () => {
       resetForm();
       onOpenChange(false);
@@ -35,8 +35,8 @@ export function CreateLotteryDialog({
     },
   });
 
-  const methods = useForm<LotteryConfigFormValues>({
-    resolver: zodResolver(lotteryConfigCreateSchema) as Resolver<LotteryConfigFormValues>,
+  const methods = useForm<LotteryConfigCreateFormValues>({
+    resolver: zodResolver(lotteryConfigCreateSchema) as Resolver<LotteryConfigCreateFormValues>,
     mode: "onChange",
     defaultValues: {
       merchantId: merchantId ?? "",
@@ -46,7 +46,6 @@ export function CreateLotteryDialog({
       cooldown: "one_day",
       noWinWeight: 0,
       guaranteeWinOnFirstPlay: "false",
-      contactMethod: "email",
       gifts: [],
     },
   });
@@ -68,21 +67,25 @@ export function CreateLotteryDialog({
       cooldown: "one_day",
       noWinWeight: 0,
       guaranteeWinOnFirstPlay: "false",
-      contactMethod: "email",
       gifts: [],
     });
 
-  const onSubmit = (values: LotteryConfigFormValues) => {
+  const onSubmit = (values: LotteryConfigCreateFormValues) => {
     execute(values);
   };
 
   type MethodsWithSlot = typeof methods & { _slot?: React.ReactNode };
   (methods as MethodsWithSlot)._slot = (
-    <LotteryFormFields disabled={isExecuting} merchantId={merchantId} merchantsLite={merchantsLite} />
+      <LotteryFormFields
+        disabled={isExecuting}
+        merchantId={merchantId}
+        merchantsLite={merchantsLite}
+        showGifts={false}
+      />
   );
 
   return (
-    <DialogForm<LotteryConfigFormValues>
+    <DialogForm<LotteryConfigCreateFormValues>
       open={open}
       onOpenChange={(next) => {
         if (!next) {

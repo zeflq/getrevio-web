@@ -13,10 +13,12 @@ import { LandingNotFoundState } from "./LandingNotFoundState";
 import { useDirtyBeforeUnload } from "../hooks/useDirtyBeforeUnload";
 import { useLandingPageDerivedState } from "../hooks/useLandingPageDerivedState";
 import { useLandingPublishHandlers } from "../hooks/useLandingPublishHandlers";
+import { useLandingHeaderActions } from "../hooks/useLandingHeaderActions";
 
 import type { LandingListItem } from "../server/mappers";
 import type { LandingFormValues } from "../model/landingSchema";
-import { useLandingHeaderActions } from "../hooks/useLandingHeaderActions";
+import type { LandingPublishAction } from "../hooks/usePublishAction";
+import type { LandingUnpublishAction } from "../hooks/useUnpublishAction";
 
 type LandingEditPageViewProps = {
   tenantId: string | null;
@@ -31,8 +33,8 @@ type LandingEditPageViewProps = {
   isSubmitting: boolean;
   onSubmit: React.FormEventHandler<HTMLFormElement>;
   onReset: () => void;
-  publishAction: { execute: (payload: any) => Promise<void>; isExecuting: boolean };
-  unpublishAction: { execute: (payload: any) => Promise<void>; isExecuting: boolean };
+  publishAction: LandingPublishAction;
+  unpublishAction: LandingUnpublishAction;
 };
 
 type ActiveTab = "settings" | "content";

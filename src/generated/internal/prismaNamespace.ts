@@ -1846,7 +1846,6 @@ export const LotteryConfigScalarFieldEnum = {
   noWinWeight: 'noWinWeight',
   guaranteeWinOnFirstPlay: 'guaranteeWinOnFirstPlay',
   gifts: 'gifts',
-  contactMethod: 'contactMethod',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2082,20 +2081,6 @@ export type EnumLotteryCooldownFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'LotteryCooldown[]'
  */
 export type ListEnumLotteryCooldownFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LotteryCooldown[]'>
-    
-
-
-/**
- * Reference to a field of type 'LotteryContactMethod'
- */
-export type EnumLotteryContactMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LotteryContactMethod'>
-    
-
-
-/**
- * Reference to a field of type 'LotteryContactMethod[]'
- */
-export type ListEnumLotteryContactMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LotteryContactMethod[]'>
     
 
 

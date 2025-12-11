@@ -289,7 +289,6 @@ export const LotteryConfigScalarFieldEnum = {
   noWinWeight: 'noWinWeight',
   guaranteeWinOnFirstPlay: 'guaranteeWinOnFirstPlay',
   gifts: 'gifts',
-  contactMethod: 'contactMethod',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

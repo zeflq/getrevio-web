@@ -42,3 +42,5 @@ export function usePublishAction(options?: ActionHookOptions) {
     },
   });
 }
+
+export type LandingPublishAction = ReturnType<typeof usePublishAction>;

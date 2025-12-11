@@ -1,14 +1,16 @@
-"use client";
+ "use client";
 
 import * as React from "react";
 import { toast } from "sonner";
 
-type Action = { execute: (payload: any) => Promise<void>; isExecuting: boolean };
+import type { LandingListItem } from "../server/mappers";
+import type { LandingPublishAction } from "./usePublishAction";
+import type { LandingUnpublishAction } from "./useUnpublishAction";
 
 type PublishHandlersArgs = {
-  landing: any | null;
-  publishAction: Action;
-  unpublishAction: Action;
+  landing: LandingListItem | null;
+  publishAction: LandingPublishAction;
+  unpublishAction: LandingUnpublishAction;
   hasUnpublishedChanges: boolean;
   tToasts: ReturnType<typeof import("next-intl").useTranslations>;
   readableError: (error: unknown, key?: string) => string;

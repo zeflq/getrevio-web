@@ -26,7 +26,6 @@ export class UpdateLotteryConfigUseCase {
       cooldown: command.cooldown,
       noWinWeight: command.noWinWeight,
       guaranteeWinOnFirstPlay: toBoolean(command.guaranteeWinOnFirstPlay),
-      contactMethod: command.contactMethod,
       gifts: command.gifts,
     };
 

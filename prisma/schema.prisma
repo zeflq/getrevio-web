@@ -311,11 +311,6 @@ enum LotteryDeliveryChannel {
   sms
 }
 
-enum LotteryContactMethod {
-  email
-  phone
-}
-
 enum LotteryCooldown {
   one_hour
   one_day
@@ -339,9 +334,6 @@ model LotteryConfig {
 
   // gifts definition (JSON array)
   gifts Json
-
-  // WinningDrawer: email ou phone
-  contactMethod LotteryContactMethod @default(email)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -1,4 +1,4 @@
-import type { LotteryContactMethod, LotteryCooldown, Prisma } from "@/generated/client";
+import type { LotteryCooldown, Prisma } from "@/generated/client";
 
 import type { LotteryGiftFormValue } from "@/features/lotteries/model/lotterySchema";
 
@@ -11,7 +11,6 @@ export const lotteryConfigSelect = {
   cooldown: true,
   noWinWeight: true,
   guaranteeWinOnFirstPlay: true,
-  contactMethod: true,
   gifts: true,
   createdAt: true,
   updatedAt: true,
@@ -32,7 +31,6 @@ export type LotteryConfigListDTO = {
   cooldown: LotteryCooldown;
   noWinWeight: number;
   guaranteeWinOnFirstPlay: boolean;
-  contactMethod: LotteryContactMethod;
   createdAt: string;
   updatedAt: string;
   gifts: LotteryGiftFormValue[];
@@ -52,7 +50,6 @@ export const mapLotteryConfigRowToList = (
   cooldown: row.cooldown,
   noWinWeight: row.noWinWeight,
   guaranteeWinOnFirstPlay: row.guaranteeWinOnFirstPlay,
-  contactMethod: row.contactMethod,
   createdAt: row.createdAt.toISOString(),
   updatedAt: row.updatedAt.toISOString(),
   gifts: [],

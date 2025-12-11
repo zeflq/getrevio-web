@@ -36,7 +36,7 @@ export default function AdminLandingEditPage({ params }: PageParams) {
       router={router}
       readableError={readableError}
       form={form}
-      landing={landing}
+      landing={landing ?? null}
       isReady={isReady}
       isLoading={isLoading}
       isSubmitting={isSubmitting}

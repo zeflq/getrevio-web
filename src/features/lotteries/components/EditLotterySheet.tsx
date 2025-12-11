@@ -49,7 +49,6 @@ export function EditLotterySheet({
       cooldown: "one_day",
       noWinWeight: 0,
       guaranteeWinOnFirstPlay: "false",
-      contactMethod: "email",
       gifts: [],
     },
   });
@@ -66,7 +65,6 @@ export function EditLotterySheet({
         cooldown: lottery.cooldown,
         noWinWeight: lottery.noWinWeight,
       guaranteeWinOnFirstPlay: lottery.guaranteeWinOnFirstPlay ? "true" : "false",
-      contactMethod: lottery.contactMethod,
       gifts: lottery.gifts,
     });
   }, [lottery, merchantId, reset]);
@@ -86,7 +84,6 @@ export function EditLotterySheet({
       cooldown: lottery?.cooldown ?? "one_day",
       noWinWeight: lottery?.noWinWeight ?? 0,
       guaranteeWinOnFirstPlay: lottery?.guaranteeWinOnFirstPlay ? "true" : "false",
-      contactMethod: lottery?.contactMethod ?? "email",
       gifts: lottery?.gifts ?? [],
     });
 
