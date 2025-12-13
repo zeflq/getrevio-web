@@ -42,7 +42,7 @@ export function SinglePageHeader({
       {/* Title and description */}
       <div className="space-y-1 flex-1">
         <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
-        {description && <p className="text-muted-foreground">{description}</p>}
+        {description && <p className="text-muted-foreground text-sm">{description}</p>}
       </div>
 
       {/* Actions: icon-only buttons */}

@@ -70,11 +70,11 @@ export function EditPageLayout({
   return (
     <div className={cn("flex min-h-screen flex-col", className)}>
       {/* STICKY HEADER */}
-      <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur-sm">
-        <div className="mx-auto w-full max-w-5xl px-3 py-2 sm:px-6">
+      <header className="sticky top-0 z-30 border-b bg-background/80 shadow-sm">
+        <div className="mx-auto w-full max-w-5xl px-2 py-1 md:px-6">
           <div className="flex flex-col gap-0">
             {/* Top row: back + title + actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center">
               {onBack && (
                 <Button
                   variant="ghost"

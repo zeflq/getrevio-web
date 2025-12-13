@@ -15,6 +15,7 @@ import { useThemesLite } from "@/features/themes/hooks/useThemeCrud";
 
 import type { LandingFormValues } from "../model/landingSchema";
 import { landingTemplates } from "../templates";
+import { Button } from "@/components/ui/button";
 
 type FormShape = LandingFormValues;
 
@@ -151,15 +152,17 @@ export function LandingFormFields({
 
         <div className="flex gap-2">
           {(["place", "campaign"] as const).map((type) => (
-            <button
+            <Button
               key={type}
-              type="button"
               className={cn(
-                "flex-1 rounded-md border px-3 py-2 text-sm font-medium transition",
+                "flex-1 transition",
                 attachmentType === type
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-muted-foreground/20 text-muted-foreground hover:border-muted-foreground/50"
+                  ? "bg-primary/10"
+                  : "border-muted-foreground/20 text-muted-foreground hover:border-primary hover:bg-primary/10 hover:text-primary "
               )}
+              variant={ 
+                attachmentType === type ? "primaryOutline" : "outline"
+              }
               aria-pressed={attachmentType === type}
               onClick={() => {
                 if (type === attachmentType) return;
@@ -175,7 +178,7 @@ export function LandingFormFields({
               disabled={disabled}
             >
               {type === "place" ? t("attachmentPlace") : t("attachmentCampaign")}
-            </button>
+            </Button>
           ))}
         </div>
 

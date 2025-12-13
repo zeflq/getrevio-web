@@ -7,6 +7,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { OnboardingWizardModal } from "@/features/onboarding/components/OnboardingWizardModal";
+import { ThemeToggle } from "@/components/theme-toggle";
 import type { OrganizationStepData } from "@/features/onboarding/model/organizationStepSchema";
 import type { PlaceStepData } from "@/features/onboarding/model/placeStepSchema";
 import { getTenantFirstPlaceServer } from "@/features/places/server/interface/queries";
@@ -69,7 +70,11 @@ export default async function MerchantLayout({ children }: { children: React.Rea
             <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
             {/* Breadcrumb here if you want */}
           </div>
-          <LanguageSwitcher className="px-4" />
+          <div className="flex items-center gap-2 px-4">
+            <LanguageSwitcher />
+            <Separator orientation="vertical" className="h-4" />
+            {/* <ThemeToggle /> */}
+          </div>
         </header>
         {children}
       </SidebarInset>

@@ -5,6 +5,7 @@ import "./globals.css";
 import { getLocale } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { Providers } from "./providers"; // client wrapper for QueryProvider + Toaster
+import { ThemeProvider } from "next-themes";
 
 
 const geistSans = Geist({
@@ -28,11 +29,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
         <NextIntlClientProvider locale={locale}>
           <Providers>
             {children}
           </Providers>
         </NextIntlClientProvider>
+      </ThemeProvider>
       </body>
     </html>
   );

@@ -1,0 +1,813 @@
+{
+  "url": "https://shadcnuikit.com/dashboard/crm",
+  "extractedAt": "2025-12-13T22:44:15.092Z",
+  "logo": {
+    "source": "img",
+    "url": "https://shadcnuikit.com/_next/image?url=%2Flogo.png&w=64&q=75",
+    "width": 32,
+    "height": 32,
+    "alt": "shadcn ui kit logo",
+    "safeZone": {
+      "top": 8,
+      "right": 12,
+      "bottom": 8,
+      "left": 8
+    }
+  },
+  "favicons": [
+    {
+      "type": "icon",
+      "url": "https://shadcnuikit.com/favicon.ico?favicon.5c370ec6.ico",
+      "sizes": "32x32"
+    },
+    {
+      "type": "og:image",
+      "url": "https://shadcnuikit.com/images/seo.jpg",
+      "sizes": null
+    },
+    {
+      "type": "twitter:image",
+      "url": "https://shadcnuikit.com/images/seo.jpg",
+      "sizes": null
+    },
+    {
+      "type": "favicon.ico",
+      "url": "https://shadcnuikit.com/favicon.ico",
+      "sizes": null
+    }
+  ],
+  "colors": {
+    "semantic": {
+      "primary": "lab(15.7118 0.831872 -2.88485)"
+    },
+    "palette": [
+      {
+        "color": "lab",
+        "normalized": "lab",
+        "count": 1882,
+        "confidence": "high",
+        "sources": [
+          "peer/menu-button",
+          "text-sidebar-foreground",
+          "pointer-events-none"
+        ]
+      },
+      {
+        "color": "rgb(255, 255, 255)",
+        "normalized": "#ffffff",
+        "count": 22,
+        "confidence": "high",
+        "sources": [
+          "inline-flex",
+          "peer"
+        ]
+      },
+      {
+        "color": "oklab",
+        "normalized": "oklab",
+        "count": 13,
+        "confidence": "high",
+        "sources": [
+          "bg-background/40",
+          "bg-primary/20"
+        ]
+      },
+      {
+        "color": "lab(15.7118 0.831872 -2.88485)",
+        "normalized": "lab(15.7118 0.831872 -2.88485)",
+        "count": 1,
+        "confidence": "medium",
+        "sources": [
+          "hover/focus"
+        ]
+      },
+      {
+        "color": "oklab(0.141 0.00108961 -0.00384479 / 0.05)",
+        "normalized": "oklab(0.141 0.00108961 -0.00384479 / 0.05)",
+        "count": 1,
+        "confidence": "medium",
+        "sources": [
+          "hover/focus"
+        ]
+      },
+      {
+        "color": "oklab(0.274 0.00220609 -0.00768211 / 0.5)",
+        "normalized": "oklab(0.274 0.00220609 -0.00768211 / 0.5)",
+        "count": 1,
+        "confidence": "medium",
+        "sources": [
+          "hover/focus"
+        ]
+      },
+      {
+        "color": "oklab(0.141 0.00108961 -0.00384479 / 0.1)",
+        "normalized": "oklab(0.141 0.00108961 -0.00384479 / 0.1)",
+        "count": 1,
+        "confidence": "medium",
+        "sources": [
+          "hover/focus"
+        ]
+      }
+    ],
+    "cssVariables": {
+      "--color-purple-200": "lab(87.8405% 13.4282 -18.7159)",
+      "--color-zinc-200": "lab(90.6853% .399232 -1.45452)",
+      "--color-rose-200": "lab(86.806% 19.1909 4.07754)",
+      "--tw-mask-bottom-to-color": "transparent",
+      "--color-pink-500": "lab(56.9303% 76.8162 -8.07021)",
+      "--color-orange-600": "lab(57.1026% 64.2584 89.8886)",
+      "--color-red-900": "lab(28.5139% 44.5539 29.0463)",
+      "--color-orange-800": "lab(37.1566% 46.6433 50.5562)",
+      "--tw-mask-bottom-from-color": "black",
+      "--color-pink-950": "lab(15.6116% 35.2166 3.53979)",
+      "--color-blue-700": "lab(36.9089% 35.0961 -85.6872)",
+      "--color-teal-400": "lab(76.0109% -53.3483 -2.27906)",
+      "--color-purple-800": "lab(30.6017% 56.7637 -64.4751)",
+      "--color-orange-900": "lab(30.2951% 36.0434 37.671)",
+      "--color-orange-50": "lab(97.7008% 1.53735 5.90649)",
+      "--color-cyan-700": "lab(44.7267% -21.5987 -26.118)",
+      "--color-gray-300": "lab(85.1236% -.612259 -3.7138)",
+      "--color-yellow-400": "lab(83.2664% 8.65132 106.895)",
+      "--color-cyan-200": "lab(91.0821% -24.0435 -12.8306)",
+      "--color-amber-300": "lab(86.4156% 6.13147 78.3961)",
+      "--color-gray-500": "lab(47.7841% -.393182 -10.0268)",
+      "--color-green-500": "lab(70.5521% -66.5147 45.8073)",
+      "--color-white": "#fff",
+      "--color-gray-400": "lab(65.9269% -.832707 -8.17473)",
+      "--color-blue-400": "lab(65.0361% -1.42065 -56.9802)",
+      "--color-slate-400": "lab(65.5349% -2.25151 -14.5072)",
+      "--color-yellow-300": "lab(89.7033% -.480294 84.4917)",
+      "--color-gray-100": "lab(96.1596% -.0823438 -1.13575)",
+      "--color-teal-950": "lab(16.6371% -15.3183 -3.81732)",
+      "--color-emerald-200": "lab(90.2247% -31.039 9.47084)",
+      "--fc-today-bg-color": "lab(96.52% -.0000298023 .0000119209)",
+      "--color-purple-600": "lab(43.0295% 75.21 -86.5669)",
+      "--color-teal-900": "lab(29.506% -21.4706 -3.59886)",
+      "--color-neutral-700": "lab(27.036% 0 0)",
+      "--color-fuchsia-600": "lab(47.5131% 83.4271 -63.0363)",
+      "--color-green-900": "lab(30.797% -29.6927 17.382)",
+      "--fc-border-color": "lab(90.6739% .53075 -1.9261)",
+      "--color-rose-950": "lab(14.2323% 34.0086 9.80922)",
+      "--color-blue-800": "lab(30.2514% 27.7853 -70.2699)",
+      "--color-pink-100": "lab(93.5864% 9.01193 -3.15079)",
+      "--color-chart-1": "lab(2.51549% .19104 -.702733)",
+      "--color-blue-100": "lab(92.0301% -2.24757 -11.6453)",
+      "--color-green-600": "lab(59.0978% -58.6621 41.2579)",
+      "--color-green-950": "lab(15.6845% -20.4225 11.7249)",
+      "--color-yellow-950": "lab(16.8146% 15.7422 23.1133)",
+      "--color-violet-950": "lab(14.0706% 33.3353 -46.7553)",
+      "--color-red-300": "lab(76.5514% 36.422 15.5335)",
+      "--color-cyan-500": "lab(67.805% -35.3952 -30.2018)",
+      "--color-orange-500": "lab(64.272% 57.1788 90.3583)",
+      "--color-slate-800": "lab(16.132% -.318035 -14.6672)",
+      "--color-sky-400": "lab(70.687% -23.6078 -45.9483)",
+      "--color-slate-600": "lab(35.5623% -1.74978 -15.4316)",
+      "--color-pink-200": "lab(87.4504% 19.6 -6.46662)",
+      "--color-green-400": "lab(78.503% -64.9265 39.7492)",
+      "--color-emerald-500": "lab(66.9756% -58.27 19.5419)",
+      "--color-accent-foreground": "lab(15.7118% .831872 -2.88485)",
+      "--color-yellow-50": "lab(98.6846% -1.79055 9.7766)",
+      "--color-rose-700": "lab(41.1651% 71.6251 30.3087)",
+      "--color-amber-700": "lab(47.2709% 42.9082 69.2966)",
+      "--color-indigo-500": "lab(48.295% 38.3129 -81.9673)",
+      "--color-violet-200": "lab(87.0888% 8.53688 -19.4189)",
+      "--color-orange-100": "lab(94.7127% 3.58394 14.3151)",
+      "--color-purple-400": "lab(63.6946% 47.6127 -59.2066)",
+      "--color-yellow-200": "lab(94.3433% -5.00429 52.9663)",
+      "--color-blue-600": "lab(44.0605% 29.0279 -86.0352)",
+      "--color-green-200": "lab(92.4222% -26.4702 12.9427)",
+      "--color-cyan-900": "lab(30.372% -13.1853 -18.7887)",
+      "--color-red-600": "lab(48.4493% 77.4328 61.5452)",
+      "--color-blue-50": "lab(96.492% -1.14644 -5.11479)",
+      "--color-indigo-700": "lab(32.4486% 49.2217 -84.6695)",
+      "--color-black": "#000",
+      "--color-amber-100": "lab(95.916% -1.21653 23.111)",
+      "--color-teal-100": "lab(95.1845% -17.4212 -.425422)",
+      "--color-indigo-300": "lab(74.0235% 8.54138 -41.6075)",
+      "--color-cyan-400": "lab(76.6045% -40.9406 -29.6231)",
+      "--color-amber-400": "lab(80.1641% 16.6016 99.2089)",
+      "--color-orange-200": "lab(88.4871% 9.94918 28.8378)",
+      "--color-purple-500": "lab(52.0183% 66.11 -78.2316)",
+      "--color-indigo-400": "lab(59.866% 22.4834 -64.4485)",
+      "--color-yellow-600": "lab(62.7799% 22.4197 86.1544)",
+      "--color-lime-950": "lab(16.5113% -15.1841 22.0145)",
+      "--color-neutral-500": "lab(48.496% 0 0)",
+      "--color-amber-600": "lab(60.3514% 40.5624 87.1228)",
+      "--color-yellow-800": "lab(38.7484% 23.5833 51.4916)",
+      "--color-pink-400": "lab(64.5597% 64.3615 -12.7988)",
+      "--color-slate-900": "lab(7.78673% 1.82345 -15.0537)",
+      "--color-green-100": "lab(96.1861% -13.8464 6.52365)",
+      "--color-emerald-700": "lab(44.4871% -41.0396 11.0361)",
+      "--color-red-200": "lab(86.017% 19.8815 7.75869)",
+      "--color-indigo-800": "lab(26.6645% 37.9804 -68.6402)",
+      "--color-purple-900": "lab(24.9401% 45.2703 -51.2728)",
+      "--color-pink-800": "lab(34.9559% 60.2885 5.99639)",
+      "--color-emerald-600": "lab(55.0481% -49.9246 15.93)",
+      "--color-violet-400": "lab(62.8239% 34.9159 -60.0512)",
+      "--color-purple-100": "lab(93.3333% 6.97437 -9.83434)",
+      "--color-pink-900": "lab(29.4367% 49.3962 3.35757)",
+      "--color-red-400": "lab(63.7053% 60.745 31.3109)",
+      "--color-lime-300": "lab(89.9218% -35.6546 68.5254)",
+      "--color-fuchsia-800": "lab(32.904% 60.2883 -43.6569)",
+      "--color-red-800": "lab(33.7174% 55.8993 41.0293)",
+      "--color-red-500": "lab(55.4814% 75.0732 48.8528)",
+      "--color-rose-400": "lab(64.4125% 63.0291 19.2068)",
+      "--color-purple-950": "lab(14.8253% 38.9005 -44.5861)",
+      "--color-indigo-600": "lab(38.4009% 52.6132 -92.3857)",
+      "--color-amber-800": "lab(37.8822% 37.1699 52.2718)",
+      "--color-fuchsia-500": "lab(56.4256% 83.132 -64.639)",
+      "--color-lime-500": "lab(75.3197% -46.6547 86.1778)",
+      "--color-sky-700": "lab(41.6013% -9.10804 -42.5647)",
+      "--color-cyan-800": "lab(36.5114% -17.1989 -21.6292)",
+      "--color-yellow-100": "lab(97.3564% -4.51407 27.344)",
+      "--color-violet-700": "lab(35.2783% 67.9912 -88.793)",
+      "--fc-event-text-color": "lab(100% 0 0)",
+      "--color-orange-700": "lab(46.4615% 57.7275 70.8507)",
+      "--color-teal-700": "lab(44.4134% -33.1436 -4.22149)",
+      "--color-green-50": "lab(98.1563% -5.60117 2.75915)",
+      "--color-lime-700": "lab(47.246% -32.2589 55.8249)",
+      "--color-indigo-950": "lab(12.4853% 14.9672 -31.3418)",
+      "--color-lime-900": "lab(31.9931% -20.7654 33.7379)",
+      "--color-orange-950": "lab(14.1747% 23.4515 19.4461)",
+      "--color-lime-50": "lab(98.7039% -5.32573 10.2149)",
+      "--color-emerald-950": "lab(15.0582% -17.9507 2.38369)",
+      "--color-amber-500": "lab(72.7183% 31.8672 97.9407)",
+      "--color-orange-400": "lab(70.0429% 42.5156 75.8207)",
+      "--color-cyan-100": "lab(95.3146% -13.8285 -6.84732)",
+      "--color-yellow-700": "lab(47.8202% 25.2426 66.5015)",
+      "--color-slate-950": "lab(1.76974% 1.32743 -9.28855)",
+      "--color-green-800": "lab(37.4616% -36.7971 22.9692)",
+      "--color-red-700": "lab(40.4273% 67.2623 53.7441)",
+      "--color-indigo-200": "lab(84.4329% 3.18977 -23.9688)",
+      "--color-blue-500": "lab(54.1736% 13.3369 -74.6839)",
+      "--color-gray-900": "lab(8.11897% .811279 -12.254)",
+      "--color-pink-700": "lab(42.1737% 71.8009 7.42233)",
+      "--color-blue-900": "lab(26.1542% 15.7545 -51.5504)",
+      "--color-sky-950": "lab(17.8299% -5.31271 -21.1584)",
+      "--color-yellow-900": "lab(32.3865% 21.1273 38.5959)",
+      "--color-gray-700": "lab(27.1134% -.956401 -12.3224)",
+      "--color-cyan-600": "lab(55.1767% -26.7496 -30.5139)",
+      "--color-red-100": "lab(92.243% 10.2865 3.83865)",
+      "--color-amber-950": "lab(15.8111% 20.9107 23.3752)",
+      "--color-blue-200": "lab(86.15% -4.04379 -21.0797)",
+      "--color-red-50": "lab(96.5005% 4.18508 1.52328)",
+      "--color-lime-400": "lab(83.7876% -45.0447 88.4738)",
+      "--color-gray-200": "lab(91.6229% -.159115 -2.26791)",
+      "--color-red-950": "lab(13.003% 29.04 16.7519)",
+      "--color-teal-200": "lab(90.7612% -33.1343 -.542295)",
+      "--color-emerald-400": "lab(75.0771% -60.7313 19.4147)",
+      "--color-green-700": "lab(47.0329% -47.0239 31.4788)",
+      "--color-fuchsia-400": "lab(66.1178% 66.0652 -52.4733)",
+      "--color-purple-700": "lab(36.1758% 69.8525 -80.0381)",
+      "--color-teal-500": "lab(67.3859% -49.0983 -2.63511)",
+      "--color-cyan-950": "lab(19.1528% -9.68757 -15.5267)",
+      "--color-yellow-500": "lab(76.3898% 14.5258 98.4589)",
+      "--color-sky-200": "lab(88.6983% -11.3978 -16.8488)",
+      "--color-blue-950": "lab(15.6723% 8.86232 -32.2945)",
+      "--color-amber-200": "lab(91.7203% -.505269 49.9084)",
+      "--color-fuchsia-700": "lab(39.787% 72.2653 -53.1244)"
+    }
+  },
+  "typography": {
+    "styles": [
+      {
+        "context": "heading-1",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "30px (1.88rem)",
+        "weight": 700,
+        "lineHeight": "1.20",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "heading-1",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "24px (1.50rem)",
+        "weight": 700,
+        "lineHeight": "1.33",
+        "spacing": "-0.6px",
+        "transform": null
+      },
+      {
+        "context": "heading-1",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "20px (1.25rem)",
+        "weight": 600,
+        "lineHeight": "1.40",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "heading-1",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "18px (1.13rem)",
+        "weight": 600,
+        "lineHeight": "1.00",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "heading-1",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "16px (1.00rem)",
+        "weight": 400,
+        "lineHeight": "1.50",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "button",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "16px (1.00rem)",
+        "weight": 400,
+        "lineHeight": "1.50",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "button",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "14px (0.88rem)",
+        "weight": 400,
+        "lineHeight": "1.43",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "14px (0.88rem)",
+        "weight": 600,
+        "lineHeight": "1.43",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "14px (0.88rem)",
+        "weight": 400,
+        "lineHeight": "1.43",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "link",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "14px (0.88rem)",
+        "weight": 400,
+        "lineHeight": "1.43",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "link",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "14px (0.88rem)",
+        "weight": 500,
+        "lineHeight": "1.43",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "14px (0.88rem)",
+        "weight": 500,
+        "lineHeight": "1.43",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "button",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "14px (0.88rem)",
+        "weight": 500,
+        "lineHeight": "1.43",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "12px (0.75rem)",
+        "weight": 500,
+        "lineHeight": "1.33",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "12px (0.75rem)",
+        "weight": 400,
+        "lineHeight": "1.33",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "ui-monospace",
+        "fallbacks": "SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New",
+        "size": "12px (0.75rem)",
+        "weight": 500,
+        "lineHeight": "1.33",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Outfit",
+        "fallbacks": "Outfit Fallback",
+        "size": "12px (0.75rem)",
+        "weight": 400,
+        "lineHeight": "1.33",
+        "spacing": "0.3px",
+        "transform": "uppercase"
+      }
+    ],
+    "sources": {
+      "googleFonts": [],
+      "adobeFonts": false,
+      "variableFonts": false
+    }
+  },
+  "spacing": {
+    "scaleType": "8px",
+    "commonValues": [
+      {
+        "px": "2px",
+        "rem": "0.13rem",
+        "count": 6,
+        "numericValue": 2
+      },
+      {
+        "px": "4px",
+        "rem": "0.25rem",
+        "count": 22,
+        "numericValue": 4
+      },
+      {
+        "px": "6px",
+        "rem": "0.38rem",
+        "count": 2,
+        "numericValue": 6
+      },
+      {
+        "px": "8px",
+        "rem": "0.50rem",
+        "count": 198,
+        "numericValue": 8
+      },
+      {
+        "px": "12px",
+        "rem": "0.75rem",
+        "count": 8,
+        "numericValue": 12
+      },
+      {
+        "px": "16px",
+        "rem": "1.00rem",
+        "count": 13,
+        "numericValue": 16
+      },
+      {
+        "px": "24px",
+        "rem": "1.50rem",
+        "count": 17,
+        "numericValue": 24
+      }
+    ]
+  },
+  "borderRadius": {
+    "values": [
+      {
+        "value": "4px",
+        "count": 10,
+        "elements": [
+          "div",
+          "checkbox"
+        ],
+        "confidence": "medium",
+        "numericValue": 4
+      },
+      {
+        "value": "5px",
+        "count": 1,
+        "elements": [
+          "img"
+        ],
+        "confidence": "low",
+        "numericValue": 5
+      },
+      {
+        "value": "6px",
+        "count": 93,
+        "elements": [
+          "button",
+          "div",
+          "a",
+          "input"
+        ],
+        "confidence": "high",
+        "numericValue": 6
+      },
+      {
+        "value": "12px",
+        "count": 10,
+        "elements": [
+          "card",
+          "main"
+        ],
+        "confidence": "medium",
+        "numericValue": 12
+      },
+      {
+        "value": "12px 12px 0px 0px",
+        "count": 1,
+        "elements": [
+          "header"
+        ],
+        "confidence": "low",
+        "numericValue": 12
+      },
+      {
+        "value": "3.35544e+07px",
+        "count": 24,
+        "elements": [
+          "span",
+          "div",
+          "progressbar"
+        ],
+        "confidence": "high",
+        "numericValue": 33554400
+      }
+    ]
+  },
+  "borders": {
+    "combinations": [
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "lab(90.6739 0.53075 -1.9261)",
+        "count": 22,
+        "elements": [
+          "card",
+          "input",
+          "div"
+        ],
+        "confidence": "high"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "lab(84.966 0.806063 -2.9036)",
+        "count": 10,
+        "elements": [
+          "input",
+          "checkbox"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "width": "0px 0px 1px",
+        "style": "solid",
+        "color": "lab(90.6739 0.53075 -1.9261)",
+        "count": 6,
+        "elements": [
+          "header",
+          "tr"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "lab(78.503 -64.9265 39.7492)",
+        "count": 3,
+        "elements": [
+          "button"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "lab(2.51549 0.19104 -0.702733)",
+        "count": 1,
+        "elements": [
+          "checkbox"
+        ],
+        "confidence": "low"
+      }
+    ]
+  },
+  "shadows": [
+    {
+      "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+      "count": 17,
+      "confidence": "high"
+    },
+    {
+      "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px",
+      "count": 1,
+      "confidence": "low"
+    }
+  ],
+  "components": {
+    "buttons": [
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "lab(90.6739 0.53075 -1.9261)",
+            "color": "lab(2.51549 0.19104 -0.702733)",
+            "padding": "8px",
+            "borderRadius": "6px",
+            "border": "0px solid lab(90.6739 0.53075 -1.9261)",
+            "boxShadow": "none",
+            "outline": "oklab(0.274 0.00220609 -0.00768211 / 0.5) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": {},
+          "active": null,
+          "focus": {
+            "boxShadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px"
+          }
+        },
+        "fontWeight": "500",
+        "fontSize": "14px",
+        "classes": "peer/menu-button flex w-full items-center gap-2 ov",
+        "confidence": "medium"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "lab(59.0978 -58.6621 41.2579)",
+            "padding": "0px 4px",
+            "borderRadius": "6px",
+            "border": "1px solid lab(78.503 -64.9265 39.7492)",
+            "boxShadow": "none",
+            "outline": "oklab(0.274 0.00220609 -0.00768211 / 0.5) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": null,
+          "active": null,
+          "focus": null
+        },
+        "fontWeight": "500",
+        "fontSize": "12px",
+        "classes": "pointer-events-none absolute right-1 flex h-5 min-",
+        "confidence": "medium"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgb(255, 255, 255)",
+            "color": "lab(15.7118 0.831872 -2.88485)",
+            "padding": "8px 12px",
+            "borderRadius": "6px",
+            "border": "1px solid lab(90.6739 0.53075 -1.9261)",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+            "outline": "oklab(0.274 0.00220609 -0.00768211 / 0.5) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": {},
+          "active": null,
+          "focus": {
+            "boxShadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px"
+          }
+        },
+        "fontWeight": "400",
+        "fontSize": "14px",
+        "classes": "inline-flex items-center gap-2 whitespace-nowrap r",
+        "confidence": "high"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "lab(2.51549 0.19104 -0.702733)",
+            "color": "rgb(255, 255, 255)",
+            "padding": "8px 16px",
+            "borderRadius": "6px",
+            "border": "0px solid lab(90.6739 0.53075 -1.9261)",
+            "boxShadow": "none",
+            "outline": "oklab(0.274 0.00220609 -0.00768211 / 0.5) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": {},
+          "active": null,
+          "focus": {
+            "boxShadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px"
+          }
+        },
+        "fontWeight": "500",
+        "fontSize": "14px",
+        "classes": "inline-flex items-center justify-center gap-2 whit",
+        "confidence": "high"
+      }
+    ],
+    "inputs": {
+      "text": [
+        {
+          "specificType": "search",
+          "states": {
+            "default": {
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "color": "lab(15.7118 0.831872 -2.88485)",
+              "border": "1px solid lab(84.966 0.806063 -2.9036)",
+              "borderRadius": "6px",
+              "padding": "4px 16px 4px 40px",
+              "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+              "outline": "oklab(0.274 0.00220609 -0.00768211 / 0.5) none 0px"
+            },
+            "focus": null
+          }
+        }
+      ],
+      "checkbox": [],
+      "radio": [],
+      "select": []
+    },
+    "links": [
+      {
+        "color": "lab(47.8878 1.65495 -5.77277)",
+        "textDecoration": "none",
+        "fontWeight": "400",
+        "states": {
+          "default": {
+            "color": "lab(47.8878 1.65495 -5.77277)",
+            "textDecoration": "none"
+          },
+          "hover": null
+        }
+      },
+      {
+        "color": "lab(2.51549 0.19104 -0.702733)",
+        "textDecoration": "none",
+        "fontWeight": "500",
+        "states": {
+          "default": {
+            "color": "lab(2.51549 0.19104 -0.702733)",
+            "textDecoration": "none"
+          },
+          "hover": null
+        }
+      },
+      {
+        "color": "rgb(255, 255, 255)",
+        "textDecoration": "none",
+        "fontWeight": "500",
+        "states": {
+          "default": {
+            "color": "rgb(255, 255, 255)",
+            "textDecoration": "none"
+          },
+          "hover": null
+        }
+      }
+    ]
+  },
+  "breakpoints": [
+    {
+      "px": "600px"
+    }
+  ],
+  "iconSystem": [
+    {
+      "name": "SVG Icons",
+      "type": "svg"
+    }
+  ],
+  "frameworks": [
+    {
+      "name": "Tailwind CSS",
+      "confidence": "high",
+      "evidence": "arbitrary values (e.g., top-[117px]), responsive/state modifiers"
+    },
+    {
+      "name": "Radix UI",
+      "confidence": "high",
+      "evidence": "118 Radix primitives"
+    }
+  ]
+}
