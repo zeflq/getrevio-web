@@ -1,12 +1,13 @@
 "use client";
+
 import { useFormContext } from "react-hook-form";
+import { useTranslations } from "next-intl";
 import { RHFCombobox, RHFInput, RHFSelect } from "@/components/form/controls";
 import type { LiteListe } from "@/types/lists";
 import {
   booleanOptions,
   lotteryCooldownOptions,
 } from "@/features/lotteries/model/lotterySchema";
-import { LotteryGiftsBuilder } from "./LotteryGiftsBuilder";
 
 type Props = {
   disabled?: boolean;
@@ -19,9 +20,9 @@ export function LotteryFormFields({
   disabled,
   merchantId,
   merchantsLite = [],
-  showGifts = true,
 }: Props) {
   const { register } = useFormContext();
+  const t = useTranslations("lotteries.form");
 
   return (
     <div className="space-y-6">
@@ -29,12 +30,12 @@ export function LotteryFormFields({
         {!merchantId ? (
           <RHFCombobox<LiteListe>
             name="merchantId"
-            label="Merchant"
+            label={t("merchant.label")}
             options={merchantsLite}
             getOptionValue={(m) => m.value}
             getOptionLabel={(m) => m.label}
-            placeholder="Select merchant"
-            searchPlaceholder="Search merchants…"
+            placeholder={t("merchant.placeholder")}
+            searchPlaceholder={t("merchant.searchPlaceholder")}
             requiredStar
             disabled={disabled}
           />
@@ -44,8 +45,8 @@ export function LotteryFormFields({
 
         <RHFInput
           name="name"
-          label="Lottery name"
-          placeholder="Summer Spin"
+          label={t("name.label")}
+          placeholder={t("name.placeholder")}
           requiredStar
           disabled={disabled}
         />
@@ -53,17 +54,17 @@ export function LotteryFormFields({
         <div className="grid gap-3 sm:grid-cols-2">
           <RHFSelect
             name="enabled"
-            label="Enabled"
+            label={t("enabled.label")}
             options={booleanOptions}
-            placeholder="Enabled?"
+            placeholder={t("enabled.placeholder")}
             disabled={disabled}
             requiredStar
           />
           <RHFSelect
             name="guaranteeWinOnFirstPlay"
-            label="Guarantee win"
+            label={t("guaranteeWin.label")}
             options={booleanOptions}
-            placeholder="Guarantee win?"
+            placeholder={t("guaranteeWin.placeholder")}
             disabled={disabled}
             requiredStar
           />
@@ -72,17 +73,17 @@ export function LotteryFormFields({
         <div className="grid gap-3 sm:grid-cols-2">
           <RHFInput
             name="playLimitPerUser"
-            label="Play limit per user"
+            label={t("playLimit.label")}
             type="number"
-            placeholder="1"
+            placeholder={t("playLimit.placeholder")}
             requiredStar
             disabled={disabled}
           />
           <RHFSelect
             name="cooldown"
-            label="Cooldown"
+            label={t("cooldown.label")}
             options={lotteryCooldownOptions}
-            placeholder="Select cooldown"
+            placeholder={t("cooldown.placeholder")}
             requiredStar
             disabled={disabled}
           />
@@ -91,17 +92,15 @@ export function LotteryFormFields({
         <div className="grid gap-3 sm:grid-cols-2">
           <RHFInput
             name="noWinWeight"
-            label="No-win weight"
+            label={t("noWinWeight.label")}
             type="number"
-            placeholder="0"
-            description="Higher value makes no-win outcomes more common."
+            placeholder={t("noWinWeight.placeholder")}
+            description={t("noWinWeight.description")}
             disabled={disabled}
           />
           <div className="hidden sm:block" />
         </div>
       </div>
-
-      {showGifts && <LotteryGiftsBuilder name="gifts" disabled={disabled} />}
     </div>
   );
 }

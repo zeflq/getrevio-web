@@ -372,8 +372,136 @@
             }
           }
         }
+    }
+  },
+  "lotteries": {
+    "editPage": {
+      "title": "Edit Lottery",
+      "description": "Update the lottery configuration.",
+      "tabs": {
+        "settings": "Settings",
+        "gifts": "Gifts"
+      },
+      "saving": "Saving...",
+      "actions": {
+        "saveChanges": "Save changes",
+        "reset": "Reset"
+      },
+      "loading": "Loading lottery…"
+    },
+    "list": {
+      "title": "Lotteries",
+      "description": "Manage lottery configurations.",
+      "descriptionMerchant": "Manage your lotteries.",
+      "searchPlaceholder": "Search lotteries…",
+      "empty": "No lotteries found.",
+      "totalRows": "{count} lottery(s)",
+      "create": "Create Lottery",
+      "columns": {
+        "name": "Lottery",
+        "merchant": "Merchant",
+        "enabled": "Enabled",
+        "yes": "Yes",
+        "no": "No",
+        "cooldown": "Cooldown",
+        "createdAt": "Created At",
+        "actions": "Actions"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
       }
     },
+    "editGiftSheet": {
+      "titleAdd": "Add gift",
+      "titleEdit": "Edit gift",
+      "description": "Configure the reward details for this gift.",
+      "internalName": "Internal name",
+      "internalNamePlaceholder": "Ex. 1 margherita",
+      "type": "Type",
+      "typePlaceholder": "Select type",
+      "weight": "Weight (probability)",
+      "weightHelper": "Higher weight makes this gift more frequent.",
+      "displayLabel": "Display label",
+      "displayLabelPlaceholder": "Ex. 1 pizza margherita offerte",
+      "minAmount": "Min amount (€)",
+      "minAmountPlaceholder": "Ex. 10",
+      "validity": "Validity (days)",
+      "validityPlaceholder": "Ex. 7",
+      "validityHelper": "Number of days after the win.",
+        "errors": {
+          "internalName": "Internal name is required",
+          "displayLabel": "Display label is required",
+          "weightRequired": "Weight is required",
+          "weightInvalid": "Weight must be greater or equal to 0"
+        }
+      },
+    "giftCard": {
+      "unnamedGift": "Unnamed gift",
+      "weightLabel": "Weight",
+      "approxChance": "Approx. {chance}% chance",
+      "minPurchase": "Min purchase: {amount} {currency}",
+      "validity": "Valid {days} day(s)"
+    },
+    "giftTypes": {
+      "free_item": "Free item",
+      "discount": "Discount",
+      "credit": "Credit / voucher",
+      "other": "Other"
+    },
+    "form": {
+      "merchant": {
+        "label": "Merchant",
+        "placeholder": "Select merchant",
+        "searchPlaceholder": "Search merchants…"
+      },
+      "name": {
+        "label": "Lottery name",
+        "placeholder": "Summer Spin"
+      },
+      "enabled": {
+        "label": "Enabled",
+        "placeholder": "Enabled?"
+      },
+      "guaranteeWin": {
+        "label": "Guarantee win",
+        "placeholder": "Guarantee win?"
+      },
+      "playLimit": {
+        "label": "Play limit per user",
+        "placeholder": "1"
+      },
+      "cooldown": {
+        "label": "Cooldown",
+        "placeholder": "Select cooldown"
+      },
+      "noWinWeight": {
+        "label": "No-win weight",
+        "placeholder": "0",
+        "description": "Higher value makes no-win outcomes more common."
+      }
+    },
+    "giftsTab": {
+      "title": "Gifts",
+      "description": "Configure the rewards distributed by this lottery.",
+      "giftsCount": "gifts",
+      "winChance": "win chance",
+      "sortByProbability": "Sort by probability",
+      "autoBalanceWeights": "Auto-balance weights",
+      "addGift": "Add a gift",
+      "noGifts": "No gifts defined yet.",
+      "addFirstGift": "Add your first gift",
+      "probabilitySummary": "Probability summary",
+      "probabilitySummaryDescription": "Overview of win vs no-win chances with the current configuration.",
+      "totalGiftWeight": "Total gift weight",
+      "noWinWeight": "No-win weight",
+      "giftLabel": "gift",
+      "noWinLabel": "no-win",
+      "probabilityHint": "Probabilities derive from weights. Balance weights or increase no-win to lower win chance."
+      ,
+      "limitReached": "Maximum of {limit} gifts reached."
+    }
+  },
   "merchantSettings": {
     "theme": {
       "title": "Reset theme",

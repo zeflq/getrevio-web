@@ -24,27 +24,43 @@ const optionalCurrency = z.preprocess((value) => {
   return value;
 }, z.string().trim().optional());
 
-const optionalUrl = z.preprocess((value) => {
-  if (value === undefined || value === null) {
-    return undefined;
-  }
-  if (typeof value === "string") {
-    const trimmed = value.trim();
-    return trimmed === "" ? undefined : trimmed;
-  }
-  return value;
-}, z.string().trim().url("Invalid URL").optional());
-
 export const lotteryGiftSchema = z.object({
   id: z.string().min(1, "Gift ID is required"),
-  name: z.string().min(1, "Gift name is required"),
+  name: z
+    .string()
+    .min(3, "Gift must be at least 3 characters")
+    .regex(
+      /^[\p{L}0-9 ]+$/u,
+      "Gift name can only contain letters, numbers, and spaces"
+    ),
   kind: z.enum(["free_item", "discount", "credit", "other"]),
-  weight: z.coerce.number().int().min(1, "Weight must be at least 1"),
-  imageUrl: optionalUrl,
-  rewardLabel: z.string().min(1, "Reward label is required"),
-  minPurchaseAmount: coerceOptionalNumber(0),
-  minPurchaseCurrency: optionalCurrency,
-  validityDays: coerceOptionalNumber(0),
+  weight: z
+    .coerce.number()
+    .int()
+    .min(1, "Weight must be at least 1")
+    .max(100, "Weight cannot exceed 100"),
+  imageUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
+  rewardLabel: z
+    .string()
+    .min(3, "Reward must be at least 3 characters")
+    .regex(
+      /^[\p{L}0-9 ]+$/u,
+      "Reward label can only contain letters, numbers, and spaces"
+    ),
+  minPurchaseAmount: z
+    .coerce
+    .number()
+    .int()
+    .min(0)
+    .max(1000, "Validity cannot exceed 1000")
+    .optional(),
+  minPurchaseCurrency: z.string().optional(),
+  validityDays: z
+    .coerce.number()
+    .int()
+    .min(0)
+    .max(365, "Validity cannot exceed 365 days")
+    .optional(),
 });
 
 export const lotteryCooldownSchema = z.enum(["one_hour", "one_day", "one_week"]);
@@ -53,11 +69,22 @@ export type LotteryCooldownFormValue = z.infer<typeof lotteryCooldownSchema>;
 
 const lotteryConfigBaseSchema = z.object({
   merchantId: z.string().min(1, "Merchant is required"),
-  name: z.string().min(1, "Name is required"),
+  name: z
+    .string()
+    .min(3, "Name must be at least 3 characters")
+    .regex( /^[\p{L}0-9 ]+$/u, "Name can only contain letters, numbers, and spaces"),
   enabled: booleanString,
-  playLimitPerUser: z.coerce.number().int().min(1, "Play limit must be at least 1"),
+  playLimitPerUser: z
+    .coerce.number()
+    .int()
+    .min(1, "Play limit must be at least 1")
+    .max(10, "Play limit cannot exceed 10"),
   cooldown: lotteryCooldownSchema,
-  noWinWeight: z.coerce.number().int().min(0, "Weight must be non-negative"),
+  noWinWeight: z
+    .coerce.number()
+    .int()
+    .min(0, "Weight must be non-negative")
+    .max(100, "No-win weight cannot exceed 100"),
   guaranteeWinOnFirstPlay: booleanString,
 });
 

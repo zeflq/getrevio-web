@@ -1,7 +1,5 @@
 "use client";
 
-import type { UseFormReturn } from "react-hook-form";
-import type { LandingFormValues } from "../model/landingSchema";
 import { buttonVariants } from "@/components/ui/button";
 import type { VariantProps } from "class-variance-authority";
 import type { LandingListItem } from "../server/mappers";
@@ -9,12 +7,11 @@ import type { LandingListItem } from "../server/mappers";
 type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
 
 type DerivedStateArgs = {
-  t: ReturnType<typeof import("next-intl").useTranslations>;
-  form: UseFormReturn<LandingFormValues>;
   landing: LandingListItem | null;
+  t: ReturnType<typeof import("next-intl").useTranslations>;
 };
 
-export function useLandingPageDerivedState({ t, form, landing }: DerivedStateArgs) {
+export function useLandingPageDerivedState({ t, landing }: DerivedStateArgs) {
   const isPublished = landing?.status === "published";
   const contentDraft = landing?.contentDraft ?? null;
   const contentPublished = landing?.contentPublished ?? null;
@@ -33,13 +30,6 @@ export function useLandingPageDerivedState({ t, form, landing }: DerivedStateArg
       ? `/landings/${landing.id}?preview=live`
       : `/landings/${landing.id}?preview=draft`
     : "";
-
-  const { settings: settingsErrors, belongsTo: belongsToErrors, content: contentErrors } =
-    form.formState.errors;
-
-  const hasSettingsErrors = Boolean(settingsErrors || belongsToErrors);
-  const hasContentErrors = Boolean(contentErrors);
-  const hasFormErrors = hasSettingsErrors || hasContentErrors;
 
   const previewLiveLabel = t("common.previewLive");
   const previewDraftLabel = t("common.previewDraft");
@@ -60,11 +50,6 @@ export function useLandingPageDerivedState({ t, form, landing }: DerivedStateArg
     ? "outline"
     : "secondary";
 
-  const tabs = [
-    { id: "settings", label: t("tabs.settings"), hasError: hasSettingsErrors },
-    { id: "content", label: t("tabs.content"), hasError: hasContentErrors },
-  ];
-
   return {
     isPublished,
     hasUnpublishedChanges,
@@ -73,10 +58,6 @@ export function useLandingPageDerivedState({ t, form, landing }: DerivedStateArg
     previewHref,
     toggleButtonLabel,
     publishButtonVariant,
-    hasSettingsErrors,
-    hasContentErrors,
-    hasFormErrors,
-    tabs,
     previewLiveLabel,
     previewDraftLabel,
     unpublishLabel,

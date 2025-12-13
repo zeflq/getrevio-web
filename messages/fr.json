@@ -370,6 +370,133 @@
       }
     }
   },
+  "lotteries": {
+    "editPage": {
+      "title": "Modifier la loterie",
+      "description": "Mettez à jour la configuration de la loterie.",
+      "tabs": {
+        "settings": "Paramètres",
+        "gifts": "Cadeaux"
+      },
+      "saving": "Enregistrement…",
+      "actions": {
+        "saveChanges": "Enregistrer les modifications",
+        "reset": "Réinitialiser"
+      },
+      "loading": "Chargement de la loterie…"
+    },
+    "list": {
+      "title": "Loteries",
+      "description": "Gérez les configurations de loteries.",
+      "descriptionMerchant": "Gérez vos loteries.",
+      "searchPlaceholder": "Recherchez des loteries…",
+      "empty": "Aucune loterie trouvée.",
+      "totalRows": "{count} loterie(s)",
+      "create": "Créer une loterie",
+      "columns": {
+        "name": "Loterie",
+        "merchant": "Marchand",
+        "enabled": "Activée",
+        "yes": "Oui",
+        "no": "Non",
+        "cooldown": "Temps de pause",
+        "createdAt": "Créée le",
+        "actions": "Actions"
+      },
+      "actions": {
+        "edit": "Modifier",
+        "delete": "Supprimer"
+      }
+    },
+    "editGiftSheet": {
+      "titleAdd": "Ajouter un cadeau",
+      "titleEdit": "Modifier le cadeau",
+      "description": "Configurez les détails de récompense pour ce cadeau.",
+      "internalName": "Nom interne",
+      "internalNamePlaceholder": "Ex. 1 margherita",
+      "type": "Type",
+      "typePlaceholder": "Sélectionnez un type",
+      "weight": "Poids (probabilité)",
+      "weightHelper": "Un poids plus élevé rend ce cadeau plus fréquent.",
+      "displayLabel": "Libellé affiché",
+      "displayLabelPlaceholder": "Ex. 1 pizza margherita offerte",
+      "minAmount": "Montant minimum (€)",
+      "minAmountPlaceholder": "Ex. 10",
+      "validity": "Validité (jours)",
+      "validityPlaceholder": "Ex. 7",
+      "validityHelper": "Nombre de jours après le gain.",
+        "errors": {
+          "internalName": "Le nom interne est requis",
+          "displayLabel": "Le libellé affiché est requis",
+          "weightRequired": "Le poids est requis",
+          "weightInvalid": "Le poids doit être supérieur ou égal à 0"
+        }
+      },
+    "giftCard": {
+      "unnamedGift": "Cadeau sans nom",
+      "weightLabel": "Poids",
+      "approxChance": "Environ {chance}% de chance",
+      "minPurchase": "Montant minimum : {amount} {currency}",
+      "validity": "Valide {days} jour(s)"
+    },
+    "giftTypes": {
+      "free_item": "Produit offert",
+      "discount": "Réduction",
+      "credit": "Crédit / bon",
+      "other": "Autre"
+    },
+    "form": {
+      "merchant": {
+        "label": "Marchand",
+        "placeholder": "Sélectionnez un marchand",
+        "searchPlaceholder": "Recherchez un marchand…"
+      },
+      "name": {
+        "label": "Nom de la loterie",
+        "placeholder": "Summer Spin"
+      },
+      "enabled": {
+        "label": "Activée",
+        "placeholder": "Activée ?"
+      },
+      "guaranteeWin": {
+        "label": "Gain garanti",
+        "placeholder": "Gain garanti ?"
+      },
+      "playLimit": {
+        "label": "Nombre de parties par utilisateur",
+        "placeholder": "1"
+      },
+      "cooldown": {
+        "label": "Temps de pause",
+        "placeholder": "Sélectionnez un rythme"
+      },
+      "noWinWeight": {
+        "label": "Poids de non-gain",
+        "placeholder": "0",
+        "description": "Une valeur plus élevée augmente les pertes."
+      }
+    },
+    "giftsTab": {
+      "title": "Cadeaux",
+      "description": "Configurez les récompenses distribuées par cette loterie.",
+      "giftsCount": "cadeaux",
+      "winChance": "chance de gain",
+      "sortByProbability": "Trier par probabilité",
+      "autoBalanceWeights": "Équilibrage auto. des poids",
+      "addGift": "Ajouter un cadeau",
+      "noGifts": "Aucun cadeau défini pour le moment.",
+      "addFirstGift": "Ajoutez votre premier cadeau",
+      "probabilitySummary": "Résumé des probabilités",
+      "probabilitySummaryDescription": "Aperçu des chances de gain vs non-gain avec la configuration actuelle.",
+      "totalGiftWeight": "Poids total des cadeaux",
+      "noWinWeight": "Poids de non-gain",
+      "giftLabel": "cadeau",
+      "noWinLabel": "non-gain",
+      "probabilityHint": "Les probabilités découlent des poids. Équilibrez les poids ou augmentez le non-gain pour réduire les chances de gain.",
+      "limitReached": "Maximum de {limit} cadeaux atteint."
+    }
+  },
   "merchantSettings": {
     "theme": {
       "title": "Réinitialiser le thème",

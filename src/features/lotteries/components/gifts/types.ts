@@ -2,26 +2,14 @@
 
 export type GiftFormValue = {
   id: string;
-  name: string; // internal name
+  name: string;
   kind: "free_item" | "discount" | "credit" | "other";
   weight: number;
   rewardLabel: string;
   imageUrl?: string;
-  minPurchaseAmount?: number | null;
-  minPurchaseCurrency?: string | null;
-  validityDays?: number | null;
-};
-
-export type LotteryConfigFormValues = {
-  gifts: GiftFormValue[];
-  noWinWeight?: number;
-};
-
-export const GIFT_TYPE_LABEL: Record<GiftFormValue["kind"], string> = {
-  free_item: "Produit offert",
-  discount: "Réduction",
-  credit: "Crédit / bon",
-  other: "Autre",
+  minPurchaseAmount?: number;
+  minPurchaseCurrency?: string;
+  validityDays?: number;
 };
 
 export function createEmptyGift(): GiftFormValue {

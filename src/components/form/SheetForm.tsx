@@ -6,6 +6,7 @@ import {
   SheetTitle,
   SheetDescription,
   SheetFooter,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -28,6 +29,7 @@ type SheetFormProps<TFieldValues extends FieldValues = FieldValues> = {
   isReady?: boolean;         // gating
   children: React.ReactNode; // the fields
   onCancel?: () => void;
+  trigger?: React.ReactNode;
 };
 
 export function SheetForm<TFieldValues extends FieldValues = FieldValues>({
@@ -41,10 +43,12 @@ export function SheetForm<TFieldValues extends FieldValues = FieldValues>({
   isReady = true,
   children,
   onCancel,
+  trigger,
 }: SheetFormProps<TFieldValues>) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-[560px]">
+      {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
+      <SheetContent className="sm:max-w-[560px] w-full gap-0">
         <SheetHeader>
           <SheetTitle>{title}</SheetTitle>
           {description && <SheetDescription>{description}</SheetDescription>}

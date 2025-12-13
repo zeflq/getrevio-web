@@ -5,20 +5,18 @@ import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
 
 import { iconActionGroup as IconActionGroup } from "@/shared/ui/IconActionGroup";
-import {
-  lotteryColumns,
-  CreateLotteryDialog,
-  EditLotterySheet,
-  DeleteLotteryDialog,
-  useLotteriesList,
-} from "@/features/lotteries";
+import { useRouter } from "@/i18n/navigation";
+import { lotteryColumns, CreateLotteryDialog, DeleteLotteryDialog, useLotteriesList } from "@/features/lotteries";
 import { useMerchantsLite } from "@/features/merchants";
 import { useDataTableController } from "@/shared/ui/data-table/useDataTableController";
 import { DataTableResponsive } from "@/shared/ui/data-table/DataTableResponsive";
 import { DataTableToolbarBase } from "@/shared/ui/data-table/DataTableToolbarBase";
+import { useTranslations } from "next-intl";
 
 export default function AdminLotteriesPage() {
   const merchantsLiteQuery = useMerchantsLite();
+  const router = useRouter();
+  const t = useTranslations("lotteries.list");
 
   const [pageIndex, setPageIndex] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
@@ -26,9 +24,7 @@ export default function AdminLotteriesPage() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
-  const [editSheetOpen, setEditSheetOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<string | undefined>(undefined);
   const [selectedTarget, setSelectedTarget] = React.useState<{ id: string; name?: string } | null>(null);
 
   const q = getFilterValue(columnFilters, "name");
@@ -49,14 +45,14 @@ export default function AdminLotteriesPage() {
 
   const columns = lotteryColumns({
     onEdit: (id) => {
-      setSelectedId(id);
-      setEditSheetOpen(true);
+      router.push(`/admin/lotteries/${id}`);
     },
     onDelete: (id) => {
       const row = rows.find((row) => row.id === id);
       setSelectedTarget(row ? { id, name: row.name } : { id });
       setDeleteDialogOpen(true);
     },
+    t,
   });
 
   const controller = useDataTableController({
@@ -77,14 +73,14 @@ export default function AdminLotteriesPage() {
     <DataTableToolbarBase
       table={controller.table}
       searchKey="name"
-      searchPlaceholder="Search lotteries…"
+      searchPlaceholder={t("searchPlaceholder")}
       rightExtras={
         <IconActionGroup
           actions={[
             {
               onClick: () => setCreateDialogOpen(true),
               icon: <Plus className="h-4 w-4" />,
-              ariaLabel: "Create Lottery",
+              ariaLabel: t("create"),
               variant: "default",
             },
           ]}
@@ -98,23 +94,20 @@ export default function AdminLotteriesPage() {
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="space-y-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Lotteries</h1>
-          <p className="text-muted-foreground">Manage lottery configurations.</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+          <p className="text-muted-foreground">{t("description")}</p>
         </div>
 
         <DataTableResponsive
           controller={controller}
           toolbar={toolbar}
           isLoading={isLoading}
-          emptyText="No lotteries found."
-          serverTotalRowsLabel={`${total} lottery(s)`}
+          emptyText={t("empty")}
+          serverTotalRowsLabel={t("totalRows", { count: total })}
           cardActionsColumnId="actions"
           cardExcludeColumnIds={["actions"]}
           metaColsPerRow={2}
-          onRowClick={(id) => {
-            setSelectedId(id);
-            setEditSheetOpen(true);
-          }}
+          onRowClick={(id) => router.push(`/admin/lotteries/${id}`)}
         />
       </div>
 
@@ -123,15 +116,6 @@ export default function AdminLotteriesPage() {
         onOpenChange={setCreateDialogOpen}
         merchantsLite={merchantsLiteQuery.data ?? []}
       />
-
-      {selectedId && (
-        <EditLotterySheet
-          id={selectedId}
-          open={editSheetOpen}
-          onOpenChange={setEditSheetOpen}
-          merchantsLite={merchantsLiteQuery.data ?? []}
-        />
-      )}
 
       {selectedTarget && selectedTarget.id && (
         <DeleteLotteryDialog

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -33,6 +33,7 @@ type EditPageLayoutProps = {
   secondaryDisabled?: boolean;
   onPrimary?: () => void;
   onSecondary?: () => void;
+  isSaving?: boolean;
   /** Main page content */
   children: React.ReactNode;
   className?: string;
@@ -60,16 +61,17 @@ export function EditPageLayout({
   secondaryDisabled,
   onPrimary,
   onSecondary,
+  isSaving,
   children,
   className,
 }: EditPageLayoutProps) {
   const hasTabs = tabs && tabs.length > 0;
 
   return (
-    <div className={cn("flex min-h-screen flex-col bg-slate-100", className)}>
+    <div className={cn("flex min-h-screen flex-col", className)}>
       {/* STICKY HEADER */}
       <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur-sm">
-        <div className="mx-auto w-full max-w-5xl px-3 py-2 sm:px-6 sm:py-3">
+        <div className="mx-auto w-full max-w-5xl px-3 py-2 sm:px-6">
           <div className="flex flex-col gap-0">
             {/* Top row: back + title + actions */}
             <div className="flex items-center gap-2">
@@ -126,7 +128,7 @@ export function EditPageLayout({
       <main className="flex-1">
         <div
           className={cn(
-            "mx-auto w-full max-w-5xl px-3 py-4 sm:px-6 sm:py-6",
+            "mx-auto w-full max-w-5xl px-2 py-4 md:px-6 md:py-12",
             showFooter && "pb-28" // room for sticky footer
           )}
         >
@@ -134,33 +136,39 @@ export function EditPageLayout({
         </div>
       </main>
 
-      {/* STICKY FOOTER WITH GRADIENT FADE */}
+      {/* STICKY FOOTER */}
       {showFooter && (primaryLabel || secondaryLabel) && (
-        <footer className="sticky bottom-0 z-30">
-          {/* gradient fade */}
-          <div className="pointer-events-none h-6 bg-gradient-to-t from-background/95 to-transparent" />
-          <div className="border-t bg-background/95 backdrop-blur-sm">
-            <div className="mx-auto flex w-full max-w-5xl items-center justify-end gap-2 px-3 py-3 sm:px-6">
-              {secondaryLabel && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={onSecondary}
-                  disabled={secondaryDisabled}
-                >
-                  {secondaryLabel}
-                </Button>
-              )}
-              {primaryLabel && (
-                <Button
-                  type="button"
-                  onClick={onPrimary}
-                  disabled={primaryDisabled}
-                >
-                  {primaryLabel}
-                </Button>
-              )}
-            </div>
+        <footer className="sticky bottom-0 z-10 mt-auto border-t bg-background/95 py-3 backdrop-blur-sm">
+          <div
+            className="pointer-events-none absolute -top-8 left-0 h-8 w-full"
+            style={{
+              background:
+                "linear-gradient(to top, hsl(var(--background)), transparent)",
+            }}
+          />
+          <div className="mx-auto flex w-full max-w-5xl items-center justify-end gap-3 px-3 sm:px-6">
+            {secondaryLabel && (
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={onSecondary}
+                disabled={secondaryDisabled || isSaving}
+              >
+                {secondaryLabel}
+              </Button>
+            )}
+            {primaryLabel && (
+              <Button
+                type="button"
+                onClick={onPrimary}
+                disabled={primaryDisabled || isSaving}
+              >
+                {isSaving && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                {primaryLabel}
+              </Button>
+            )}
           </div>
         </footer>
       )}

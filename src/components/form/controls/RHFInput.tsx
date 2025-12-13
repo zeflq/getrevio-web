@@ -11,6 +11,7 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
 
 type BaseProps = {
   name: string; // required
@@ -48,7 +49,7 @@ export function RHFInput({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={className}>
+        <FormItem className={cn("flex flex-col",className)}>
           <FormLabel>
             {label} {requiredStar ? <span className="text-destructive">*</span> : null}
           </FormLabel>

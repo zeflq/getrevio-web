@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Pencil, Trash2 } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 
 import type { iconAction } from "@/shared/ui/IconActionGroup";
 import { iconActionGroup as IconActionGroup } from "@/shared/ui/IconActionGroup";
@@ -13,14 +13,21 @@ const cooldownLabelMap = lotteryCooldownOptions.reduce<Record<string, string>>((
   return acc;
 }, {});
 
-export function lotteryColumns(opts: {
+type LotteryTranslations = ReturnType<typeof import("next-intl").useTranslations>;
+
+type LotteryColumnsOptions = {
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-}): ColumnDef<LotteryConfigListDTO>[] {
+  t: LotteryTranslations;
+};
+
+export function lotteryColumns(opts: LotteryColumnsOptions): ColumnDef<LotteryConfigListDTO>[] {
+  const { t } = opts;
+
   return [
     {
       accessorKey: "name",
-      header: "Lottery",
+      header: t("columns.name"),
       enableSorting: true,
       enableColumnFilter: true,
       cell: ({ row }) => (
@@ -35,28 +42,28 @@ export function lotteryColumns(opts: {
     {
       accessorFn: (row) => row.merchantName ?? row.merchantId,
       id: "merchant",
-      header: "Merchant",
+      header: t("columns.merchant"),
       cell: ({ getValue }) => getValue() ?? "—",
     },
     {
       accessorKey: "enabled",
-      header: "Enabled",
-      cell: ({ row }) => (row.original.enabled ? "Yes" : "No"),
+      header: t("columns.enabled"),
+      cell: ({ row }) => (row.original.enabled ? t("columns.yes") : t("columns.no")),
     },
     {
       accessorKey: "cooldown",
-      header: "Cooldown",
+      header: t("columns.cooldown"),
       cell: ({ getValue }) => cooldownLabelMap[getValue() as string] ?? getValue(),
     },
     {
       accessorKey: "createdAt",
-      header: "Created At",
+      header: t("columns.createdAt"),
       enableSorting: true,
       cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
     },
     {
       id: "actions",
-      header: () => <div className="text-right">Actions</div>,
+      header: () => <div className="text-right">{t("columns.actions")}</div>,
       meta: { forTable: true },
       cell: ({ row }) => {
         const record = row.original;
@@ -67,12 +74,12 @@ export function lotteryColumns(opts: {
                 opts.onEdit && {
                   onClick: () => opts.onEdit(record.id),
                   icon: <Pencil className="h-4 w-4" />,
-                  ariaLabel: "Edit",
+                  ariaLabel: t("actions.edit"),
                 },
                 opts.onDelete && {
                   onClick: () => opts.onDelete(record.id),
                   icon: <Trash2 className="h-4 w-4" />,
-                  ariaLabel: "Delete",
+                  ariaLabel: t("actions.delete"),
                   variant: "linkDestructive",
                 },
               ].filter(Boolean) as iconAction[]}

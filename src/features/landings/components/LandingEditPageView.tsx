@@ -14,6 +14,7 @@ import { useDirtyBeforeUnload } from "../hooks/useDirtyBeforeUnload";
 import { useLandingPageDerivedState } from "../hooks/useLandingPageDerivedState";
 import { useLandingPublishHandlers } from "../hooks/useLandingPublishHandlers";
 import { useLandingHeaderActions } from "../hooks/useLandingHeaderActions";
+import { useTabbedFormState } from "@/hooks/useTabbedFormState";
 
 import type { LandingListItem } from "../server/mappers";
 import type { LandingFormValues } from "../model/landingSchema";
@@ -57,8 +58,6 @@ export function LandingEditPageView(props: LandingEditPageViewProps) {
     unpublishAction,
   } = props;
 
-  const [activeTab, setActiveTab] = React.useState<ActiveTab>("settings");
-
   useDirtyBeforeUnload(form.formState.isDirty);
 
   const {
@@ -69,9 +68,23 @@ export function LandingEditPageView(props: LandingEditPageViewProps) {
     previewHref,
     toggleButtonLabel,
     publishButtonVariant,
-    hasFormErrors,
-    tabs,
-  } = useLandingPageDerivedState({ t, form, landing });
+  } = useLandingPageDerivedState({ t, landing });
+  const tabState = useTabbedFormState({
+    form,
+    tabs: [
+      {
+        id: "settings",
+        label: t("tabs.settings"),
+        error: (errors) => Boolean(errors.settings || errors.belongsTo),
+      },
+      {
+        id: "content",
+        label: t("tabs.content"),
+        error: (errors) => Boolean(errors.content),
+      },
+    ],
+    defaultTab: "settings",
+  });
 
   const { handlePublish, handleUnpublish, isToggleLoading } = useLandingPublishHandlers({
     landing,
@@ -122,9 +135,9 @@ export function LandingEditPageView(props: LandingEditPageViewProps) {
       description={t("form.description")}
       onBack={() => router.back()}
       headerActions={headerActions}
-      tabs={tabs}
-      activeTabId={activeTab}
-      onTabChange={(value) => setActiveTab(value as ActiveTab)}
+      tabs={tabState.tabs}
+      activeTabId={tabState.activeTab}
+      onTabChange={tabState.handleTabChange}
       showFooter
       primaryLabel={t("common.saveChanges")}
       secondaryLabel={t("common.reset")}
@@ -138,7 +151,7 @@ export function LandingEditPageView(props: LandingEditPageViewProps) {
       ) : (
         <FormProvider {...form} key={landing?.id}>
           <form ref={formRef} onSubmit={onSubmit} className="space-y-6">
-            {activeTab === "settings" && (
+            {tabState.activeTab === "settings" && (
               <LandingSettingsTab
                 isSubmitting={isSubmitting}
                 tenantId={tenantId}
@@ -146,11 +159,11 @@ export function LandingEditPageView(props: LandingEditPageViewProps) {
               />
             )}
 
-            {activeTab === "content" && (
+            {tabState.activeTab === "content" && (
               <LandingContentTab landing={landing} isSubmitting={isSubmitting} t={t} />
             )}
 
-            {hasFormErrors && (
+            {tabState.hasFormErrors && (
               <p className="text-xs text-destructive/80">{t("common.formHasErrors")}</p>
             )}
           </form>

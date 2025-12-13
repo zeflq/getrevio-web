@@ -32,8 +32,8 @@ export function SloteBannerRenderer({ data }: SloteBannerRendererProps) {
           className="
           mt-6 px-8 py-2 rounded-xl
           text-[10px] font-extrabold uppercase tracking-[0.25em]
-          bg-[var(--landing-secondary)]
-          text-[var(--landing-text)]
+          bg-(--landing-secondary)
+          text-(--landing-text)
           shadow-[0_3px_8px_rgba(0,0,0,0.15),0_0_12px_var(--landing-slot-glow-primary)]
           transition-all
           hover:scale-[1.03] hover:shadow-[0_4px_14px_rgba(0,0,0,0.25)]

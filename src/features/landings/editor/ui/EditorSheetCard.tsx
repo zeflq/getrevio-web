@@ -1,33 +1,24 @@
 "use client";
 
 import * as React from "react";
-import { ArrowUp, ArrowDown, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-  SheetTrigger,
-  SheetClose,
-  SheetFooter,
-} from "@/components/ui/sheet";
+import { buttonVariants } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import { useFormContext } from "react-hook-form";
+import { SheetForm } from "@/components/form/SheetForm";
 
 export interface EditorSheetCardProps {
   /** Titre clair du bloc, affiché dans la Sheet */
   sheetTitle: string;
   sheetDescription?: string;
   sheetContext?: React.ReactNode;
-  closeLabel?: string;
 
   /** Reorder actions */
   canMoveUp: boolean;
@@ -77,6 +68,7 @@ export function EditorSheetCard({
 }: EditorSheetCardProps) {
   const t = useTranslations("landings.editor.sheetCard");
   const [open, setOpen] = React.useState(false);
+  const form = useFormContext();
 
   const handleMoveUp = () => {
     if (!disabled && canMoveUp) onMoveUp();
@@ -94,115 +86,105 @@ export function EditorSheetCard({
     if (!disabled) onDelete();
   };
 
-  return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      {/* -------- CARD (TRIGGER) -------- */}
-      <SheetTrigger asChild>
-        <div
-          className={cn(
-            "bg-background border rounded-lg px-3 py-2.5",
-            "flex items-center justify-between gap-2",
-            "cursor-pointer transition hover:bg-muted/60",
-            disabled && "opacity-60 cursor-not-allowed",
-            isFixed && "border-l-4 border-primary/70",
-            hasErrors && "border-destructive/70 bg-destructive/5 text-destructive"
-          )}
-          onClick={() => {
-            if (disabled) return;
-            setOpen(true);
-          }}
-        >
-          {/* LEFT: header du bloc (nom, index, description courte, etc.) */}
-          <div className="flex-1 flex items-center gap-2 truncate">
-            {header}
-          </div>
-          {(canDuplicate || canDelete || canMoveUp || canMoveDown) && (
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                className={cn(
-                  buttonVariants({ variant: "ghost", size: "xs" }),
-                  "shrink-0"
-                )}
-                onClick={(e) => e.stopPropagation()}
+  const triggerCard = (
+    <div
+      className={cn(
+        "bg-background border rounded-lg px-3 py-2.5",
+        "flex items-center justify-between gap-2",
+        "cursor-pointer transition hover:bg-muted/60",
+        disabled && "opacity-60 cursor-not-allowed",
+        isFixed && "border-l-4 border-primary/70",
+        hasErrors && "border-destructive/70 bg-destructive/5 text-destructive"
+      )}
+      onClick={() => {
+        if (disabled) return;
+        setOpen(true);
+      }}
+    >
+      <div className="flex-1 flex items-center gap-2 truncate">{header}</div>
+      {(canDuplicate || canDelete || canMoveUp || canMoveDown) && (
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "xs" }),
+              "shrink-0"
+            )}
+            onClick={(e) => e.stopPropagation()}
+            disabled={disabled}
+          >
+            <MoreHorizontal className="size-4" />
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              disabled={!canMoveUp || disabled}
+              onSelect={(e) => {
+                e.preventDefault();
+                handleMoveUp();
+              }}
+            >
+              Monter
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              disabled={!canMoveDown || disabled}
+              onSelect={(e) => {
+                e.preventDefault();
+                handleMoveDown();
+              }}
+            >
+              Descendre
+            </DropdownMenuItem>
+
+            {canDuplicate && (
+              <DropdownMenuItem
                 disabled={disabled}
+                onSelect={(e) => {
+                  e.preventDefault();
+                  handleDuplicate();
+                }}
               >
-                <MoreHorizontal className="size-4" />
-              </DropdownMenuTrigger>
+                Dupliquer
+              </DropdownMenuItem>
+            )}
 
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  disabled={!canMoveUp || disabled}
-                  onSelect={(e) => {
-                    e.preventDefault();
-                    handleMoveUp();
-                  }}
-                >
-                  Monter
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  disabled={!canMoveDown || disabled}
-                  onSelect={(e) => {
-                    e.preventDefault();
-                    handleMoveDown();
-                  }}
-                >
-                  Descendre
-                </DropdownMenuItem>
+            {canDelete && (
+              <DropdownMenuItem
+                disabled={disabled}
+                onSelect={(e) => {
+                  e.preventDefault();
+                  handleDelete();
+                }}
+              >
+                Supprimer
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+    </div>
+  );
 
-                {canDuplicate && (
-                  <DropdownMenuItem
-                    disabled={disabled}
-                    onSelect={(e) => {
-                      e.preventDefault();
-                      handleDuplicate();
-                    }}
-                  >
-                    Dupliquer
-                  </DropdownMenuItem>
-                )}
+  const handleSubmit = React.useCallback(() => {
+    setOpen(false);
+  }, []);
 
-                {canDelete && (
-                  <DropdownMenuItem
-                    disabled={disabled}
-                    onSelect={(e) => {
-                      e.preventDefault();
-                      handleDelete();
-                    }}
-                  >
-                    Supprimer
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-        </div>
-      </SheetTrigger>
-
-      {/* -------- SHEET (INSPECTOR) -------- */}
-      <SheetContent className="sm:max-w-[560px]">
-        <SheetHeader>
-          <SheetTitle>{sheetTitle}</SheetTitle>
-
-          {sheetDescription && (
-            <SheetDescription>{sheetDescription}</SheetDescription>
-          )}
-
-          {sheetContext && (
-            <p className="text-xs text-muted-foreground">{sheetContext}</p>
-          )}
-        </SheetHeader>
-
-        <div className="space-y-4 p-4">{content}</div>
-
-        {/* Footer UX : bouton clair pour revenir */}
-        <SheetFooter>
-          <SheetClose asChild>
-            <Button type="button" variant="default">
-              {t('close')}
-            </Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+  return (
+    <SheetForm
+      open={open}
+      title={sheetTitle}
+      description={sheetDescription}
+      methods={form}
+      onOpenChange={setOpen}
+      onSubmit={handleSubmit}
+      isBusy={form.formState.isSubmitting}
+      isReady={!form.formState.isSubmitting}
+      onCancel={() => setOpen(false)}
+      trigger={triggerCard}
+    >
+      {sheetContext && (
+        <p className="text-xs text-muted-foreground">{sheetContext}</p>
+      )}
+      <div className="space-y-4">{content}</div>
+    </SheetForm>
   );
 }
