@@ -65,6 +65,12 @@ export const landingTemplates: LandingTemplate[] = [
               showPlayButton: true
             }
           },
+          {
+            id: "lottery-section",
+            kind: "lotteryAddon",
+            mode: "fixed",
+            maxInstances: 1,
+          },
         ],
       }
     ],

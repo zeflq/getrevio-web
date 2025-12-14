@@ -2,6 +2,7 @@
 
 import { createCrudBridge, type ListEnvelope } from "@/hooks/createCrudBridge";
 import { http } from "@/shared/lib/http";
+import type { LiteListe } from "@/types/lists";
 
 import {
   createLotteryConfigAction,
@@ -28,10 +29,16 @@ const list = (params: Record<string, unknown>) =>
 const get = (id: string) =>
   http.get<LotteryConfigDetailDTO>(`/api/lotteries/${id}`, { cache: "no-store" });
 
-const bridge = createCrudBridge<LotteryConfigDetailDTO, string>({
+const liteList = (params: Record<string, unknown>) =>
+  http.get<LiteListe[]>(`/api/lotteries/lite?${buildQuery(params)}`, {
+    cache: "no-store",
+  });
+
+const bridge = createCrudBridge<LotteryConfigDetailDTO, string, LiteListe>({
   keyBase: ["lotteries"],
   list,
   get,
+  liteList,
   actions: {
     create: createLotteryConfigAction,
     update: updateLotteryConfigAction,
@@ -42,6 +49,7 @@ const bridge = createCrudBridge<LotteryConfigDetailDTO, string>({
 
 export const useLotteriesList = bridge.useList!;
 export const useLotteryItem = bridge.useItem!;
+export const useLotteriesLite = bridge.useLite!;
 export const useCreateLottery = bridge.useCreateAction!;
 export const useUpdateLottery = bridge.useUpdateAction!;
 export const useDeleteLottery = bridge.useRemoveAction!;

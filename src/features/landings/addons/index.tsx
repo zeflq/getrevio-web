@@ -14,6 +14,7 @@ import instagramActionDrawerAddonPlugin from "./instagramActionDrawerAddon";
 import simpleTitleAddonPlugin from "./simpleTitle";
 import { clone, createId } from "../utils/serialization";
 import sloteBannerPlugin from "./sloteBanner";
+import lotteryAddonPlugin from "./lotteryAddon";
 
 const landingAddonPlugins = [
   sloteBannerPlugin,
@@ -23,6 +24,7 @@ const landingAddonPlugins = [
   simpleTitleAddonPlugin,
   googleReviewActionDrawerAddonPlugin,
   instagramActionDrawerAddonPlugin,
+  lotteryAddonPlugin,
 ] as const satisfies readonly LandingAddonPlugin<any>[];
 
 type LandingAddonPluginTuple = typeof landingAddonPlugins;
@@ -53,6 +55,7 @@ const addonSchemas =[
   buildAddonSchema(simpleTitleAddonPlugin),
   buildAddonSchema(googleReviewActionDrawerAddonPlugin),
   buildAddonSchema(instagramActionDrawerAddonPlugin),
+  buildAddonSchema(lotteryAddonPlugin),
 ] as const;
 
 export const LandingAddonSchema = z.discriminatedUnion("kind", addonSchemas);

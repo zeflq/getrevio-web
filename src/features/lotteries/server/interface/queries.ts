@@ -15,10 +15,12 @@ import type {
 import { PrismaLotteryConfigQueryRepository } from "@/features/lotteries/server/infrastructure/prisma/prismaLotteryConfigQueryRepository";
 import { ListLotteryConfigsUseCase } from "@/features/lotteries/server/application/usecases/listLotteryConfigsUseCase";
 import { GetLotteryConfigUseCase } from "@/features/lotteries/server/application/usecases/getLotteryConfigUseCase";
+import { ListLotteryConfigsLiteUseCase } from "@/features/lotteries/server/application/usecases/listLotteryConfigsLiteUseCase";
 
 const repository = new PrismaLotteryConfigQueryRepository();
 const listUseCase = new ListLotteryConfigsUseCase(repository);
 const getUseCase = new GetLotteryConfigUseCase(repository);
+const listLiteUseCase = new ListLotteryConfigsLiteUseCase(repository);
 
 type MaybeTenant = string | undefined;
 type Options = LotteryQueryOptions | undefined;
@@ -70,6 +72,26 @@ export async function getLotteryConfigServer(
   );
 
   return getUseCase.execute({ id, tenantId, options });
+}
+
+export async function listLotteryConfigsLiteServer(
+  tenantIdOrFilters: string | FiltersInput,
+  maybeFilters?: FiltersInput,
+  options?: Options
+) {
+  const session = await getServerSession();
+  if (!session?.user) {
+    throw new ActionError(401, "UNAUTHORIZED");
+  }
+
+  const { tenantId: override, filters } = normalizeFiltersInput(tenantIdOrFilters, maybeFilters);
+  const { tenantId } = resolveTenantScope(
+    createUserContext(session),
+    typeof filters === "object" && filters !== null ? (filters as Record<string, unknown>) : {},
+    { tenantIdOverride: override }
+  );
+
+  return listLiteUseCase.execute({ filters, tenantId, options });
 }
 
 function normalizeFiltersInput(

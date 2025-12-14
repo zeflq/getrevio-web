@@ -167,6 +167,11 @@
               "footerText": "Thanks for being part of the community."
             }
           }
+          , 
+          "lotteryAddon": {
+            "label": "Lottery",
+            "description": "Embed a lottery game so visitors can spin and win directly from this landing."
+          }
           ,
           "actionSectionAddon": {
             "label": "Action section",

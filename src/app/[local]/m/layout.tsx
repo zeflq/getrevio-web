@@ -73,7 +73,7 @@ export default async function MerchantLayout({ children }: { children: React.Rea
           <div className="flex items-center gap-2 px-4">
             <LanguageSwitcher />
             <Separator orientation="vertical" className="h-4" />
-            {/* <ThemeToggle /> */}
+            <ThemeToggle />
           </div>
         </header>
         {children}

@@ -78,6 +78,32 @@ export class PrismaLotteryConfigQueryRepository implements LotteryConfigQueryRep
     return row ? mapLotteryConfigRowToDetail(row) : null;
   }
 
+  async listLite({ filters, tenantId, options }: {
+    filters: LotteryFilters;
+    tenantId?: string;
+    options?: LotteryQueryOptions;
+  }): Promise<{ value: string; label: string }[]> {
+    const where = this.buildScopedWhere(filters, tenantId);
+    const orderBy = lotterySortPolicy.toOrderBy(filters.sort, filters.order, filters);
+
+    const rows = await this.runWithTimeout(
+      this.client.findMany({
+        where,
+        orderBy,
+        select: {
+          id: true,
+          name: true,
+        },
+      }),
+      options
+    );
+
+    return rows.map((row) => ({
+      value: row.id,
+      label: row.name,
+    }));
+  }
+
   private buildScopedWhere(filters: LotteryFilters, tenantId?: string) {
     const where = buildLotteryConfigWhere(filters, tenantId);
     return lotteryQueryPolicy.enforceTenant(where, tenantId, "merchantId");

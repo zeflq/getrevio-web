@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { SlotBanner } from "../slotGame/SlotBanner";
 
 
 export function EmptyRenderer() {

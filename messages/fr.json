@@ -163,6 +163,11 @@
             }
           }
           ,
+          "lotteryAddon": {
+            "label": "Loterie",
+            "description": "Ajoutez un jeu de loterie à cette landing pour que les visiteurs puissent tenter leur chance."
+          }
+          ,
           "actionSectionAddon": {
             "label": "Section d’action",
             "description": "Mets en avant un CTA avec texte et bouton",

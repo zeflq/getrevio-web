@@ -18,4 +18,10 @@ export interface LotteryConfigQueryRepository {
     tenantId?: string;
     options?: LotteryQueryOptions;
   }): Promise<LotteryConfigDetailDTO | null>;
+
+  listLite(args: {
+    filters: LotteryFilters;
+    tenantId?: string;
+    options?: LotteryQueryOptions;
+  }): Promise<{ value: string; label: string }[]>;
 }
