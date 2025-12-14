@@ -37,6 +37,7 @@ const buildTemplateContent = (
         definition.kind,
         definition.defaultData as any,
         definition.addons?.filter((addonDef) => addonDef.mode === "fixed"),
+        definition.label,
         translator
       );
       block.__templateBlockId = definition.id;

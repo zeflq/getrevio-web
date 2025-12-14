@@ -51,7 +51,7 @@ export function BlockCard({
   const t = useTranslations("landings.editor");
   const blocksTranslations = useTranslations("landings.editor.blocks");
 
-  const typeLabel = blocksTranslations(`${block.kind}.label` as const) ?? block.kind;
+  const typeLabel = block.__templateLabel ?? blocksTranslations(`${block.kind}.label` as const) ?? block.kind;
   const description = blocksTranslations(`${block.kind}.description` as const);
 
   const plugin = landingBlockPluginMap[block.kind];

@@ -6,6 +6,7 @@ export type TemplateBlockDefinition = {
   kind: LandingBlockKind;
   mode: "fixed" | "optional";
   maxInstances?: number;
+  label?: string;
   defaultData?: Record<string, unknown>;
   addons?: LandingBlockAddonDefinition[];
 };

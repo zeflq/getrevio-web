@@ -12,6 +12,7 @@ export type TemplateBlockDefinition = {
   kind: LandingBlockKind; // the block plugin kind (see `src/features/landings/blocks/index.ts`)
   mode: "fixed" | "optional"; // whether the editor must keep at least one instance
   maxInstances?: number; // optional cap that the UI honors when adding/duplicating blocks
+  label?: string; // optional display label for this block instance (supports i18n: prefix)
   defaultData?: Record<string, unknown>; // starter payload for the block inspector
   addons?: LandingBlockAddonDefinition[]; // addon slots that sit under the block
 };
@@ -25,6 +26,22 @@ export type LandingTemplate = {
 Each `kind` must match one of the `LandingBlockKind` values exported from the block registry (`src/features/landings/blocks/index.ts`). When merchants select a template, the UI surfaces a translated name and description that live under the `landings.templates.{templateId}` namespace (see `landings.form` and `landings.editor` translations used in `LandingFormFields.tsx` and `LandingContentEditor.tsx`).
 
 The `mode` flag controls whether the template enforces a required block count: "fixed" slots contribute to the template’s fixed count map (`getTemplateFixedCountMap` in `src/features/landings/templates/utils.ts`), which keeps the delete button disabled until the minimum number of fixed blocks or addons remain. Templates also export a `maxInstances` map (`getTemplateMaxInstanceMap`) so the UI can prevent dropping below caps when duplicates are added (the same logic is mirrored for addons in `src/features/landings/editor/addons/BlockAddonsSection.tsx`).
+
+### Block labels
+
+Templates can specify a custom `label` for each block instance that appears in the editor UI (BlockCard). This label is stored as `__templateLabel` metadata on the block and takes precedence over the default block type label. Labels support the `i18n:` prefix for localization:
+
+```ts
+{
+  id: "empty1",
+  kind: "empty",
+  mode: "fixed",
+  maxInstances: 1,
+  label: "i18n:templates.slotTemplate.defaultValues.empty1.label"
+}
+```
+
+When `createBlockByKind` receives a `label`, it passes it through `applyOverrideTranslations` to resolve any `i18n:` keys before storing it as `__templateLabel`. The editor's `BlockCard` component then displays this label instead of the generic block type label, making it easier to distinguish multiple instances of the same block kind.
 
 ### Localized defaults
 

@@ -7,6 +7,7 @@ import {
 } from "@/features/landings/addons";
 import {
   applyTranslationDefaults,
+  applyOverrideTranslations,
   type TranslationFn,
 } from "../utils/translationDefaults";
 import type { LandingBlockPlugin } from "./plugin";
@@ -36,6 +37,7 @@ const buildBlockSchema = <P extends LandingBlockPlugin<any>>(plugin: P) =>
     data: plugin.schema,
     __templateFixed: z.boolean().optional(),
     __templateBlockId: z.string().optional(),
+    __templateLabel: z.string().optional(),
     addons: z.array(LandingAddonSchema).default([]),
   });
 
@@ -59,6 +61,7 @@ export const createBlockByKind = <K extends LandingBlockKind>(
   kind: K,
   overrides?: Partial<PluginByKind<K>["defaultData"]>,
   addonOverrides?: LandingBlockAddonDefinition[],
+  templateLabel?: string,
   translator?: TranslationFn
 ): LandingBlock => {
   const plugin = findPluginByKind(kind);
@@ -74,6 +77,9 @@ export const createBlockByKind = <K extends LandingBlockKind>(
     kind
   );
 
+  const translatedLabel = templateLabel
+    ? applyOverrideTranslations({ label: templateLabel }, translator).label
+    : undefined;
   return {
     id: createId(),
     kind,
@@ -81,11 +87,12 @@ export const createBlockByKind = <K extends LandingBlockKind>(
       ...withI18nDefaults,
       ...(overrides ?? {}),
     },
+    __templateLabel: translatedLabel,
     addons: (addonOverrides ?? [])
       .map((slot) => {
         const addon = createAddonByKind(slot.kind, slot.defaultData, translator);
 
-        if (slot.mode === "fixed") {    
+        if (slot.mode === "fixed") {
           addon.__templateAddonId = slot.id;
           addon.__templateFixed = true;
         }

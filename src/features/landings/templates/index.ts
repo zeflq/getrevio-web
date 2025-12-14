@@ -10,6 +10,7 @@ export const landingTemplates: LandingTemplate[] = [
         kind: "empty",
         mode: "fixed",
         maxInstances: 1,
+        label: `${I18N_PREFIX}slotTemplate.defaultValues.empty1.label`,
         addons: [
           {
             id: "slote-banner-section",
@@ -44,6 +45,7 @@ export const landingTemplates: LandingTemplate[] = [
         kind: "empty",
         mode: "fixed",
         maxInstances: 1,
+        label: `${I18N_PREFIX}slotTemplate.defaultValues.empty2.label`,
         addons: [
           {
             id: "slot-simple-title",
