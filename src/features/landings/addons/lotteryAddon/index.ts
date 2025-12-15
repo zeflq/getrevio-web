@@ -9,7 +9,7 @@ const lotteryAddonPlugin: LandingAddonPlugin<LotteryAddonData> = {
   schema: lotteryAddonSchema,
   defaultData: lotteryAddonDefault,
   Inspector: LotteryAddonInspector,
-  Renderer: () => null,
+  Renderer: LotteryAddonRenderer,
 };
 
 export default lotteryAddonPlugin;

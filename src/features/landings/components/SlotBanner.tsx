@@ -15,6 +15,7 @@ import {
 interface SlotBannerProps {
   name: string; // restaurant / hotel name
   label?: string; // e.g. "BIG WIN", "JACKPOT"
+  onSpinEnd?: () => void;
 }
 
 /**
@@ -104,7 +105,7 @@ const INITIAL_MATRIX: SymbolKey[][] = [
 
 export const SlotBanner = React.forwardRef<SlotBannerHandle, SlotBannerProps>(
   function SlotBannerInner(
-    { name, label = "BIG WIN" }: SlotBannerProps,
+    { name, label = "BIG WIN", onSpinEnd }: SlotBannerProps,
     ref,
   ) {
     const initials = getInitials(name);
@@ -258,6 +259,9 @@ export const SlotBanner = React.forwardRef<SlotBannerHandle, SlotBannerProps>(
         window.setTimeout(() => {
           stopReel(col);
           applyColumnFromMatrix(col, finalMatrix);
+          if (col === COLS - 1) {
+            onSpinEnd?.();
+          }
         }, col * REEL_STOP_INTERVAL_MS);
       }
     }

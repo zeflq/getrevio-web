@@ -57,7 +57,7 @@ export function SocialActionDrawerRenderer({
   i18nNamespace,
 }: SocialActionDrawerRendererProps) {
   const { next } = useStepController();
-  const { useListener } = useBlockChannel();
+  const { on } = useBlockChannel();
   const t = useTranslations(i18nNamespace);
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [open, setOpen] = React.useState(false);
@@ -101,7 +101,7 @@ export function SocialActionDrawerRenderer({
     [t, variant]
   );
 
-  useListener("cta:primary-click", () => {
+  on("cta:primary-click", () => {
     setCurrentSlide(0);
     setOpen(true);
   });

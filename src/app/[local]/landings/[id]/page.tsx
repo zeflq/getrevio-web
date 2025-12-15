@@ -5,6 +5,7 @@ import { TemplateLinearRenderer } from "@/features/landings/preview/TemplateLine
 import { getLandingServer } from "@/features/landings/server/interface/queries";
 import { listThemesServer } from "@/features/themes/server/queries";
 import { ThemeSelector } from "@/features/landings/theme/ThemeSelector";
+import { LandingRenderProvider } from "@/features/landings/preview/LandingRenderContext";
 
 interface LandingPreviewPageProps {
   params: {
@@ -46,16 +47,25 @@ export default async function LandingPreviewPage({
   const blocks = content?.blocks ?? [];
 
   return (
-    <LandingThemeProvider
-      themes={themesPayload.data}
-      themeId={landing.themeId ?? undefined}
-    >
-      <main className="min-h-screen flex flex-col justify-start max-w-md w-full px-6 space-y-6">
-        <header className="flex justify-end pt-4">
-          <ThemeSelector/>
-        </header>
-        <TemplateLinearRenderer blocks={blocks} />
-      </main>
-    </LandingThemeProvider>
+    <LandingRenderProvider
+        value={{
+          landingId: landing.id,
+          merchantId: landing.merchantId,
+          belongsTo: landing.belongsTo ?? null,
+          previewMode,
+        }}
+      >
+      <LandingThemeProvider
+        themes={themesPayload.data}
+        themeId={landing.themeId ?? undefined}
+      >
+        <main className="min-h-screen flex flex-col justify-start max-w-md w-full px-6 space-y-6">
+          <header className="flex justify-end pt-4">
+            <ThemeSelector/>
+          </header>
+          <TemplateLinearRenderer blocks={blocks} />
+        </main>
+      </LandingThemeProvider>
+    </LandingRenderProvider>
   );
 }
