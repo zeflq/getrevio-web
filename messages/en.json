@@ -438,12 +438,13 @@
       "validity": "Validity (days)",
       "validityPlaceholder": "Ex. 7",
       "validityHelper": "Number of days after the win.",
-        "errors": {
-          "internalName": "Internal name is required",
-          "displayLabel": "Display label is required",
-          "weightRequired": "Weight is required",
-          "weightInvalid": "Weight must be greater or equal to 0"
-        }
+      "activationNote": "Gifts become active 24 hours after saving so we can process the changes.",
+      "errors": {
+        "internalName": "Internal name is required",
+        "displayLabel": "Display label is required",
+        "weightRequired": "Weight is required",
+        "weightInvalid": "Weight must be greater or equal to 0"
+      }
       },
     "giftCard": {
       "unnamedGift": "Unnamed gift",

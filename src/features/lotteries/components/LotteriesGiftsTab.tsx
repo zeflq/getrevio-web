@@ -11,7 +11,7 @@ import { Toolbar, ToolbarGroup, ToolbarSeparator } from "@/components/ui/toolbar
 
 import { GiftCard } from "./gifts/GiftCard";
 import { EditGiftSheet } from "./gifts/EditGiftSheet";
-import { createEmptyGift, type GiftFormValue } from "./gifts/types";
+import { createEmptyGift } from "./gifts/types";
 import {
   LotteryConfigFormValues,
   type LotteryGiftFormValue,
@@ -26,7 +26,8 @@ const MAX_GIFTS = 5;
 
 export function LotteriesGiftsTab() {
   const t = useTranslations("lotteries.giftsTab");
-  const { control, watch, formState } = useFormContext<LotteryConfigFormValues>();
+  const form = useFormContext<LotteryConfigFormValues>();
+  const { control, watch, formState } = form;
 
   const { fields, append, update, remove } = useFieldArray<
     LotteryConfigFormValues,
@@ -94,13 +95,11 @@ export function LotteriesGiftsTab() {
   type SheetState =
     | {
         mode: "create";
-        index: null;
-        initialGift: GiftFormValue;
+        index: number; // Index where new gift will be added
       }
     | {
         mode: "edit";
         index: number;
-        initialGift: GiftFormValue;
       }
     | null;
 
@@ -109,21 +108,25 @@ export function LotteriesGiftsTab() {
 
   const handleAddGift = () => {
     if (!canAddGift) return;
+    // Add empty gift to form, then open sheet to edit it
+    const newIndex = giftFields.length;
+    append(createEmptyGift());
+
+    // Clear validation errors for the new gift (it's empty, user hasn't touched it yet)
+    setTimeout(() => {
+      form.clearErrors(`gifts.${newIndex}`);
+    }, 0);
+
     setSheetState({
       mode: "create",
-      index: null,
-      initialGift: createEmptyGift(),
+      index: newIndex,
     });
   };
 
   const handleEditGift = (index: number) => {
-    const gift = giftFields[index];
-    if (!gift) return;
-
     setSheetState({
       mode: "edit",
       index,
-      initialGift: gift,
     });
   };
 
@@ -131,22 +134,18 @@ export function LotteriesGiftsTab() {
     remove(index);
   };
 
+  // Track if user clicked Save (vs Cancel)
+  const saveClickedRef = React.useRef(false);
+
   const handleSheetOpenChange = (open: boolean) => {
     if (!open) {
+      // If user cancelled (didn't click Save) and was creating a new gift, remove it
+      if (sheetState?.mode === "create" && !saveClickedRef.current) {
+        remove(sheetState.index);
+      }
       setSheetState(null);
+      saveClickedRef.current = false; // Reset for next time
     }
-  };
-
-  const handleSaveGift = (gift: GiftFormValue) => {
-    if (!sheetState) return;
-
-    if (sheetState.mode === "create") {
-      append(gift);
-    } else if (sheetState.mode === "edit" && sheetState.index != null) {
-      update(sheetState.index, gift);
-    }
-
-    setSheetState(null);
   };
 
   const handleAutoBalance = () => {
@@ -310,9 +309,9 @@ export function LotteriesGiftsTab() {
         <EditGiftSheet
           open={sheetOpen}
           onOpenChange={handleSheetOpenChange}
-          initialGift={sheetState.initialGift}
-          onSave={handleSaveGift}
+          giftIndex={sheetState.index}
           isNew={sheetState.mode === "create"}
+          onSaveClicked={() => { saveClickedRef.current = true; }}
         />
       )}
     </>

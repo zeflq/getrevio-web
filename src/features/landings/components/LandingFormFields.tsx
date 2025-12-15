@@ -131,15 +131,17 @@ export function LandingFormFields({
         disabled={disabled || isEdit}
         keyBy={`template-${selectedMerchantId}`}
       />
-
-      <RHFSelect
+      <RHFCombobox<LiteListe>
         name="themeId"
         label={t("theme")}
         options={themesLite}
+        getOptionValue={(option) => option.value}
+        getOptionLabel={(option) => option.label}
         placeholder={t("themePlaceholder")}
         disabled={disabled || !selectedMerchantId || themesLoading}
-        allowClear
-        clearLabel={t("themeClear")}
+        loading={themesLoading}
+        keyBy={`theme-${selectedMerchantId}`}
+        valueIsNullable
       />
 
       <div className="space-y-3 rounded-lg border p-4">

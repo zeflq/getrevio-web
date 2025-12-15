@@ -58,7 +58,7 @@ export const lotteryGiftSchema = z.object({
   validityDays: z
     .coerce.number()
     .int()
-    .min(0)
+    .min(2, "Validity must be at least 2 day")
     .max(365, "Validity cannot exceed 365 days")
     .optional(),
 });

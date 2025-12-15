@@ -1,17 +1,6 @@
 "use client";
 
-import * as React from "react";
-import { useFormContext } from "react-hook-form";
-
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
-import { cn } from "@/lib/utils";
+import { useFormContext, Controller } from "react-hook-form";
 import {
   Select,
   SelectContent,
@@ -19,113 +8,142 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
-export type SelectOption = {
-  value: string;
+type SelectOption = {
+  value: string | number;
   label: string;
   disabled?: boolean;
 };
 
-export type RHFSelectProps = {
+type RHFSelectProps = {
   name: string;
-  label: string;
-  options: SelectOption[];
+  label?: string;
+  options?: SelectOption[];
   placeholder?: string;
   description?: string;
   disabled?: boolean;
   requiredStar?: boolean;
   className?: string;
   labelClassName?: string;
-  hideLabel?: boolean;
-  onValueChange?: (value: string | undefined) => void;
-  /**
-   * If true, adds a "clear" option at the top that sets the value to `undefined`.
-   * This avoids using "" which Radix Select does not allow as an item value.
-   */
-  allowClear?: boolean;
-  clearLabel?: string;
+  triggerClassName?: string;
+  keyBy?: {
+    value: string;
+    label: string;
+  };
+  // Async options
+  isLoading?: boolean;
+  loadingText?: string;
+  emptyText?: string;
+  // Additional features
+  onValueChange?: (value: string) => void;
+  searchable?: boolean;
 };
-
-const CLEAR_SENTINEL = "__CLEAR__";
 
 export function RHFSelect({
   name,
   label,
-  options,
-  placeholder = "Select…",
+  options = [],
+  placeholder = "Select an option",
   description,
-  disabled,
-  requiredStar,
+  disabled = false,
+  requiredStar = false,
   className,
   labelClassName,
-  hideLabel,
+  triggerClassName,
+  keyBy,
+  isLoading = false,
+  loadingText = "Loading...",
+  emptyText = "No options available",
   onValueChange,
-  allowClear = false,
-  clearLabel = "None",
+  searchable = false,
 }: RHFSelectProps) {
   const { control } = useFormContext();
+
+  // Normalize options if keyBy is provided
+  const normalizedOptions: SelectOption[] = keyBy
+    ? options.map((option: any) => ({
+        value: option[keyBy.value],
+        label: option[keyBy.label],
+        disabled: option.disabled,
+      }))
+    : options;
 
   return (
     <FormField
       control={control}
       name={name}
-      render={({ field }) => {
-        // Normalize value for Radix: never pass "" or null
-        const currentValue =
-          field.value === "" || field.value == null
-            ? undefined
-            : (field.value as string | undefined);
-
-        return (
-          <FormItem className={className}>
-            <FormLabel className={cn(hideLabel && "sr-only", labelClassName)}>
+      render={({ field }) => (
+        <FormItem className={cn("space-y-2", className)}>
+          {label && (
+            <FormLabel className={cn(labelClassName)}>
               {label}
-              {requiredStar ? (
-                <span className="ml-0.5 text-destructive">*</span>
-              ) : null}
+              {requiredStar && <span className="text-destructive ml-1">*</span>}
             </FormLabel>
-
-            <FormControl className="w-full">
-              <Select
-                value={currentValue}
-                disabled={disabled}
-                onValueChange={(val) => {
-                  const next = val === CLEAR_SENTINEL ? undefined : val;
-                  field.onChange(next);
-                  onValueChange?.(next);
-                }}
+          )}
+          <Select
+            disabled={disabled || isLoading}
+            onValueChange={(value) => {
+              field.onChange(value);
+              onValueChange?.(value);
+            }}
+            value={field.value?.toString()}
+            defaultValue={field.value?.toString()}
+          >
+            <FormControl>
+              <SelectTrigger
+                className={cn(
+                  "w-full",
+                  !field.value && "text-muted-foreground",
+                  triggerClassName
+                )}
               >
-                <SelectTrigger className="w-full">
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>{loadingText}</span>
+                  </div>
+                ) : (
                   <SelectValue placeholder={placeholder} />
-                </SelectTrigger>
-
-                <SelectContent>
-                  {allowClear && (
-                    <SelectItem value={CLEAR_SENTINEL}>{clearLabel}</SelectItem>
-                  )}
-
-                  {options.map((o) => (
-                    <SelectItem
-                      key={o.value}
-                      value={o.value}
-                      disabled={o.disabled}
-                    >
-                      {o.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                )}
+              </SelectTrigger>
             </FormControl>
-
-            {description ? (
-              <FormDescription>{description}</FormDescription>
-            ) : null}
-            <FormMessage className="text-xs" />
-          </FormItem>
-        );
-      }}
+            <SelectContent>
+              {isLoading ? (
+                <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  {loadingText}
+                </div>
+              ) : normalizedOptions.length === 0 ? (
+                <div className="py-6 text-center text-sm text-muted-foreground">
+                  {emptyText}
+                </div>
+              ) : (
+                normalizedOptions.map((option) => (
+                  <SelectItem
+                    key={option.value}
+                    value={option.value.toString()}
+                    disabled={option.disabled}
+                  >
+                    {option.label}
+                  </SelectItem>
+                ))
+              )}
+            </SelectContent>
+          </Select>
+          {description && <FormDescription>{description}</FormDescription>}
+          <FormMessage />
+        </FormItem>
+      )}
     />
   );
 }
-
-export default RHFSelect;

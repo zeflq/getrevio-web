@@ -1,96 +1,49 @@
 "use client";
 
 import * as React from "react";
-import { FormProvider } from "react-hook-form";
+import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import type { UseFormReturn } from "react-hook-form";
-import { EditPageLayout } from "@/shared/ui/EditPageLayout";
+import { useReadableError } from "@/lib/useReadableError";
+
+import { EditPageContainer } from "@/shared/ui/EditPageContainer";
+import { useLandingEditForm } from "../hooks/useLandingEditForm";
+import { useLandingPageDerivedState } from "../hooks/useLandingPageDerivedState";
+import { useLandingPublishHandlers } from "../hooks/useLandingPublishHandlers";
+import { useLandingHeaderActions } from "../hooks/useLandingHeaderActions";
+import { usePublishAction } from "../hooks/usePublishAction";
+import { useUnpublishAction } from "../hooks/useUnpublishAction";
+import { useDirtyBeforeUnload } from "../hooks/useDirtyBeforeUnload";
 
 import { LandingSettingsTab } from "./LandingSettingsTab";
 import { LandingContentTab } from "./LandingContentTab";
 import { LandingEditSkeleton } from "./LandingEditSkeleton";
 import { LandingNotFoundState } from "./LandingNotFoundState";
-import { useDirtyBeforeUnload } from "../hooks/useDirtyBeforeUnload";
-import { useLandingPageDerivedState } from "../hooks/useLandingPageDerivedState";
-import { useLandingPublishHandlers } from "../hooks/useLandingPublishHandlers";
-import { useLandingHeaderActions } from "../hooks/useLandingHeaderActions";
-import { useTabbedFormState } from "@/hooks/useTabbedFormState";
-
-import type { LandingListItem } from "../server/mappers";
-import type { LandingFormValues } from "../model/landingSchema";
-import type { LandingPublishAction } from "../hooks/usePublishAction";
-import type { LandingUnpublishAction } from "../hooks/useUnpublishAction";
 
 type LandingEditPageViewProps = {
+  id: string;
   tenantId: string | null;
-  t: ReturnType<typeof useTranslations>;
-  tToasts: ReturnType<typeof useTranslations>;
-  router: ReturnType<typeof import("@/i18n/navigation").useRouter>;
-  readableError: (error: unknown, fallbackKey?: string) => string;
-  form: UseFormReturn<LandingFormValues>;
-  landing: LandingListItem | null;
-  isReady: boolean;
-  isLoading: boolean;
-  isSubmitting: boolean;
-  onSubmit: React.FormEventHandler<HTMLFormElement>;
-  onReset: () => void;
-  publishAction: LandingPublishAction;
-  unpublishAction: LandingUnpublishAction;
 };
 
-type ActiveTab = "settings" | "content";
+export function LandingEditPageView({ id, tenantId }: LandingEditPageViewProps) {
+  const router = useRouter();
+  const t = useTranslations("landings");
+  const tToasts = useTranslations("landings.toasts");
+  const readableError = useReadableError();
 
-export function LandingEditPageView(props: LandingEditPageViewProps) {
-  const {
-    tenantId,
-    t,
-    tToasts,
-    router,
-    readableError,
-    form,
-    landing,
-    isReady,
-    isLoading,
-    isSubmitting,
-    onSubmit,
-    onReset,
-    publishAction,
-    unpublishAction,
-  } = props;
+  const { form, landing, isReady, isLoading, isSubmitting, onSubmit, onReset } =
+    useLandingEditForm(id, true);
+
+  const publishAction = usePublishAction();
+  const unpublishAction = useUnpublishAction();
 
   useDirtyBeforeUnload(form.formState.isDirty);
 
-  const {
-    isPublished,
-    hasUnpublishedChanges,
-    canPublish,
-    showUnpublish,
-    previewHref,
-    toggleButtonLabel,
-    publishButtonVariant,
-  } = useLandingPageDerivedState({ t, landing });
-  const tabState = useTabbedFormState({
-    form,
-    tabs: [
-      {
-        id: "settings",
-        label: t("tabs.settings"),
-        error: (errors) => Boolean(errors.settings || errors.belongsTo),
-      },
-      {
-        id: "content",
-        label: t("tabs.content"),
-        error: (errors) => Boolean(errors.content),
-      },
-    ],
-    defaultTab: "settings",
-  });
-
+  const derivedState = useLandingPageDerivedState({ t, landing });
   const { handlePublish, handleUnpublish, isToggleLoading } = useLandingPublishHandlers({
     landing,
     publishAction,
     unpublishAction,
-    hasUnpublishedChanges,
+    hasUnpublishedChanges: derivedState.hasUnpublishedChanges,
     tToasts,
     readableError,
     router,
@@ -99,13 +52,13 @@ export function LandingEditPageView(props: LandingEditPageViewProps) {
   const headerActions = useLandingHeaderActions({
     landing,
     form,
-    isPublished,
-    hasUnpublishedChanges,
-    canPublish,
-    showUnpublish,
-    previewHref,
-    toggleButtonLabel,
-    publishButtonVariant,
+    isPublished: derivedState.isPublished,
+    hasUnpublishedChanges: derivedState.hasUnpublishedChanges,
+    canPublish: derivedState.canPublish,
+    showUnpublish: derivedState.showUnpublish,
+    previewHref: derivedState.previewHref,
+    toggleButtonLabel: derivedState.toggleButtonLabel,
+    publishButtonVariant: derivedState.publishButtonVariant,
     isSubmitting,
     isToggleLoading,
     t,
@@ -125,50 +78,50 @@ export function LandingEditPageView(props: LandingEditPageViewProps) {
     );
   }
 
-  const formRef = React.useRef<HTMLFormElement | null>(null);
-  const handlePrimary = () => formRef.current?.requestSubmit();
-  const handleSecondary = () => onReset();
-
   return (
-    <EditPageLayout
+    <EditPageContainer
       title={t("form.title")}
       description={t("form.description")}
       onBack={() => router.back()}
+      form={form}
+      tabs={[
+        {
+          id: "settings",
+          label: t("tabs.settings"),
+          error: (errors) => Boolean(errors.settings || errors.belongsTo),
+        },
+        {
+          id: "content",
+          label: t("tabs.content"),
+          error: (errors) => Boolean(errors.content),
+        },
+      ]}
+      defaultTab="settings"
       headerActions={headerActions}
-      tabs={tabState.tabs}
-      activeTabId={tabState.activeTab}
-      onTabChange={tabState.handleTabChange}
-      showFooter
       primaryLabel={t("common.saveChanges")}
       secondaryLabel={t("common.reset")}
-      primaryDisabled={!form.formState.isDirty || isSubmitting}
-      secondaryDisabled={isSubmitting}
-      onPrimary={handlePrimary}
-      onSecondary={handleSecondary}
+      onPrimary={onSubmit}
+      onSecondary={onReset}
+      isSubmitting={isSubmitting}
+      loadingContent={<LandingEditSkeleton />}
+      isLoading={!isReady}
+      formErrorMessage={t("common.formHasErrors")}
     >
-      {!isReady ? (
-        <LandingEditSkeleton />
-      ) : (
-        <FormProvider {...form} key={landing?.id}>
-          <form ref={formRef} onSubmit={onSubmit} className="space-y-6">
-            {tabState.activeTab === "settings" && (
-              <LandingSettingsTab
-                isSubmitting={isSubmitting}
-                tenantId={tenantId}
-                landing={landing}
-              />
-            )}
+      {(activeTab) => (
+        <>
+          {activeTab === "settings" && (
+            <LandingSettingsTab
+              isSubmitting={isSubmitting}
+              tenantId={tenantId}
+              landing={landing}
+            />
+          )}
 
-            {tabState.activeTab === "content" && (
-              <LandingContentTab landing={landing} isSubmitting={isSubmitting} t={t} />
-            )}
-
-            {tabState.hasFormErrors && (
-              <p className="text-xs text-destructive/80">{t("common.formHasErrors")}</p>
-            )}
-          </form>
-        </FormProvider>
+          {activeTab === "content" && (
+            <LandingContentTab landing={landing} isSubmitting={isSubmitting} t={t} />
+          )}
+        </>
       )}
-    </EditPageLayout>
+    </EditPageContainer>
   );
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { CalendarDays, Command, LayoutDashboard, Link2, MapPin, Megaphone, Settings } from "lucide-react"
+import { CalendarDays, Command, Gift, LayoutDashboard, Link2, MapPin, Megaphone, Settings } from "lucide-react"
 import { usePathname } from "next/navigation"
 
 import { NavMain } from "@/components/nav-main"
@@ -20,6 +20,8 @@ export function MerchantSidebar({ base, ...props }: React.ComponentProps<typeof 
   const navMain = [
     { title: "Dashboard", url: `${base}`, icon: LayoutDashboard },
     { title: "Places", url: `${base}/places`, icon: MapPin },
+    { title: "Landings", url: `${base}/landings`, icon: Command },
+    { title: "Lotteries", url: `${base}/lotteries`, icon: Gift },
     { title: "Campaigns", url: `${base}/campaigns`, icon: Megaphone },
     { title: "Shortlinks", url: `${base}/shortlinks`, icon: Link2 },
     { title: "Events", url: `${base}/events`, icon: CalendarDays },

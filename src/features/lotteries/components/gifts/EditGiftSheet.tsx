@@ -2,8 +2,7 @@
 "use client";
 
 import * as React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, type Resolver } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { useTranslations } from "next-intl";
 
 import { SheetForm } from "@/components/form/SheetForm";
@@ -16,92 +15,57 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RHFInput } from "@/components/form/controls";
-import { lotteryGiftSchema } from "@/features/lotteries/model/lotterySchema";
-
-import type { GiftFormValue } from "./types";
+import type { LotteryConfigFormValues } from "@/features/lotteries/model/lotterySchema";
 
 type EditGiftSheetProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  initialGift: GiftFormValue;
-  onSave: (gift: GiftFormValue) => void;
+  giftIndex: number;
   isNew: boolean;
+  onSaveClicked?: () => void; // Called when Save button clicked (before close)
 };
 
 export function EditGiftSheet({
   open,
   onOpenChange,
-  initialGift,
-  onSave,
+  giftIndex,
   isNew,
+  onSaveClicked,
 }: EditGiftSheetProps) {
   const t = useTranslations("lotteries.editGiftSheet");
   const tTypes = useTranslations("lotteries.giftTypes");
 
-  const defaultValues: GiftFormValue = React.useMemo(
-    () => ({
-      id: initialGift.id,
-      name: initialGift.name ?? "",
-      kind: initialGift.kind,
-      weight: initialGift.weight ?? 0,
-      rewardLabel: initialGift.rewardLabel ?? "",
-      imageUrl: initialGift.imageUrl,
-      minPurchaseAmount: initialGift.minPurchaseAmount,
-      minPurchaseCurrency: initialGift.minPurchaseCurrency ?? "EUR",
-      validityDays: initialGift.validityDays,
-    }),
-    [initialGift]
-  );
+  const form = useFormContext<LotteryConfigFormValues>();
+  const { setValue, watch } = form;
 
-  const methods = useForm<GiftFormValue>({
-    mode: "onChange", // validation réactive
-    reValidateMode: "onChange",
-    defaultValues,
-    resolver: zodResolver(lotteryGiftSchema) as Resolver<GiftFormValue>,
-  });
+  const handleSubmit = React.useCallback(() => {
+    onSaveClicked?.(); // Notify parent that Save was clicked
+    onOpenChange(false);
+  }, [onSaveClicked, onOpenChange]);
 
-  const {
-    reset,
-    setValue,
-    watch,
-    formState: { isSubmitting, errors },
-    register,
-  } = methods;
-
-  React.useEffect(() => {
-    reset(defaultValues);
-  }, [defaultValues, reset]);
-
-  const handleOpenChange = (next: boolean) => {
-    if (!next) {
-      // on ferme → on reset sur la valeur initiale
-      reset(defaultValues);
-    }
-    onOpenChange(next);
-  };
-
-  const handleSubmit = (values: GiftFormValue) => {
-    onSave(values);
-  };
-
-  const kind = watch("kind");
+  const fieldPrefix = `gifts.${giftIndex}` as const;
+  const kind = watch(`${fieldPrefix}.kind`);
 
   return (
-    <SheetForm<GiftFormValue>
+    <SheetForm<LotteryConfigFormValues>
       open={open}
       title={isNew ? t("titleAdd") : t("titleEdit")}
       description={t("description")}
-      methods={methods}
-      onOpenChange={handleOpenChange}
+      methods={form}
+      onOpenChange={onOpenChange}
       onSubmit={handleSubmit}
-      isBusy={isSubmitting}
+      isBusy={form.formState.isSubmitting}
       isReady={true}
-      onCancel={() => handleOpenChange(false)}
+      onCancel={() => onOpenChange(false)}
+      // IMPORTANT: skipFormProvider=true because we use the parent lottery form
+      // via useFormContext() above. Same pattern as EditorSheetCard for landing addons.
+      // See: /docs/SheetForm-usage-guide.md
+      skipFormProvider={true}
     >
       {/* Row 1 : name / type / weight */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <RHFInput
-          name="name"
+          name={`${fieldPrefix}.name`}
           label={t("internalName")}
           placeholder={t("internalNamePlaceholder")}
           requiredStar
@@ -112,7 +76,7 @@ export function EditGiftSheet({
           <Select
             value={kind}
             onValueChange={(value) =>
-              setValue("kind", value as GiftFormValue["kind"], {
+              setValue(`${fieldPrefix}.kind` as any, value, {
                 shouldDirty: true,
                 shouldValidate: true,
               })
@@ -131,7 +95,7 @@ export function EditGiftSheet({
         </div>
 
         <RHFInput
-          name="weight"
+          name={`${fieldPrefix}.weight`}
           label={t("weight")}
           type="number"
           min={0}
@@ -141,32 +105,20 @@ export function EditGiftSheet({
         />
       </div>
 
-      {/* Row 2 : label uniquement (URL cachée pour l’instant) */}
+      {/* Row 2 : label uniquement (URL cachée pour l'instant) */}
       <div className="grid grid-cols-1 gap-3">
         <RHFInput
-          name="rewardLabel"
+          name={`${fieldPrefix}.rewardLabel`}
           label={t("displayLabel")}
           placeholder={t("displayLabelPlaceholder")}
           requiredStar
         />
-
-        {/* 
-        // 🔒 Futur : image URL + upload
-        // <div className="space-y-1">
-        //   <Label htmlFor="gift-image">Image (URL)</Label>
-        //   <Input
-        //     id="gift-image"
-        //     {...register("imageUrl")}
-        //     placeholder="https://…"
-        //   />
-        // </div>
-        */}
       </div>
 
       {/* Row 3 : min amount / validity */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <RHFInput
-          name="minPurchaseAmount"
+          name={`${fieldPrefix}.minPurchaseAmount`}
           label={t("minAmount")}
           type="number"
           min={0}
@@ -174,25 +126,17 @@ export function EditGiftSheet({
         />
 
         <RHFInput
-          name="validityDays"
+          name={`${fieldPrefix}.validityDays`}
           label={t("validity")}
           type="number"
           min={0}
           placeholder={t("validityPlaceholder")}
           description={t("validityHelper")}
         />
-
-        {/* 
-        // 🔒 Futur : currency input
-        // <div className="space-y-1">
-        //   <Label htmlFor="gift-currency">Currency</Label>
-        //   <Input
-        //     id="gift-currency"
-        //     {...register("minPurchaseCurrency")}
-        //   />
-        // </div>
-        */}
       </div>
+      <p className="text-xs text-muted-foreground">
+        {t("activationNote")}
+      </p>
     </SheetForm>
   );
 }

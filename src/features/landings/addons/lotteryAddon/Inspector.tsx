@@ -27,8 +27,6 @@ export function LotteryAddonInspector({
         options={lotteryOptions ?? []}
         placeholder={isLoading ? "Loading..." : "Select a lottery"}
         disabled={disabled || isLoading}
-        allowClear
-        clearLabel={t.has("noLottery") ? t("noLottery") : "None"}
       />
       <RHFSelect
         name={`${fieldName}.contactMethod`}

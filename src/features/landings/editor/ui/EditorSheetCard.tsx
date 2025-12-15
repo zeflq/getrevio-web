@@ -180,6 +180,10 @@ export function EditorSheetCard({
       isReady={!form.formState.isSubmitting}
       onCancel={() => setOpen(false)}
       trigger={triggerCard}
+      // IMPORTANT: skipFormProvider=true because we use the parent form from EditPageContainer
+      // via useFormContext() above. Without this, we'd have nested FormProviders causing race conditions.
+      // See: /docs/SheetForm-usage-guide.md
+      skipFormProvider={true}
     >
       {sheetContext && (
         <p className="text-xs text-muted-foreground">{sheetContext}</p>

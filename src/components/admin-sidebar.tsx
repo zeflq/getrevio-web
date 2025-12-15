@@ -3,6 +3,7 @@
 import {
   CalendarDays,
   Command,
+  Gift,
   LayoutDashboard,
   Link2,
   MapPin,
@@ -38,6 +39,7 @@ export function AdminSidebar(props: React.ComponentProps<typeof Sidebar>) {
     { title: "Merchants", url: "/admin/merchants", icon: Users },
     { title: "Places", url: "/admin/places", icon: MapPin },
     { title: "Landings", url: "/admin/landings", icon: Command },
+    { title: "Lotteries", url: "/admin/lotteries", icon: Gift },
     { title: "Campaigns", url: "/admin/campaigns", icon: Megaphone },
     { title: "Shortlinks", url: "/admin/shortlinks", icon: Link2 },
     { title: "Events", url: "/admin/events", icon: CalendarDays },

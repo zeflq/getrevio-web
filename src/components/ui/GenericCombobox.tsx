@@ -132,6 +132,7 @@ export function GenericCombobox<TOption>({
       {useDialog ? (
         <>
           <Button
+            type="button"
             variant="outline"
             role="combobox"
             disabled={!!disabled}
@@ -152,6 +153,7 @@ export function GenericCombobox<TOption>({
           <PopoverTrigger asChild>
             {/* ✅ single child */}
             <Button
+              type="button"
               variant="outline"
               role="combobox"
               disabled={!!disabled}

@@ -1,4 +1,22 @@
 // ui/form/SheetForm.tsx
+/**
+ * SheetForm - Reusable sheet dialog for forms with consistent UI/UX
+ *
+ * IMPORTANT: Understanding `skipFormProvider`
+ *
+ * This component wraps form content in FormProvider by default, which is correct
+ * for standalone sheets that create their own form (e.g., from listing tables).
+ *
+ * However, if this sheet is used WITHIN an edit page that already has a FormProvider,
+ * and you're passing the PARENT form via useFormContext(), you MUST use skipFormProvider={true}
+ * to avoid nested FormProviders with the same form instance (causes race conditions).
+ *
+ * Rules:
+ * - Sheet creates its own form with useForm() → skipFormProvider: false (default) ✅
+ * - Sheet uses parent form with useFormContext() → skipFormProvider: true ✅
+ *
+ * See: /docs/SheetForm-usage-guide.md for detailed examples
+ */
 import {
   Sheet,
   SheetContent,
@@ -30,6 +48,12 @@ type SheetFormProps<TFieldValues extends FieldValues = FieldValues> = {
   children: React.ReactNode; // the fields
   onCancel?: () => void;
   trigger?: React.ReactNode;
+  /**
+   * Skip wrapping in FormProvider.
+   * Set to true when this sheet uses a parent form via useFormContext().
+   * Default: false (creates its own FormProvider)
+   */
+  skipFormProvider?: boolean;
 };
 
 export function SheetForm<TFieldValues extends FieldValues = FieldValues>({
@@ -44,7 +68,37 @@ export function SheetForm<TFieldValues extends FieldValues = FieldValues>({
   children,
   onCancel,
   trigger,
+  skipFormProvider = false,
 }: SheetFormProps<TFieldValues>) {
+  const formContent = (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        methods.handleSubmit(onSubmit)(e);
+      }}
+      className="space-y-4 p-4"
+    >
+      {children}
+      <SheetFooter>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => {
+            onCancel?.();
+            onOpenChange(false);
+          }}
+          disabled={isBusy}
+        >
+          Cancel
+        </Button>
+        <Button type="submit" disabled={isBusy}>
+          {isBusy ? "Saving..." : "Save Changes"}
+        </Button>
+      </SheetFooter>
+    </form>
+  );
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
@@ -63,28 +117,10 @@ export function SheetForm<TFieldValues extends FieldValues = FieldValues>({
               </div>
             ))}
           </div>
+        ) : skipFormProvider ? (
+          formContent
         ) : (
-          <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4 p-4">
-              {children}
-              <SheetFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    onCancel?.();
-                    onOpenChange(false);
-                  }}
-                  disabled={isBusy}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isBusy}>
-                  {isBusy ? "Saving..." : "Save Changes"}
-                </Button>
-              </SheetFooter>
-            </form>
-          </FormProvider>
+          <FormProvider {...methods}>{formContent}</FormProvider>
         )}
       </SheetContent>
     </Sheet>

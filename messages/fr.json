@@ -434,12 +434,13 @@
       "validity": "Validité (jours)",
       "validityPlaceholder": "Ex. 7",
       "validityHelper": "Nombre de jours après le gain.",
-        "errors": {
-          "internalName": "Le nom interne est requis",
-          "displayLabel": "Le libellé affiché est requis",
-          "weightRequired": "Le poids est requis",
-          "weightInvalid": "Le poids doit être supérieur ou égal à 0"
-        }
+      "activationNote": "Les cadeaux peuvent être récupérés qu’après 24 h afin que les changements soient propagés.",
+      "errors": {
+        "internalName": "Le nom interne est requis",
+        "displayLabel": "Le libellé affiché est requis",
+        "weightRequired": "Le poids est requis",
+        "weightInvalid": "Le poids doit être supérieur ou égal à 0"
+      }
       },
     "giftCard": {
       "unnamedGift": "Cadeau sans nom",
