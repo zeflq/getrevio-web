@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import type { GiftFormValue } from "./types";
+import { cn } from "@/lib/utils";
 
 type GiftCardProps = {
   gift: GiftFormValue;
@@ -10,6 +11,7 @@ type GiftCardProps = {
   onDelete: () => void;
   probability?: number; // 0–100
   color?: string;
+  isPendingNewGift?: boolean;
 };
 
 export function GiftCard({
@@ -18,6 +20,7 @@ export function GiftCard({
   onDelete,
   probability,
   color,
+  isPendingNewGift,
 }: GiftCardProps) {
   const t = useTranslations("lotteries.giftCard");
   const tTypes = useTranslations("lotteries.giftTypes");
@@ -40,11 +43,18 @@ export function GiftCard({
   const validityLabel =
     validityDays != null && t("validity", { days: validityDays });
 
+  const pendingClasses = isPendingNewGift
+  ? "border-dashed pointer-events-none"
+  : "";
+
   return (
     <button
       type="button"
       onClick={onClick}
-      className="w-full rounded-lg border bg-card p-4 text-left shadow-sm hover:border-primary/60 border-primary/90 transition-colors"
+      className={cn(
+        "w-full rounded-lg border bg-card p-4 text-left shadow-sm hover:border-primary/60 border-primary/90 transition-colors",
+        pendingClasses
+      )}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="space-y-1">
