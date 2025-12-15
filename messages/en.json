@@ -506,6 +506,7 @@
       "totalGiftWeight": "Total gift weight",
       "noWinWeight": "No-win weight",
       "giftLabel": "gift",
+      "winLabel": "win",
       "noWinLabel": "no-win",
       "probabilityHint": "Probabilities derive from weights. Balance weights or increase no-win to lower win chance."
       ,

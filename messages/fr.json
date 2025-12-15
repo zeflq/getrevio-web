@@ -502,6 +502,7 @@
       "totalGiftWeight": "Poids total des cadeaux",
       "noWinWeight": "Poids de non-gain",
       "giftLabel": "cadeau",
+      "winLabel": "gagnent",
       "noWinLabel": "non-gain",
       "probabilityHint": "Les probabilités découlent des poids. Équilibrez les poids ou augmentez le non-gain pour réduire les chances de gain.",
       "limitReached": "Maximum de {limit} cadeaux atteint."

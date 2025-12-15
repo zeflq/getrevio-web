@@ -112,7 +112,7 @@ export function DataTableCards<TData>({
                 className="border border-border/60 bg-card/60 backdrop-blur-sm shadow-sm p-3 sm:p-4 rounded-2xl"
               >
                 {/* header skeleton */}
-                <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start justify-between gap-1">
                   <div className="flex-1 space-y-2">
                     <Skeleton className="h-4 sm:h-5 w-2/3 rounded" />
                     <Skeleton className="h-3 w-1/3 rounded" />

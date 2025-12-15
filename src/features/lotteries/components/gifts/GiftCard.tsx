@@ -27,9 +27,6 @@ export function GiftCard({
 
   const displayLabel = gift.rewardLabel || gift.name || t("unnamedGift");
   const weightLabel = t("weightLabel");
-  const approxChanceLabel = t("approxChance", {
-    chance: probability?.toFixed(1) ?? "0.0",
-  });
   const minPurchaseAmount = gift.minPurchaseAmount;
   const minPurchaseCurrency = gift.minPurchaseCurrency || "EUR";
   const hasMinPurchaseAmount = minPurchaseAmount != null;
@@ -52,48 +49,58 @@ export function GiftCard({
       type="button"
       onClick={onClick}
       className={cn(
-        "w-full rounded-lg border bg-card p-4 text-left shadow-sm hover:border-primary/60 border-primary/90 transition-colors",
+        "w-full rounded-lg border bg-card md:p-3 p-2 text-left shadow-sm hover:border-primary/60 border-primary/90 transition-colors",
         pendingClasses
       )}
     >
-      <div className="flex items-start justify-between gap-2">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            {color && <div className={`h-3 w-3 rounded-sm ${color}`} />}
-            <span className="text-sm font-semibold">{displayLabel}</span>
-            <span className="inline-flex items-center rounded-full border bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+      <div className="flex items-start justify-between gap-1">
+        <div className="flex-1 space-y-1.5">
+          {/* Top row: Color dot + Gift name | Probability */}
+          <div className="flex justify-between gap-2 items-baseline">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              {color && <div className={`h-3 w-3 rounded-sm ${color} flex-shrink-0`} />}
+              <span className="text-base font-semibold truncate">{displayLabel}</span>
+            </div>
+            {typeof probability === "number" && (
+              <span className="text-sm font-semibold text-primary flex-shrink-0">
+                {probability.toFixed(1)}%
+              </span>
+            )}
+          </div>
+
+          {/* Second row: Gift type badge */}
+          <div>
+            <span className="inline-flex items-center rounded-full border bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
               {tTypes(gift.kind)}
             </span>
           </div>
 
-          <p className="text-xs text-muted-foreground">
-            {weightLabel}: <span className="font-medium">{gift.weight}</span>
-            {typeof probability === "number" && (
-              <>
-                {" "}
-                · <span className="font-medium">{approxChanceLabel}</span>
-              </>
+          {/* Third row: Constraints with icons */}
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+            {minPurchaseLabel && (
+              <span className="flex items-center gap-1">
+                <span className="text-xs">💰</span>
+                {minPurchaseLabel}
+              </span>
             )}
-          </p>
-
-          {minPurchaseLabel && (
-            <p className="text-xs text-muted-foreground">
-              {minPurchaseLabel}
-              {validityLabel && (
-                <>
-                  {" "}
-                  · {validityLabel}
-                </>
-              )}
-            </p>
-          )}
+            {validityLabel && (
+              <span className="flex items-center gap-1">
+                <span className="text-xs">⏱️</span>
+                {validityLabel}
+              </span>
+            )}
+            <span className="flex items-center gap-1">
+              <span className="text-xs">⚖️</span>
+              {weightLabel}: {gift.weight}
+            </span>
+          </div>
         </div>
 
         <Button
           type="button"
           size="icon"
           variant="ghost"
-          className="h-7 w-7 text-muted-foreground"
+          className="h-6 w-6 text-muted-foreground flex-shrink-0"
           onClick={(e) => {
             e.stopPropagation();
             onDelete();

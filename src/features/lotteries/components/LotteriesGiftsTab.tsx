@@ -269,7 +269,7 @@ export function LotteriesGiftsTab() {
           <div className="rounded-lg border bg-muted/40 p-4 text-sm space-y-3">
             <Toolbar className="h-auto justify-start gap-2 rounded-lg border-none bg-transparent p-0">
               <ToolbarGroup>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-xs">
                   <div>
                     {t("totalGiftWeight")}{" "}
                     <span className="font-medium text-foreground">
@@ -280,7 +280,7 @@ export function LotteriesGiftsTab() {
               </ToolbarGroup>
               <ToolbarSeparator />
               <ToolbarGroup>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-xs">
                   <div>
                     {t("noWinWeight")}{" "}
                     <span className="font-medium text-foreground">
@@ -292,32 +292,45 @@ export function LotteriesGiftsTab() {
             </Toolbar>
 
             {totalWeight > 0 && (
-              <div className="mt-1 w-full overflow-hidden rounded-full bg-muted">
-                <div className="flex h-2 w-full">
-                  {gifts.map((gift, i) => (
-                    <div
-                      key={gift.__fieldId}
-                      className={`${palette[i % palette.length]} h-full`}
-                      title={`${gift.name ?? t("giftLabel")}: ${giftProbabilities[
-                        i
-                      ].toFixed(1)}%`}
-                      style={{ width: `${giftProbabilities[i]}%` }}
-                    />
-                  ))}
-                  {noWinWeight > 0 && (
-                    <div
-                      className="h-full bg-neutral-400"
-                      title={`${t("noWinLabel")}: ${(
-                        ((Number(noWinWeight) || 0) / totalWeight) *
-                        100
-                      ).toFixed(1)}%`}
-                      style={{
-                        width: `${
-                          ((Number(noWinWeight) || 0) / totalWeight) * 100
-                        }%`,
-                      }}
-                    />
-                  )}
+              <div className="space-y-1.5">
+                {/* Percentage labels */}
+                <div className="flex items-center justify-between text-xs">
+                  <div className="font-medium text-foreground">
+                    {winProbability.toFixed(1)}% {t("winLabel")}
+                  </div>
+                  <div className="text-muted-foreground">
+                    {(100 - winProbability).toFixed(1)}% {t("noWinLabel")}
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                <div className="w-full overflow-hidden rounded-full bg-muted">
+                  <div className="flex h-2 w-full">
+                    {gifts.map((gift, i) => (
+                      <div
+                        key={gift.__fieldId}
+                        className={`${palette[i % palette.length]} h-full`}
+                        title={`${gift.name ?? t("giftLabel")}: ${giftProbabilities[
+                          i
+                        ].toFixed(1)}%`}
+                        style={{ width: `${giftProbabilities[i]}%` }}
+                      />
+                    ))}
+                    {noWinWeight > 0 && (
+                      <div
+                        className="h-full bg-neutral-400"
+                        title={`${t("noWinLabel")}: ${(
+                          ((Number(noWinWeight) || 0) / totalWeight) *
+                          100
+                        ).toFixed(1)}%`}
+                        style={{
+                          width: `${
+                            ((Number(noWinWeight) || 0) / totalWeight) * 100
+                          }%`,
+                        }}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             )}
