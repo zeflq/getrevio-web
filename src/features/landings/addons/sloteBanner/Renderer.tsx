@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 
-import { SlotBanner, SlotBannerHandle } from "../../components/SlotBanner";
+import { SlotBanner, SlotBannerHandle } from "./SlotBanner";
 import type { SloteBannerData } from "./schema";
 import { useLandingRenderContext } from "../../preview/LandingRenderContext";
 import { useBlockChannel } from "../../preview/BlockChannelContext";
