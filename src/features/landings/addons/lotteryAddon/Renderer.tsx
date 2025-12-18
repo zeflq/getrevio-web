@@ -2,57 +2,64 @@
 
 import * as React from "react";
 import type { LotteryAddonData } from "./schema";
-import { useLandingRenderContext } from "../../preview/LandingRenderContext";
 import { useBlockChannel } from "../../preview/BlockChannelContext";
+import type { LotteryResultPayload } from "../shared/types";
 
-type LotteryAddonRendererProps = {
-  data: LotteryAddonData;
-};
-
-export function LotteryAddonRenderer({ data }: LotteryAddonRendererProps) {
-  const { landingId } = useLandingRenderContext();
+export function LotteryAddonRenderer({ data }: { data: LotteryAddonData }) {
   const { on, emit } = useBlockChannel();
-  const fakeCall = async () =>{ try {
-      // TODO: remplacer par ton vrai call API
-      // const res = await fetch("/api/public/lotteries/play", {...})
 
-      await new Promise((r) => setTimeout(r, 600)); // fake delay
+  const emitResult = React.useCallback(
+    (payload: LotteryResultPayload) => {
+      emit("lottery:result", payload);
+    },
+    [emit],
+  );
+
+  const playLottery = React.useCallback(async () => {
+    if (!data.lotteryId) {
+      emitResult({
+        status: "ineligible",
+        reason: "no_lottery_config",
+      });
+      return;
+    }
+
+    try {
+      // TODO: replace with real API call
+      await new Promise((r) => setTimeout(r, 600));
+
       const isWin = Math.random() < 0.5;
 
       if (isWin) {
-        emit("lottery:win", {
-          winId: "fake-win-id",
-          giftSnapshot: {
-            rewardLabel: "1 margherita offerte",
-            minPurchaseAmount: 10,
-            minPurchaseCurrency: "EUR",
-            validityDays: 7,
+        emitResult({
+          status: "win",
+          win: {
+            winId: "fake-win-id",
+            giftSnapshot: {
+              rewardLabel: "1 margherita offerte",
+              minPurchaseAmount: 10,
+              minPurchaseCurrency: "EUR",
+              validityDays: 7,
+            },
+            contactMethod: "email",
           },
         });
       } else {
-        emit("lottery:nowin");
+        emitResult({ status: "nowin" });
       }
     } catch (e) {
-      console.error("[LotteryAddon] error during play", e);
-      emit("lottery:error", { reason: "exception" });
+      console.error("[LotteryAddon] play failed", e);
+      emitResult({
+        status: "error",
+        reason: "exception",
+      });
     }
-  }
+  }, [data.lotteryId, emitResult]);
 
   React.useEffect(() => {
-    const offPlay = on("lottery:play", async () => {
-      if (!data.lotteryId) {
-        console.warn("[LotteryAddon] missing lotteryId");
-        emit("lottery:ineligible", { reason: "no_lottery_config" });
-        return;
-      }
-
-      fakeCall();
-    });
-
-    return () => {
-      offPlay();
-    };
-  }, [on, emit, data.lotteryId, landingId]);
+    const offPlay = on("lottery:play", playLottery);
+    return () => offPlay();
+  }, [on, playLottery]);
 
   return null;
 }

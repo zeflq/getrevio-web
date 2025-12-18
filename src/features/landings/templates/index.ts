@@ -73,6 +73,13 @@ export const landingTemplates: LandingTemplate[] = [
             mode: "fixed",
             maxInstances: 1,
           },
+          {
+            id: "slot-winning-drawer",
+            kind: "winningDrawerAddon",
+            mode: "fixed",
+            hideInspector: true,
+            maxInstances: 1,
+          },
         ],
       }
     ],
