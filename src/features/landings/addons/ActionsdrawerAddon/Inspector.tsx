@@ -3,7 +3,7 @@
 
 import * as React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 import type { LandingFormValues } from "../../model/landingSchema";
 import type { LandingAddonInspectorProps } from "../plugin";
@@ -11,6 +11,11 @@ import { RHFSelect } from "@/components/form/controls";
 import { GoogleReviewActionDrawerAddonInspector } from "../googleReviewActionDrawerAddon/Inspector";
 import { InstagramActionDrawerAddonInspector } from "../instagramActionDrawerAddon/Inspector";
 import type { DrawerAddonData, DrawerProvider } from "./schema";
+import { getAddonI18n } from "../../utils/translations/getAddonI18n";
+import {
+  resolveFieldLabel,
+  resolveFieldPlaceholder,
+} from "../../utils/translations";
 
 export function ActionDrawerAddonInspector({
   blockIndex,
@@ -18,8 +23,15 @@ export function ActionDrawerAddonInspector({
   fieldName,
   disabled,
 }: LandingAddonInspectorProps) {
-  const t = useTranslations("landings.editor.addons.actionsdrawerAddon");
+  const locale = useLocale() as "en" | "fr" | "ar";
   const { control } = useFormContext<LandingFormValues>();
+
+  // Get i18n for actionsdrawerAddon
+  const i18n = getAddonI18n("actionsdrawerAddon");
+
+  // Resolve field labels
+  const providerLabel = resolveFieldLabel("actionsdrawerAddon", "provider", locale);
+  const providerPlaceholder = resolveFieldPlaceholder("actionsdrawerAddon", "provider", locale);
 
   // On regarde le provider actuel: "googleReviewActionDrawerAddon" | "instagramActionDrawerAddon"
   const provider = useWatch({
@@ -32,17 +44,17 @@ export function ActionDrawerAddonInspector({
       {/* Sélecteur de type de drawer */}
       <RHFSelect
         name={`${fieldName}.provider`}
-        label={t("drawerKindLabel")}
-        placeholder={t("drawerKindPlaceholder")}
+        label={providerLabel}
+        placeholder={providerPlaceholder}
         disabled={disabled}
         options={[
           {
             value: "googleReviewActionDrawerAddon",
-            label: t("drawerKindOptions.googleReview"),
+            label: i18n?.inspector.options?.provider?.googleReview?.[locale] || "Google Review",
           },
           {
             value: "instagramActionDrawerAddon",
-            label: t("drawerKindOptions.instagram"),
+            label: i18n?.inspector.options?.provider?.instagram?.[locale] || "Instagram",
           },
         ]}
       />
@@ -69,7 +81,7 @@ export function ActionDrawerAddonInspector({
 
       {!provider && (
         <p className="text-xs text-muted-foreground">
-          {t("noKindSelected")}
+          {i18n?.inspector.messages?.noKindSelected?.[locale] || "No action type selected."}
         </p>
       )}
     </div>

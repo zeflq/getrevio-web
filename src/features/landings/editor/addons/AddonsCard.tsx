@@ -1,14 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useFormContext } from "react-hook-form";
 
 import type { LandingFormValues } from "../../model/landingSchema";
 import type { LandingAddon } from "../../addons";
 import { landingAddonPluginMap } from "../../addons";
+import { resolveAddonLabel, resolveAddonDescription } from "../../utils/translations";
 
-import { EditorCard } from "../ui/EditorCard";
 import { EditorSheetCard } from "../ui/EditorSheetCard";
 
 interface AddonsCardProps {
@@ -34,13 +34,13 @@ interface AddonsCardProps {
 }
 
 export function AddonsCard({
-  id,
+  id: _id,
   addon,
   addonIndex,
   cardIndex,
   total,
-  selected = false,
-  onSelect,
+  selected: _selected = false,
+  onSelect: _onSelect,
   onMoveUp,
   onMoveDown,
   onDuplicate,
@@ -51,16 +51,21 @@ export function AddonsCard({
   blockIndex,
 }: AddonsCardProps) {
   const t = useTranslations("landings.editor.addons");
-  const addonsTranslations = useTranslations("landings.editor.addons.items");
+  const locale = useLocale() as "en" | "fr" | "ar";
 
   const plugin = landingAddonPluginMap[addon.kind];
   const InspectorComponent = plugin?.Inspector;
 
-  const typeLabel =
-    addonsTranslations(`${addon.kind}.label` as const) ?? addon.kind;
+  // Use new translation utilities with KIND i18n + instance override support
+  const typeLabel = resolveAddonLabel(
+    addon.kind,
+    addon.id, // instance ID for template overrides
+    undefined, // TODO: Pass templateId when available
+    locale,
+    t
+  );
 
-  const description =
-    addonsTranslations(`${addon.kind}.description` as const);
+  const description = resolveAddonDescription(addon.kind, locale);
 
   const isFixedAddon = addon.__templateFixed ?? false;
 
