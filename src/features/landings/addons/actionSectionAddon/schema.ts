@@ -10,8 +10,8 @@ export const actionSectionAddonSchema = z.object({
 export type ActionSectionAddonData = z.infer<typeof actionSectionAddonSchema>;
 
 export const actionSectionAddonDefault: ActionSectionAddonData = {
-  title: "",
-  subtitle: "",
-  description: "",
-  buttonLabel: "",
+  title: "Action Section Title",
+  subtitle: "Action Section Subtitle",
+  description: "Action Section Description",
+  buttonLabel: "Action Button Label",
 };

@@ -38,4 +38,18 @@ export interface AddonI18n {
   };
 }
 
+export interface BlockI18n {
+  kind: string;
+  label: {
+    en: string;
+    fr?: string;
+    ar?: string;
+  };
+  description?: {
+    en: string;
+    fr?: string;
+    ar?: string;
+  };
+}
+
 export type Locale = "en" | "fr" | "ar";

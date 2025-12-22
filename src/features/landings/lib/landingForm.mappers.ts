@@ -1,7 +1,6 @@
 import {
   type LandingBelongsTo,
   type LandingBelongsToExternal,
-  type LandingCreateInput,
   type LandingFormValues,
   type LandingUpdateInput,
 } from "../model/landingSchema";
@@ -11,10 +10,8 @@ import {
   type LandingContentInput,
 } from "../model/landingContentSchema";
 import { createBlockByKind } from "../blocks";
-import { createAddonByKind } from "@/features/landings/addons";
-import { getTemplateById } from "../templates";
+import { getTemplateByIdForLocale } from "../templates";
 import type { LandingListItem } from "../server/mappers";
-import { TranslationFn } from "../utils/translationDefaults";
 
 type LandingFormShape = LandingFormValues;
 
@@ -24,21 +21,22 @@ type BuildLandingPayloadOptions = {
 
 const buildTemplateContent = (
   templateId?: string | null,
-  translator?: TranslationFn
+  locale: string = "en"
 ): LandingContentInput | null => {
-  const template = getTemplateById(templateId);
+  // Get template with actual translations for the locale
+  const template = getTemplateByIdForLocale(templateId, locale);
   if (!template) return null;
 
-  // ✅ Only pick fixed blocks
+  // Only pick fixed blocks
   const blocks = template.blocks
     .filter((definition) => definition.mode === "fixed")
     .map((definition) => {
+      // definition.label and addon defaultData already contain actual translations
       const block = createBlockByKind(
         definition.kind,
         definition.defaultData as any,
         definition.addons?.filter((addonDef) => addonDef.mode === "fixed"),
-        definition.label,
-        translator
+        definition.label // Already translated text for locale
       );
       block.__templateBlockId = definition.id;
       block.__templateFixed = true;
@@ -122,12 +120,12 @@ export const fillLandingFormFromEntity = (landing?: LandingListItem | null): Lan
 export const buildLandingPayload = (
   values: LandingFormShape,
   options?: BuildLandingPayloadOptions,
-  translator?: TranslationFn
+  locale: string = "en"
 ): LandingUpdateInput => {
   const baseContent = ensureLandingContentShape(values.content);
   const seededTemplateContent =
     options?.seedTemplateContent && baseContent.blocks.length === 0
-      ? buildTemplateContent(values.templateId, translator)
+      ? buildTemplateContent(values.templateId, locale)
       : null;
 
   const content = ensureLandingContentShape(

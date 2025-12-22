@@ -1,11 +1,6 @@
 import { z } from "zod";
 
 import type { LandingAddonPlugin } from "./plugin";
-import {
-  applyOverrideTranslations,
-  applyTranslationDefaults,
-} from "../utils/translationDefaults";
-import type { TranslationFn } from "../utils/translationDefaults";
 import actionsdrawerAddonPlugin from "./actionsdrawerAddon";
 import actionSectionAddonPlugin from "./actionSectionAddon";
 import footerAddonPlugin from "./footerAddon";
@@ -80,26 +75,20 @@ type PluginDefaultData<P extends LandingAddonPlugin<any>> = P extends LandingAdd
 
 export function createAddonByKind<K extends LandingAddonKind>(
   kind: K,
-  overrides?: Partial<PluginDefaultData<PluginByKind<K>>>,
-  translator?: TranslationFn
+  overrides?: Partial<PluginDefaultData<PluginByKind<K>>>
 ): LandingAddon {
   const plugin = findAddonPluginByKind(kind);
   if (!plugin) {
     throw new Error(`Unknown addon kind: ${kind}`);
   }
 
-  const translatedOverrides = overrides
-    ? applyOverrideTranslations(overrides, translator)
-    : undefined;
-
+  // overrides now contains actual translated values from template
   return {
     id: createId(),
     kind,
     data: {
-      ...clone(
-        applyTranslationDefaults(plugin.defaultData, translator, "addons.items", kind)
-      ),
-      ...(translatedOverrides ?? {}),
+      ...clone(plugin.defaultData),
+      ...(overrides ?? {}),
     },
   };
 }

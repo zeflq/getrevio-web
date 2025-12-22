@@ -1,13 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 
 import { landingBlockPluginMap, type LandingBlock } from "../../blocks";
 import type { LandingBelongsTo, LandingFormValues } from "../../model/landingSchema";
 import type { LandingListItem } from "../../server/mappers";
 import type { LandingTemplate, TemplateBlockDefinition } from "../../templates/types";
+import { resolveBlockLabel, resolveBlockDescription, type Locale } from "../../utils/translations";
 
 import { BlockAddonsSection } from "../addons/BlockAddonsSection";
 import { EditorCard } from "../ui/EditorCard";
@@ -49,10 +50,16 @@ export function BlockCard({
   template,
 }: BlockCardProps) {
   const t = useTranslations("landings.editor");
-  const blocksTranslations = useTranslations("landings.editor.blocks");
+  const locale = useLocale() as Locale;
 
-  const typeLabel = block.__templateLabel ?? blocksTranslations(`${block.kind}.label` as const) ?? block.kind;
-  const description = blocksTranslations(`${block.kind}.description` as const);
+  // Resolve block label with fallback chain:
+  // 1. __templateLabel (stored translated text from template)
+  // 2. KIND i18n (portable)
+  // 3. Kind itself
+  const typeLabel = block.__templateLabel ?? resolveBlockLabel(block.kind, locale);
+
+  // Resolve block description from KIND i18n
+  const description = resolveBlockDescription(block.kind, locale);
 
   const plugin = landingBlockPluginMap[block.kind];
   const InspectorComponent = plugin?.Inspector;

@@ -56,15 +56,8 @@ export function AddonsCard({
   const plugin = landingAddonPluginMap[addon.kind];
   const InspectorComponent = plugin?.Inspector;
 
-  // Use new translation utilities with KIND i18n + instance override support
-  const typeLabel = resolveAddonLabel(
-    addon.kind,
-    addon.id, // instance ID for template overrides
-    undefined, // TODO: Pass templateId when available
-    locale,
-    t
-  );
-
+  // Use KIND i18n translation utilities
+  const typeLabel = resolveAddonLabel(addon.kind, locale);
   const description = resolveAddonDescription(addon.kind, locale);
 
   const isFixedAddon = addon.__templateFixed ?? false;

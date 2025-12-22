@@ -5,11 +5,6 @@ import {
   createAddonByKind,
   LandingBlockAddonDefinition,
 } from "@/features/landings/addons";
-import {
-  applyTranslationDefaults,
-  applyOverrideTranslations,
-  type TranslationFn,
-} from "../utils/translationDefaults";
 import type { LandingBlockPlugin } from "./plugin";
 import emptyPlugin from "./emptyBlock";
 import { clone, createId } from "../utils/serialization";
@@ -61,8 +56,7 @@ export const createBlockByKind = <K extends LandingBlockKind>(
   kind: K,
   overrides?: Partial<PluginByKind<K>["defaultData"]>,
   addonOverrides?: LandingBlockAddonDefinition[],
-  templateLabel?: string,
-  translator?: TranslationFn
+  templateLabel?: string
 ): LandingBlock => {
   const plugin = findPluginByKind(kind);
   if (!plugin) {
@@ -70,27 +64,19 @@ export const createBlockByKind = <K extends LandingBlockKind>(
   }
 
   const defaultData = clone(plugin.defaultData);
-  const withI18nDefaults = applyTranslationDefaults(
-    defaultData,
-    translator,
-    "blocks.items",
-    kind
-  );
 
-  const translatedLabel = templateLabel
-    ? applyOverrideTranslations({ label: templateLabel }, translator).label
-    : undefined;
   return {
     id: createId(),
     kind,
     data: {
-      ...withI18nDefaults,
+      ...defaultData,
       ...(overrides ?? {}),
     },
-    __templateLabel: translatedLabel,
+    __templateLabel: templateLabel, // Now contains actual translated text
     addons: (addonOverrides ?? [])
       .map((slot) => {
-        const addon = createAddonByKind(slot.kind, slot.defaultData, translator);
+        // slot.defaultData now contains actual translations from template
+        const addon = createAddonByKind(slot.kind, slot.defaultData);
 
         if (slot.mode === "fixed") {
           addon.__templateAddonId = slot.id;

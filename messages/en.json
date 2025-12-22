@@ -79,14 +79,14 @@
     "editor": {
       "templates": {
         "slotTemplate": {
-          "defaultValues":{
-            "empty1":{
+          "defaultValues": {
+            "empty1": {
               "label": "Page 1"
             },
-            "empty2":{
+            "empty2": {
               "label": "Page 2",
-              "addons":{
-                "slot-simple-title":{
+              "addons": {
+                "slot-simple-title": {
                   "title": "Spin to Reveal Your Gift",
                   "subtitle": "Get 3 matching symbols to win."
                 }
@@ -101,14 +101,6 @@
       "emptyState": "No blocks yet. Use the “Add block” button to get started.",
       "blockNumber": "#{index}",
       "selectPrompt": "Select a block to edit its content.",
-      "blocks": {
-        "empty":{
-          "label": "Page",
-          "description": ""
-        },
-        "items":{
-        }
-      },
       "addons": {
         "sectionLabel": "Add-ons",
         "add": "Add add-on",
@@ -116,7 +108,7 @@
         "empty": "No addons yet.",
         "remove": "Remove"
       },
-      "sheetCard":{
+      "sheetCard": {
         "close": "Close"
       },
       "actions": {
@@ -164,9 +156,21 @@
       }
     },
     "templates": {
-      "slotTemplate":{
-        "name" :"Slot game Reloaded",
-        "description": "A template optimized for game landings"
+      "slotTemplate": {
+        "defaultValues": {
+          "empty1": {
+            "label": "Page 1"
+          },
+          "empty2": {
+            "label": "Page 2",
+            "addons": {
+              "slot-simple-title": {
+                "title": "Spin to Reveal Your Gift",
+                "subtitle": "Get 3 matching symbols to win."
+              }
+            }
+          }
+        }
       }
     },
     "preview": {
@@ -243,15 +247,15 @@
             "title": "Pensez à revenir en",
             "highlight": "cliquant sur l’icône d’onglet",
             "description": "Après votre follow, revenez sur l’onglet du jeu pour lancer la machine.",
-              "buttonText": "J’ouvre Instagram"
-            },
-            "footer": {
-              "rules": "Règlement",
-              "poweredBy": "Powered by",
-              "brand": "GetRevio"
-            }
+            "buttonText": "J’ouvre Instagram"
+          },
+          "footer": {
+            "rules": "Règlement",
+            "poweredBy": "Powered by",
+            "brand": "GetRevio"
           }
         }
+      }
     }
   },
   "lotteries": {
@@ -316,7 +320,7 @@
         "weightRequired": "Weight is required",
         "weightInvalid": "Weight must be greater or equal to 0"
       }
-      },
+    },
     "giftCard": {
       "unnamedGift": "Unnamed gift",
       "weightLabel": "Weight",
@@ -379,8 +383,7 @@
       "giftLabel": "gift",
       "winLabel": "win",
       "noWinLabel": "no-win",
-      "probabilityHint": "Probabilities derive from weights. Balance weights or increase no-win to lower win chance."
-      ,
+      "probabilityHint": "Probabilities derive from weights. Balance weights or increase no-win to lower win chance.",
       "limitReached": "Maximum of {limit} gifts reached."
     }
   },

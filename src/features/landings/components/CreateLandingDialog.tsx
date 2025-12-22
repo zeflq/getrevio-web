@@ -4,7 +4,7 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 
 import { useRouter } from "@/i18n/navigation";
@@ -42,7 +42,7 @@ export function CreateLandingDialog({
   redirectBasePath = "/admin/landings",
 }: CreateLandingDialogProps) {
   const t = useTranslations("landings.createDialog");
-  const tEditor = useTranslations("landings.editor");
+  const locale = useLocale();
   const tForm = useTranslations("landings.form");
   const router = useRouter();
   const defaultValues = React.useMemo(
@@ -85,7 +85,7 @@ export function CreateLandingDialog({
     reset(createLandingFormDefaults({ merchantId, belongsTo: initialBelongsTo }));
 
   const onSubmit = (data: LandingFormValues) => {
-    const payload = buildLandingPayload(data, { seedTemplateContent: true }, tEditor);
+    const payload = buildLandingPayload(data, { seedTemplateContent: true }, locale);
     execute(payload);
   };
 

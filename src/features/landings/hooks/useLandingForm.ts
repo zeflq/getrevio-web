@@ -4,7 +4,7 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import {
   createLandingFormSchema,
@@ -22,7 +22,7 @@ import {
 export function useLandingForm(id: string, isEdit: boolean) {
   const readableError = useReadableError();
   const t = useTranslations("landings.toasts");
-  const tEditor = useTranslations("landings.editor");
+  const locale = useLocale();
   const landingQuery = useLandingItem(id);
   const landing = landingQuery.data;
   const form = useForm<LandingFormValues>({
@@ -62,7 +62,7 @@ export function useLandingForm(id: string, isEdit: boolean) {
 
   const onSubmit = form.handleSubmit((values) => {
     try {
-      const payload = buildLandingPayload(values, {}, tEditor);
+      const payload = buildLandingPayload(values, {}, locale);
       lastPayloadRef.current = payload;
       execute({ id, ...payload });
     } catch (error) {

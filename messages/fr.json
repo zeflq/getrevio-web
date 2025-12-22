@@ -78,15 +78,15 @@
     },
     "editor": {
       "templates": {
-        "slotTemplate":{
-          "defaultValues":{
-            "empty1":{
+        "slotTemplate": {
+          "defaultValues": {
+            "empty1": {
               "label": "Page 1"
             },
-            "empty2":{
+            "empty2": {
               "label": "Page 2",
-              "addons":{
-                "slot-simple-title":{
+              "addons": {
+                "slot-simple-title": {
                   "title": "A vous de jouer !",
                   "subtitle": "Obtenez 3 symboles identiques pour gagner."
                 }
@@ -101,14 +101,6 @@
       "emptyState": "Aucun bloc pour le moment. Utilisez le bouton « Ajouter un bloc » pour commencer.",
       "blockNumber": "N°{index}",
       "selectPrompt": "Sélectionnez un bloc pour modifier son contenu.",
-      "blocks": {
-        "empty":{
-          "label": "Page",
-          "description": ""
-        },
-        "items":{
-        }
-      },
       "addons": {
         "sectionLabel": "Add-ons",
         "add": "Ajouter un add-on",
@@ -116,7 +108,7 @@
         "empty": "Aucun add-on pour le moment.",
         "remove": "Supprimer"
       },
-      "sheetCard":{
+      "sheetCard": {
         "close": "Terminer"
       },
       "actions": {
@@ -164,9 +156,21 @@
       }
     },
     "templates": {
-      "slotTemplate":{
-        "name" :"Slot game Reloaded",
-        "description": "Un modèle optimisé pour les landings de jeux"
+      "slotTemplate": {
+        "defaultValues": {
+          "empty1": {
+            "label": "Page 1"
+          },
+          "empty2": {
+            "label": "Page 2",
+            "addons": {
+              "slot-simple-title": {
+                "title": "A vous de jouer !",
+                "subtitle": "Obtenez 3 symboles identiques pour gagner."
+              }
+            }
+          }
+        }
       }
     },
     "preview": {
@@ -316,7 +320,7 @@
         "weightRequired": "Le poids est requis",
         "weightInvalid": "Le poids doit être supérieur ou égal à 0"
       }
-      },
+    },
     "giftCard": {
       "unnamedGift": "Cadeau sans nom",
       "weightLabel": "Poids",

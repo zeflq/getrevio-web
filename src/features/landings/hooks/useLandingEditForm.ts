@@ -2,7 +2,7 @@
 
 import { useEditPageForm } from "@/hooks/useEditPageForm";
 import { useReadableError } from "@/lib/useReadableError";
-import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 import {
   createLandingFormSchema,
@@ -21,7 +21,7 @@ import {
  */
 export function useLandingEditForm(id: string, isEdit: boolean = true) {
   const readableError = useReadableError();
-  const tEditor = useTranslations("landings.editor");
+  const locale = useLocale();
 
   const editForm = useEditPageForm({
     id,
@@ -31,7 +31,7 @@ export function useLandingEditForm(id: string, isEdit: boolean = true) {
 
     entityToFormValues: fillLandingFormFromEntity,
 
-    formValuesToPayload: (values) => buildLandingPayload(values, {}, tEditor),
+    formValuesToPayload: (values) => buildLandingPayload(values, {}, locale),
 
     defaultValues: createLandingFormDefaults(),
 

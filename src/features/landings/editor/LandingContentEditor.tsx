@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 import { createBlockByKind, type LandingBlock, type LandingBlockKind } from "../blocks";
 import type { LandingBelongsTo, LandingFormValues } from "../model/landingSchema";
 import type { LandingListItem } from "../server/mappers";
-import { getTemplateById } from "../templates";
+import { getTemplateByIdForLocale } from "../templates";
 import type { TemplateBlockDefinition } from "../templates/types";
 import { getTemplateFixedCountMap } from "../templates/utils";
 import { useBlocksFieldArray } from "./hooks/useBlocksFieldArray";
@@ -21,8 +21,7 @@ interface LandingContentEditorProps {
 }
 
 export function LandingContentEditor({ landing, disabled }: LandingContentEditorProps) {
-  const t = useTranslations("landings.editor");
-  const tpl = useTranslations("landings.templates");
+  const locale = useLocale();
   const form = useFormContext<LandingFormValues>();
 
   const blocks =
@@ -37,9 +36,10 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
   // Template is now fully controlled by the system:
   const templateId = landing?.templateId;
 
+  // Get template with actual translations for current locale
   const template = React.useMemo(
-    () => getTemplateById(templateId),
-    [templateId]
+    () => getTemplateByIdForLocale(templateId, locale),
+    [templateId, locale]
   );
 
   // Keep form in sync with derived templateId
@@ -83,12 +83,12 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
     kind: LandingBlockKind,
     templateBlock?: TemplateBlockDefinition
   ) => {
+    // templateBlock now contains actual translations for current locale
     const block = createBlockByKind(
       kind,
       templateBlock?.defaultData as any,
       templateBlock?.addons,
-      templateBlock?.label,
-      t,
+      templateBlock?.label // Already translated text
     );
     if (templateBlock) {
       block.__templateBlockId = templateBlock.id;
@@ -140,7 +140,7 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
     move(fromIndex, toIndex);
   };
 
-  const templateDescription = tpl(`${template?.id}.description`);
+  const templateDescription = template?.meta?.description;
 
   const belongsTo: LandingBelongsTo | undefined =
     landing?.belongsTo?.type === "place"

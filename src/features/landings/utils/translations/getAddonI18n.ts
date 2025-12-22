@@ -10,7 +10,7 @@ import { simpleTitleI18n } from "../../addons/simpleTitle/i18n";
 import { sloteBannerI18n } from "../../addons/sloteBanner/i18n";
 import { footerAddonI18n } from "../../addons/footerAddon/i18n";
 import { actionSectionAddonI18n } from "../../addons/actionSectionAddon/i18n";
-import { actionsdrawerAddonI18n } from "../../addons/ActionsdrawerAddon/i18n";
+import { actionsdrawerAddonI18n } from "../../addons/actionsdrawerAddon/i18n";
 import { winningDrawerAddonI18n } from "../../addons/winningDrawerAddon/i18n";
 import { googleReviewActionDrawerAddonI18n } from "../../addons/googleReviewActionDrawerAddon/i18n";
 import { instagramActionDrawerAddonI18n } from "../../addons/instagramActionDrawerAddon/i18n";

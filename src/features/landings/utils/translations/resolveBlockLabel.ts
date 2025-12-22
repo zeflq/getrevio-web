@@ -1,27 +1,28 @@
 /**
- * Resolve addon label from KIND i18n
+ * Resolve block label from KIND i18n
+ * Template-specific labels are handled via __templateLabel (already translated)
  */
 
-import { getAddonI18n } from "./getAddonI18n";
+import { getBlockI18n } from "./getBlockI18n";
 import type { Locale } from "./types";
 
 /**
- * Resolve the label for an addon from KIND i18n
+ * Resolve the label for a block from KIND i18n
  *
- * @param kind - The addon kind (e.g., "lotteryAddon")
+ * @param kind - The block kind (e.g., "empty")
  * @param locale - The locale to use (defaults to "en")
  * @returns The resolved label
  *
  * @example
- * resolveAddonLabel("lotteryAddon", "en") // => "Lottery"
- * resolveAddonLabel("lotteryAddon", "fr") // => "Loterie"
+ * resolveBlockLabel("empty", "en") // => "Page"
+ * resolveBlockLabel("empty", "fr") // => "Page"
  */
-export function resolveAddonLabel(
+export function resolveBlockLabel(
   kind: string,
   locale: Locale = "en"
 ): string {
   // Try base KIND i18n (portable)
-  const kindI18n = getAddonI18n(kind);
+  const kindI18n = getBlockI18n(kind);
   if (kindI18n?.label?.[locale]) {
     return kindI18n.label[locale]!;
   }
