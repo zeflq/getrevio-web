@@ -9,7 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { TemplateBlockDefinition } from "@/features/landings/templates/types";
-import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
+import { resolveBlockLabel, type Locale } from "../../utils/translations";
 
 type MenuOption = {
   kind: string;
@@ -19,14 +20,14 @@ type MenuOption = {
 
 function getMenuOptions(
   templateBlocks: TemplateBlockDefinition[] | [],
-  t: ReturnType<typeof useTranslations>
+  locale: Locale
 ) {
   if (templateBlocks && templateBlocks.length > 0) {
     return templateBlocks
       .filter((block) => block.mode === "optional")
       .map((block) => ({
         kind: block.kind,
-        label: t(`${block.kind}.name`) ?? block.kind,
+        label: block.label ?? resolveBlockLabel(block.kind, locale),
         template: block,
       }));
   }
@@ -48,29 +49,32 @@ export function BlockActions({
   addOptionDisabled,
   onSelect,
 }: BlockActionsProps) {
-  const t = useTranslations("landings.templates");
+  const locale = useLocale() as Locale;
 
   const menuOptions = React.useMemo(
-    () => getMenuOptions(templateBlocks ?? [], t),
-    [templateBlocks, t]
+    () => getMenuOptions(templateBlocks ?? [], locale),
+    [templateBlocks, locale]
   );
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button disabled={disabled} variant="primaryOutline">{buttonLabel}</Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {menuOptions.map((option) => (
-          <DropdownMenuItem
-            key={option.template?.id ?? option.kind}
-            disabled={disabled || Boolean(addOptionDisabled?.(option))}
-            onSelect={() => onSelect(option.kind, option.template)}
-          >
-            {option.label}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+    menuOptions && menuOptions.length > 0 && (
+    <div className="flex items-center justify-end gap-2">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button disabled={disabled} variant="primaryOutline">{buttonLabel}</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {menuOptions.map((option) => (
+            <DropdownMenuItem
+              key={option.template?.id ?? option.kind}
+              disabled={disabled || Boolean(addOptionDisabled?.(option))}
+              onSelect={() => onSelect(option.kind, option.template)}
+            >
+              {option.label}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  ));
 }

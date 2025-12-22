@@ -65,7 +65,7 @@ export function LandingEditPageView({ id, tenantId }: LandingEditPageViewProps) 
     handlePublish,
     handleUnpublish,
   });
-
+  
   if (!landing && !isLoading) {
     return (
       <LandingNotFoundState

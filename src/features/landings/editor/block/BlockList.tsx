@@ -84,19 +84,15 @@ export function BlockList({
     return (
       <div className="space-y-4 rounded-lg border border-dashed p-6">
         {template?.blocks && template.blocks.length > 0 && (
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-sm font-semibold"></span>
-            {/* <span className="text-sm font-semibold">{t("addBlock")}</span> */}
-            <BlockActions
-              disabled={disabled}
-              buttonLabel={t("addBlock")}
-              templateBlocks={template.blocks}
-              addOptionDisabled={addOptionDisabled}
-              onSelect={(kind, templateBlock) =>
-                onAdd(kind as LandingBlockKind, templateBlock)
-              }
-            />
-          </div>
+          <BlockActions
+            disabled={disabled}
+            buttonLabel={t("addBlock")}
+            templateBlocks={template.blocks}
+            addOptionDisabled={addOptionDisabled}
+            onSelect={(kind, templateBlock) =>
+              onAdd(kind as LandingBlockKind, templateBlock)
+            }
+          />
         )}
         <EmptyState />
       </div>
@@ -105,18 +101,15 @@ export function BlockList({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-semibold">{t("addBlock")}</span>
-        <BlockActions
-          disabled={disabled}
-          buttonLabel={t("addBlock")}
-          templateBlocks={template?.blocks}
-          addOptionDisabled={addOptionDisabled}
-          onSelect={(kind, templateBlock) =>
-            onAdd(kind as LandingBlockKind, templateBlock)
-          }
-        />
-      </div>
+      <BlockActions
+        disabled={disabled}
+        buttonLabel={t("addBlock")}
+        templateBlocks={template?.blocks}
+        addOptionDisabled={addOptionDisabled}
+        onSelect={(kind, templateBlock) =>
+          onAdd(kind as LandingBlockKind, templateBlock)
+        }
+      />
 
       <div className="space-y-3">
         {fields.map((field, index) => {

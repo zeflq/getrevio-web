@@ -3,7 +3,7 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { RHFInput, RHFCombobox, RHFSelect } from "@/components/form/controls";
 import { cn } from "@/lib/utils";
@@ -14,7 +14,7 @@ import type { CampaignLiteItem } from "@/features/campaigns/server/application/i
 import { useThemesLite } from "@/features/themes/hooks/useThemeCrud";
 
 import type { LandingFormValues } from "../model/landingSchema";
-import { landingTemplates } from "../templates";
+import { getAllTemplatesForLocale } from "../templates";
 import { Button } from "@/components/ui/button";
 
 type FormShape = LandingFormValues;
@@ -47,8 +47,13 @@ export function LandingFormFields({
   const selectedMerchantId = merchantId ?? watch("settings.merchantId");
   const belongsTo = watch("belongsTo");
   const attachmentType: "place" | "campaign" = belongsTo?.type ?? "place";
+  const locale = useLocale();
   const t = useTranslations("landings.form");
   const t_tpl = useTranslations("landings.templates");
+  const templates = React.useMemo(
+    () => getAllTemplatesForLocale(locale),
+    [locale]
+  );
 
   const previousMerchantId = React.useRef<string | undefined>(selectedMerchantId);
 
@@ -113,18 +118,10 @@ export function LandingFormFields({
         disabled={disabled || isEdit}
         suffix={slugSuffix}
       />
-      {/* 
-      <RHFSelect
-        name="templateId"
-        label={t("template")}
-        options={landingTemplates.map((tpl) => ({ value: tpl.id, label: tpl.name }))}
-        placeholder={t("templatePlaceholder")}
-        disabled={disabled || isEdit}
-      /> */}
       <RHFCombobox<LiteListe>
         name="templateId"
         label={t("template")}
-        options={landingTemplates.map((tpl) => ({ value: tpl.id, label: t_tpl(`${tpl.id}.name`) }))}
+        options={templates.map((tpl) => ({ value: tpl.id, label: tpl.meta?.name }))}
         getOptionValue={(option) => option.value}
         getOptionLabel={(option) => option.label}
         placeholder={t("templatePlaceholder")}

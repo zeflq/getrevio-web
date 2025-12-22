@@ -50,9 +50,13 @@ export function useLandingForm(id: string, isEdit: boolean) {
   >({
     onSuccess: () => {
       toast.success(t("updated"));
-      if (landing) {
-        resetFromEntity();
-      }
+      // Reset form with current values to mark as not dirty
+      // Using getValues() instead of landing to avoid stale data
+      form.reset(form.getValues(), {
+        keepValues: true,
+        keepDirty: false,
+        keepErrors: false,
+      });
     },
     onError: (error: unknown) => {
       lastPayloadRef.current = null;

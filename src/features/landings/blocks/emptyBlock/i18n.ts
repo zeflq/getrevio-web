@@ -21,9 +21,9 @@ export const emptyBlockI18n = {
 
   // Description (shared across instances)
   description: {
-    en: "An empty container for addons",
-    fr: "Un conteneur vide pour les modules",
-    ar: "حاوية فارغة للوحدات",
+    en: "",
+    fr: "",
+    ar: ""
   },
 } as const;
 

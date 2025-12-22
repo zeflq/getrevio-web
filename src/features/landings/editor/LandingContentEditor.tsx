@@ -151,18 +151,6 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
 
   return (
     <div className="space-y-4">
-      {/* <div className="flex flex-col gap-2 rounded-lg border border-border p-4 lg:flex-row lg:items-center">
-        <div className="flex-1 space-y-1">
-          <p className="text-sm font-semibold">{t("addBlock")}</p>
-          <p className="text-sm text-muted-foreground">{t("selectPrompt")}</p>
-          {template && (
-            <p className="text-xs text-muted-foreground">
-              Template: <span className="font-medium">{template.name}</span>
-            </p>
-          )}
-        </div>
-      </div> */}
-
       {templateDescription ? (
         <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
           <p className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">

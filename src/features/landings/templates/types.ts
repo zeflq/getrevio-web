@@ -13,7 +13,7 @@ export type TemplateBlockDefinition = {
 
 export type LandingTemplate = {
   id: string;
-  meta?: {
+  meta: {
     name: string;
     description: string;
   };
