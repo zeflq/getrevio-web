@@ -77,24 +77,6 @@
       "submitLabel": "Create Landing"
     },
     "editor": {
-      "templates": {
-        "slotTemplate": {
-          "defaultValues": {
-            "empty1": {
-              "label": "Page 1"
-            },
-            "empty2": {
-              "label": "Page 2",
-              "addons": {
-                "slot-simple-title": {
-                  "title": "Spin to Reveal Your Gift",
-                  "subtitle": "Get 3 matching symbols to win."
-                }
-              }
-            }
-          }
-        }
-      },
       "addBlock": "Add block",
       "warningsTitle": "Warnings",
       "warningsMultipleGames": "Multiple game blocks may confuse users.",
@@ -153,24 +135,6 @@
         "campaign": "Campaign",
         "place": "Place",
         "none": "—"
-      }
-    },
-    "templates": {
-      "slotTemplate": {
-        "defaultValues": {
-          "empty1": {
-            "label": "Page 1"
-          },
-          "empty2": {
-            "label": "Page 2",
-            "addons": {
-              "slot-simple-title": {
-                "title": "Spin to Reveal Your Gift",
-                "subtitle": "Get 3 matching symbols to win."
-              }
-            }
-          }
-        }
       }
     },
     "preview": {

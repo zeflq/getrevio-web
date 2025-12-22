@@ -1,22 +1,24 @@
 /**
- * Landing Templates - Public API (KIND Pattern)
+ * Landing Templates - Public API
  *
  * This file provides the public API for landing templates.
- * It uses the new separated structure with KIND i18n pattern:
+ * Uses separated structure:
  * - definitions/ - Pure structure (blocks, addons, config)
- * - i18n/ - Actual translations in all languages (KIND pattern)
- * - defaults/ - Default data values
+ * - meta/ - Label/description overrides for KIND i18n
+ * - defaults/ - Field data with locale support
  * - translation/ - Runtime combination logic
  *
- * Templates are built per-locale to contain actual translated strings.
- * When locale changes, templates are rebuilt with new translations.
+ * Templates are built per-locale with:
+ * 1. Meta overrides for KIND i18n (label/description)
+ * 2. Locale-extracted field data from defaults
+ * 3. Primitive config values
  */
 
 import type { LandingTemplate } from "./types";
 
 // Import separated parts for slotTemplate
 import { slotTemplateDefinition } from "./definitions/slotTemplate";
-import { slotTemplateI18n } from "./i18n/slotTemplate.i18n";
+import { slotTemplateMeta } from "./meta/slotTemplate.meta";
 import { slotTemplateDefaults } from "./defaults/slotTemplate.defaults";
 import { translateTemplate } from "./translation/translateTemplate";
 
@@ -42,7 +44,7 @@ export function getTemplateByIdForLocale(
     case "slotTemplate":
       return translateTemplate(
         slotTemplateDefinition,
-        slotTemplateI18n,
+        slotTemplateMeta,
         slotTemplateDefaults,
         locale
       );
@@ -73,7 +75,7 @@ export function getAllTemplatesForLocale(locale: string): LandingTemplate[] {
   return [
     translateTemplate(
       slotTemplateDefinition,
-      slotTemplateI18n,
+      slotTemplateMeta,
       slotTemplateDefaults,
       locale
     ),

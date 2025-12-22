@@ -150,6 +150,14 @@ export function useEditPageForm<
   const { execute, isExecuting } = useUpdateMutation({
     onSuccess: () => {
       toast.success(successMessage);
+      // Clear dirty state immediately after a successful save.
+      // This prevents isDirty from staying true while waiting for refetch.
+      form.reset(form.getValues(), {
+        keepValues: true,
+        keepDirty: false,
+        keepErrors: false,
+        keepTouched: false,
+      });
       // Set flag to sync form when fresh entity data arrives from refetch
       shouldSyncRef.current = true;
       onSuccessCallback?.();

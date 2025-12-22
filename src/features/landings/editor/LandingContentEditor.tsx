@@ -88,7 +88,8 @@ export function LandingContentEditor({ landing, disabled }: LandingContentEditor
       kind,
       templateBlock?.defaultData as any,
       templateBlock?.addons,
-      templateBlock?.label // Already translated text
+      templateBlock?.label, // Already translated text
+      templateBlock?.description // Already translated text
     );
     if (templateBlock) {
       block.__templateBlockId = templateBlock.id;

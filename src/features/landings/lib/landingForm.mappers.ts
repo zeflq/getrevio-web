@@ -31,12 +31,13 @@ const buildTemplateContent = (
   const blocks = template.blocks
     .filter((definition) => definition.mode === "fixed")
     .map((definition) => {
-      // definition.label and addon defaultData already contain actual translations
+      // definition.label, definition.description, and addon defaultData already contain actual translations
       const block = createBlockByKind(
         definition.kind,
         definition.defaultData as any,
         definition.addons?.filter((addonDef) => addonDef.mode === "fixed"),
-        definition.label // Already translated text for locale
+        definition.label, // Already translated text for locale
+        definition.description // Already translated text for locale
       );
       block.__templateBlockId = definition.id;
       block.__templateFixed = true;

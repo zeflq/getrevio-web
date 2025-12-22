@@ -77,24 +77,6 @@
       "submitLabel": "Créer le landing"
     },
     "editor": {
-      "templates": {
-        "slotTemplate": {
-          "defaultValues": {
-            "empty1": {
-              "label": "Page 1"
-            },
-            "empty2": {
-              "label": "Page 2",
-              "addons": {
-                "slot-simple-title": {
-                  "title": "A vous de jouer !",
-                  "subtitle": "Obtenez 3 symboles identiques pour gagner."
-                }
-              }
-            }
-          }
-        }
-      },
       "addBlock": "Ajouter un bloc",
       "warningsTitle": "Avertissements",
       "warningsMultipleGames": "Plusieurs blocs \"jeu\" peuvent perturber les utilisateurs.",
@@ -153,24 +135,6 @@
         "campaign": "Campagne",
         "place": "Lieu",
         "none": "—"
-      }
-    },
-    "templates": {
-      "slotTemplate": {
-        "defaultValues": {
-          "empty1": {
-            "label": "Page 1"
-          },
-          "empty2": {
-            "label": "Page 2",
-            "addons": {
-              "slot-simple-title": {
-                "title": "A vous de jouer !",
-                "subtitle": "Obtenez 3 symboles identiques pour gagner."
-              }
-            }
-          }
-        }
       }
     },
     "preview": {

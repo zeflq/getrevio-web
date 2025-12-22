@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const actionSectionAddonSchema = z.object({
-  title: z.string().default(""),
+  title: z.string().min(1, "Title is required"),
   subtitle: z.string().optional(),
   description: z.string().optional(),
-  buttonLabel: z.string().default(""),
+  buttonLabel: z.string().min(1, "Button label is required"),
 });
 
 export type ActionSectionAddonData = z.infer<typeof actionSectionAddonSchema>;

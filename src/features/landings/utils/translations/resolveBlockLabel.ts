@@ -1,6 +1,6 @@
 /**
  * Resolve block label from KIND i18n
- * Template-specific labels are handled via __templateLabel (already translated)
+ * Template-specific labels are handled via block.label (set during template translation)
  */
 
 import { getBlockI18n } from "./getBlockI18n";

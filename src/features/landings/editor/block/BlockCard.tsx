@@ -53,13 +53,15 @@ export function BlockCard({
   const locale = useLocale() as Locale;
 
   // Resolve block label with fallback chain:
-  // 1. __templateLabel (stored translated text from template)
+  // 1. block.label (from template meta)
   // 2. KIND i18n (portable)
   // 3. Kind itself
-  const typeLabel = block.__templateLabel ?? resolveBlockLabel(block.kind, locale);
+  const typeLabel = block.label ?? resolveBlockLabel(block.kind, locale);
 
-  // Resolve block description from KIND i18n
-  const description = resolveBlockDescription(block.kind, locale);
+  // Resolve block description with fallback chain:
+  // 1. block.description (from template meta)
+  // 2. KIND i18n (portable)
+  const description = block.description ?? resolveBlockDescription(block.kind, locale);
 
   const plugin = landingBlockPluginMap[block.kind];
   const InspectorComponent = plugin?.Inspector;

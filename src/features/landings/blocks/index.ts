@@ -32,7 +32,8 @@ const buildBlockSchema = <P extends LandingBlockPlugin<any>>(plugin: P) =>
     data: plugin.schema,
     __templateFixed: z.boolean().optional(),
     __templateBlockId: z.string().optional(),
-    __templateLabel: z.string().optional(),
+    label: z.string().optional(),
+    description: z.string().optional(),
     addons: z.array(LandingAddonSchema).default([]),
   });
 
@@ -56,7 +57,8 @@ export const createBlockByKind = <K extends LandingBlockKind>(
   kind: K,
   overrides?: Partial<PluginByKind<K>["defaultData"]>,
   addonOverrides?: LandingBlockAddonDefinition[],
-  templateLabel?: string
+  label?: string,
+  description?: string
 ): LandingBlock => {
   const plugin = findPluginByKind(kind);
   if (!plugin) {
@@ -72,7 +74,8 @@ export const createBlockByKind = <K extends LandingBlockKind>(
       ...defaultData,
       ...(overrides ?? {}),
     },
-    __templateLabel: templateLabel, // Now contains actual translated text
+    label, // From template meta
+    description, // From template meta
     addons: (addonOverrides ?? [])
       .map((slot) => {
         // slot.defaultData now contains actual translations from template

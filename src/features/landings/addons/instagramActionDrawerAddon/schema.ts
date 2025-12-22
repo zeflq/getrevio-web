@@ -3,7 +3,7 @@ import { z } from "zod";
 export const instagramActionDrawerAddonSchema = z.object({
   instagramUrl: z
     .string()
-    .default("")
+    .url("Instagram URL must be a valid URL")
     .refine((val) => val === "" || z.string().url().safeParse(val).success, {
       message: "Must be a valid URL",
     }),

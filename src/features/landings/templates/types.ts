@@ -7,13 +7,14 @@ export type TemplateBlockDefinition = {
   mode: "fixed" | "optional";
   maxInstances?: number;
   label?: string;
+  description?: string;
   defaultData?: Record<string, unknown>;
   addons?: LandingBlockAddonDefinition[];
 };
 
 export type LandingTemplate = {
   id: string;
-  meta: {
+  meta?: {
     name: string;
     description: string;
   };
@@ -52,13 +53,12 @@ export type TemplateDefinition = {
 };
 
 /**
- * Template i18n Map (Actual Translations - KIND Pattern)
- * - Contains actual translations in all supported languages
- * - Same pattern as addon/block i18n (portable, co-located)
- * - NO dependency on external messages files
+ * Template Meta (KIND i18n Overrides)
+ * - Contains label/description to override KIND i18n
+ * - Does NOT contain field data (that goes in defaults)
  * - Each field contains Record<string, string> for all languages
  */
-export type TemplateI18nMap = {
+export type TemplateMeta = {
   templateId: string;
 
   // Template-level metadata with actual translations
@@ -67,28 +67,31 @@ export type TemplateI18nMap = {
     description: Record<string, string>;
   };
 
-  // Block-level translations
-  blocks: Record<
+  // Block-level meta (label/description overrides)
+  blocks?: Record<
     string,
     {
       label?: Record<string, string>;
-    }
-  >;
-
-  // Addon instance overrides (optional)
-  // These override the KIND i18n for specific instances
-  addons?: Record<
-    string,
-    {
-      [field: string]: Record<string, string>;
+      description?: Record<string, string>;
+      // Addon meta scoped to this block (optional)
+      // These override the KIND i18n label/description for specific addon instances
+      addons?: Record<
+        string,
+        {
+          label?: Record<string, string>;
+          description?: Record<string, string>;
+        }
+      >;
     }
   >;
 };
 
 /**
- * Template Defaults (Data Values Only)
+ * Template Defaults (Data Values with Locale Support)
  * - Default data for blocks and addons
- * - NO i18n keys (use actual values or primitives)
+ * - Supports BOTH:
+ *   1. Locale-based values: { title: { en: "...", fr: "..." } }
+ *   2. Non-i18n config: { showPlayButton: true }
  * - Can be empty if no defaults needed
  */
 export type TemplateDefaults = {
@@ -97,11 +100,11 @@ export type TemplateDefaults = {
   blocks?: Record<
     string,
     {
-      data?: Record<string, unknown>;
+      data?: Record<string, unknown | Record<string, string>>;
       addons?: Record<
         string,
         {
-          data?: Record<string, unknown>;
+          data?: Record<string, unknown | Record<string, string>>;
         }
       >;
     }

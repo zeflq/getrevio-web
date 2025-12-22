@@ -3,7 +3,7 @@ import { z } from "zod";
 export const googleReviewActionDrawerAddonSchema = z.object({
   googleUrl: z
     .string()
-    .default("")
+    .url("Google review URL must be a valid URL")
     .refine((val) => val === "" || z.string().url().safeParse(val).success, {
       message: "Must be a valid URL",
     }),
@@ -15,6 +15,6 @@ export type GoogleReviewActionDrawerAddonData = z.infer<
 >;
 
 export const googleReviewActionDrawerAddonDefault: GoogleReviewActionDrawerAddonData = {
-  googleUrl: "",
+  googleUrl: "https://search.google.com/local/writereview?placeid=xxx",
   placeLabel: "",
 };

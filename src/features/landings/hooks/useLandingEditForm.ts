@@ -4,10 +4,7 @@ import { useEditPageForm } from "@/hooks/useEditPageForm";
 import { useReadableError } from "@/lib/useReadableError";
 import { useLocale } from "next-intl";
 
-import {
-  createLandingFormSchema,
-  type LandingFormValues,
-} from "../model/landingSchema";
+import { createLandingFormSchema } from "../model/landingSchema";
 import { useLandingItem, useUpdateLanding } from "./useLandingCrud";
 import {
   buildLandingPayload,
