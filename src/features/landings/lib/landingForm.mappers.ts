@@ -53,23 +53,26 @@ const buildTemplateContent = (
 
 const toInternalBelongsTo = (
   src?: LandingBelongsTo | LandingBelongsToExternal | null
-): LandingBelongsTo => {
+): LandingBelongsTo & { googlePlaceId?: string | null } => {
   if (!src) return { type: "place", placeId: "" };
+
+  // Preserve googlePlaceId if present (from external format)
+  const googlePlaceId = "googlePlaceId" in src ? src.googlePlaceId : undefined;
 
   if ("placeId" in src || "campaignId" in src) {
     return src.type === "campaign"
-      ? { type: "campaign", campaignId: src.campaignId ?? "" }
-      : { type: "place", placeId: src.placeId ?? "" };
+      ? { type: "campaign", campaignId: src.campaignId ?? "", googlePlaceId }
+      : { type: "place", placeId: src.placeId ?? "", googlePlaceId };
   }
 
   return src.type === "campaign"
-    ? { type: "campaign", campaignId: src.id ?? "" }
-    : { type: "place", placeId: src.id ?? "" };
+    ? { type: "campaign", campaignId: src.id ?? "", googlePlaceId }
+    : { type: "place", placeId: src.id ?? "", googlePlaceId };
 };
 
 export const ensureBelongsToForForm = (
   belongsTo?: LandingBelongsTo | LandingBelongsToExternal | null
-): LandingBelongsTo => toInternalBelongsTo(belongsTo);
+): LandingBelongsTo & { googlePlaceId?: string | null } => toInternalBelongsTo(belongsTo);
 
 export const createLandingFormDefaults = (args?: {
   merchantId?: string;

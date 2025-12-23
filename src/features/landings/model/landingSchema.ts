@@ -23,11 +23,12 @@ export const landingBelongsToSchema = z.discriminatedUnion("type", [
 
 export type LandingBelongsTo = z.infer<typeof landingBelongsToSchema>;
 
-/** Format EXTERNE (ex: API): { type, id, label? } */
+/** Format EXTERNE (ex: API): { type, id, label?, googlePlaceId? } */
 export type LandingBelongsToExternal = {
   type: "place" | "campaign";
   id: string;
   label?: string | null;
+  googlePlaceId?: string | null;
 };
 
 

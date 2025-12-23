@@ -18,6 +18,7 @@ export const landingSelect = {
       id: true,
       localName: true,
       merchantId: true,
+      googlePlaceId: true,
     },
   },
   campaigns: {
@@ -25,6 +26,11 @@ export const landingSelect = {
       id: true,
       name: true,
       merchantId: true,
+      place: {
+        select: {
+          googlePlaceId: true,
+        },
+      },
     },
   },
 } satisfies Prisma.LandingSelect;

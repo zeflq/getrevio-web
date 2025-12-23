@@ -23,6 +23,7 @@ export type LandingListDTO = {
     type: "place" | "campaign";
     id: string;
     label?: string | null;
+    googlePlaceId?: string | null;
   } | null;
 };
 
@@ -40,6 +41,7 @@ const deriveBelongsTo = (
       type: "campaign",
       id: campaign.id,
       label: campaign.name,
+      googlePlaceId: campaign.place?.googlePlaceId ?? null,
     };
   }
 
@@ -49,6 +51,7 @@ const deriveBelongsTo = (
       type: "place",
       id: place.id,
       label: place.localName,
+      googlePlaceId: place.googlePlaceId ?? null,
     };
   }
 
