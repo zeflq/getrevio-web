@@ -121,7 +121,6 @@ async function main() {
       id: "th_modern",
       merchantId: "mer_1",
       name: "Modern Minimal",
-      logoUrl: "https://example.com/assets/bella-logo.png",
       meta: defaultThemeMeta,
       createdAt: new Date("2025-09-20T10:10:00Z"),
       updatedAt: new Date("2025-09-20T10:10:00Z"),

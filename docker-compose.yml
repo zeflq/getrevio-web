@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: getrevio-postgres
+    environment:
+      POSTGRES_DB: getrevioDB
+      POSTGRES_USER: getrevio
+      POSTGRES_PASSWORD: getrevio
+    ports:
+      - "5432:5432"
+    volumes:
+      - getrevio-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  getrevio-postgres-data:

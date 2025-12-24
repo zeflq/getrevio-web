@@ -25,7 +25,7 @@ export function EditSection({
   return (
     <section
       className={cn(
-        "rounded-xl border border-border/60 bg-card/80 p-3 sm:p-4 shadow-sm",
+        "rounded-xl border border-border/60 bg-card p-3 sm:p-4 shadow-sm",
         className
       )}
     >

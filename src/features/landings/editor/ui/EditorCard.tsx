@@ -66,7 +66,7 @@ export function EditorCard({
   content,
 }: EditorCardProps) {
   const baseClasses = cn(
-    "bg-background border rounded-lg cursor-pointer transition text-left",
+    "border rounded-lg cursor-pointer transition text-left shadow-md hover:bg-muted/60",
     "flex items-stretch",
     disabled && "opacity-60",
     isFixed && "border-l-4 border-primary/70",
@@ -74,10 +74,11 @@ export function EditorCard({
   );
 
   return (
-    <Collapsible open={selected} onOpenChange={onSelect} className="rounded-lg border bg-background">
+    <Collapsible open={selected} onOpenChange={onSelect} className="rounded-lg border shadow-xs">
       <CollapsibleTrigger asChild>
         <div className={baseClasses}>
           {/* Left reorder rail – DESKTOP ONLY */}
+          {canMoveUp || canMoveDown && (
           <div
             className="hidden sm:flex flex-col justify-center gap-1 px-2 bg-muted/40 border-r border-border/50 rounded-l-md"
             onClick={(e) => e.stopPropagation()}
@@ -109,10 +110,10 @@ export function EditorCard({
             >
               <ArrowDown className="size-4" />
             </Button>
-          </div>
+          </div>)}
 
           {/* Header content */}
-          <div className="flex-1 flex items-center justify-between px-2 py-3">
+          <div className="flex-1 flex items-center justify-between px-2 py-2">
             {/* LEFT SLOT */}
             <div className="flex items-center gap-2">{header}</div>
 

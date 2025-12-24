@@ -89,9 +89,9 @@ export function EditorSheetCard({
   const triggerCard = (
     <div
       className={cn(
-        "bg-background border rounded-lg px-3 py-2.5",
+        "bg-transparent border rounded-lg px-3 py-2",
         "flex items-center justify-between gap-2",
-        "cursor-pointer transition hover:bg-muted/60",
+        "cursor-pointer transition hover:bg-muted/60 shadow-md",
         disabled && "opacity-60 cursor-not-allowed",
         isFixed && "border-l-4 border-primary/70",
         hasErrors && "border-destructive/70 bg-destructive/5 text-destructive"
