@@ -8,11 +8,17 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { UserProfileInline } from "./user-profile-inline"
 import { useSidebarUser } from "@/components/use-sidebar-user"
 import { Link } from "@/i18n/navigation"
-import { signOut } from "@/lib/auth-client"
+import { signOut } from "@/lib/auth/client"
 import { useRouter } from "@/i18n/navigation"
 import { RevioGlyph } from "./RevioLogo"
 
-export function MerchantSidebar({ base, ...props }: React.ComponentProps<typeof Sidebar> & { base: string }) {
+type MerchantSidebarProps = React.ComponentProps<typeof Sidebar> & {
+  base: string;
+  organizationName?: string;
+  plan?: string;
+};
+
+export function MerchantSidebar({ base, organizationName, plan, ...props }: MerchantSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const { user } = useSidebarUser()
@@ -41,9 +47,12 @@ export function MerchantSidebar({ base, ...props }: React.ComponentProps<typeof 
                 <div className="bg-black text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <RevioGlyph className="size-4 bg-black" />
                 </div>
-                <div className="grid flex-1 text-left text-lg leading-tight">
-                  <span className="truncate font-normal">
-                    <span className="font-bold">evio</span>
+                <div className="grid flex-1 text-left leading-tight">
+                  <span className="truncate  text-md ">
+                    {organizationName ?? "Organization"}
+                  </span>
+                  <span className="truncate text-xs text-muted-foreground">
+                    plan: {plan ?? "Free"}
                   </span>
                 </div>
               </Link>

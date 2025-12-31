@@ -15,8 +15,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Link } from "@/i18n/navigation"
-import { authClient } from "@/lib/auth-client"
-import { cn } from "@/lib/utils"
+import { signIn, type User } from "@/lib/auth/client"
+import { useRouter } from "next/navigation"
+import { cn, SUPER_ADMIN } from "@/lib/utils"
 import { AuthFormDivider } from "./FormDivider"
 import { GoogleSignInButton } from "./GoogleSignInButton"
 
@@ -33,6 +34,8 @@ export type LoginFormProps = React.ComponentProps<"form">
 
 export function LoginForm({ className, ...props }: LoginFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -43,7 +46,6 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
     control,
     handleSubmit,
     reset,
-    formState: { isSubmitting },
   } = form
 
   // Restore remembered email
@@ -58,23 +60,42 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
 
   const onSubmit = handleSubmit(async ({ email, password, rememberMe }) => {
     setFormError(null)
+    setIsLoading(true)
 
-    const { data, error } = await authClient.signIn.email({
-      email, 
-      password,
-      rememberMe,
-      callbackURL: "/" ,
-    })
+    try {
+      // Use better-auth's built-in signIn method
+      const response = await signIn.email({
+        email,
+        password,
+        callbackURL: "/",
+      })
+      if (response.error) {
+        setFormError(response.error.message ?? "Unable to sign in. Please try again.")
+        return
+      }
 
-    if (error || !data) {
-      setFormError(error?.message ?? "Unable to sign in. Please try again.")
-      return
-    }
+      if (response.data) {
+        // Save email if remember me is checked
+        if (rememberMe) {
+          window.localStorage.setItem(REMEMBER_ME_KEY, email)
+        } else {
+          window.localStorage.removeItem(REMEMBER_ME_KEY)
+        }
 
-    if (rememberMe) {
-      window.localStorage.setItem(REMEMBER_ME_KEY, email)
-    } else {
-      window.localStorage.removeItem(REMEMBER_ME_KEY)
+        // Redirect based on user role
+        const user = response.data.user as User;
+        const role = user.globalRole;
+
+        if (role === SUPER_ADMIN) {
+          router.push("/admin")
+        } else {
+          router.push("/m")
+        }
+      }
+    } catch (error) {
+      setFormError("An unexpected error occurred. Please try again.")
+    } finally {
+      setIsLoading(false)
     }
   })
 
@@ -142,8 +163,8 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
         />
 
         <div className="space-y-2">
-          <Button type="submit" disabled={isSubmitting} className="w-full">
-            {isSubmitting ? "Logging in..." : "Login"}
+          <Button type="submit" disabled={isLoading} className="w-full">
+            {isLoading ? "Logging in..." : "Login"}
           </Button>
           {formError && (
             <p className="text-destructive text-center text-sm">{formError}</p>

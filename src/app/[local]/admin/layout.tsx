@@ -6,13 +6,13 @@ import { AdminSidebar } from "@/components/admin-sidebar";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { AdminBreadcrumb } from "@/features/admin/components/admin-breadcrumb";
 import { redirect } from "next/navigation";
-import { getServerSession } from "@/lib/auth-server";
+import { getSession } from "@/lib/auth/server";
 import { SUPER_ADMIN } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
-  const session = await getServerSession();
+  const session = await getSession();
   if (!session?.user) redirect("/login");
   if (session.user.globalRole !== SUPER_ADMIN) redirect("/");
 

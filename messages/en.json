@@ -372,5 +372,26 @@
     "linkDialog": {
       "noUnlinkedPlaces": "There are no internal places without a Google linkage."
     }
+  },
+  "onboarding": {
+    "modal": {
+      "title": "Complete Your Setup",
+      "description": "Create your organization and add your first location to get started.",
+      "organizationSection": "Organization Details",
+      "organizationName": "Organization Name",
+      "organizationNamePlaceholder": "Enter organization name",
+      "organizationEmail": "Organization Email",
+      "organizationEmailPlaceholder": "contact@example.com",
+      "placeSection": "First Location",
+      "placeName": "Place Name",
+      "placeNamePlaceholder": "e.g., Paris HQ, Downtown Store",
+      "placeAddress": "Address",
+      "placeAddressPlaceholder": "123 Main St, City, Country",
+      "submitButton": "Complete Setup",
+      "submitting": "Setting up...",
+      "successTitle": "Welcome to GetRevio!",
+      "successMessage": "Your organization has been created successfully. You can now start managing your campaigns and locations.",
+      "continueButton": "Get Started"
+    }
   }
 }

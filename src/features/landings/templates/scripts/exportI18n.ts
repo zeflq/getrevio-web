@@ -108,7 +108,6 @@ function exportAllTemplates(): void {
     // Save updated messages
     saveMessages(locale, messages);
 
-    console.log("");
   }
 
   console.log("✓ Template i18n export complete!");

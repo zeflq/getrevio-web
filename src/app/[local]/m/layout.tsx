@@ -1,68 +1,32 @@
 // app/(merchant)/m/layout.tsx
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { MerchantSidebar } from "@/components/merchant-sidebar";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { OnboardingWizardModal } from "@/features/onboarding/components/OnboardingWizardModal";
 import { ThemeToggle } from "@/components/theme-toggle";
-import type { OrganizationStepData } from "@/features/onboarding/model/organizationStepSchema";
-import type { PlaceStepData } from "@/features/onboarding/model/placeStepSchema";
-import { getTenantFirstPlaceServer } from "@/features/places/server/interface/queries";
-import { auth } from "@/lib/auth";
-import { getServerSession } from "@/lib/auth-server";
+import { getSession } from "@/lib/auth/server";
+import { OnboardingModal } from "@/features/onboarding/components/OnboardingModal";
 
 export const dynamic = "force-dynamic";
 
 export default async function MerchantLayout({ children }: { children: React.ReactNode }) {
-  const sessionResult = await getServerSession();
-  if (!sessionResult?.user) redirect("/login"); // minimal guard; add merchant role checks if needed
-
-  const { session, user } = sessionResult;
-  const headersList = await headers();
-  const activeOrganizationId = session?.activeOrganizationId ?? null;
-
-  let organization: OrganizationStepData | undefined;
-  if (activeOrganizationId) {
-    const fullOrg = await auth.api.getFullOrganization({
-      headers: headersList,
-      query: { organizationId: activeOrganizationId },
-    });
-
-    organization = fullOrg
-      ? {
-          id: fullOrg.id,
-          name: fullOrg.name ?? "",
-          email: fullOrg.email ?? undefined,
-          onboardingStep:
-            typeof (fullOrg as { onboardingStep?: number }).onboardingStep === "number"
-              ? (fullOrg as { onboardingStep?: number }).onboardingStep
-              : undefined,
-        }
-      : undefined;
-  }
-
-  let place: PlaceStepData | null = null;
-  if (organization?.id) {
-    const firstPlace = await getTenantFirstPlaceServer(organization.id);
-    place = firstPlace
-      ? {
-          id: firstPlace.id,
-          localName: firstPlace.localName ?? "",
-          address: firstPlace.address ?? undefined,
-        }
-      : null;
-  }
-
-  const onboardingStepValue = organization?.onboardingStep ?? 0;
-  const initialCompletion = Boolean(place?.id) || onboardingStepValue >= 3;
-  const shouldShowOnboarding = !initialCompletion;
+  const sessionResult = await getSession();
+  if (!sessionResult?.user) redirect("/login");
+  // Check if user needs onboarding (no active organization)
+  const activeOrganizationId = sessionResult?.session?.activeOrganizationId;
+  const shouldShowOnboarding = !activeOrganizationId;
+  const organizationName = sessionResult.merchant?.name;
+  const organizationPlan = sessionResult.merchant?.plan;
 
   return (
     <SidebarProvider>
-      <MerchantSidebar base="/m" />
+      <MerchantSidebar
+        base="/m"
+        organizationName={organizationName}
+        plan={organizationPlan}
+      />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 justify-between">
           <div className="flex items-center gap-2 px-4">
@@ -78,11 +42,11 @@ export default async function MerchantLayout({ children }: { children: React.Rea
         </header>
         {children}
       </SidebarInset>
-      <OnboardingWizardModal
+
+      {/* Onboarding Modal - shows when user has no active organization */}
+      <OnboardingModal
         open={shouldShowOnboarding}
-        initialOrganization={organization}
-        initialEmail={user?.email ?? undefined}
-        initialPlace={place}
+        userEmail={sessionResult.user.email}
       />
     </SidebarProvider>
   );

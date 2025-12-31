@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 import { useRouter } from "@/i18n/navigation";
-import { signOut } from "@/lib/auth-client";
+import { signOut } from "@/lib/auth/client";
 
 export default function LogoutPage() {
   const router = useRouter();

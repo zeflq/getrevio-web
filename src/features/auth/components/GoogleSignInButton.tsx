@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { authClient } from "@/lib/auth-client"
+import { signIn } from "@/lib/auth/client"
 import { cn } from "@/lib/utils"
 
 interface GoogleSignInButtonProps {
@@ -16,7 +16,7 @@ export function GoogleSignInButton({ className, callbackURL = "/" }: GoogleSignI
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     try {
-      await authClient.signIn.social({
+      await signIn.social({
         provider: "google",
         callbackURL,
       })

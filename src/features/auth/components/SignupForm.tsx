@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -16,8 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { authClient } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
+import { signUp } from "@/lib/auth/client"
 
 import { AuthFormDivider } from "./FormDivider"
 
@@ -51,6 +52,8 @@ export type SignupFormProps = React.ComponentProps<"form">
 export function SignupForm({ className, ...props }: SignupFormProps) {
   const [formError, setFormError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
 
   const form = useForm<SignupValues>({
     resolver: zodResolver(signupSchema),
@@ -67,7 +70,6 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
     control,
     handleSubmit,
     watch,
-    formState: { isSubmitting },
   } = form
 
   const passwordValue = watch("password")
@@ -81,20 +83,34 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
   const onSubmit = handleSubmit(async ({ name, email, password }) => {
     setFormError(null)
     setSuccessMessage(null)
+    setIsLoading(true)
 
-    const { data, error } = await authClient.signUp.email({
-      name,
-      email, 
-      password,
-      callbackURL: '/'
-    })
+    try {
+      // Use better-auth's built-in signUp method
+      const response = await signUp.email({
+        name,
+        email,
+        password,
+      })
 
-    if (error || !data) {
-      setFormError(error?.message ?? "Unable to complete sign up. Please try again.")
-      return
+      if (response.error) {
+        setFormError(response.error.message ?? "Unable to complete sign up. Please try again.")
+        return
+      }
+
+      if (response.data) {
+        setSuccessMessage(`Welcome, ${name}! Your account is ready.`)
+
+        // Redirect after short delay (let user see success message)
+        setTimeout(() => {
+          router.push('/m')
+        }, 1000)
+      }
+    } catch (error) {
+      setFormError("An unexpected error occurred. Please try again.")
+    } finally {
+      setIsLoading(false)
     }
-
-    setSuccessMessage(`Welcome, ${name}! Your account is ready.`)
   })
 
   return (
@@ -191,8 +207,8 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
         />
 
         <div className="space-y-2">
-          <Button type="submit" disabled={isSubmitting} className="w-full">
-            {isSubmitting ? "Creating account..." : "Create Account"}
+          <Button type="submit" disabled={isLoading} className="w-full">
+            {isLoading ? "Creating account..." : "Create Account"}
           </Button>
           {formError ? (
             <p className="text-destructive text-center text-sm">{formError}</p>

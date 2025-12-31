@@ -26,7 +26,7 @@ import {
 import { UserProfileInline } from "./user-profile-inline"
 import { Link } from "@/i18n/navigation"
 import { useRouter } from "@/i18n/navigation";
-import { signOut } from "@/lib/auth-client"
+import { signOut } from "@/lib/auth/client"
 import { useSidebarUser } from "@/components/use-sidebar-user"
 import { RevioGlyph } from "./RevioLogo"
 

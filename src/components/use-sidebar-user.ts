@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth/client";
 import { SUPER_ADMIN } from "@/lib/utils";
 
 const DEFAULT_AVATAR = "/avatars/placeholder.png";

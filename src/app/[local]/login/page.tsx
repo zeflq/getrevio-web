@@ -2,12 +2,12 @@ import { GalleryVerticalEnd } from "lucide-react"
 
 import { LoginForm } from "@/features/auth/components"
 import { redirect } from "next/navigation";
-import { getServerSession } from "@/lib/auth-server";
+import { getSession } from "@/lib/auth/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function LoginPage() {
-  const session = await getServerSession();
+  const session = await getSession();
   if (session?.user) redirect("/");
   return (
     <div className="grid min-h-svh lg:grid-cols-2">

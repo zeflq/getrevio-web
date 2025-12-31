@@ -1,3 +1,11 @@
+/**
+ * @deprecated This file is deprecated. Use @/lib/auth/server.ts instead.
+ *
+ * Migration path:
+ * - Replace getServerSession() with getSession() from @/lib/auth/server
+ * - New implementation uses /auth/me endpoint instead of better-auth server-side
+ */
+
 // src/lib/auth-server.ts
 import { headers as serverHeaders } from "next/headers";
 import { auth } from "@/lib/auth";

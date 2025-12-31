@@ -370,7 +370,28 @@
   "googlePlaces": {
     "description": "Voici vos emplacements Google Business. Associez chaque lieu non lié à un lieu interne existant.",
     "linkDialog": {
-      "noUnlinkedPlaces": "Aucun lieu interne n’est disponible sans liaison Google."
+      "noUnlinkedPlaces": "Aucun lieu interne n'est disponible sans liaison Google."
+    }
+  },
+  "onboarding": {
+    "modal": {
+      "title": "Complétez votre configuration",
+      "description": "Créez votre organisation et ajoutez votre premier lieu pour commencer.",
+      "organizationSection": "Détails de l'organisation",
+      "organizationName": "Nom de l'organisation",
+      "organizationNamePlaceholder": "Entrez le nom de l'organisation",
+      "organizationEmail": "Email de l'organisation",
+      "organizationEmailPlaceholder": "contact@exemple.com",
+      "placeSection": "Premier lieu",
+      "placeName": "Nom du lieu",
+      "placeNamePlaceholder": "ex: Siège Paris, Magasin Centre-Ville",
+      "placeAddress": "Adresse",
+      "placeAddressPlaceholder": "123 Rue Principale, Ville, Pays",
+      "submitButton": "Terminer la configuration",
+      "submitting": "Configuration en cours...",
+      "successTitle": "Bienvenue sur GetRevio !",
+      "successMessage": "Votre organisation a été créée avec succès. Vous pouvez maintenant commencer à gérer vos campagnes et vos lieux.",
+      "continueButton": "Commencer"
     }
   }
 }
