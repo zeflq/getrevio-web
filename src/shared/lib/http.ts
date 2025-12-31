@@ -1,4 +1,4 @@
-const BASE_URL = "";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 class HttpError extends Error {
   status: number;
@@ -73,7 +73,14 @@ class HttpClient {
       return undefined as T;
     }
 
-    return response.json();
+    const json = await response.json();
+
+    // Unwrap backend response envelope: {success: true, data: ...} -> data
+    if (json && typeof json === 'object' && 'success' in json && 'data' in json) {
+      return json.data as T;
+    }
+
+    return json;
   }
 
   async get<T>(endpoint: string, options?: RequestInit): Promise<T> {

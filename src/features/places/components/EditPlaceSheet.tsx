@@ -2,7 +2,6 @@
 "use client";
 
 import * as React from "react";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SheetForm } from "@/components/form/SheetForm";
@@ -29,8 +28,10 @@ export function EditPlaceSheet({
   merchantsLite = [],
   onSuccess,
 }: EditPlaceSheetProps) {
-  const { data: place, isLoading } = usePlaceItem(id);
-  const { execute, isExecuting } = useUpdatePlace<
+  // Only fetch when sheet is open and ID exists
+  const { data: place, isLoading } = usePlaceItem(open && id ? id : undefined);
+  console.log("EditPlaceSheet - Place data:", place, "isLoading:", isLoading, "open:", open, "id:", id);
+  const { mutateAsync, isPending } = useUpdatePlace<
     { id: string } & PlaceUpdateInput,
     { ok?: boolean }
   >({
@@ -43,6 +44,11 @@ export function EditPlaceSheet({
   const form = useForm<PlaceUpdateInput>({
     resolver: zodResolver(placeUpdateSchema),
     mode: "onChange",
+    values: place ? {
+      localName: place.localName ?? "",
+      address: place.address ?? "",
+      merchantId: merchantId ?? place.merchantId ?? "",
+    } : undefined,
     defaultValues: {
       localName: "",
       address: "",
@@ -50,22 +56,7 @@ export function EditPlaceSheet({
     },
   });
 
-  const { reset, setValue } = form;
-
-  useEffect(() => {
-    if (!place) return;
-    reset({
-      localName: place.localName ?? "",
-      address: place.address ?? "",
-      merchantId: merchantId ?? place.merchantId ?? "",
-    });
-  }, [place, merchantId, reset]);
-
-  useEffect(() => {
-    if (merchantId) {
-      setValue("merchantId", merchantId, { shouldValidate: false, shouldDirty: false });
-    }
-  }, [merchantId, setValue]);
+  const { reset } = form;
 
   const resetForm = () =>
     reset({
@@ -75,7 +66,7 @@ export function EditPlaceSheet({
     });
 
   const onSubmit = (data: PlaceUpdateInput) => {
-    execute({ id, ...data });
+    mutateAsync({ id, ...data });
   };
 
   const handleSheetChange = (nextOpen: boolean) => {
@@ -83,7 +74,7 @@ export function EditPlaceSheet({
     onOpenChange(nextOpen);
   };
 
-  const isBusy = isLoading || isExecuting;
+  const isBusy = isLoading || isPending;
   const isReady = !!place && !isLoading;
 
   return (

@@ -2,7 +2,7 @@
 
 import { http } from "@/shared/lib/http";
 import { createCrudBridge, type ListEnvelope } from "@/hooks/createCrudBridge";
-import { createPlaceAction, updatePlaceAction } from "@/features/places/server/actions";
+import endpoints from "@/shared/api/endpoints.json";
 import type { GooglePlaceRow } from "../types";
 
 const buildQuery = (params: Record<string, unknown>) => {
@@ -23,16 +23,14 @@ const list = (params: Record<string, unknown>) => {
 const bridge = createCrudBridge<GooglePlaceRow, string>({
   keyBase: ["googlePlaces"],
   list,
-  actions: {
-    create: createPlaceAction,
-    update: updatePlaceAction,
-  },
-  getIdFromActionInput: (input) => (input as { id?: string } | undefined)?.id,
+  create: (input: any) => http.post(endpoints.places.base, input),
+  update: ({ id, ...input }: any) => http.patch(endpoints.places.byId.replace(':id', id), input),
+  getIdFromInput: (input) => (input as { id?: string } | undefined)?.id,
 });
 
 export const useGooglePlacesList = bridge.useList!;
-export const useCreateFromGooglePlace = bridge.useCreateAction!;
-export const useLinkGooglePlace = bridge.useUpdateAction!;
+export const useCreateFromGooglePlace = bridge.useCreateMutation!;
+export const useLinkGooglePlace = bridge.useUpdateMutation!;
 
 export const GOOGLE_PLACES_KEYS = {
   list: (filters: unknown) => ["googlePlaces", "list", filters] as const,

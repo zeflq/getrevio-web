@@ -25,7 +25,7 @@ export function CreatePlaceDialog({
   merchantsLite = [],
   onSuccess,
 }: CreatePlaceDialogProps) {
-  const { execute, isExecuting } = useCreatePlace<PlaceCreateInput, { id?: string }>({
+  const { mutateAsync, isPending } = useCreatePlace<PlaceCreateInput, { id?: string }>({
     onSuccess: () => {
       resetForm();
       onOpenChange(false);
@@ -59,14 +59,14 @@ export function CreatePlaceDialog({
     });
 
   const onSubmit = (data: PlaceCreateInput) => {
-    execute(data);
+    mutateAsync(data);
   };
 
   // Slug availability (debounced)
   // Provide children to the DialogForm via the Slot mechanism
   type MethodsWithSlot = typeof methods & { _slot?: React.ReactNode };
   (methods as MethodsWithSlot)._slot = (
-    <PlaceFormFields disabled={isExecuting} merchantId={merchantId} merchantsLite={merchantsLite} />
+    <PlaceFormFields disabled={isPending} merchantId={merchantId} merchantsLite={merchantsLite} />
   );
 
   return (
@@ -80,9 +80,9 @@ export function CreatePlaceDialog({
       description="Add a new place. Fill in the required information below."
       methods={methods}
       onSubmit={onSubmit}
-      isBusy={isExecuting}
+      isBusy={isPending}
       isReady={true}
-      submitLabel={isExecuting ? "Creating..." : "Create Place"}
+      submitLabel={isPending ? "Creating..." : "Create Place"}
     />
   );
 }

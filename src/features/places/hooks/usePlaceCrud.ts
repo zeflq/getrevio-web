@@ -1,12 +1,8 @@
-import {
-  createPlaceAction,
-  updatePlaceAction,
-  deletePlaceAction,
-} from "@/features/places/server/actions";
 import { createCrudBridge, type ListEnvelope } from "@/hooks/createCrudBridge";
 import { http } from "@/shared/lib/http";
+import endpoints from "@/shared/api/endpoints.json";
 import type { LiteListe } from "@/types/lists";
-import { PlaceListItem } from "../server/interface/queries";
+import type { Place } from "@/types/domain";
 
 const buildQuery = (params: Record<string, unknown>) => {
   const search = new URLSearchParams();
@@ -17,36 +13,40 @@ const buildQuery = (params: Record<string, unknown>) => {
   return search.toString();
 };
 
+// READ operations
 const list = (params: Record<string, unknown>) =>
-  http.get<ListEnvelope<PlaceListItem>>(
-    `/api/places?${buildQuery(params)}`,
+  http.get<ListEnvelope<Place>>(
+    `${endpoints.places.base}?${buildQuery(params)}`,
     { cache: "no-store" }
   );
 
 const get = (id: string) =>
-  http.get<PlaceListItem>(`/api/places/${id}`, { cache: "no-store" });
+  http.get<Place>(
+    endpoints.places.byId.replace(':id', id),
+    { cache: "no-store" }
+  );
 
 const liteList = (params: Record<string, unknown>) =>
-  http.get<LiteListe[]>(`/api/places/lite?${buildQuery(params)}`, {
-    cache: "no-store",
-  });
+  http.get<LiteListe[]>(
+    `${endpoints.places.lite}?${buildQuery(params)}`,
+    { cache: "no-store" }
+  );
 
-const bridge = createCrudBridge<PlaceListItem, string, LiteListe>({
+// WRITE operations
+const bridge = createCrudBridge<Place, string, LiteListe>({
   keyBase: ["places"],
   list,
   get,
   liteList,
-  actions: {
-    create: createPlaceAction,
-    update: updatePlaceAction,
-    remove: deletePlaceAction,
-  },
-  getIdFromActionInput: (input) => (input as { id?: string } | undefined)?.id,
+  create: (input: any) => http.post(endpoints.places.base, input),
+  update: ({ id, ...input }: any) => http.patch(endpoints.places.byId.replace(':id', id), input),
+  remove: ({ id }: { id: string }) => http.delete(endpoints.places.byId.replace(':id', id)),
+  getIdFromInput: (input) => (input as { id?: string } | undefined)?.id,
 });
 
 export const usePlacesList = bridge.useList!;
 export const usePlaceItem = bridge.useItem!;
 export const usePlacesLite = bridge.useLite!;
-export const useCreatePlace = bridge.useCreateAction!;
-export const useUpdatePlace = bridge.useUpdateAction!;
-export const useDeletePlace = bridge.useRemoveAction!;
+export const useCreatePlace = bridge.useCreateMutation!;
+export const useUpdatePlace = bridge.useUpdateMutation!;
+export const useDeletePlace = bridge.useRemoveMutation!;

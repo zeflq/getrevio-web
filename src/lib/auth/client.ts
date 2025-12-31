@@ -17,7 +17,6 @@
 
 import { createAuthClient } from "better-auth/react";
 import { inferAdditionalFields, organizationClient } from "better-auth/client/plugins";
-import { useStore } from "@nanostores/react";
 
 // Get API URL from environment
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';

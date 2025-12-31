@@ -3,18 +3,17 @@ import {
   QueryKey,
   useQuery,
   useQueryClient,
+  useMutation,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { useAction } from "next-safe-action/hooks";
 import type { LiteListe } from "@/types/lists";
 
 export type ListEnvelope<T> = { data: T[]; total: number; totalPages: number };
 
-type ActionHookOptions<I = any, R = any> = {
-  onSuccess?: (args: { data: R; input: I }) => void;
-  onError?: (args: { error: unknown; input: I }) => void;
+type MutationHookOptions<I = any, R = any> = {
+  onSuccess?: (data: R, input: I) => void;
+  onError?: (error: Error, input: I) => void;
   extraInvalidateKeys?: QueryKey[];
-  [k: string]: any;
 };
 
 export function createCrudBridge<
@@ -24,21 +23,19 @@ export function createCrudBridge<
 >(opts: {
   keyBase: QueryKey;
 
-  // READS (REST)
+  // READS (REST API)
   list?: (params: Record<string, any>) => Promise<ListEnvelope<TEntity> | TEntity[]>;
   get?: (id: TId) => Promise<TEntity>;
   /** NEW: dedicated lite fetcher (server returns TLite[] already) */
   liteList?: (params: Record<string, any>) => Promise<TLite[]>;
 
-  // WRITES (Server Actions only)
-  actions?: {
-    create?: (...args: any[]) => Promise<any>;
-    update?: (...args: any[]) => Promise<any>;
-    remove?: (...args: any[]) => Promise<any>;
-  };
+  // WRITES (API Mutations) - flattened like reads
+  create?: (input: any) => Promise<any>;
+  update?: (input: any) => Promise<any>;
+  remove?: (input: any) => Promise<any>;
 
-  getIdFromActionInput?: (input: any) => TId | undefined;
-  getIdFromActionResult?: (result: any) => TId | undefined;
+  getIdFromInput?: (input: any) => TId | undefined;
+  getIdFromResult?: (result: any) => TId | undefined;
 
   staleTimeMs?: number;
 }) {
@@ -47,9 +44,11 @@ export function createCrudBridge<
     list,
     get,
     liteList,
-    actions,
-    getIdFromActionInput,
-    getIdFromActionResult,
+    create,
+    update,
+    remove,
+    getIdFromInput,
+    getIdFromResult,
     staleTimeMs = 60_000,
   } = opts;
 
@@ -92,79 +91,79 @@ export function createCrudBridge<
           })
       : undefined;
 
-  // -------- WRITES via Server Actions --------
-  const useCreateAction = actions?.create
-    ? <I = any, R = any>(options?: ActionHookOptions<I, R>) => {
+  // -------- WRITES via API Mutations --------
+  const useCreateMutation = create
+    ? <I = any, R = any>(options?: MutationHookOptions<I, R>) => {
         const qc = useQueryClient();
-        const { onSuccess, onError, extraInvalidateKeys, ...rest } = options ?? {};
-        return useAction(actions.create!, {
-          ...rest,
-          onSuccess: (args: { data: R; input: unknown }) => {
+        const { onSuccess, onError, extraInvalidateKeys } = options ?? {};
+        return useMutation({
+          mutationFn: (input: I) => create(input),
+          onSuccess: (data: R, input: I) => {
             qc.invalidateQueries({ queryKey: [...keyBase, "list"] });
             qc.invalidateQueries({ queryKey: [...keyBase, "lite"] });
             extraInvalidateKeys?.forEach((k) => qc.invalidateQueries({ queryKey: k }));
-            onSuccess?.({ data: args.data, input: args.input as I });
+            onSuccess?.(data, input);
           },
-          onError: (args: { error: unknown; input: unknown }) => {
-            onError?.({ error: args.error, input: args.input as I });
+          onError: (error: Error, input: I) => {
+            onError?.(error, input);
           },
         });
       }
     : undefined;
 
-  const useUpdateAction = actions?.update
-    ? <I = any, R = any>(options?: ActionHookOptions<I, R>) => {
+  const useUpdateMutation = update
+    ? <I = any, R = any>(options?: MutationHookOptions<I, R>) => {
         const qc = useQueryClient();
-        const { onSuccess, onError, extraInvalidateKeys, ...rest } = options ?? {};
-        return useAction(actions.update!, {
-          ...rest,
-          onSuccess: (args: { data: R; input: unknown }) => {
+        const { onSuccess, onError, extraInvalidateKeys } = options ?? {};
+        return useMutation({
+          mutationFn: (input: I) => update(input),
+          onSuccess: (data: R, input: I) => {
             qc.invalidateQueries({ queryKey: [...keyBase, "list"] });
             qc.invalidateQueries({ queryKey: [...keyBase, "lite"] });
 
             const id =
-              (getIdFromActionInput?.(args.input) ??
-                getIdFromActionResult?.(args.data)) as TId | undefined;
+              (getIdFromInput?.(input) ??
+                getIdFromResult?.(data)) as TId | undefined;
             if (id !== undefined) {
               qc.invalidateQueries({ queryKey: [...keyBase, "item", id] });
             }
 
             extraInvalidateKeys?.forEach((k) => qc.invalidateQueries({ queryKey: k }));
-            onSuccess?.({ data: args.data, input: args.input as I });
+            onSuccess?.(data, input);
           },
-          onError: (args: { error: unknown; input: unknown }) => {
-            onError?.({ error: args.error, input: args.input as I });
+          onError: (error: Error, input: I) => {
+            onError?.(error, input);
           },
         });
       }
     : undefined;
 
-  const useRemoveAction = actions?.remove
-    ? <I = any, R = any>(options?: ActionHookOptions<I, R>) => {
+  const useRemoveMutation = remove
+    ? <I = any, R = any>(options?: MutationHookOptions<I, R>) => {
         const qc = useQueryClient();
-        const { onSuccess, onError, extraInvalidateKeys, ...rest } = options ?? {};
-        return useAction(actions.remove!, {
-          ...rest,
-          onSuccess: (args: { data: R; input: unknown }) => {
+        const { onSuccess, onError, extraInvalidateKeys } = options ?? {};
+        return useMutation({
+          mutationFn: (input: I) => remove(input),
+          onSuccess: (data: R, input: I) => {
             qc.invalidateQueries({ queryKey: [...keyBase, "list"] });
             qc.invalidateQueries({ queryKey: [...keyBase, "lite"] });
 
             const id =
-              (getIdFromActionInput?.(args.input) ??
-                getIdFromActionResult?.(args.data)) as TId | undefined;
+              (getIdFromInput?.(input) ??
+                getIdFromResult?.(data)) as TId | undefined;
             if (id !== undefined) {
-							const itemKey = [...keyBase, "item", id] as QueryKey;
-							// stop any in-flight fetch for this item
-							qc.cancelQueries({ queryKey: itemKey });
-							// remove the item query from cache (prevents refetch → 404)
-							qc.removeQueries({ queryKey: itemKey, exact: true });
+              const itemKey = [...keyBase, "item", id] as QueryKey;
+              // stop any in-flight fetch for this item
+              qc.cancelQueries({ queryKey: itemKey });
+              // remove the item query from cache (prevents refetch → 404)
+              qc.removeQueries({ queryKey: itemKey, exact: true });
             }
 
             extraInvalidateKeys?.forEach((k) => qc.invalidateQueries({ queryKey: k }));
-            onSuccess?.({ data: args.data, input: args.input as I });
+            onSuccess?.(data, input);
           },
-          onError: (args: { error: unknown; input: unknown }) => {
-            onError?.({ error: args.error, input: args.input as I });
+          onError: (error: Error, input: I) => {
+            onError?.(error, input);
           },
         });
       }
@@ -177,8 +176,8 @@ export function createCrudBridge<
     useLite,
 
     // WRITES
-    useCreateAction,
-    useUpdateAction,
-    useRemoveAction,
+    useCreateMutation,
+    useUpdateMutation,
+    useRemoveMutation,
   };
 }

@@ -12,7 +12,7 @@ export interface DeletePlaceDialogProps {
 }
 
 export function DeletePlaceDialog({ id, localName, open, onOpenChange }: DeletePlaceDialogProps) {
-  const { execute, isExecuting } = useDeletePlace<{ id: string }, { ok?: boolean }>({
+  const { mutateAsync, isPending } = useDeletePlace<{ id: string }, { ok?: boolean }>({
     onSuccess: () => onOpenChange(false),
     extraInvalidateKeys:[["googlePlaces"]]
   });
@@ -28,8 +28,8 @@ export function DeletePlaceDialog({ id, localName, open, onOpenChange }: DeleteP
       inputPlaceholder="Enter place name"
       confirmLabel="Delete Place"
       confirmVariant="destructive"
-      loading={isExecuting}
-      onConfirm={() => execute({ id })}
+      loading={isPending}
+      onConfirm={() => mutateAsync({ id })}
       preventCloseWhileLoading
     />
   );

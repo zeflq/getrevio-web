@@ -1,30 +1,49 @@
 {
+  "auth": {
+    "me": "/api/v1/auth/me",
+    "session": "/api/v1/auth/session"
+  },
+  "onboarding": {
+    "complete": "/api/v1/onboarding/complete"
+  },
   "merchants": {
-    "base": "/merchants",
-    "byId": "/merchants/:id",
-    "stats": "/merchants/:id/stats"
+    "base": "/api/v1/merchants",
+    "byId": "/api/v1/merchants/:id",
+    "lite": "/api/v1/merchants/lite"
   },
   "places": {
-    "base": "/places",
-    "byId": "/places/:id"
+    "base": "/api/v1/places",
+    "byId": "/api/v1/places/:id",
+    "lite": "/api/v1/places/lite",
+    "first": "/api/v1/places/first"
   },
   "campaigns": {
-    "base": "/campaigns",
-    "byId": "/campaigns/:id"
+    "base": "/api/v1/campaigns",
+    "byId": "/api/v1/campaigns/:id",
+    "lite": "/api/v1/campaigns/lite"
+  },
+  "landings": {
+    "base": "/api/v1/landings",
+    "byId": "/api/v1/landings/:id",
+    "lite": "/api/v1/landings/lite",
+    "bySlug": "/api/v1/landings/published/:slug",
+    "publish": "/api/v1/landings/:id/publish",
+    "unpublish": "/api/v1/landings/:id/unpublish"
+  },
+  "lotteries": {
+    "base": "/api/v1/lottery/configs",
+    "byId": "/api/v1/lottery/configs/:id",
+    "lite": "/api/v1/lottery/configs/lite",
+    "toggle": "/api/v1/lottery/configs/:id/toggle"
   },
   "themes": {
-    "base": "/themes",
-    "byId": "/themes/:id"
+    "base": "/api/v1/themes",
+    "byId": "/api/v1/themes/:id"
   },
   "shortlinks": {
-    "base": "/shortlinks",
-    "byId": "/shortlinks/:id"
-  },
-  "events": {
-    "base": "/events",
-    "byId": "/events/:id"
-  },
-  "stats": {
-    "campaignDaily": "/statsCampaignDaily"
+    "base": "/api/v1/shortlinks",
+    "byId": "/api/v1/shortlinks/:id",
+    "qr": "/api/v1/shortlinks/:code/qr",
+    "redisStatus": "/api/v1/shortlinks/redis-status"
   }
 }
