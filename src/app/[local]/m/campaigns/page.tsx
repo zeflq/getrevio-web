@@ -152,13 +152,14 @@ export default function MerchantCampaignsPage() {
         />
       </div>
 
+      
       <CreateCampaignDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
         merchantId={tenantId}
         onSuccess={() => controller.table.resetRowSelection()}
       />
-
+      
       {editId && (
         <EditCampaignSheet
           campaignId={editId}

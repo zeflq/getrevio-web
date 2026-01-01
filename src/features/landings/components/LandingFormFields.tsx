@@ -10,7 +10,6 @@ import { cn } from "@/lib/utils";
 import type { LiteListe } from "@/types/lists";
 import { usePlacesLite } from "@/features/places";
 import { useCampaignsLite } from "@/features/campaigns";
-import type { CampaignLiteItem } from "@/features/campaigns/server/application/interfaces/campaignQueryRepository";
 import { useThemesLite } from "@/features/themes/hooks/useThemeCrud";
 
 import type { LandingFormValues } from "../model/landingSchema";
@@ -74,7 +73,7 @@ export function LandingFormFields({
   const campaignsLiteQuery = useCampaignsLite(
     selectedMerchantId ? { merchantId: selectedMerchantId } : {}
   );
-  const campaignsLite = (campaignsLiteQuery.data ?? []) as CampaignLiteItem[];
+  const campaignsLite = campaignsLiteQuery.data ?? [];
   const campaignsLoading = campaignsLiteQuery.isLoading;
   const themesLiteQuery = useThemesLite(
     selectedMerchantId ? { merchantId: selectedMerchantId } : {},

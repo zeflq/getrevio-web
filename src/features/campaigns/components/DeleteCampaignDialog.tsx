@@ -18,17 +18,14 @@ export function DeleteCampaignDialog({
   open,
   onOpenChange,
 }: DeleteCampaignDialogProps) {
-  const { execute, isExecuting } = useDeleteCampaign<
-    { id: string },
-    { ok?: boolean }
-  >({
+  const { mutateAsync, isPending } = useDeleteCampaign({
     onSuccess: () => {
       onOpenChange(false);
     },
   });
 
   const handleConfirm = () => {
-    execute({ id: campaignId });
+    mutateAsync({ id: campaignId });
   };
 
   return (
@@ -42,7 +39,7 @@ export function DeleteCampaignDialog({
       inputPlaceholder="Enter campaign name"
       confirmLabel="Delete Campaign"
       confirmVariant="destructive"
-      loading={isExecuting}
+      loading={isPending}
       onConfirm={handleConfirm}
       preventCloseWhileLoading
     />

@@ -1,15 +1,11 @@
 // src/features/campaigns/hooks/useCampaignCrud.ts
 "use client";
 
-import {
-  createCampaignAction,
-  deleteCampaignAction,
-  updateCampaignAction,
-} from "@/features/campaigns/server/actions";
 import { createCrudBridge, type ListEnvelope } from "@/hooks/createCrudBridge";
 import { http } from "@/shared/lib/http";
-import type { CampaignLiteItem } from "../server/application/interfaces/campaignQueryRepository";
-import type { CampaignListItem } from "../server/queries";
+import endpoints from "@/shared/api/endpoints.json";
+import type { Campaign } from "@/types/domain";
+import type { LiteListe } from "@/types/lists";
 
 const buildQuery = (params: Record<string, unknown>) => {
   const search = new URLSearchParams();
@@ -21,39 +17,45 @@ const buildQuery = (params: Record<string, unknown>) => {
 };
 
 const list = (params: Record<string, unknown>) =>
-  http.get<ListEnvelope<CampaignListItem>>(
-    `/api/campaigns?${buildQuery(params)}`,
+  http.get<ListEnvelope<Campaign>>(
+    `${endpoints.campaigns.base}?${buildQuery(params)}`,
     { cache: "no-store" }
   );
 
 const get = (id: string) =>
-  http.get<CampaignListItem>(`/api/campaigns/${id}`, { cache: "no-store" });
+  http.get<Campaign>(
+    endpoints.campaigns.byId.replace(':id', id),
+    { cache: "no-store" }
+  );
 
 const liteList = (params: Record<string, unknown>) =>
-  http.get<CampaignLiteItem[]>(`/api/campaigns/lite?${buildQuery(params)}`, {
-    cache: "no-store",
-  });
+  http.get<LiteListe[]>(
+    `${endpoints.campaigns.lite}?${buildQuery(params)}`,
+    { cache: "no-store" }
+  );
 
-const bridge = createCrudBridge<CampaignListItem, string, CampaignLiteItem>({
+const bridge = createCrudBridge<Campaign, string, LiteListe>({
   keyBase: ["campaigns"],
   list,
   get,
   liteList,
-  actions: {
-    create: createCampaignAction,
-    update: updateCampaignAction,
-    remove: deleteCampaignAction,
-  },
-  getIdFromActionInput: (input) => input?.id,
+  // ✅ Flattened at root level (consistent with get/liteList)
+  create: (input: any) => http.post(endpoints.campaigns.base, input),
+  update: ({ id, ...input }: any) =>
+    http.patch(endpoints.campaigns.byId.replace(':id', id), input),
+  remove: ({ id }: { id: string }) =>
+    http.delete(endpoints.campaigns.byId.replace(':id', id)),
+  getIdFromInput: (input) => (input as { id?: string } | undefined)?.id,
 });
 
 export const useCampaignsList = bridge.useList!;
 export const useCampaignItem = bridge.useItem!;
 export const useCampaignsLite = bridge.useLite!;
 
-export const useCreateCampaign = bridge.useCreateAction!;
-export const useUpdateCampaign = bridge.useUpdateAction!;
-export const useDeleteCampaign = bridge.useRemoveAction!;
+// ✅ New naming convention (Mutation instead of Action)
+export const useCreateCampaign = bridge.useCreateMutation!;
+export const useUpdateCampaign = bridge.useUpdateMutation!;
+export const useDeleteCampaign = bridge.useRemoveMutation!;
 
 export const CAMPAIGN_KEYS = {
   all: ["campaigns"] as const,

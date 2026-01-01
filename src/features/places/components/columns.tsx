@@ -1,14 +1,14 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import type { PlaceListItem } from "@/features/places/hooks/usePlaceCrud";
 import { Pencil, Trash2 } from "lucide-react";
 import { iconActionGroup as IconActionGroup, iconAction } from "@/shared/ui/IconActionGroup";
+import { Place } from "@/types/domain";
 
 export function placeColumns(opts: {
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-}): ColumnDef<PlaceListItem>[] {
+}): ColumnDef<Place>[] {
   return [
     {
       accessorKey: "localName",

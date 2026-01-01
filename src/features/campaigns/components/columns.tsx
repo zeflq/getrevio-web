@@ -9,10 +9,10 @@ import {
   iconActionGroup as IconActionGroup,
   iconAction,
 } from "@/shared/ui/IconActionGroup";
-import type { CampaignListItem } from "../server/queries";
+import type { Campaign } from "@/types/domain";
 
 const statusBadgeVariant = (
-  status: CampaignListItem["status"]
+  status: Campaign["status"]
 ): "default" | "secondary" | "outline" => {
   switch (status) {
     case "active":
@@ -29,8 +29,8 @@ export function CampaignColumns(opts: {
   onEdit: (id: string) => void;
   onDelete: (id: string, name: string) => void;
   showMerchantColumn?: boolean;
-}): ColumnDef<CampaignListItem>[] {
-  const columns: ColumnDef<CampaignListItem>[] = [
+}): ColumnDef<Campaign>[] {
+  const columns: ColumnDef<Campaign>[] = [
     {
       accessorKey: "name",
       header: "Name",
@@ -56,15 +56,15 @@ export function CampaignColumns(opts: {
       header: "Merchant",
       enableColumnFilter: true,
       cell: ({ row }) =>
-        row.original.merchantName ?? row.original.merchantId ?? "—",
-          } as ColumnDef<CampaignListItem>,
+        (row.original as any).merchantName ?? row.original.merchantId ?? "—",
+          } as ColumnDef<Campaign>,
         ]),
     {
       accessorKey: "placeId",
       header: "Place",
       enableColumnFilter: true,
       cell: ({ row }) =>
-        row.original.placeName ?? row.original.placeId ?? "—",
+        (row.original as any).placeName ?? row.original.placeId ?? "—",
     },
     {
       accessorKey: "status",

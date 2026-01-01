@@ -25,14 +25,14 @@ export function GooglePlacesTable() {
   const [linkDialogOpen, setLinkDialogOpen] = React.useState(false);
   const [selectedGooglePlace, setSelectedGooglePlace] = React.useState<GooglePlaceRow | null>(null);
 
-  const { execute: createFromGooglePlace } =
+  const { mutateAsync: createFromGooglePlace } =
     useCreateFromGooglePlace<PlaceCreateInput, { ok: true }>({
       extraInvalidateKeys: [
         ["places", "list", { _page: 1, _limit: 10 }],
         ["places", "lite", {}],
       ],
     });
-  const { execute: linkGooglePlace, isExecuting: isLinking } =
+  const { mutateAsync: linkGooglePlace, isPending: isLinking } =
     useLinkGooglePlace<
       { id: string; merchantId: string; googlePlaceId: string },
       { ok: true }

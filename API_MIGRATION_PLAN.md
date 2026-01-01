@@ -433,12 +433,12 @@ return (
 ### Completed ✅
 - [x] Onboarding (`useCompleteOnboarding`)
 - [x] **Places** (Phase 1) - ✅ Hook migrated, types from domain.ts, EditPlaceSheet fixed
+- [x] **Campaigns** (Phase 2) - ✅ Hook migrated, types from domain.ts, all components updated, server folder deleted, API routes deleted
 
 ### In Progress 🔄
 - [ ] None currently
 
 ### Pending ⏳
-- [ ] Campaigns
 - [ ] Merchants
 - [ ] Landings
 - [ ] Lotteries

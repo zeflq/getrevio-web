@@ -35,10 +35,7 @@ export function EditCampaignSheet({
 }: EditCampaignSheetProps) {
   const { data: campaign, isLoading } = useCampaignItem(campaignId);
 
-  const { execute, isExecuting } = useUpdateCampaign<
-    { id: string } & CampaignUpdateInput,
-    { ok?: boolean }
-  >({
+  const { mutateAsync, isPending } = useUpdateCampaign({
     onSuccess: () => {
       onOpenChange(false);
       onSuccess?.();
@@ -86,7 +83,7 @@ export function EditCampaignSheet({
   const merchantIdValue = watch("merchantId");
 
   const placesLiteQuery = usePlacesLite(
-    { merchantId: merchantIdValue || undefined, _limit: 100 },
+    { merchantId: merchantIdValue || undefined, _limit: 10 },
     { enabled: !!merchantIdValue }
   );
 
@@ -116,7 +113,7 @@ export function EditCampaignSheet({
   }, [campaign?.placeId, placesLiteQuery.data, setValue]);
 
   const onSubmit = (data: CampaignUpdateInput) => {
-    execute({ id: campaignId, ...data });
+    mutateAsync({ id: campaignId, ...data });
   };
 
   const handleSheetChange = (nextOpen: boolean) => {
@@ -145,12 +142,12 @@ export function EditCampaignSheet({
       methods={methods}
       onOpenChange={handleSheetChange}
       onSubmit={onSubmit}
-      isBusy={isExecuting}
+      isBusy={isPending}
       isReady={formReady}
       onCancel={resetToLoaded}
     >
       <CampaignFormFields
-        disabled={isExecuting}
+        disabled={isPending}
         merchantsLite={merchantsLite}
         merchantIdLocked={merchantId}
         placesLite={placesLiteQuery.data ?? []}

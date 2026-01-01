@@ -30,7 +30,6 @@ export function EditPlaceSheet({
 }: EditPlaceSheetProps) {
   // Only fetch when sheet is open and ID exists
   const { data: place, isLoading } = usePlaceItem(open && id ? id : undefined);
-  console.log("EditPlaceSheet - Place data:", place, "isLoading:", isLoading, "open:", open, "id:", id);
   const { mutateAsync, isPending } = useUpdatePlace<
     { id: string } & PlaceUpdateInput,
     { ok?: boolean }

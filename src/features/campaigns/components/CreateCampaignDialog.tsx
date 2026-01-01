@@ -37,10 +37,7 @@ export function CreateCampaignDialog({
   merchantsLite = [],
   onSuccess,
 }: CreateCampaignDialogProps) {
-  const { execute, isExecuting } = useCreateCampaign<
-    CampaignCreateInput,
-    { id?: string }
-  >({
+  const { mutateAsync, isPending } = useCreateCampaign({
     onSuccess: () => {
       resetForm();
       onOpenChange(false);
@@ -77,13 +74,13 @@ export function CreateCampaignDialog({
 
   // Fetch places filtered by merchant (disabled until a merchant is chosen)
   const placesLiteQuery = usePlacesLite(
-    { merchantId: merchantIdValue || undefined, _limit: 100 },
+    { merchantId: merchantIdValue || undefined, _limit: 10 },
     { enabled: !!merchantIdValue }
   );
 
   // Reset placeId whenever merchant changes to avoid stale selection
   React.useEffect(() => {
-    setValue("placeId", "", { shouldDirty: true, shouldValidate: true });
+    setValue("placeId", "", { shouldDirty: false, shouldValidate: false });
   }, [merchantIdValue, setValue]);
 
   const resetForm = React.useCallback(
@@ -98,7 +95,7 @@ export function CreateCampaignDialog({
   );
 
   const onSubmit = (data: CampaignCreateInput) => {
-    execute(data);
+    mutateAsync(data);
   };
 
   const handleOpenChange = (nextOpen: boolean) => {
@@ -112,7 +109,7 @@ export function CreateCampaignDialog({
   type MethodsWithSlot = typeof methods & { _slot?: React.ReactNode };
   (methods as MethodsWithSlot)._slot = (
     <CampaignFormFields
-      disabled={isExecuting}
+      disabled={isPending}
       merchantsLite={merchantsLite}
       merchantIdLocked={merchantId}
       placesLite={placesLiteQuery.data ?? []}
@@ -129,10 +126,10 @@ export function CreateCampaignDialog({
       description="Create a new campaign. Fill in the required information below."
       methods={methods}
       onSubmit={onSubmit}
-      isBusy={isExecuting}
+      isBusy={isPending}
       isReady={merchantReady}
       onCancel={resetForm}
-      submitLabel={isExecuting ? "Creating..." : "Create Campaign"}
+      submitLabel={isPending ? "Creating..." : "Create Campaign"}
       className="sm:max-w-[560px]"
     />
   );
