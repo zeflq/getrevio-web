@@ -38,7 +38,7 @@ export type LandingBelongsToExternal = {
  *  ========================= */
 export const landingSettingsSchema = z.object({
   merchantId: z.string().min(1, "Merchant is required"),
-  name: z.string().min(1, "Name is required"),
+  name: z.string().min(3, "Name must be at least 3 characters"),
   status: landingStatusEnum.default("draft"),
 });
 
@@ -71,7 +71,7 @@ const landingPayloadCore = z.object({
   merchantId: z.string().min(1, "Merchant is required"),
   placeId: z.string().min(1).optional(),
   campaignId: z.string().min(1).optional(),
-  name: z.string().min(1, "Name is required"),
+  name: z.string().min(3, "Name must be at least 3 characters"),
   //status: landingStatusEnum.default("draft"),
   content: LandingContentSchema,
   templateId: z.string().nullable().optional(),
