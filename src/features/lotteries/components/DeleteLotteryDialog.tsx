@@ -11,7 +11,7 @@ export interface DeleteLotteryDialogProps {
 }
 
 export function DeleteLotteryDialog({ id, name, open, onOpenChange }: DeleteLotteryDialogProps) {
-  const { execute, isExecuting } = useDeleteLottery<{ id: string }, { ok?: true }>({
+  const { mutateAsync, isPending } = useDeleteLottery<{ id: string }, { ok?: true }>({
     onSuccess: () => onOpenChange(false),
   });
 
@@ -26,8 +26,10 @@ export function DeleteLotteryDialog({ id, name, open, onOpenChange }: DeleteLott
       inputPlaceholder="Enter lottery name"
       confirmLabel="Delete Lottery"
       confirmVariant="destructive"
-      loading={isExecuting}
-      onConfirm={() => execute({ id })}
+      loading={isPending}
+      onConfirm={async () => {
+        await mutateAsync({ id });
+      }}
       preventCloseWhileLoading
     />
   );

@@ -2,14 +2,9 @@
 
 import { createCrudBridge, type ListEnvelope } from "@/hooks/createCrudBridge";
 import { http } from "@/shared/lib/http";
+import endpoints from "@/shared/api/endpoints.json";
 import type { LiteListe } from "@/types/lists";
-
-import {
-  createLotteryConfigAction,
-  updateLotteryConfigAction,
-  deleteLotteryConfigAction,
-} from "@/features/lotteries/server/actions";
-import type { LotteryConfigDetailDTO } from "@/features/lotteries/server/mappers";
+import type { LotteryConfig } from "@/types/domain";
 
 const buildQuery = (params: Record<string, unknown>) => {
   const search = new URLSearchParams();
@@ -20,39 +15,49 @@ const buildQuery = (params: Record<string, unknown>) => {
   return search.toString();
 };
 
+// Transform form values (string booleans) to API values (actual booleans)
+const transformLotteryInput = (input: any) => {
+  return {
+    ...input,
+    enabled: input.enabled === "true" || input.enabled === true,
+    guaranteeWinOnFirstPlay:
+      input.guaranteeWinOnFirstPlay === "true" || input.guaranteeWinOnFirstPlay === true,
+  };
+};
+
 const list = (params: Record<string, unknown>) =>
-  http.get<ListEnvelope<LotteryConfigDetailDTO>>(
-    `/api/lotteries?${buildQuery(params)}`,
+  http.get<ListEnvelope<LotteryConfig>>(
+    `${endpoints.lotteries.base}?${buildQuery(params)}`,
     { cache: "no-store" }
   );
 
 const get = (id: string) =>
-  http.get<LotteryConfigDetailDTO>(`/api/lotteries/${id}`, { cache: "no-store" });
+  http.get<LotteryConfig>(endpoints.lotteries.byId.replace(":id", id), { cache: "no-store" });
 
 const liteList = (params: Record<string, unknown>) =>
-  http.get<LiteListe[]>(`/api/lotteries/lite?${buildQuery(params)}`, {
+  http.get<LiteListe[]>(`${endpoints.lotteries.lite}?${buildQuery(params)}`, {
     cache: "no-store",
   });
 
-const bridge = createCrudBridge<LotteryConfigDetailDTO, string, LiteListe>({
+const bridge = createCrudBridge<LotteryConfig, string, LiteListe>({
   keyBase: ["lotteries"],
   list,
   get,
   liteList,
-  actions: {
-    create: createLotteryConfigAction,
-    update: updateLotteryConfigAction,
-    remove: deleteLotteryConfigAction,
-  },
-  getIdFromActionInput: (input) => (input as { id?: string } | undefined)?.id,
+  create: (input: any) => http.post(endpoints.lotteries.base, transformLotteryInput(input)),
+  update: ({ id, ...input }: any) =>
+    http.patch(endpoints.lotteries.byId.replace(":id", id), transformLotteryInput(input)),
+  remove: ({ id }: { id: string }) =>
+    http.delete(endpoints.lotteries.byId.replace(":id", id)),
+  getIdFromInput: (input) => (input as { id?: string } | undefined)?.id,
 });
 
 export const useLotteriesList = bridge.useList!;
 export const useLotteryItem = bridge.useItem!;
 export const useLotteriesLite = bridge.useLite!;
-export const useCreateLottery = bridge.useCreateAction!;
-export const useUpdateLottery = bridge.useUpdateAction!;
-export const useDeleteLottery = bridge.useRemoveAction!;
+export const useCreateLottery = bridge.useCreateMutation!;
+export const useUpdateLottery = bridge.useUpdateMutation!;
+export const useDeleteLottery = bridge.useRemoveMutation!;
 
 export const LOTTERY_KEYS = {
   all: ["lotteries"] as const,

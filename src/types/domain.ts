@@ -134,3 +134,32 @@ export interface CampaignStatsDaily {
   ctaClicks: number;
   reviewDelta?: number;
 }
+
+export type LotteryCooldown = 'one_hour' | 'one_day' | 'one_week';
+
+export interface LotteryGift {
+  id: string;
+  name: string;
+  kind: 'free_item' | 'discount' | 'credit' | 'other';
+  weight: number;
+  imageUrl?: string;
+  rewardLabel: string;
+  minPurchaseAmount?: number;
+  minPurchaseCurrency?: string;
+  validityDays?: number;
+}
+
+export interface LotteryConfig {
+  id: string;
+  merchantId: string;
+  merchantName?: string | null;
+  name: string;
+  enabled: boolean;
+  playLimitPerUser: number;
+  cooldown: LotteryCooldown;
+  noWinWeight: number;
+  guaranteeWinOnFirstPlay: boolean;
+  createdAt: ISODate;
+  updatedAt: ISODate;
+  gifts: LotteryGift[];
+}

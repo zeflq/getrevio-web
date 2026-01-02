@@ -44,8 +44,8 @@ export function useEditPageForm<
     onSuccess?: () => void;
     onError?: (error: unknown) => void;
   }) => {
-    execute: (payload: any) => void;
-    isExecuting: boolean;
+    mutateAsync: (payload: any) => Promise<any>;
+    isPending: boolean;
   };
 
   /** Zod schema for validation */
@@ -147,7 +147,7 @@ export function useEditPageForm<
   }, [entity, isHydrated]); // Only depend on entity and isHydrated - form.reset and entityToFormValues are stable
 
   // Update mutation
-  const { execute, isExecuting } = useUpdateMutation({
+  const { mutateAsync, isPending } = useUpdateMutation({
     onSuccess: () => {
       toast.success(successMessage);
       // Clear dirty state immediately after a successful save.
@@ -168,10 +168,10 @@ export function useEditPageForm<
   });
 
   // Submit handler
-  const onSubmit = form.handleSubmit((values) => {
+  const onSubmit = form.handleSubmit(async (values) => {
     try {
       const payload = formValuesToPayload(values, entity);
-      execute({ id, ...payload } as any);
+      await mutateAsync({ id, ...payload } as any);
     } catch (error) {
       toast.error(readableError(error, "Validation failed"));
     }
@@ -195,7 +195,7 @@ export function useEditPageForm<
     entity,
     isReady,
     isLoading,
-    isSubmitting: isExecuting,
+    isSubmitting: isPending,
     onSubmit,
     onReset,
     resetFromEntity,

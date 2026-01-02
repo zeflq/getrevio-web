@@ -434,6 +434,7 @@ return (
 - [x] Onboarding (`useCompleteOnboarding`)
 - [x] **Places** (Phase 1) - ✅ Hook migrated, types from domain.ts, EditPlaceSheet fixed
 - [x] **Campaigns** (Phase 2) - ✅ Hook migrated, types from domain.ts, all components updated, server folder deleted, API routes deleted
+- [x] **Lotteries** (Phase 2) - ✅ Hook migrated, types added to domain.ts (LotteryConfig, LotteryGift, LotteryCooldown), components updated, server folder deleted
 
 ### In Progress 🔄
 - [ ] None currently
@@ -441,7 +442,6 @@ return (
 ### Pending ⏳
 - [ ] Merchants
 - [ ] Landings
-- [ ] Lotteries
 - [ ] Shortlinks
 - [ ] Themes
 - [ ] Google Places

@@ -27,7 +27,7 @@ export function CreateLotteryDialog({
   merchantsLite = [],
   onSuccess,
 }: CreateLotteryDialogProps) {
-  const { execute, isExecuting } = useCreateLottery<LotteryConfigCreateFormValues, { ok?: true }>({
+  const { mutateAsync, isPending } = useCreateLottery<LotteryConfigCreateFormValues, { ok?: true }>({
     onSuccess: () => {
       resetForm();
       onOpenChange(false);
@@ -71,13 +71,13 @@ export function CreateLotteryDialog({
     });
 
   const onSubmit = (values: LotteryConfigCreateFormValues) => {
-    execute(values);
+    mutateAsync(values);
   };
 
   type MethodsWithSlot = typeof methods & { _slot?: React.ReactNode };
   (methods as MethodsWithSlot)._slot = (
       <LotteryFormFields
-        disabled={isExecuting}
+        disabled={isPending}
         merchantId={merchantId}
         merchantsLite={merchantsLite}
         showGifts={false}
@@ -97,9 +97,9 @@ export function CreateLotteryDialog({
       description="Configure a lottery and its gifts."
       methods={methods}
       onSubmit={onSubmit}
-      isBusy={isExecuting}
+      isBusy={isPending}
       isReady={true}
-      submitLabel={isExecuting ? "Creating..." : "Create Lottery"}
+      submitLabel={isPending ? "Creating..." : "Create Lottery"}
     />
   );
 }
