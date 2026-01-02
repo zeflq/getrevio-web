@@ -5,7 +5,6 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
-import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 
 import { useRouter } from "@/i18n/navigation";
 import { DialogForm } from "@/components/form/DialogForm";
@@ -14,13 +13,11 @@ import type { LiteListe } from "@/types/lists";
 import {
   landingFormSchema,
   type LandingFormValues,
-  type LandingCreateInput,
   type LandingBelongsTo,
 } from "../model/landingSchema";
 import { useCreateLanding } from "../hooks/useLandingCrud";
 import { LandingFormFields } from "./LandingFormFields";
 import { buildLandingPayload, createLandingFormDefaults } from "../lib/landingForm.mappers";
-import { useLandingSlugCheck } from "../hooks/useLandingSlugCheck";
 
 export interface CreateLandingDialogProps {
   open: boolean;
@@ -43,19 +40,20 @@ export function CreateLandingDialog({
 }: CreateLandingDialogProps) {
   const t = useTranslations("landings.createDialog");
   const locale = useLocale();
-  const tForm = useTranslations("landings.form");
   const router = useRouter();
   const defaultValues = React.useMemo(
     () => createLandingFormDefaults({ merchantId, belongsTo: initialBelongsTo }),
     [merchantId, initialBelongsTo]
   );
 
-  const { execute, isExecuting } = useCreateLanding<LandingCreateInput, { id: string }>({
-    onSuccess: ({ data }) => {
+  const { mutateAsync, isPending } = useCreateLanding({
+    onSuccess: (data) => {
       resetForm();
       onOpenChange(false);
       onSuccess?.();
-      router.push(`${redirectBasePath}/${data.id}/edit`);
+      if (data?.id) {
+        router.push(`${redirectBasePath}/${data.id}/edit`);
+      }
     },
   });
 
@@ -65,7 +63,7 @@ export function CreateLandingDialog({
     defaultValues,
   });
 
-  const { reset, setValue, watch } = methods;
+  const { reset, setValue } = methods;
   React.useEffect(() => {
     if (!open) {
       reset(defaultValues);
@@ -86,46 +84,16 @@ export function CreateLandingDialog({
 
   const onSubmit = (data: LandingFormValues) => {
     const payload = buildLandingPayload(data, { seedTemplateContent: true }, locale);
-    execute(payload);
+    mutateAsync(payload);
   };
-
-  const slugValue = watch("settings.slug");
-  const [debouncedSlug, setDebouncedSlug] = React.useState("");
-  React.useEffect(() => {
-    const handle = setTimeout(() => setDebouncedSlug(slugValue ?? ""), 300);
-    return () => clearTimeout(handle);
-  }, [slugValue]);
-
-  const { data: slugCheck, isFetching: slugChecking } = useLandingSlugCheck(
-    debouncedSlug || undefined
-  );
-  const slugExists = !!slugCheck?.exists;
-
-  const slugSuffix = slugChecking ? (
-    <Loader2 className="h-4 w-4 text-muted-foreground animate-spin" aria-hidden="true" />
-  ) : debouncedSlug ? (
-    slugExists ? (
-      <AlertCircle className="h-4 w-4 text-destructive" aria-hidden="true" />
-    ) : (
-      <CheckCircle2 className="h-4 w-4 text-emerald-600" aria-hidden="true" />
-    )
-  ) : null;
-
-  const slugDescription = debouncedSlug
-    ? slugExists
-      ? tForm("slugTaken")
-      : tForm("slugAvailable")
-    : undefined;
 
   type MethodsWithSlot = typeof methods & { _slot?: React.ReactNode };
   (methods as MethodsWithSlot)._slot = (
     <LandingFormFields
       isEdit={false}
-      disabled={isExecuting}
+      disabled={isPending}
       merchantId={merchantId}
       merchantsLite={merchantsLite}
-      slugSuffix={slugSuffix}
-      slugDescription={slugDescription}
     />
   );
 
@@ -140,9 +108,9 @@ export function CreateLandingDialog({
       description={t("description")}
       methods={methods}
       onSubmit={onSubmit}
-      isBusy={isExecuting}
+      isBusy={isPending}
       isReady={true}
-      submitLabel={isExecuting ? t("submitCreating") : t("submitLabel")}
+      submitLabel={isPending ? t("submitCreating") : t("submitLabel")}
     />
   );
 }

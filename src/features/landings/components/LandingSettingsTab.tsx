@@ -17,7 +17,6 @@ export function LandingSettingsTab({ isSubmitting, tenantId, landing }: Props) {
           disabled={isSubmitting}
           merchantId={tenantId ?? landing?.merchantId}
           merchantsLite={[] as LiteListe[]}
-          existingSlug={landing?.slug}
         />
       </EditSection>
     </div>

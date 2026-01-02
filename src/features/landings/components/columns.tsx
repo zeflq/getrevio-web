@@ -8,7 +8,7 @@ import {
   type iconAction,
 } from "@/shared/ui/IconActionGroup";
 
-import type { LandingListItem } from "../server/mappers";
+import type { Landing } from "@/types/domain";
 
 type LandingColumnLabels = {
   nameHeader: string;
@@ -49,7 +49,7 @@ const formatDate = (value?: string | null) => {
 
 type LandingColumnOptions = {
   onEdit: (id: string) => void;
-  onDelete: (landing: LandingListItem) => void;
+  onDelete: (landing: Landing) => void;
   showMerchantColumn?: boolean;
   labels?: Partial<LandingColumnLabels>;
 };
@@ -59,9 +59,9 @@ const mergeLabels = (labels?: Partial<LandingColumnLabels>): LandingColumnLabels
   ...labels,
 });
 
-export function landingColumns(opts: LandingColumnOptions): ColumnDef<LandingListItem>[] {
+export function landingColumns(opts: LandingColumnOptions): ColumnDef<Landing>[] {
   const labels = mergeLabels(opts.labels);
-  const columns: ColumnDef<LandingListItem>[] = [
+  const columns: ColumnDef<Landing>[] = [
     {
       accessorKey: "name",
       header: labels.nameHeader,

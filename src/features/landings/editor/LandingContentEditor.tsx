@@ -6,7 +6,7 @@ import { useLocale } from "next-intl";
 
 import { createBlockByKind, type LandingBlock, type LandingBlockKind } from "../blocks";
 import type { LandingBelongsTo, LandingFormValues } from "../model/landingSchema";
-import type { LandingListItem } from "../server/mappers";
+import type { Landing } from "@/types/domain";
 import { getTemplateByIdForLocale } from "../templates";
 import type { TemplateBlockDefinition } from "../templates/types";
 import { getTemplateFixedCountMap } from "../templates/utils";
@@ -16,7 +16,7 @@ import { BlockList } from "./block/BlockList";
 import { clone, createId } from "../utils/serialization";
 
 interface LandingContentEditorProps {
-  landing?: LandingListItem | null;
+  landing?: Landing | null;
   disabled?: boolean;
 }
 

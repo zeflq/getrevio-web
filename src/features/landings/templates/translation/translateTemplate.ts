@@ -157,12 +157,10 @@ export function translateTemplate(
   });
 
   // Get translated template meta
-  const templateMeta = meta.meta
-    ? {
-        name: meta.meta.name[locale] || meta.meta.name.en,
-        description: meta.meta.description[locale] || meta.meta.description.en,
-      }
-    : undefined;
+  const templateMeta ={
+      name: meta.meta.name[locale] || meta.meta.name.en,
+      description: meta.meta.description[locale] || meta.meta.description.en,
+    }
 
   return {
     id: definition.id,

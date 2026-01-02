@@ -7,6 +7,5 @@ export * from "./components/LandingContentTab";
 export * from "./components/LandingEditSkeleton";
 export * from "./components/LandingNotFoundState";
 export * from "./hooks/useLandingCrud";
-export * from "./hooks/useLandingSlugCheck";
 export * from "./hooks/usePublishAction";
 export * from "./hooks/useUnpublishAction";

@@ -16,7 +16,7 @@ import {
 import { EmptyState } from "../ui/EmptyState";
 import type { LandingBlockField } from "../hooks/useBlocksFieldArray";
 import type { LandingBelongsTo } from "../../model/landingSchema";
-import type { LandingListItem } from "../../server/mappers";
+import type { Landing } from "@/types/domain";
 
 import { BlockActions } from "./BlockActions";
 import { BlockCard } from "./BlockCard";
@@ -33,7 +33,7 @@ interface BlockListProps {
   template?: LandingTemplate | null;
   disabled?: boolean;
   belongsTo?: LandingBelongsTo | null;
-  landing?: LandingListItem | null;
+  landing?: Landing | null;
 }
 
 export function BlockList({

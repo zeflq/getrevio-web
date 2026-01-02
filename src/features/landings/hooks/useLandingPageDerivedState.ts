@@ -2,12 +2,12 @@
 
 import { buttonVariants } from "@/components/ui/button";
 import type { VariantProps } from "class-variance-authority";
-import type { LandingListItem } from "../server/mappers";
+import type { Landing } from "@/types/domain";
 
 type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
 
 type DerivedStateArgs = {
-  landing: LandingListItem | null;
+  landing: Landing | null;
   t: ReturnType<typeof import("next-intl").useTranslations>;
 };
 

@@ -36,15 +36,9 @@ export type LandingBelongsToExternal = {
 /** =========================
  *  Settings & Form Schemas
  *  ========================= */
-const alphanumericSlug = z
-  .string()
-  .min(1, "Slug is required")
-  .regex(/^[a-zA-Z0-9]+$/, "Slug must contain only letters and numbers");
-
 export const landingSettingsSchema = z.object({
   merchantId: z.string().min(1, "Merchant is required"),
   name: z.string().min(1, "Name is required"),
-  slug: alphanumericSlug,
   status: landingStatusEnum.default("draft"),
 });
 
@@ -75,11 +69,11 @@ export type LandingFormData = z.output<typeof landingFormSchema>; // OUTPUT (sty
  *  ========================= */
 const landingPayloadCore = z.object({
   merchantId: z.string().min(1, "Merchant is required"),
+  placeId: z.string().min(1).optional(),
+  campaignId: z.string().min(1).optional(),
   name: z.string().min(1, "Name is required"),
-  slug: alphanumericSlug,
   //status: landingStatusEnum.default("draft"),
   content: LandingContentSchema,
-  belongsTo: landingBelongsToSchema,
   templateId: z.string().nullable().optional(),
   themeId: z.string().nullable().optional(),
 });
@@ -90,6 +84,21 @@ const landingPayloadCore = z.object({
 
 export const landingCreateSchema = landingPayloadCore.extend({
   content: LandingContentCreateSchema,
+}).superRefine((data, ctx) => {
+  const hasPlace = Boolean(data.placeId);
+  const hasCampaign = Boolean(data.campaignId);
+  if (hasPlace === hasCampaign) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["placeId"],
+      message: "Provide either placeId or campaignId",
+    });
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["campaignId"],
+      message: "Provide either placeId or campaignId",
+    });
+  }
 });
 export const landingUpdateSchema = landingPayloadCore.partial();
 

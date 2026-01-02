@@ -23,9 +23,6 @@ type Props = {
   disabled?: boolean;
   merchantId?: string;
   merchantsLite?: LiteListe[];
-  slugSuffix?: React.ReactNode;
-  slugDescription?: string;
-  existingSlug?: string;
 };
 
 export function LandingFormFields({
@@ -33,9 +30,6 @@ export function LandingFormFields({
   disabled,
   merchantId,
   merchantsLite = [],
-  slugSuffix,
-  slugDescription,
-  existingSlug,
 }: Props) {
   const {
     register,
@@ -108,15 +102,6 @@ export function LandingFormFields({
         disabled={disabled}
       />
 
-      <RHFInput
-        name="settings.slug"
-        label={t("slug")}
-        placeholder={isEdit ? existingSlug ?? "" : t("slugPlaceholder")}
-        description={isEdit ? t("slugLocked") : slugDescription}
-        requiredStar
-        disabled={disabled || isEdit}
-        suffix={slugSuffix}
-      />
       <RHFCombobox<LiteListe>
         name="templateId"
         label={t("template")}

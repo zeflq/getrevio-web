@@ -11,7 +11,7 @@ import {
 } from "../model/landingContentSchema";
 import { createBlockByKind } from "../blocks";
 import { getTemplateByIdForLocale } from "../templates";
-import type { LandingListItem } from "../server/mappers";
+import type { Landing } from "@/types/domain";
 
 type LandingFormShape = LandingFormValues;
 
@@ -81,7 +81,6 @@ export const createLandingFormDefaults = (args?: {
   settings: {
     merchantId: args?.merchantId ?? "",
     name: "",
-    slug: "",
     status: "draft",
   },
   belongsTo: ensureBelongsToForForm(args?.belongsTo),
@@ -90,19 +89,26 @@ export const createLandingFormDefaults = (args?: {
   themeId: undefined,
 });
 
-export const fillLandingFormFromEntity = (landing?: LandingListItem | null): LandingFormValues => {
+export const fillLandingFormFromEntity = (landing?: Landing | null): LandingFormValues => {
   if (!landing) {
     return createLandingFormDefaults();
   }
+
+  const belongsToSource =
+    landing.belongsTo ??
+    (landing.placeId
+      ? { type: "place", placeId: landing.placeId }
+      : landing.campaignId
+        ? { type: "campaign", campaignId: landing.campaignId }
+        : undefined);
 
   return {
     settings: {
       merchantId: landing.merchantId ?? "",
       name: landing.name ?? "",
-      slug: landing.slug ?? "",
       status: landing.status ?? "draft",
     },
-    belongsTo: ensureBelongsToForForm(landing.belongsTo ?? undefined),
+    belongsTo: ensureBelongsToForForm(belongsToSource),
     content: ensureLandingContentShape(landing.contentDraft),
     templateId: landing.templateId ?? "",
     themeId: landing.themeId ?? undefined,
@@ -136,12 +142,13 @@ export const buildLandingPayload = (
     seededTemplateContent ?? baseContent
   );
 
+  const belongsTo = ensureBelongsToForForm(values.belongsTo);
   return {
     merchantId: values.settings.merchantId,
+    placeId: belongsTo.type === "place" ? belongsTo.placeId : undefined,
+    campaignId: belongsTo.type === "campaign" ? belongsTo.campaignId : undefined,
     name: values.settings.name,
-    slug: values.settings.slug,
     content,
-    belongsTo: values.belongsTo,
     templateId: values.templateId ?? null,
     themeId: values.themeId ?? null,
   };

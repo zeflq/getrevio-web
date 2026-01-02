@@ -163,3 +163,33 @@ export interface LotteryConfig {
   updatedAt: ISODate;
   gifts: LotteryGift[];
 }
+
+export type LandingStatus = 'draft' | 'published' | 'archived';
+
+export interface LandingContent {
+  layout: 'full' | 'boxed';
+  blocks: any[]; // Complex block structure
+}
+
+export interface Landing {
+  id: string;
+  merchantId: string;
+  name: string;
+  slug: string;
+  status: LandingStatus;
+  contentDraft: LandingContent;
+  contentPublished?: LandingContent | null;
+  templateId?: string | null;
+  themeId?: string | null;
+  placeId?: string | null;
+  campaignId?: string | null;
+  publishedAt?: ISODate | null;
+  createdAt: ISODate;
+  updatedAt: ISODate;
+  belongsTo?: {
+    type: 'place' | 'campaign';
+    id: string;
+    label?: string | null;
+    googlePlaceId?: string | null;
+  } | null;
+}

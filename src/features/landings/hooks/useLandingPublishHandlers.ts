@@ -3,12 +3,12 @@
 import * as React from "react";
 import { toast } from "sonner";
 
-import type { LandingListItem } from "../server/mappers";
+import type { Landing } from "@/types/domain";
 import type { LandingPublishAction } from "./usePublishAction";
 import type { LandingUnpublishAction } from "./useUnpublishAction";
 
 type PublishHandlersArgs = {
-  landing: LandingListItem | null;
+  landing: Landing | null;
   publishAction: LandingPublishAction;
   unpublishAction: LandingUnpublishAction;
   hasUnpublishedChanges: boolean;
@@ -26,12 +26,12 @@ export function useLandingPublishHandlers({
   readableError,
   router,
 }: PublishHandlersArgs) {
-  const isToggleLoading = publishAction.isExecuting || unpublishAction.isExecuting;
+  const isToggleLoading = publishAction.isPending || unpublishAction.isPending;
 
   const handlePublish = React.useCallback(async () => {
     if (!landing?.merchantId) return;
     try {
-      await publishAction.execute({ id: landing.id, merchantId: landing.merchantId });
+      await publishAction.mutateAsync({ id: landing.id, merchantId: landing.merchantId });
       toast.success(
         hasUnpublishedChanges ? tToasts("publishedChanges") : tToasts("published")
       );
@@ -44,7 +44,7 @@ export function useLandingPublishHandlers({
   const handleUnpublish = React.useCallback(async () => {
     if (!landing?.merchantId) return;
     try {
-      await unpublishAction.execute({ id: landing.id, merchantId: landing.merchantId });
+      await unpublishAction.mutateAsync({ id: landing.id, merchantId: landing.merchantId });
       toast.success(tToasts("unpublished"));
       router.refresh();
     } catch (error) {

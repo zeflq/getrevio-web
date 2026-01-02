@@ -13,7 +13,7 @@ export interface DeleteLandingDialogProps {
 }
 
 export function DeleteLandingDialog({ id, name, open, onOpenChange }: DeleteLandingDialogProps) {
-  const { execute, isExecuting } = useDeleteLanding<{ id: string }, { ok?: boolean }>({
+  const { mutateAsync, isPending } = useDeleteLanding<{ id: string }, { ok?: boolean }>({
     onSuccess: () => onOpenChange(false),
   });
 
@@ -28,8 +28,10 @@ export function DeleteLandingDialog({ id, name, open, onOpenChange }: DeleteLand
       inputPlaceholder="Enter landing name"
       confirmLabel="Delete Landing"
       confirmVariant="destructive"
-      loading={isExecuting}
-      onConfirm={() => execute({ id })}
+      loading={isPending}
+      onConfirm={async () => {
+        await mutateAsync({ id });
+      }}
       preventCloseWhileLoading
     />
   );

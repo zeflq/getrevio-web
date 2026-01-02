@@ -6,7 +6,7 @@ import { useFormContext } from "react-hook-form";
 
 import { landingBlockPluginMap, type LandingBlock } from "../../blocks";
 import type { LandingBelongsTo, LandingFormValues } from "../../model/landingSchema";
-import type { LandingListItem } from "../../server/mappers";
+import type { Landing } from "@/types/domain";
 import type { LandingTemplate, TemplateBlockDefinition } from "../../templates/types";
 import { resolveBlockLabel, resolveBlockDescription, type Locale } from "../../utils/translations";
 
@@ -28,7 +28,7 @@ interface BlockCardProps {
   disableDuplicate?: boolean;
   disableDelete?: boolean;
   belongsTo?: LandingBelongsTo | null;
-  landing?: LandingListItem | null;
+  landing?: Landing | null;
   template?: LandingTemplate | null;
 }
 

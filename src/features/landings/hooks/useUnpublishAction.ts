@@ -1,9 +1,8 @@
 "use client";
 
-import { QueryKey, useQueryClient } from "@tanstack/react-query";
-import { useAction } from "next-safe-action/hooks";
-
-import { unpublishLandingAction } from "@/features/landings/server/actions";
+import { QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
+import { http } from "@/shared/lib/http";
+import endpoints from "@/shared/api/endpoints.json";
 
 type LandingActionInput = {
   id: string;
@@ -24,21 +23,25 @@ const landingKeys = {
 
 export function useUnpublishAction(options?: ActionHookOptions) {
   const qc = useQueryClient();
-  const { onSuccess, onError, extraInvalidateKeys, ...rest } = options ?? {};
-  return useAction(unpublishLandingAction, {
-    ...rest,
-    onSuccess: (args) => {
-      const input = args.input as LandingActionInput;
+  const { onSuccess, onError, extraInvalidateKeys } = options ?? {};
+
+  return useMutation({
+    mutationFn: async (input: LandingActionInput) => {
+      return http.post(endpoints.landings.unpublish.replace(":id", input.id), {
+        merchantId: input.merchantId,
+      });
+    },
+    onSuccess: (data, input) => {
       qc.invalidateQueries({ queryKey: landingKeys.list });
       qc.invalidateQueries({ queryKey: landingKeys.lite });
       if (input?.id) {
         qc.invalidateQueries({ queryKey: landingKeys.item(input.id) });
       }
       extraInvalidateKeys?.forEach((key) => qc.invalidateQueries({ queryKey: key }));
-      onSuccess?.({ data: args.data, input });
+      onSuccess?.({ data, input });
     },
-    onError: (args) => {
-      onError?.({ error: args.error, input: args.input as LandingActionInput });
+    onError: (error, input) => {
+      onError?.({ error, input });
     },
   });
 }
