@@ -4,7 +4,6 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -25,7 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { updateMerchantAction } from "../server/actions";
+import { useUpdateMerchant } from "../hooks/useMerchantCrud";
 
 const formSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters"),
@@ -54,12 +53,12 @@ export function MerchantSettingsForm({
     },
   });
 
-  const { execute, isExecuting } = useAction(updateMerchantAction, {
+  const { mutateAsync, isPending } = useUpdateMerchant({
     onSuccess: () => {
       form.reset({ name: form.getValues("name") });
       toast.success("Merchant details updated");
     },
-    onError: ({ error }) => {
+    onError: (error) => {
       const message =
         error instanceof Error ? error.message : "Unable to save changes. Please try again.";
       toast.error(message);
@@ -76,11 +75,12 @@ export function MerchantSettingsForm({
         <form
           onSubmit={form.handleSubmit((values) => {
             const normalizedName = values.name.trim();
-            execute({
+            mutateAsync({
               id: merchantId,
               name: normalizedName,
             });
           })}
+          className="space-y-6"
         >
           <CardContent className="space-y-4">
             <FormField
@@ -112,12 +112,12 @@ export function MerchantSettingsForm({
               <FormLabel>Email</FormLabel>
               <Input type="email" value={defaultEmail ?? ""} disabled readOnly />
             </div>
-            <div className="flex justify-end">
-                <Button type="submit" disabled={isExecuting || !form.formState.isDirty}>
-                  {isExecuting ? "Saving…" : "Save changes"}
-                </Button>
-            </div>
           </CardContent>
+          <CardFooter className="flex justify-end">
+            <Button type="submit" disabled={isPending || !form.formState.isDirty}>
+              {isPending ? "Saving…" : "Save changes"}
+            </Button>
+          </CardFooter>
         </form>
       </Form>
     </Card>

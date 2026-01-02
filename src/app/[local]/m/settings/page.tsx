@@ -1,30 +1,14 @@
-"use server";
+"use client";
 
-import { redirect } from "next/navigation";
+import { MerchantSettingsPage as MerchantSettingsPageClient } from "@/features/merchant-settings/components/MerchantSettingsPage";
+import { useActiveTenantId } from "@/hooks/useActiveTenantId";
 
-import { getServerSession } from "@/lib/auth-server";
-import { MerchantSettingsSection, loadMerchantSettings } from "@/features/merchant-settings";
+export default function MerchantSettingsPage() {
+  const tenantId = useActiveTenantId();
 
-export default async function MerchantSettingsPage() {
-  const sessionResult = await getServerSession();
-  if (!sessionResult?.user) {
-    redirect("/login");
+  if (!tenantId) {
+    return null;
   }
 
-  const { session } = sessionResult;
-  const activeOrganizationId = session?.activeOrganizationId ?? null;
-  const settingsData = await loadMerchantSettings({ tenantId: activeOrganizationId });
-
-  return (
-    <div className="flex flex-1 flex-col gap-6 p-4 pt-0">
-      <header className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">Manage your information and defaults.</p>
-      </header>
-
-      <div className="w-full max-w-2xl space-y-6">
-        <MerchantSettingsSection {...settingsData} />
-      </div>
-    </div>
-  );
+  return <MerchantSettingsPageClient tenantId={tenantId} />;
 }

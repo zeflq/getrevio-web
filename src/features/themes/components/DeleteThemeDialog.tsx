@@ -18,7 +18,10 @@ export function DeleteThemeDialog({
   open,
   onOpenChange,
 }: DeleteThemeDialogProps) {
-  const { execute, isExecuting } = useDeleteTheme<{ id: string; merchantId: string }, { ok?: boolean }>({
+  const { mutateAsync, isPending } = useDeleteTheme<
+    { id: string; merchantId: string },
+    { ok?: boolean }
+  >({
     onSuccess: () => onOpenChange(false),
   });
 
@@ -33,8 +36,8 @@ export function DeleteThemeDialog({
       inputPlaceholder="Enter theme name"
       confirmLabel="Delete Theme"
       confirmVariant="destructive"
-      loading={isExecuting}
-      onConfirm={() => execute({ id: themeId, merchantId })}
+      loading={isPending}
+      onConfirm={() => mutateAsync({ id: themeId, merchantId })}
       preventCloseWhileLoading
     />
   );

@@ -24,7 +24,7 @@ export function CreateMerchantDialog({
   onOpenChange,
 }: CreateMerchantDialogProps) {
   // Wire the success handler here so we can close/reset after the action completes.
-  const { execute, isExecuting } = useCreateMerchant<MerchantCreateInput, { id?: string }>({
+  const { mutateAsync, isPending } = useCreateMerchant<MerchantCreateInput, { id?: string }>({
     onSuccess: () => {
       resetForm();
       onOpenChange(false);
@@ -55,14 +55,13 @@ export function CreateMerchantDialog({
     });
 
   const onSubmit = (data: MerchantCreateInput) => {
-    // next-safe-action's execute is fire-and-forget; success is handled via onSuccess above
-    execute(data);
+    mutateAsync(data);
   };
 
   // Provide children to the DialogForm (rendered inside RHF context)
   type MethodsWithSlot = typeof methods & { _slot?: React.ReactNode };
   (methods as MethodsWithSlot)._slot = (
-    <MerchantFormFields disabled={isExecuting} showPlanAndStatus />
+    <MerchantFormFields disabled={isPending} showPlanAndStatus />
   );
 
   return (
@@ -76,9 +75,9 @@ export function CreateMerchantDialog({
       description="Add a new merchant to the system. Fill in the required information below."
       methods={methods}
       onSubmit={onSubmit}
-      isBusy={isExecuting}
+      isBusy={isPending}
       isReady={true}
-      submitLabel={isExecuting ? "Creating..." : "Create Merchant"}
+      submitLabel={isPending ? "Creating..." : "Create Merchant"}
     />
   );
 }

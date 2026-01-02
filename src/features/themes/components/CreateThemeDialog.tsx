@@ -9,9 +9,8 @@ import { RHFCombobox } from "@/components/form/controls";
 import ThemeFormFields from "./ThemeFormFields";
 
 import { themeCreateSchema, type ThemeCreateInput } from "../model/themeSchema";
-import { useCreateTheme } from "../hooks/useThemeCrud";
+import { useCreateTheme, useThemePresets } from "../hooks/useThemeCrud";
 import type { LiteListe } from "@/types/lists";
-import { buildThemeMeta } from "../lib/themeMeta";
 
 export interface CreateThemeDialogProps {
   open: boolean;
@@ -28,7 +27,11 @@ export function CreateThemeDialog({
   merchantsLite = [],
   onSuccess,
 }: CreateThemeDialogProps) {
-  const { execute, isExecuting } = useCreateTheme<ThemeCreateInput, { id?: string }>({
+  // Fetch presets from API
+  const { data: presets = [] } = useThemePresets();
+  const defaultPreset = presets.find((p) => p.id === "neutral") ?? presets[0];
+
+  const { mutateAsync, isPending } = useCreateTheme<ThemeCreateInput, { id?: string }>({
     onSuccess: () => {
       resetForm();
       onOpenChange(false);
@@ -42,7 +45,13 @@ export function CreateThemeDialog({
     defaultValues: {
       merchantId: merchantId ?? "",
       name: "",
-      meta: buildThemeMeta(),
+      meta: defaultPreset
+        ? {
+            presetKey: defaultPreset.id,
+            palette: defaultPreset.palette,
+            tokens: defaultPreset.tokens,
+          }
+        : undefined,
     },
   });
 
@@ -61,7 +70,13 @@ export function CreateThemeDialog({
     reset({
       merchantId: merchantId ?? "",
       name: "",
-      meta: buildThemeMeta(),
+      meta: defaultPreset
+        ? {
+            presetKey: defaultPreset.id,
+            palette: defaultPreset.palette,
+            tokens: defaultPreset.tokens,
+          }
+        : undefined,
     });
 
   const onSubmit = (d: ThemeCreateInput) => {
@@ -70,7 +85,7 @@ export function CreateThemeDialog({
       meta: d.meta,
     };
 
-    execute(cleaned);
+    mutateAsync(cleaned);
   };
 
   // Provide the inner fields to DialogForm inside RHF context
@@ -87,10 +102,10 @@ export function CreateThemeDialog({
           placeholder="Select merchant"
           searchPlaceholder="Search merchants…"
           requiredStar
-          disabled={isExecuting}
+          disabled={isPending}
         />
       )}
-      <ThemeFormFields disabled={isExecuting} />
+      <ThemeFormFields disabled={isPending} />
     </>
   );
 
@@ -105,9 +120,9 @@ export function CreateThemeDialog({
       description="Create a new theme for a merchant."
       methods={methods}
       onSubmit={onSubmit}
-      isBusy={isExecuting}
+      isBusy={isPending}
       isReady
-      submitLabel={isExecuting ? "Creating..." : "Create Theme"}
+      submitLabel={isPending ? "Creating..." : "Create Theme"}
       className="sm:max-w-[560px]"
     />
   );

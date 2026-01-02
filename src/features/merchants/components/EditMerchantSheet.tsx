@@ -27,7 +27,7 @@ export function EditMerchantSheet({
 }: EditMerchantSheetProps) {
   const { data: merchant, isLoading } = useMerchantItem(merchantId);
 
-  const { execute, isExecuting } = useUpdateMerchant<
+  const { mutateAsync, isPending } = useUpdateMerchant<
     { id: string } & MerchantUpdateInput,
     { ok?: boolean }
   >({
@@ -62,8 +62,7 @@ export function EditMerchantSheet({
   }, [merchant, reset]);
 
   const onSubmit = (data: MerchantUpdateInput) => {
-    // Server action expects flat input with id at root
-    execute({ id: merchantId, ...data });
+    mutateAsync({ id: merchantId, ...data });
   };
 
   const resetToLoaded = () => {
@@ -82,7 +81,7 @@ export function EditMerchantSheet({
     onOpenChange(nextOpen);
   };
 
-  const isBusy = isExecuting;
+  const isBusy = isPending;
   const isReady = !!merchant && !isLoading;
 
   return (

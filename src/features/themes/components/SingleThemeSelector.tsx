@@ -11,19 +11,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { landingThemes } from "@/features/landings/theme/themes";
-import type { ThemeListItem } from "@/features/themes/server/queries";
-import { useResetTheme } from "@/features/themes/hooks/useThemeCrud";
+import type { Theme } from "@/types/domain";
+import { useResetTheme, useThemePresets } from "@/features/themes/hooks/useThemeCrud";
 import { DEFAULT_THEME_PRESET_KEY } from "@/features/themes/lib/themeMeta";
 import type { ThemeMeta } from "@/types/domain";
 import { useTranslations } from "next-intl";
 
 type SingleThemeSelectorProps = {
   themeId: string;
-  theme?: ThemeListItem | null;
+  theme?: Theme | null;
 };
 
-const presetOptions = Object.values(landingThemes);
 const paletteLabels: Array<{ key: keyof ThemeMeta["palette"]; label: string }> = [
   { key: "primary", label: "Primary" },
   { key: "secondary", label: "Secondary" },
@@ -37,11 +35,14 @@ export function SingleThemeSelector({ themeId, theme }: SingleThemeSelectorProps
   const [presetKey, setPresetKey] = React.useState(currentPreset);
   const t = useTranslations("merchantSettings.theme");
 
+  // Fetch presets from API
+  const { data: presets = [], isLoading: presetsLoading } = useThemePresets();
+
   React.useEffect(() => {
     setPresetKey(theme?.meta?.presetKey ?? DEFAULT_THEME_PRESET_KEY);
   }, [theme?.meta?.presetKey]);
 
-  const { execute: resetTheme, isExecuting } = useResetTheme({
+  const { mutateAsync: resetTheme, isPending } = useResetTheme({
     onSuccess: () => {
       toast.success("Theme reset to preset");
     },
@@ -64,8 +65,10 @@ export function SingleThemeSelector({ themeId, theme }: SingleThemeSelectorProps
     });
   };
 
-  const palette =
-    landingThemes[presetKey]?.colors ?? landingThemes[DEFAULT_THEME_PRESET_KEY].colors;
+  // Get palette from fetched presets
+  const selectedPreset = presets.find((p) => p.id === presetKey);
+  const defaultPreset = presets.find((p) => p.id === DEFAULT_THEME_PRESET_KEY);
+  const palette = selectedPreset?.palette ?? defaultPreset?.palette;
 
   return (
     <div className="space-y-6">
@@ -74,12 +77,12 @@ export function SingleThemeSelector({ themeId, theme }: SingleThemeSelectorProps
           <p className="text-lg font-semibold">{t("title")}</p>
           <p className="text-sm text-muted-foreground">{t("description")}</p>
         </div>
-        <Select value={presetKey} onValueChange={setPresetKey}>
+        <Select value={presetKey} onValueChange={setPresetKey} disabled={presetsLoading}>
           <SelectTrigger size="sm">
-            <SelectValue placeholder={t("presetPlaceholder")} />
+            <SelectValue placeholder={presetsLoading ? "Loading..." : t("presetPlaceholder")} />
           </SelectTrigger>
           <SelectContent>
-            {presetOptions.map((preset) => (
+            {presets.map((preset) => (
               <SelectItem key={preset.id} value={preset.id}>
                 {preset.name}
               </SelectItem>
@@ -89,7 +92,7 @@ export function SingleThemeSelector({ themeId, theme }: SingleThemeSelectorProps
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        {paletteLabels.map((field) => (
+        {palette && paletteLabels.map((field) => (
           <div
             key={field.key}
             className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2"
@@ -108,11 +111,16 @@ export function SingleThemeSelector({ themeId, theme }: SingleThemeSelectorProps
             </div>
           </div>
         ))}
+        {!palette && presetsLoading && (
+          <p className="col-span-2 text-center text-sm text-muted-foreground">
+            Loading presets...
+          </p>
+        )}
       </div>
 
       <div className="flex justify-end">
-          <Button disabled={!theme?.merchantId || isExecuting} onClick={handleReset}>
-            {isExecuting ? t("resettingLabel") : t("resetButton")}
+          <Button disabled={!theme?.merchantId || isPending} onClick={handleReset}>
+            {isPending ? t("resettingLabel") : t("resetButton")}
           </Button>
       </div>
     </div>

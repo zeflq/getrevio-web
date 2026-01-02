@@ -38,7 +38,9 @@
   },
   "themes": {
     "base": "/api/v1/themes",
-    "byId": "/api/v1/themes/:id"
+    "lite": "/api/v1/themes/lite",
+    "byId": "/api/v1/themes/:id",
+    "presets": "/api/v1/themes/presets"
   },
   "shortlinks": {
     "base": "/api/v1/shortlinks",

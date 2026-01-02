@@ -60,30 +60,60 @@ export default function ThemeFormFields({ disabled }: { disabled?: boolean }) {
           label="Primary color"
           placeholder="#06B6D4"
           disabled={disabled}
+          suffix={
+            <span
+              className="flex h-4 w-4 rounded border border-gray-300"
+              style={{ backgroundColor: watch("meta.palette.primary") || "#06B6D4" }}
+            />
+          }
         />
         <RHFInput
           name="meta.palette.secondary"
           label="Secondary color"
           placeholder="#0EA5E9"
           disabled={disabled}
+          suffix={
+            <span
+              className="flex h-4 w-4 rounded border border-gray-300"
+              style={{ backgroundColor: watch("meta.palette.secondary") || "#0EA5E9" }}
+            />
+          }
         />
         <RHFInput
           name="meta.palette.accent"
           label="Accent color"
           placeholder="#F59E0B"
           disabled={disabled}
+          suffix={
+            <span
+              className="flex h-4 w-4 rounded border border-gray-300"
+              style={{ backgroundColor: watch("meta.palette.accent") || "#F59E0B" }}
+            />
+          }
         />
         <RHFInput
           name="meta.palette.background"
           label="Background color"
           placeholder="#F8FAFC"
           disabled={disabled}
+          suffix={
+            <span
+              className="flex h-4 w-4 rounded border border-gray-300"
+              style={{ backgroundColor: watch("meta.palette.background") || "#F8FAFC" }}
+            />
+          }
         />
         <RHFInput
           name="meta.palette.text"
           label="Text color"
           placeholder="#0F172A"
           disabled={disabled}
+          suffix={
+            <span
+              className="flex h-4 w-4 rounded border border-gray-300"
+              style={{ backgroundColor: watch("meta.palette.text") || "#0F172A" }}
+            />
+          }
         />
       </div>
     </div>

@@ -9,9 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SheetForm } from "@/components/form/SheetForm";
 
 import { themeUpdateSchema, type ThemeUpdateInput } from "../model/themeSchema";
-import { useThemeItem, useUpdateTheme } from "../hooks/useThemeCrud";
+import { useThemeItem, useUpdateTheme, useThemePresets } from "../hooks/useThemeCrud";
 import ThemeFormFields from "./ThemeFormFields";
-import { buildThemeMeta } from "../lib/themeMeta";
 
 export interface EditThemeSheetProps {
   themeId: string;
@@ -27,7 +26,12 @@ export function EditThemeSheet({
   onSuccess,
 }: EditThemeSheetProps) {
   const { data: theme, isLoading } = useThemeItem(themeId);
-  const { execute, isExecuting } = useUpdateTheme<
+
+  // Fetch presets from API for fallback
+  const { data: presets = [] } = useThemePresets();
+  const defaultPreset = presets.find((p) => p.id === "neutral") ?? presets[0];
+
+  const { mutateAsync, isPending } = useUpdateTheme<
     { id: string } & ThemeUpdateInput,
     { ok?: boolean }
   >({
@@ -44,7 +48,13 @@ export function EditThemeSheet({
       id: "",
       merchantId: "",
       name: "",
-      meta: buildThemeMeta(),
+      meta: defaultPreset
+        ? {
+            presetKey: defaultPreset.id,
+            palette: defaultPreset.palette,
+            tokens: defaultPreset.tokens,
+          }
+        : undefined,
     },
   });
   const { reset } = form;
@@ -56,9 +66,17 @@ export function EditThemeSheet({
       id: theme.id ?? "",
       merchantId: theme.merchantId ?? "",
       name: theme.name ?? "",
-      meta: theme.meta ?? buildThemeMeta(),
+      meta:
+        theme.meta ??
+        (defaultPreset
+          ? {
+              presetKey: defaultPreset.id,
+              palette: defaultPreset.palette,
+              tokens: defaultPreset.tokens,
+            }
+          : undefined),
     });
-  }, [theme, reset]);
+  }, [theme, reset, defaultPreset]);
 
   const onSubmit = (data: ThemeUpdateInput) => {
     const merchantId = theme?.merchantId;
@@ -70,10 +88,10 @@ export function EditThemeSheet({
       ...data,
       meta: data.meta,
     };
-    execute({ id: themeId, merchantId, ...cleaned });
+    mutateAsync({ id: themeId, merchantId, ...cleaned });
   };
 
-  const isBusy = isExecuting || isLoading;
+  const isBusy = isPending || isLoading;
 
   // Reset back to loaded values when closing the sheet
   const handleOpenChange = (next: boolean) => {
@@ -82,7 +100,15 @@ export function EditThemeSheet({
         id: theme.id ?? "",
         merchantId: theme.merchantId ?? "",
         name: theme.name ?? "",
-        meta: theme.meta ?? buildThemeMeta(),
+        meta:
+          theme.meta ??
+          (defaultPreset
+            ? {
+                presetKey: defaultPreset.id,
+                palette: defaultPreset.palette,
+                tokens: defaultPreset.tokens,
+              }
+            : undefined),
       });
     }
     onOpenChange(next);

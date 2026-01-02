@@ -1,8 +1,7 @@
-import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
+import { Card, CardDescription, CardHeader } from "@/components/ui/card";
 import { MerchantSettingsForm } from "@/features/merchants/components/MerchantSettingsForm";
 import { SingleThemeEditor } from "@/features/merchants/components/SingleThemeEditor";
-import { SingleThemeSelector } from "@/features/themes/components/SingleThemeSelector";
-import type { MerchantSettingsData } from "../server/loadMerchantSettings";
+import type { MerchantSettingsData } from "../hooks/useMerchantSettings";
 
 export function MerchantSettingsSection({
   merchant,
@@ -23,27 +22,16 @@ export function MerchantSettingsSection({
   }
 
   return (
-    <>
-        <MerchantSettingsForm
-          merchantId={merchant.id}
-          defaultName={merchant.name}
-          defaultEmail={merchant.email}
-          themes={themes}
-        />
+    <div className="space-y-6">
+      <MerchantSettingsForm
+        merchantId={merchant.id}
+        defaultName={merchant.name}
+        defaultEmail={merchant.email}
+        themes={themes}
+      />
       {singleThemeLite ? (
-        <>
-        <Card>
-          <CardContent className="space-y-6">
-            <SingleThemeEditor themeId={singleThemeLite.value} theme={singleTheme ?? undefined} />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="space-y-6">
-            <SingleThemeSelector themeId={singleThemeLite.value} theme={singleTheme ?? undefined} />
-          </CardContent>
-        </Card>
-        </>
+        <SingleThemeEditor themeId={singleThemeLite.value} theme={singleTheme ?? undefined} />
       ) : null}
-    </>
+    </div>
   );
 }

@@ -10,7 +10,7 @@ import type {
 import { buildLandingWhere } from "../../buildWhere";
 import { landingQueryPolicy } from "../../policy";
 import { mapLandingRow, type LandingListDTO } from "../../mappers";
-import { mapMerchantRow, type MerchantListDTO } from "@/features/merchants/server/mappers";
+//import { mapMerchantRow, type MerchantListDTO } from "@/features/merchants/server/mappers";
 import { landingLiteSelect, landingSelect } from "./landingSelects";
 import { LandingFilters } from "@/features/landings/model/landingSchema";
 

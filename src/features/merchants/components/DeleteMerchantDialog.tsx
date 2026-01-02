@@ -17,14 +17,14 @@ export function DeleteMerchantDialog({
   open,
   onOpenChange,
 }: DeleteMerchantDialogProps) {
-  const { execute, isExecuting } = useDeleteMerchant<{ id: string }, { ok?: boolean }>({
+  const { mutateAsync, isPending } = useDeleteMerchant<{ id: string }, { ok?: boolean }>({
     onSuccess: () => {
       onOpenChange(false);
     },
   });
 
   const handleConfirm = () => {
-    execute({ id: merchantId });
+    mutateAsync({ id: merchantId });
   };
 
   return (
@@ -38,7 +38,7 @@ export function DeleteMerchantDialog({
       inputPlaceholder="Enter merchant name"
       confirmLabel="Delete Merchant"
       confirmVariant="destructive"
-      loading={isExecuting}
+      loading={isPending}
       onConfirm={handleConfirm}
       preventCloseWhileLoading
     />

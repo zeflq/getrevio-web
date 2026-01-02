@@ -8,31 +8,49 @@ import { toast } from "sonner";
 
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import ThemeFormFields from "@/features/themes/components/ThemeFormFields";
 import { themeUpdateSchema, type ThemeUpdateInput } from "@/features/themes/model/themeSchema";
-import { useThemeItem, useUpdateTheme } from "@/features/themes/hooks/useThemeCrud";
-import type { ThemeListItem } from "@/features/themes/server/queries";
-import { buildThemeMeta } from "@/features/themes/lib/themeMeta";
+import { useThemeItem, useUpdateTheme, useThemePresets } from "@/features/themes/hooks/useThemeCrud";
+import type { Theme } from "@/types/domain";
 
 type Props = {
   themeId: string;
-  theme?: ThemeListItem | null;
+  theme?: Theme | null;
 };
 
 export function SingleThemeEditor({ themeId, theme }: Props) {
   const { data: fetchedTheme, isLoading } = useThemeItem(theme ? undefined : themeId);
   const resolvedTheme = theme ?? fetchedTheme;
+
+  // Fetch presets from API for fallback
+  const { data: presets = [] } = useThemePresets();
+  const defaultPreset = presets.find((p) => p.id === "neutral") ?? presets[0];
+
   const themeForm = useForm<ThemeUpdateInput>({
     resolver: zodResolver(themeUpdateSchema),
     mode: "onSubmit",
     defaultValues: {
       name: "",
-      meta: buildThemeMeta(),
+      meta: defaultPreset
+        ? {
+            presetKey: defaultPreset.id,
+            palette: defaultPreset.palette,
+            tokens: defaultPreset.tokens,
+          }
+        : undefined,
     },
   });
   const { reset, handleSubmit, getValues, formState } = themeForm;
 
-  const { execute, isExecuting } = useUpdateTheme<
+  const { mutateAsync, isPending } = useUpdateTheme<
     { id: string } & ThemeUpdateInput,
     { ok?: boolean }
   >({
@@ -46,9 +64,17 @@ export function SingleThemeEditor({ themeId, theme }: Props) {
     if (!resolvedTheme) return;
     reset({
       name: resolvedTheme.name ?? "",
-      meta: resolvedTheme.meta ?? buildThemeMeta(),
+      meta:
+        resolvedTheme.meta ??
+        (defaultPreset
+          ? {
+              presetKey: defaultPreset.id,
+              palette: defaultPreset.palette,
+              tokens: defaultPreset.tokens,
+            }
+          : undefined),
     });
-  }, [resolvedTheme, reset]);
+  }, [resolvedTheme, reset, defaultPreset]);
 
   const onSubmit = (values: ThemeUpdateInput) => {
     const merchantId = resolvedTheme?.merchantId;
@@ -61,29 +87,29 @@ export function SingleThemeEditor({ themeId, theme }: Props) {
       ...values,
       meta: values.meta,
     };
-    execute({ id: themeId, merchantId, ...cleaned });
+    mutateAsync({ id: themeId, merchantId, ...cleaned });
   };
 
-  const busy = isExecuting || (!theme && isLoading);
+  const busy = isPending || (!theme && isLoading);
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h3 className="text-lg font-semibold">Theme</h3>
-        <p className="text-sm text-muted-foreground">
-          Update your theme. Changes apply everywhere it&apos;s used.
-        </p>
-      </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Theme</CardTitle>
+        <CardDescription>Update your theme. Changes apply everywhere it&apos;s used.</CardDescription>
+      </CardHeader>
       <Form {...themeForm}>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <ThemeFormFields disabled={busy} />
-          <div className="flex justify-end">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <CardContent className="space-y-4">
+            <ThemeFormFields disabled={busy} />
+          </CardContent>
+          <CardFooter className="flex justify-end">
             <Button type="submit" disabled={busy || !formState.isDirty}>
               {busy ? "Saving…" : "Save theme"}
             </Button>
-          </div>
+          </CardFooter>
         </form>
       </Form>
-    </div>
+    </Card>
   );
 }
