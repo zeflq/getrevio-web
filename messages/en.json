@@ -13,6 +13,19 @@
     "conflict": "This resource already exists.",
     "validation": "Please check the entered information and try again."
   },
+  "auth": {
+    "error": {
+      "titleCancelled": "Sign-in cancelled",
+      "titleDefault": "We couldn't sign you in",
+      "messageCancelled": "You closed the sign-in window. No changes were made to your account.",
+      "messageDefault": "Something went wrong while signing you in. You can try again or go back to the login page.",
+      "errorCodeLabel": "Error code",
+      "technicalDetailsLabel": "Technical details:",
+      "backToLogin": "Back to login",
+      "supportHint": "If the problem persists, contact support or try again in a few minutes.",
+      "unknownError": "unknown_error"
+    }
+  },
   "landings": {
     "common": {
       "back": "Back",

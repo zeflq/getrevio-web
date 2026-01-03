@@ -13,6 +13,19 @@
     "conflict": "Cette ressource existe déjà.",
     "validation": "Veuillez vérifier les informations saisies et réessayer."
   },
+  "auth": {
+    "error": {
+      "titleCancelled": "Connexion annulée",
+      "titleDefault": "Impossible de vous connecter",
+      "messageCancelled": "Vous avez annulé la fenêtre de connexion. Aucun changement n’a été effectué sur votre compte.",
+      "messageDefault": "Un problème est survenu pendant la connexion. Vous pouvez réessayer ou revenir à la page de connexion.",
+      "errorCodeLabel": "Code erreur",
+      "technicalDetailsLabel": "Détails techniques :",
+      "backToLogin": "Revenir à la page de connexion",
+      "supportHint": "Si le problème persiste, contactez le support ou réessayez dans quelques minutes.",
+      "unknownError": "erreur_inconnue"
+    }
+  },
   "landings": {
     "common": {
       "back": "Retour",

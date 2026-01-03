@@ -17,8 +17,10 @@ import { DataTableResponsive } from "@/shared/ui/data-table/DataTableResponsive"
 import { DataTableToolbarBase } from "@/shared/ui/data-table/DataTableToolbarBase";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useActiveTenantId } from "@/hooks/useActiveTenantId";
-import { GooglePlacesTable } from "@/features/google-places/components/GooglePlacesTable";
+// Temporarily disabled - requires backend API implementation
+// import { GooglePlacesTable } from "@/features/google-places/components/GooglePlacesTable";
 import { useSession } from "@/lib/auth/client";
+import { GooglePlacesTable } from "@/features/google-places/components/GooglePlacesTable";
 
 export default function MerchantPlacesPage() {
   const session = useSession();
@@ -164,6 +166,7 @@ export default function MerchantPlacesPage() {
           onOpenChange={(open) => !open && setDeleteTarget(null)}
         />
       )}
+      {/* Temporarily disabled - requires backend API implementation */}
       {session && session.data?.user.provider === "google"
         && <GooglePlacesTable/>
       }

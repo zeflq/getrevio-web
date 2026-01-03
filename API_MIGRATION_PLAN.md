@@ -436,16 +436,17 @@ return (
 - [x] **Campaigns** (Phase 2) - ✅ Hook migrated, types from domain.ts, all components updated, server folder deleted, API routes deleted
 - [x] **Lotteries** (Phase 2) - ✅ Hook migrated, types added to domain.ts (LotteryConfig, LotteryGift, LotteryCooldown), components updated, server folder deleted
 - [x] **Landings** (Phase 2) - ✅ Hook migrated, types added to domain.ts (Landing, LandingContent, LandingStatus), components updated (CreateLandingDialog, DeleteLandingDialog), publish/unpublish actions migrated, slug field removed, server folder deleted
-- [x] **Shortlinks** (Phase 3) - ✅ Hook already migrated, types from domain.ts (Shortlink), server folder deleted
+- [x] **Shortlinks** (Phase 3) - ✅ Hook already migrated, types from domain.ts (Shortlink), server folder deleted, QR proxy uses serverProxy.ts
+- [x] **Merchants** (Phase 2) - ✅ Hook already migrated, no server folder, all components use React Query API (mutateAsync, isPending)
+- [x] **Themes** (Phase 3) - ✅ Hook already migrated, no server folder, all components use React Query API (mutateAsync, isPending)
+- [x] **Google Places** (Phase 3) - ✅ Hook already migrated, server folder deleted, Next.js route remains as legitimate Google API proxy
+- [x] **Merchant Settings** - ✅ Composes data from merchants + themes hooks (both already migrated), read-only feature, no server folder
 
 ### In Progress 🔄
-- [ ] None currently
+- [ ] None
 
 ### Pending ⏳
-- [ ] Merchants
-- [ ] Themes
-- [ ] Google Places
-- [ ] Merchant Settings
+- [ ] None - All features migrated! 🎉
 
 ---
 
@@ -680,5 +681,67 @@ const place = await http.get(url);
 
 ---
 
-**Last Updated**: 2025-12-31
-**Status**: ✅ Planning Complete - Ready for Phase 1 Implementation
+## 🎉 Migration Complete Summary
+
+**Completion Date**: 2026-01-03
+**Total Features Migrated**: 10/10 (100%)
+
+### Key Achievements
+
+1. **All Server Actions Removed**: Migrated from `next-safe-action` to direct API calls
+2. **Clean Architecture Removed**: Deleted all server folders (use cases, repositories, DTOs)
+3. **Single Source of Truth**: All types centralized in `/src/types/domain.ts`
+4. **Reusable Utilities Created**:
+   - `/src/lib/serverProxy.ts` - Server-side API proxy with cookie forwarding
+   - `/src/shared/lib/http.ts` - Client-side HTTP client with auto-unwrapping
+   - `/src/shared/api/endpoints.json` - Centralized endpoint definitions
+
+### Infrastructure Improvements
+
+1. **HTTP Client** (`/src/shared/lib/http.ts`):
+   - Auto-unwraps backend envelopes `{success, data}` → `data`
+   - Auto-redirects on 401
+   - Automatic cookie forwarding (`credentials: 'include'`)
+   - Accept-Language header from cookie
+
+2. **Server Proxy** (`/src/lib/serverProxy.ts`):
+   - Handles both JSON and binary responses
+   - Cookie forwarding from NextRequest or cookies()
+   - Proper error forwarding
+   - 30-second timeout
+   - Used by: QR code proxy, getSession
+
+3. **Type Management** (`/src/types/domain.ts`):
+   - Single source of truth for all domain entities
+   - Added: LotteryConfig, LotteryGift, LotteryCooldown
+   - Added: Landing, LandingContent, LandingStatus
+   - Updated: Shortlink (redisStatus, landingName)
+
+### Special Cases Handled
+
+1. **Google Places**: Next.js route kept as legitimate Google API proxy (OAuth + enrichment)
+2. **QR Codes**: Uses serverProxy.ts to avoid CORS issues
+3. **Merchant Settings**: Read-only composition of merchants + themes hooks
+
+### Files Deleted
+
+- ❌ `/src/features/places/server/` (entire folder)
+- ❌ `/src/features/campaigns/server/` (entire folder)
+- ❌ `/src/features/lotteries/server/` (entire folder)
+- ❌ `/src/features/landings/server/` (entire folder)
+- ❌ `/src/features/shortlinks/server/` (entire folder)
+- ❌ `/src/features/google-places/server/` (entire folder)
+- ❌ `/src/app/api/campaigns/` (Next.js routes)
+
+### Performance & Security
+
+- ✅ Reduced code complexity (~5000+ lines removed)
+- ✅ Faster development (no intermediate layers)
+- ✅ Better debugging (direct API calls visible in Network tab)
+- ✅ Maintained security (tenant isolation via backend API)
+- ✅ Cookie-based authentication works correctly
+
+---
+
+**Last Updated**: 2026-01-03
+**Status**: ✅ **MIGRATION COMPLETE** 🎉

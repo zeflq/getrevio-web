@@ -7,10 +7,9 @@ import { cn } from "@/lib/utils"
 
 interface GoogleSignInButtonProps {
   className?: string
-  callbackURL?: string
 }
 
-export function GoogleSignInButton({ className, callbackURL = "/" }: GoogleSignInButtonProps) {
+export function GoogleSignInButton({ className}: GoogleSignInButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleGoogleSignIn = async () => {
@@ -18,7 +17,8 @@ export function GoogleSignInButton({ className, callbackURL = "/" }: GoogleSignI
     try {
       await signIn.social({
         provider: "google",
-        callbackURL,
+        callbackURL: `${window.location.origin}/m`, // or "/"
+        errorCallbackURL: `${window.location.origin}/auth/error`,
       })
     } catch (error) {
       console.error("Google sign-in error:", error)

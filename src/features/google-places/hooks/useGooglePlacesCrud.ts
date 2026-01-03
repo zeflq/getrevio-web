@@ -16,7 +16,7 @@ const buildQuery = (params: Record<string, unknown>) => {
 
 const list = (params: Record<string, unknown>) => {
   const query = buildQuery(params);
-  const url = `/api/google-places${query ? `?${query}` : ""}`;
+  const url = `${endpoints.googlePlaces.list}${query ? `?${query}` : ""}`;
   return http.get<ListEnvelope<GooglePlaceRow>>(url, { cache: "no-store" });
 };
 

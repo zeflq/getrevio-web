@@ -47,5 +47,8 @@
     "byId": "/api/v1/shortlinks/:id",
     "qr": "/api/v1/shortlinks/:code/qr",
     "redisStatus": "/api/v1/shortlinks/redis-status"
+  },
+  "googlePlaces": {
+    "list": "/api/v1/google-places"
   }
 }
