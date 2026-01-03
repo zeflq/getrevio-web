@@ -3,13 +3,8 @@
 
 import { createCrudBridge, type ListEnvelope } from "@/hooks/createCrudBridge";
 import { http } from "@/shared/lib/http";
-
-import { type ShortlinkListItem } from "../server/queries";
-import {
-  createShortlinkAction,
-  deleteShortlinkAction,
-  updateShortlinkAction,
-} from "../server/actions";
+import endpoints from "@/shared/api/endpoints.json";
+import type { Shortlink } from "@/types/domain";
 import type { ShortlinkQueryParams } from "../model/shortlinkSchema";
 
 const buildQuery = (params: Record<string, unknown>) => {
@@ -22,14 +17,14 @@ const buildQuery = (params: Record<string, unknown>) => {
 };
 
 const list = (params: Record<string, unknown>) =>
-  http.get<ListEnvelope<ShortlinkListItem>>(
-    `/api/shortlinks?${buildQuery(params)}`,
+  http.get<ListEnvelope<Shortlink>>(
+    `${endpoints.shortlinks.base}?${buildQuery(params)}`,
     { cache: "no-store" }
   );
 
 // Fetch by id (not code)
 const get = (id: string) =>
-  http.get<ShortlinkListItem>(`/api/shortlinks/${encodeURIComponent(id)}`, {
+  http.get<Shortlink>(endpoints.shortlinks.byId.replace(":id", encodeURIComponent(id)), {
     cache: "no-store",
   });
 
@@ -39,23 +34,23 @@ export const SHORTLINK_KEYS = {
   item: (id: string | undefined) => ["shortlinks", "item", id] as const,
 };
 
-const bridge = createCrudBridge<ShortlinkListItem, string>({
+const bridge = createCrudBridge<Shortlink, string>({
   keyBase: SHORTLINK_KEYS.all,
   list,
   get,
-  actions: {
-    create: createShortlinkAction,
-    update: updateShortlinkAction,
-    remove: deleteShortlinkAction,
-  },
+  create: (input: any) => http.post(endpoints.shortlinks.base, input),
+  update: ({ id, ...input }: any) =>
+    http.patch(endpoints.shortlinks.byId.replace(":id", id), input),
+  remove: ({ id }: { id: string }) =>
+    http.delete(endpoints.shortlinks.byId.replace(":id", id)),
   // Invalidate by id only
-  getIdFromActionInput: (input) => input?.id,
-  getIdFromActionResult: (result) => result?.id,
+  getIdFromInput: (input) => input?.id,
+  getIdFromResult: (result) => result?.id,
 });
 
 export const useShortlinksList = (params: ShortlinkQueryParams = {}) =>
   bridge.useList!(params);
 export const useShortlinkItem = bridge.useItem!;
-export const useCreateShortlink = bridge.useCreateAction!;
-export const useUpdateShortlink = bridge.useUpdateAction!;
-export const useDeleteShortlink = bridge.useRemoveAction!;
+export const useCreateShortlink = bridge.useCreateMutation!;
+export const useUpdateShortlink = bridge.useUpdateMutation!;
+export const useDeleteShortlink = bridge.useRemoveMutation!;

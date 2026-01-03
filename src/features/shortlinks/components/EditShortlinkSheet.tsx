@@ -41,7 +41,7 @@ export function EditShortlinkSheet({
 }: EditShortlinkSheetProps) {
   const shortlinkQuery = useShortlinkItem(open ? id : undefined);
   const readableError = useReadableError();
-  const { execute, isExecuting } = useUpdateShortlink<
+  const { mutateAsync, isPending } = useUpdateShortlink<
     { id: string } & ShortlinkUpdateInput,
     { ok?: boolean }
   >({
@@ -69,7 +69,7 @@ export function EditShortlinkSheet({
 
   const handleSubmit = (values: ShortlinkFormValues) => {
     const payload = buildUpdateShortlinkPayload(values);
-    execute({ id, ...payload });
+    mutateAsync({ id, ...payload });
   };
 
   const handleOpenChange = (next: boolean) => {
@@ -83,7 +83,7 @@ export function EditShortlinkSheet({
     onOpenChange(next);
   };
 
-  const isBusy = isExecuting || shortlinkQuery.isLoading;
+  const isBusy = isPending || shortlinkQuery.isLoading;
   const isReady = !!shortlinkQuery.data && !shortlinkQuery.isLoading;
 
   return (

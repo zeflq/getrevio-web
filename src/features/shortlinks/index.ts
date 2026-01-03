@@ -6,6 +6,3 @@ export * from "./components/ShortlinkFormFields";
 export * from "./components/ShortlinkQrDialog";
 // hooks
 export * from "./hooks/useShortlinkCrud";
-// server utilities (named exports to avoid type name conflicts)
-export { checkRedisShortlinks } from "./server/checkRedisShortlinks";
-export { checkRedisShortlinksAction } from "./server/checkRedisShortlinks";

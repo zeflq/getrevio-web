@@ -5,14 +5,19 @@ export const shortlinkTargetSchema = z.object({
   t: z.enum(["campaign", "place"])
 });
 
+const futureDate = z.date().refine(
+  (value) => value.getTime() > Date.now(),
+  "Expires At must be in the future"
+);
+
+const optionalFutureDate = futureDate.optional();
+
 const shortlinkCommonSchema = z.object({
   merchantId: z.string().min(1),
   landingId: z.string().min(1),
   channel: z.enum(["qr", "nfc", "email", "web", "print", "custom"]).optional(),
-  campaignId: z.string().optional(),
-  placeId: z.string().optional(),
   active: z.boolean(),
-  expiresAt: z.date().optional(), // "YYYY-MM-DD"
+  expiresAt: optionalFutureDate, // "YYYY-MM-DD"
   utm: z.object({
     source: z.string().optional(),
     medium: z.string().optional(),
@@ -44,7 +49,7 @@ export const shortlinkFormSchema = z.object({
   landingId: z.string().min(1, "Landing is required"),
   channel: z.enum(["qr", "nfc", "email", "web", "print", "custom"]).optional(),
   active: z.boolean(),
-  expiresAt: z.date().optional(),
+  expiresAt: optionalFutureDate,
   utm: z.object({
     source: z.string().optional(),
     medium: z.string().optional(),
@@ -58,8 +63,7 @@ export const shortlinkFormSchema = z.object({
 const shortlinkQuerySchemaRaw = z.object({
   merchantId: z.string().optional(),
   landingId: z.string().optional(),
-  placeId: z.string().optional(),
-  campaignId: z.string().optional(),
+  active: z.coerce.boolean().optional(),
   channel: z
     .enum(["qr", "nfc", "email", "web", "print", "custom"])
     .optional(),
@@ -79,8 +83,7 @@ export const shortlinkQuerySchema = shortlinkQuerySchemaRaw;
 export const shortlinkFiltersSchema = shortlinkQuerySchemaRaw.transform((params) => ({
   merchantId: params.merchantId,
   landingId: params.landingId,
-  placeId: params.placeId,
-  campaignId: params.campaignId,
+  active: params.active,
   channel: params.channel,
   status: params.status,
   redis: params.redis,

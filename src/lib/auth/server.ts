@@ -4,11 +4,8 @@ import { Merchant } from '@/types/domain';
  * For use in Server Components and Server Actions
  */
 
-import { cookies } from 'next/headers';
 import type { User } from './client';
-
-// External API URL
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+import { proxyToAPI } from '@/lib/serverProxy';
 
 export type ServerSession = {
   user: User;
@@ -32,32 +29,14 @@ export type ServerSession = {
  */
 export async function getSession(): Promise<ServerSession | null> {
   try {
-    const cookieStore = await cookies();
-
-    // Get all cookies and format them for the Cookie header
-    const allCookies = cookieStore.getAll();
-    const cookieHeader = allCookies
-      .map((cookie) => `${cookie.name}=${cookie.value}`)
-      .join('; ');
-
-    if (!cookieHeader) {
-      return null;
-    }
-
-    const res = await fetch(`${API_URL}/api/auth/get-session`, {
-      headers: {
-        'Cookie': cookieHeader,
+    const session = await proxyToAPI<ServerSession>({
+      endpoint: '/api/auth/get-session',
+      fetchOptions: {
+        cache: 'no-store',
       },
-      cache: 'no-store',
     });
 
-    if (!res.ok) {
-      return null;
-    }
-
-    const data = await res.json();
-
-    return data;
+    return session;
   } catch (error) {
     console.error('[Auth] Failed to get session from API:', error);
     return null;

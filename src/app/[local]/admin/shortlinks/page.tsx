@@ -13,7 +13,6 @@ import { DataTableToolbarBase } from "@/shared/ui/data-table/DataTableToolbarBas
 import { useDataTableController } from "@/shared/ui/data-table/useDataTableController";
 import { RHFSelect } from "@/components/form/controls";
 
-import { useAction } from "next-safe-action/hooks";
 import {
   shortlinkColumns,
   useShortlinksList,
@@ -21,7 +20,6 @@ import {
   EditShortlinkSheet,
   DeleteShortlinkDialog,
   ShortlinkQrDialog,
-  checkRedisShortlinksAction,
 } from "@/features/shortlinks";
 import { useMerchantsLite } from "@/features/merchants/hooks/useMerchantCrud";
 
@@ -80,37 +78,6 @@ export default function AdminShortlinksPage() {
   const rows = shortlinksResponse?.data ?? [];
   const totalPages = shortlinksResponse?.totalPages ?? 1;
   const total = shortlinksResponse?.total ?? 0;
-
-  // Redis status: check existence for visible codes and decorate rows
-  const codes = React.useMemo(() => Array.from(new Set(rows.map((r) => r.code))), [rows]);
-  const [redisMap, setRedisMap] = React.useState<Record<string, "ok" | "missing" | "error">>({});
-  const { execute: checkRedis } = useAction(checkRedisShortlinksAction, {
-    onSuccess: ({ data }) => {
-      const next: Record<string, "ok" | "missing" | "error"> = {};
-      data.items.forEach(({ code, exists }: { code: string; exists: boolean }) => {
-        next[code] = exists ? "ok" : "missing";
-      });
-      setRedisMap(next);
-    },
-    onError: () => {
-      setRedisMap((prev) => {
-        const next = { ...prev };
-        codes.forEach((code) => (next[code] = "error"));
-        return next;
-      });
-    },
-  });
-
-  React.useEffect(() => {
-    if (codes.length) {
-      checkRedis({ codes });
-    }
-  }, [codes, checkRedis]);
-
-  const decoratedRows = React.useMemo(
-    () => rows.map((sl) => ({ ...sl, redisStatus: redisMap[sl.code] ?? sl.redisStatus ?? "unknown" })),
-    [rows, redisMap]
-  );
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | undefined>(undefined);
   const [deleteId, setDeleteId] = React.useState<string | undefined>(undefined);
@@ -136,7 +103,7 @@ export default function AdminShortlinksPage() {
 
   const controller = useDataTableController({
     columns,
-    data: decoratedRows,
+    data: rows,
     mode: "server",
     pageCount: totalPages,
     state: { pageIndex, pageSize, sorting, columnFilters },
@@ -345,7 +312,6 @@ function FilterSelect({
       <RHFSelect
         name="selection"
         label={placeholder}
-        hideLabel
         className={className}
         options={selectOptions}
         disabled={disabled}

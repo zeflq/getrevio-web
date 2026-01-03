@@ -21,7 +21,7 @@ const formatDate = (value?: string | null) => {
 
 export type ShortlinkRow = Pick<
   Shortlink,
-  "id" | "code" | "merchantId" | "channel" | "active" | "redisStatus" | "landing" | "landingId" | "createdAt" | "updatedAt"
+  "id" | "code" | "merchantId" | "channel" | "active" | "redisStatus" | "landingId" | "landingName" | "createdAt" | "updatedAt"
 >;
 
 export function shortlinkColumns(opts: {
@@ -59,28 +59,31 @@ export function shortlinkColumns(opts: {
         ]
       : []),
     {
-      accessorKey: "landing",
+      accessorKey: "landingName",
       header: "Landing",
-      cell: ({ row }) =>
-        row.original.landing?.name ? (
-          mode === "admin" ? (
-            <Link href={`/admin/landings/${row.original.landing.id}/edit`} className="text-primary underline-offset-4 hover:underline">
-              {row.original.landing.name}
-            </Link>
-          ) : (
-            row.original.landing.name
-          )
-        ) : row.original.landingId ? (
-          mode === "admin" ? (
-            <Link href={`/admin/landings/${row.original.landingId}/edit`} className="text-primary underline-offset-4 hover:underline">
-              {row.original.landingId}
-            </Link>
-          ) : (
-            row.original.landingId
-          )
+      cell: ({ row }) => {
+        const { landingId, landingName } = row.original;
+
+        if (!landingId) return "—";
+
+        const displayText = landingName || landingId;
+
+        return mode === "admin" ? (
+          <Link
+            href={`/admin/landings/${landingId}/edit`}
+            className="text-primary underline-offset-4 hover:underline"
+          >
+            {displayText}
+          </Link>
         ) : (
-          "—"
-        ),
+          <Link
+            href={`/m/landings/${landingId}/edit`}
+            className="text-primary underline-offset-4 hover:underline"
+          >
+            {displayText}
+          </Link>
+        );
+      },
     },
     {
       accessorKey: "channel",
@@ -92,10 +95,9 @@ export function shortlinkColumns(opts: {
       accessorKey: "redisStatus",
       header: "Redis",
       cell: ({ row }) => {
-        const status = row.original.redisStatus ?? "unknown";
-        if (status === "ok") return <Badge variant="default">OK</Badge>;
-        if (status === "missing") return <Badge variant="destructive">Missing</Badge>;
-        if (status === "error") return <Badge variant="destructive">Error</Badge>;
+        const status = row.original.redisStatus;
+        if (status === "synced") return <Badge variant="default">Synced</Badge>;
+        if (status === "not_synced") return <Badge variant="destructive">Not Synced</Badge>;
         return <Badge variant="outline">Unknown</Badge>;
       },
     },

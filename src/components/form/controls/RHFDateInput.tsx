@@ -185,7 +185,7 @@ export function RHFDateInput({
               </div>
             </FormControl>
             {description ? <FormDescription>{description}</FormDescription> : null}
-            <FormMessage className="text-xs" />
+            <div className="min-h-[1.25rem]"><FormMessage className="text-xs" /></div>
           </FormItem>
         );
       }}

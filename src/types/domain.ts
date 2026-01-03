@@ -84,6 +84,7 @@ export interface Shortlink {
   merchantId: UUID;       // FK -> merchants.id
 
   landingId?: string | null;
+  landingName?: string | null;
   landing?: {
     id: string;
     name?: string | null;
@@ -96,7 +97,7 @@ export interface Shortlink {
 
   // New runtime/redis status fields
   active: boolean;                   // mirror of Redis a=1/0
-  redisStatus?: "ok" | "missing" | "error"; // computed field (not stored permanently)
+  redisStatus?: "synced" | "not_synced"; // Redis sync status from API
 
   // Optional UTM params
   utm?: {

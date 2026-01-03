@@ -1,42 +1,26 @@
-import QRCode from "qrcode";
 import { NextRequest } from "next/server";
-
-import prisma from "@/lib/prisma";
-import { withApiAuth } from "@/server/core/apiGuards";
-import { assertTenantAccess } from "@/server/core/guards/authGuards";
-
-const APP_BASE = process.env.NEXT_PUBLIC_APP_URL;
-const SHORT_BASE = (process.env.NEXT_PUBLIC_SHORT_URL_BASE ?? "").replace(/\/$/, "");
+import { proxyToAPI } from "@/lib/serverProxy";
+import endpoints from "@/shared/api/endpoints.json";
 
 export const dynamic = "force-dynamic";
 
-export const GET = withApiAuth<{ code: string }>(async ({ req, params, auth }) => {
-  const shortlink = await prisma.shortlink.findUnique({
-    where: { code: params.code },
-    select: { merchantId: true },
-  });
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ code: string }> }
+) {
+  const { code } = await params;
+  const endpoint = endpoints.shortlinks.qr.replace(":code", encodeURIComponent(code));
+console.log("Fetching QR code for shortlink code:", code, "from endpoint:", endpoint);
+  try {
+    const response = await proxyToAPI({
+      endpoint,
+      request: req,
+      responseType: "binary",
+    });
 
-  if (!shortlink) {
-    return new Response("Not Found", { status: 404 });
+    return response;
+  } catch (error) {
+    console.error("Error fetching QR code from API:", error);
+    return new Response("Internal Server Error", { status: 500 });
   }
-
-  assertTenantAccess(auth, shortlink.merchantId);
-
-  const origin = APP_BASE ?? new URL(req.url).origin;
-  const base = SHORT_BASE || origin;
-  const targetUrl = `${base}/${encodeURIComponent((await params).code)}`;
-
-  const png = await QRCode.toBuffer(targetUrl, {
-    type: "png",
-    errorCorrectionLevel: "M",
-    margin: 2,
-    scale: 8,
-  });
-
-  return new Response(png, {
-    headers: {
-      "Content-Type": "image/png",
-      "Cache-Control": "private, max-age=60",
-    },
-  });
-});
+}

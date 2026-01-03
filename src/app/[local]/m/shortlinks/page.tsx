@@ -10,7 +10,6 @@ import { DataTableResponsive } from "@/shared/ui/data-table/DataTableResponsive"
 import { DataTableToolbarBase } from "@/shared/ui/data-table/DataTableToolbarBase";
 import { iconActionGroup as IconActionGroup } from "@/shared/ui/IconActionGroup";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAction } from "next-safe-action/hooks";
 
 import {
   shortlinkColumns,
@@ -19,7 +18,6 @@ import {
   EditShortlinkSheet,
   DeleteShortlinkDialog,
   ShortlinkQrDialog,
-  checkRedisShortlinksAction,
 } from "@/features/shortlinks";
 import { useActiveTenantId } from "@/hooks/useActiveTenantId";
 
@@ -55,7 +53,7 @@ export default function MerchantShortlinksPage() {
     | "print"
     | "custom"
     | undefined;
-  const status = getFilterValue(columnFilters, "status") as "active" | "inactive" | undefined;
+  const active = getFilterValue(columnFilters, "active") as boolean | undefined;
 
   const sortIdRaw = sorting[0]?.id as string | undefined;
   const sortOrder = sorting[0]?.desc ? "desc" : "asc";
@@ -66,7 +64,7 @@ export default function MerchantShortlinksPage() {
   const { data: shortlinksResponse, isLoading } = useShortlinksList({
     q: search,
     channel,
-    status,
+    active,
     merchantId: tenantId,
     _page: pageIndex + 1,
     _limit: pageSize,
@@ -77,43 +75,6 @@ export default function MerchantShortlinksPage() {
   const rows = shortlinksResponse?.data ?? [];
   const totalPages = shortlinksResponse?.totalPages ?? 1;
   const total = shortlinksResponse?.total ?? 0;
-
-  const codes = React.useMemo(() => Array.from(new Set(rows.map((r) => r.code))), [rows]);
-  const [redisMap, setRedisMap] = React.useState<Record<string, "ok" | "missing" | "error">>({});
-
-  const { execute: checkRedis } = useAction(checkRedisShortlinksAction, {
-    onSuccess: ({ data }) => {
-      const next: Record<string, "ok" | "missing" | "error"> = {};
-      data.items.forEach(({ code, exists }) => {
-        next[code] = exists ? "ok" : "missing";
-      });
-      setRedisMap(next);
-    },
-    onError: () => {
-      setRedisMap((prev) => {
-        const next = { ...prev };
-        codes.forEach((code) => {
-          next[code] = "error";
-        });
-        return next;
-      });
-    },
-  });
-
-  React.useEffect(() => {
-    if (codes.length) {
-      checkRedis({ codes });
-    }
-  }, [codes, checkRedis]);
-
-  const decoratedRows = React.useMemo(
-    () =>
-      rows.map((sl) => ({
-        ...sl,
-        redisStatus: redisMap[sl.code] ?? sl.redisStatus ?? "unknown",
-      })),
-    [rows, redisMap]
-  );
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | null>(null);
@@ -138,7 +99,7 @@ export default function MerchantShortlinksPage() {
 
   const controller = useDataTableController({
     columns,
-    data: decoratedRows,
+    data: rows,
     mode: "server",
     pageCount: totalPages,
     state: { pageIndex, pageSize, sorting, columnFilters },
@@ -178,9 +139,15 @@ export default function MerchantShortlinksPage() {
           </Select>
 
           <Select
-            value={status ?? "all"}
+            value={active === undefined ? "all" : active ? "active" : "inactive"}
             onValueChange={(value) =>
-              setColumnFilters((prev) => upsertFilter(prev, "status", value === "all" ? undefined : value))
+              setColumnFilters((prev) =>
+                upsertFilter(
+                  prev,
+                  "active",
+                  value === "all" ? undefined : value === "active"
+                )
+              )
             }
           >
             <SelectTrigger className="w-full sm:w-[140px]">

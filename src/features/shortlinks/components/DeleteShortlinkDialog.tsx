@@ -12,7 +12,7 @@ type Props = {
 };
 
 export function DeleteShortlinkDialog({ id, code, open, onOpenChange }: Props) {
-  const { execute, isExecuting } = useDeleteShortlink<
+  const { mutateAsync, isPending } = useDeleteShortlink<
     { id: string },
     { ok?: boolean }
   >({
@@ -21,8 +21,8 @@ export function DeleteShortlinkDialog({ id, code, open, onOpenChange }: Props) {
     },
   });
 
-  const handleConfirm = () => {
-    execute({ id });
+  const handleConfirm = async () => {
+    await mutateAsync({ id });
   };
 
   return (
@@ -34,9 +34,9 @@ export function DeleteShortlinkDialog({ id, code, open, onOpenChange }: Props) {
       expectedName={code}
       confirmPromptLabel="Type the code"
       inputPlaceholder="Enter shortlink code"
-      confirmLabel={isExecuting ? "Deleting…" : "Delete Shortlink"}
+      confirmLabel={isPending ? "Deleting…" : "Delete Shortlink"}
       confirmVariant="destructive"
-      loading={isExecuting}
+      loading={isPending}
       onConfirm={handleConfirm}
       preventCloseWhileLoading
     />

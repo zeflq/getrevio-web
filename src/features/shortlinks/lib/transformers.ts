@@ -50,12 +50,13 @@ export const shortlinkToFormValues = (s: Shortlink): ShortlinkFormValues => ({
 // === Sanitize Form → DTO (Create/Update payloads) ===
 export const buildCreateShortlinkPayload = (values: ShortlinkFormValues): ShortlinkCreateInput => {
   const expiresAtSan = values.expiresAt ? values.expiresAt : undefined;
+  const channel = asChannel(values.channel);
 
   const payload: ShortlinkCreateInput = {
     code: (values.code ?? "").trim() || undefined,
     merchantId: values.merchantId.trim(),
     landingId: values.landingId.trim(),
-    channel: values.channel,
+    channel,
     active: !!values.active,
     expiresAt: expiresAtSan,
     utm: values.utm,
@@ -70,11 +71,12 @@ export const buildCreateShortlinkPayload = (values: ShortlinkFormValues): Shortl
 };
 
 export const buildUpdateShortlinkPayload = (values: ShortlinkFormValues): ShortlinkUpdateInput => {
+  const channel = asChannel(values.channel);
   const partial: ShortlinkUpdateInput = {
     code: (values.code ?? "").trim() || undefined, // optionnel en update
     merchantId: values.merchantId.trim(),
     landingId: values.landingId.trim(),
-    channel: values.channel,
+    channel,
     active: !!values.active,
     expiresAt: values.expiresAt,
     utm: values.utm,

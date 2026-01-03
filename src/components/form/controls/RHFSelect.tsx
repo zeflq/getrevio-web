@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
 type SelectOption = {
-  value: string | number;
+  value: string | number | boolean;
   label: string;
   disabled?: boolean;
 };
@@ -46,6 +46,7 @@ type RHFSelectProps = {
   emptyText?: string;
   // Additional features
   onValueChange?: (value: string) => void;
+  parseValue?: (value: string) => unknown;
   searchable?: boolean;
 };
 
@@ -65,6 +66,7 @@ export function RHFSelect({
   loadingText = "Loading...",
   emptyText = "No options available",
   onValueChange,
+  parseValue,
   searchable = false,
 }: RHFSelectProps) {
   const { control } = useFormContext();
@@ -93,7 +95,7 @@ export function RHFSelect({
           <Select
             disabled={disabled || isLoading}
             onValueChange={(value) => {
-              field.onChange(value);
+              field.onChange(parseValue ? parseValue(value) : value);
               onValueChange?.(value);
             }}
             value={field.value?.toString()}
@@ -130,7 +132,6 @@ export function RHFSelect({
               ) : (
                 normalizedOptions.map((option) => (
                   <SelectItem
-                    key={option.value}
                     value={option.value.toString()}
                     disabled={option.disabled}
                   >
@@ -141,7 +142,7 @@ export function RHFSelect({
             </SelectContent>
           </Select>
           {description && <FormDescription>{description}</FormDescription>}
-          <FormMessage />
+          <div className="min-h-[1.25rem]"><FormMessage /></div>
         </FormItem>
       )}
     />

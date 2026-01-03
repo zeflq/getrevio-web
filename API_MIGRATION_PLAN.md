@@ -435,14 +435,14 @@ return (
 - [x] **Places** (Phase 1) - ✅ Hook migrated, types from domain.ts, EditPlaceSheet fixed
 - [x] **Campaigns** (Phase 2) - ✅ Hook migrated, types from domain.ts, all components updated, server folder deleted, API routes deleted
 - [x] **Lotteries** (Phase 2) - ✅ Hook migrated, types added to domain.ts (LotteryConfig, LotteryGift, LotteryCooldown), components updated, server folder deleted
-- [x] **Landings** (Phase 2) - ✅ Hook migrated, types added to domain.ts (Landing, LandingContent, LandingStatus), components updated (CreateLandingDialog, DeleteLandingDialog), server folder deleted
+- [x] **Landings** (Phase 2) - ✅ Hook migrated, types added to domain.ts (Landing, LandingContent, LandingStatus), components updated (CreateLandingDialog, DeleteLandingDialog), publish/unpublish actions migrated, slug field removed, server folder deleted
+- [x] **Shortlinks** (Phase 3) - ✅ Hook already migrated, types from domain.ts (Shortlink), server folder deleted
 
 ### In Progress 🔄
 - [ ] None currently
 
 ### Pending ⏳
 - [ ] Merchants
-- [ ] Shortlinks
 - [ ] Themes
 - [ ] Google Places
 - [ ] Merchant Settings
