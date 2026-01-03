@@ -11,7 +11,48 @@
     "notFound": "The requested resource was not found.",
     "timeout": "The request took too long. Please try again later.",
     "conflict": "This resource already exists.",
-    "validation": "Please check the entered information and try again."
+    "validation": "Please check the entered information and try again.",
+
+    "UNKNOWN_ERROR": "An unexpected error occurred. Please try again.",
+    "RESOURCE_NOT_FOUND": "The requested resource was not found.",
+    "INVALID_INPUT": "The information provided is invalid. Please check and try again.",
+    "FORBIDDEN": "You don't have permission to perform this action.",
+    "UNAUTHORIZED": "You must be logged in to continue.",
+    "CONFLICT": "This resource already exists.",
+
+    "PAGINATION_WINDOW_EXCEEDED": "Too many results requested. Please reduce the page size or navigate to an earlier page.",
+
+    "ORGANIZATION_CREATION_FAILED": "Failed to create your organization. Please try again or contact support if the problem persists.",
+    "MERCHANT_EMAIL_ALREADY_EXISTS": "This email address is already registered. Please use a different email or sign in to your existing account.",
+
+    "PLACE_NOT_FOUND": "Location not found. It may have been deleted or you don't have access to it.",
+
+    "MERCHANT_NOT_FOUND": "Organization not found. It may have been deleted or you don't have access to it.",
+    "MERCHANT_ACCESS_FORBIDDEN": "You don't have permission to access this organization.",
+    "MERCHANT_CREATION_FORBIDDEN": "You don't have permission to create organizations. Please contact your administrator.",
+
+    "CAMPAIGN_NOT_FOUND": "Campaign not found. It may have been deleted or you don't have access to it.",
+
+    "THEME_NOT_FOUND": "Theme not found. It may have been deleted or you don't have access to it.",
+
+    "LANDING_NOT_FOUND": "Landing page not found. It may have been deleted or you don't have access to it.",
+    "LANDING_ACCESS_FORBIDDEN": "You don't have permission to access this landing page.",
+
+    "SHORTLINK_NOT_FOUND": "Short link not found. It may have been deleted or expired.",
+    "SHORTLINK_EXPIRES_AT_INVALID": "The expiration date must be in the future. Please select a valid date.",
+    "SHORTLINK_LANDING_INVALID": "The landing page must be associated with either a location or a campaign.",
+    "SHORTLINK_LANDING_CONFLICT": "The landing page cannot be associated with both a location and a campaign. Please choose one.",
+    "SHORTLINK_CODE_GENERATION_FAILED": "Failed to generate a unique short code. Please try again.",
+
+    "LOTTERY_CONFIG_NOT_FOUND": "Lottery configuration not found. It may have been deleted or you don't have access to it.",
+
+    "TENANT_ID_REQUIRED": "Organization ID is required. Please select an organization.",
+    "GOOGLE_OAUTH_REQUIRED": "Please connect your Google account to access Google Business locations.",
+    "GOOGLE_ACCOUNT_FETCH_FAILED": "Failed to retrieve your Google account information. Please try reconnecting your Google account.",
+    "GOOGLE_BUSINESS_ACCOUNT_NOT_FOUND": "No Google Business account found. Please make sure your Google account has access to a Google Business Profile.",
+    "GOOGLE_API_ERROR": "An error occurred while communicating with Google. Please try again later.",
+
+    "NO_ACTIVE_ORGANIZATION": "No active organization selected. Please select an organization from your profile."
   },
   "auth": {
     "error": {

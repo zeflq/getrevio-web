@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+import { http } from "@/shared/lib/http";
+import { extractApiError } from "@/lib/api/errorHandler";
+import { useErrorTranslation } from "@/hooks/useErrorTranslation";
+import endpoints from "@/shared/api/endpoints.json";
 
 export interface CompleteOnboardingRequest {
   merchant: {
@@ -31,6 +33,7 @@ export interface CompleteOnboardingResponse {
 export function useCompleteOnboarding() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { translateError } = useErrorTranslation();
 
   const completeOnboarding = async (
     data: CompleteOnboardingRequest
@@ -39,26 +42,20 @@ export function useCompleteOnboarding() {
     setError(null);
 
     try {
-      const res = await fetch(`${API_URL}/api/v1/onboarding/complete`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Send cookies
-        body: JSON.stringify(data),
-      });
+      // Use shared HTTP client
+      const result = await http.post<CompleteOnboardingResponse>(
+        endpoints.onboarding.complete,
+        data
+      );
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Failed to complete onboarding");
-      }
-
-      const result = await res.json();
       return result;
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unknown error";
-      setError(message);
-      throw err;
+      // HttpError from shared client includes status and body
+      const apiError = extractApiError(err);
+      const translatedMessage = translateError(apiError.code);
+
+      setError(translatedMessage);
+      throw new Error(translatedMessage);
     } finally {
       setIsLoading(false);
     }

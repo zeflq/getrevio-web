@@ -6,12 +6,53 @@
   },
   "errors": {
     "generic": "Une erreur est survenue. Veuillez réessayer.",
-    "unauthorized": "Vous n’êtes pas autorisé à effectuer cette action.",
+    "unauthorized": "Vous n'êtes pas autorisé à effectuer cette action.",
     "forbidden": "Accès refusé.",
     "notFound": "La ressource demandée est introuvable.",
     "timeout": "La requête a expiré. Veuillez réessayer plus tard.",
     "conflict": "Cette ressource existe déjà.",
-    "validation": "Veuillez vérifier les informations saisies et réessayer."
+    "validation": "Veuillez vérifier les informations saisies et réessayer.",
+
+    "UNKNOWN_ERROR": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+    "RESOURCE_NOT_FOUND": "La ressource demandée est introuvable.",
+    "INVALID_INPUT": "Les informations fournies sont invalides. Veuillez vérifier et réessayer.",
+    "FORBIDDEN": "Vous n'avez pas la permission d'effectuer cette action.",
+    "UNAUTHORIZED": "Vous devez être connecté pour continuer.",
+    "CONFLICT": "Cette ressource existe déjà.",
+
+    "PAGINATION_WINDOW_EXCEEDED": "Trop de résultats demandés. Veuillez réduire la taille de la page ou naviguer vers une page antérieure.",
+
+    "ORGANIZATION_CREATION_FAILED": "Échec de la création de votre organisation. Veuillez réessayer ou contacter le support si le problème persiste.",
+    "MERCHANT_EMAIL_ALREADY_EXISTS": "Cette adresse e-mail est déjà enregistrée. Veuillez utiliser une autre adresse ou vous connecter à votre compte existant.",
+
+    "PLACE_NOT_FOUND": "Lieu introuvable. Il a peut-être été supprimé ou vous n'y avez pas accès.",
+
+    "MERCHANT_NOT_FOUND": "Organisation introuvable. Elle a peut-être été supprimée ou vous n'y avez pas accès.",
+    "MERCHANT_ACCESS_FORBIDDEN": "Vous n'avez pas la permission d'accéder à cette organisation.",
+    "MERCHANT_CREATION_FORBIDDEN": "Vous n'avez pas la permission de créer des organisations. Veuillez contacter votre administrateur.",
+
+    "CAMPAIGN_NOT_FOUND": "Campagne introuvable. Elle a peut-être été supprimée ou vous n'y avez pas accès.",
+
+    "THEME_NOT_FOUND": "Thème introuvable. Il a peut-être été supprimé ou vous n'y avez pas accès.",
+
+    "LANDING_NOT_FOUND": "Page de destination introuvable. Elle a peut-être été supprimée ou vous n'y avez pas accès.",
+    "LANDING_ACCESS_FORBIDDEN": "Vous n'avez pas la permission d'accéder à cette page de destination.",
+
+    "SHORTLINK_NOT_FOUND": "Lien court introuvable. Il a peut-être été supprimé ou expiré.",
+    "SHORTLINK_EXPIRES_AT_INVALID": "La date d'expiration doit être dans le futur. Veuillez sélectionner une date valide.",
+    "SHORTLINK_LANDING_INVALID": "La page de destination doit être associée à un lieu ou une campagne.",
+    "SHORTLINK_LANDING_CONFLICT": "La page de destination ne peut pas être associée à la fois à un lieu et une campagne. Veuillez en choisir un.",
+    "SHORTLINK_CODE_GENERATION_FAILED": "Échec de la génération d'un code court unique. Veuillez réessayer.",
+
+    "LOTTERY_CONFIG_NOT_FOUND": "Configuration de loterie introuvable. Elle a peut-être été supprimée ou vous n'y avez pas accès.",
+
+    "TENANT_ID_REQUIRED": "L'identifiant d'organisation est requis. Veuillez sélectionner une organisation.",
+    "GOOGLE_OAUTH_REQUIRED": "Veuillez connecter votre compte Google pour accéder aux emplacements Google Business.",
+    "GOOGLE_ACCOUNT_FETCH_FAILED": "Échec de la récupération des informations de votre compte Google. Veuillez reconnecter votre compte Google.",
+    "GOOGLE_BUSINESS_ACCOUNT_NOT_FOUND": "Aucun compte Google Business trouvé. Veuillez vous assurer que votre compte Google a accès à un profil Google Business.",
+    "GOOGLE_API_ERROR": "Une erreur s'est produite lors de la communication avec Google. Veuillez réessayer plus tard.",
+
+    "NO_ACTIVE_ORGANIZATION": "Aucune organisation active sélectionnée. Veuillez sélectionner une organisation depuis votre profil."
   },
   "auth": {
     "error": {
