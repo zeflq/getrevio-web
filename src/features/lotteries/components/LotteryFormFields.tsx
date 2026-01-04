@@ -26,7 +26,7 @@ export function LotteryFormFields({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-1 gap-2">
         {!merchantId ? (
           <RHFCombobox<LiteListe>
             name="merchantId"
@@ -51,7 +51,7 @@ export function LotteryFormFields({
           disabled={disabled}
         />
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-2 sm:grid-cols-2">
           <RHFSelect
             name="enabled"
             label={t("enabled.label")}
@@ -70,7 +70,7 @@ export function LotteryFormFields({
           />
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-2 sm:grid-cols-2">
           <RHFInput
             name="playLimitPerUser"
             label={t("playLimit.label")}
@@ -89,7 +89,7 @@ export function LotteryFormFields({
           />
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-2 sm:grid-cols-2">
           <RHFInput
             name="noWinWeight"
             label={t("noWinWeight.label")}

@@ -49,7 +49,7 @@ export function RHFInput({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={cn("flex flex-col",className)}>
+        <FormItem className={cn("flex flex-col justify-between",className)}>
           <FormLabel>
             {label} {requiredStar ? <span className="text-destructive">*</span> : null}
           </FormLabel>
@@ -71,7 +71,7 @@ export function RHFInput({
             </div>
           </FormControl>
           {description ? <FormDescription>{description}</FormDescription> : null}
-          <FormMessage className="text-xs" />
+          <div className="text-xs min-h-[1.25rem]"><FormMessage /></div>
         </FormItem>
       )}
     />

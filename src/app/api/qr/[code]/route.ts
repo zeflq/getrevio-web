@@ -10,7 +10,6 @@ export async function GET(
 ) {
   const { code } = await params;
   const endpoint = endpoints.shortlinks.qr.replace(":code", encodeURIComponent(code));
-console.log("Fetching QR code for shortlink code:", code, "from endpoint:", endpoint);
   try {
     const response = await proxyToAPI({
       endpoint,

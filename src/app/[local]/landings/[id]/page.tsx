@@ -2,10 +2,11 @@
 
 import { LandingThemeProvider } from "@/features/landings/theme/themeProvider";
 import { TemplateLinearRenderer } from "@/features/landings/preview/TemplateLinearRenderer";
-import { getLandingServer } from "@/features/landings/server/interface/queries";
-import { listThemesServer } from "@/features/themes/server/queries";
 import { ThemeSelector } from "@/features/landings/theme/ThemeSelector";
 import { LandingRenderProvider } from "@/features/landings/preview/LandingRenderContext";
+import { proxyToAPI } from "@/lib/serverProxy";
+import endpoints from "@/shared/api/endpoints.json";
+import type { Landing, Theme } from "@/types/domain";
 
 interface LandingPreviewPageProps {
   params: {
@@ -22,7 +23,11 @@ export default async function LandingPreviewPage({
   searchParams,
 }: LandingPreviewPageProps) {
   const { id } = await params;
-  const landing = await getLandingServer(id);
+
+  // Fetch landing from API using serverProxy
+  const landing = await proxyToAPI<Landing>({
+    endpoint: endpoints.landings.byId.replace(':id', id),
+  });
 
   if (!landing) {
     return (
@@ -34,9 +39,20 @@ export default async function LandingPreviewPage({
     );
   }
 
-  const themesPayload = landing.merchantId
-    ? await listThemesServer({ merchantId: landing.merchantId, _limit: 50 })
-    : { data: [] };
+  // Fetch themes if merchantId exists
+  // After proxyToAPI unwraps {success, data}, we get just the array
+  let themes: Theme[] = [];
+
+  if (landing.merchantId) {
+    const query = new URLSearchParams({
+      merchantId: landing.merchantId,
+      _limit: '50',
+    });
+
+    themes = await proxyToAPI<Theme[]>({
+      endpoint: `${endpoints.themes.base}?${query.toString()}`,
+    });
+  }
 
   // décider du mode preview
   const previewMode = (await searchParams).preview === "live" ? "live" : "draft";
@@ -56,7 +72,7 @@ export default async function LandingPreviewPage({
         }}
       >
       <LandingThemeProvider
-        themes={themesPayload.data}
+        themes={themes}
         themeId={landing.themeId ?? undefined}
       >
         <main className="min-h-screen flex flex-col justify-start max-w-md w-full px-6 space-y-6">

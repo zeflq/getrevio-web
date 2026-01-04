@@ -110,7 +110,7 @@ export function RHFSelect({
                 )}
               >
                 {isLoading ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex justify-between items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
                     <span>{loadingText}</span>
                   </div>
@@ -142,7 +142,7 @@ export function RHFSelect({
             </SelectContent>
           </Select>
           {description && <FormDescription>{description}</FormDescription>}
-          <div className="min-h-[1.25rem]"><FormMessage /></div>
+          <div className="text-xs min-h-[1.25rem]"><FormMessage /></div>
         </FormItem>
       )}
     />
